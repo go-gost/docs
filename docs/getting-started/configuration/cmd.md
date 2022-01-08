@@ -1,0 +1,86 @@
+# 命令行参数
+
+GOST目前有以下几个命令行参数项：
+
+> **`-L`** - 指定本地服务，可设置多个。
+
+此参数值为类URL格式(方括号中的内容可以省略):
+
+```
+[scheme://][username:password@host]:port[?key1=value1&key2=value2]
+```
+
+或用于端口转发模式
+
+```
+scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
+```
+
+`scheme`
+:      可以是处理器(Handler)与监听器(Listener)的组合，也可以是单独的处理器(监听器默认为tcp)，例如:
+
+       * `http+tls` - 处理器http与监听器tls的组合，指定HTTPS代理服务
+       * `http` - 等价与`http+tcp`，处理器http与监听器tcp的组合，指定HTTP代理服务
+	   * `tcp` - 等价与`tcp+tcp`，处理器tcp与监听器tcp的组合，指定TCP端口转发
+
+!!! example
+	```
+	gost -L http://:8080
+	```
+	```
+	gost -L http://:8080 -L socks5://:1080?foo=bar
+	```
+	```
+	gost -L http+tls://gost:gost@:8443
+	```
+	```
+	gost -L tcp://:8080/192.168.1.1:80
+	```
+
+> **`-F`** - 指定转发服务，可设置多个，构成转发链。
+
+此参数值为类URL格式(方括号中的内容可以省略):
+
+```
+[scheme://][username:password@host]:port[?key1=value1&key2=value2]
+```
+
+`scheme`
+:      可以是连接器(Connector)与拨号器(Dialer)的组合，也可以是单独的连接器(拨号器默认为tcp)，例如:
+
+       * `http+tls` - 连接器http与拨号器tls的组合，指定HTTPS代理节点
+       * `http` - 等价与`http+tcp`，处理器http与监听器tcp的组合，指定HTTP代理节点
+
+!!! example
+	```
+    gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080 -F socks5+tls://192.168.1.2:1080?foo=bar
+	```
+
+> **`-C`** - 指定外部配置文件。
+
+!!! example
+    使用配置文件`gost.yml`
+	```
+    gost -C gost.yml
+	```
+
+> **`-O`** - 将当前配置写入文件，使用`-`可以输出到标准输出中。
+
+!!! example
+    将当前配置保存到文件`gost.yml`：
+	```
+	gost -L http://:8080 -O gost.yml 
+	```
+    将当前配置输出到标准输出：
+	```
+    gost -L http://:8080 -O - 
+	```
+
+> **`-D`** - 开启Debug模式，更详细的日志输出。
+
+!!! example
+	```
+	gost -L http://:8080 -D
+	```
+
+> **`-V`** - 查看版本，显示当前运行的GOST版本号。
