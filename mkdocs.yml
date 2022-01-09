@@ -94,26 +94,37 @@ nav:
     - 架构: concepts/architecture.md
     - 代理和转发: concepts/proxy.md
     - 转发链: concepts/chain.md
-  - 组件:
-    - 认证: components/auth.md
-    - TLS: components/tls.md
+  - 教程:
+    - 你好，GOST: tutorials/hello-gost.md
+  - 参考:
+    - 配置: 
+      - 简介: reference/configuration/overview.md
+    - 认证: reference/auth.md
+    - TLS: reference/tls.md
     - 监听器(Listeners):
-      - TCP: components/listeners/tcp.md
-      - UDP: components/listeners/udp.md
-      - TLS: components/listeners/tls.md
-      - MTLS: components/listeners/mtls.md
-      - WS: components/listeners/ws.md
-      - MWS: components/listeners/mws.md
-      - HTTP2: components/listeners/http2.md
-      - H2: components/listeners/h2.md
-      - QUIC: components/listeners/quic.md
-      - KCP: components/listeners/kcp.md
-      - SSH: components/listeners/ssh.md
-      - REDU: components/listeners/redu.md
-      - RTCP: components/listeners/rtcp.md
-      - RUDP: components/listeners/rudp.md
-      - DNS: components/listeners/dns.md
-      - TUN: components/listeners/tun.md
-      - TAP: components/listeners/tap.md
-      - OHTTP: components/listeners/ohttp.md
-      - OTLS: components/listeners/otls.md
+      - TCP: reference/listeners/tcp.md
+      - UDP: reference/listeners/udp.md
+      - TLS: reference/listeners/tls.md
+      - MTLS: reference/listeners/mtls.md
+      - WS: reference/listeners/ws.md
+      - MWS: reference/listeners/mws.md
+      - HTTP2: reference/listeners/http2.md
+      - H2: reference/listeners/h2.md
+      - QUIC: reference/listeners/quic.md
+      - KCP: reference/listeners/kcp.md
+      - SSH: reference/listeners/ssh.md
+      - REDU: reference/listeners/redu.md
+      - RTCP: reference/listeners/rtcp.md
+      - RUDP: reference/listeners/rudp.md
+      - DNS: reference/listeners/dns.md
+      - TUN: reference/listeners/tun.md
+      - TAP: reference/listeners/tap.md
+      - OHTTP: reference/listeners/ohttp.md
+      - OTLS: reference/listeners/otls.md
+    - 处理器(Handlers):
+      - HTTP: reference/handlers/http.md
+      - SOCKS4: reference/handlers/socks4.md
+      - SOCKS5: reference/handlers/socks5.md
+      - Relay: reference/handlers/relay.md
+      - Auto: reference/handlers/auto.md
+      - Shadowsocks: reference/handlers/ss.md
