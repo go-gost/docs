@@ -17,11 +17,12 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 ```
 
 `scheme`
-:      可以是处理器(Handler)与监听器(Listener)的组合，也可以是单独的处理器(监听器默认为tcp)，例如:
+:      可以是处理器(Handler)与监听器(Listener)的组合，也可以是单独的处理器(监听器默认为tcp)或监听器(处理器默认为auto)，例如:
 
        * `http+tls` - 处理器http与监听器tls的组合，指定HTTPS代理服务
        * `http` - 等价与`http+tcp`，处理器http与监听器tcp的组合，指定HTTP代理服务
 	   * `tcp` - 等价与`tcp+tcp`，处理器tcp与监听器tcp的组合，指定TCP端口转发
+	   * `tls` - 等价与`auto+tls`，处理器auto与监听器tls的组合
 
 !!! example
 	```
@@ -36,6 +37,9 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	```
 	gost -L tcp://:8080/192.168.1.1:80
 	```
+	```
+	gost -L tls://:8443
+	```
 
 > **`-F`** - 指定转发服务，可设置多个，构成转发链。
 
@@ -46,10 +50,11 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 ```
 
 `scheme`
-:      可以是连接器(Connector)与拨号器(Dialer)的组合，也可以是单独的连接器(拨号器默认为tcp)，例如:
+:      可以是连接器(Connector)与拨号器(Dialer)的组合，也可以是单独的连接器(拨号器默认为tcp)或拨号器(连接器默认为http)，例如:
 
        * `http+tls` - 连接器http与拨号器tls的组合，指定HTTPS代理节点
        * `http` - 等价与`http+tcp`，处理器http与监听器tcp的组合，指定HTTP代理节点
+	   * `tls` - 等价与`http+tls`
 
 !!! example
 	```
