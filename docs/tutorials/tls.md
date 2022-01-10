@@ -18,19 +18,10 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 
     ```yaml
 	tls:
-	  cert: "cert.pem"
-	  key: "key.pem"
-	  ca: "root.ca"
+	  certFile: "cert.pem"
+	  keyFile: "key.pem"
+	  caFile: "ca.pem"
 	```
-
-	`cert`
-	:    公钥文件路径
-
-	`key`
-	:    私钥文件路径
-
-	`ca`
-	:    CA证书文件路径
 
 !!! tip "提示"
     GOST会自动加载当前工作目录下的`cert.pem`, `key.pem`, `ca.pem`文件来初始化全局证书。
@@ -42,7 +33,7 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 === "命令行"
 
     ```
-	gost -L http+tls://:8443?cert=cert.pem&key=key.pem&ca=ca.pem
+	gost -L http+tls://:8443?certFile=cert.pem&keyFile=key.pem&caFile=ca.pem
 	```
 
 === "配置文件"
@@ -56,9 +47,9 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
       listener:
         type: tls
         tls:
-          cert: cert.pem
-          key: key.pem
-          ca: ca.pem
+          certFile: cert.pem
+          keyFile: key.pem
+          caFile: ca.pem
 	```
 
 ## 客户端设置
@@ -71,7 +62,7 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?secure=true&serverName=www.example.com
 	```
 	
-	`ca`
+	`caFile`
 	:    CA证书文件路径。设置CA证书将会开启证书锁定(Certificate Pinning)。
 
 	`secure`
@@ -115,7 +106,7 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 === "命令行"
 
 	```
-	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?cert=cert.pem&key=key.pem
+	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?certFile=cert.pem&keyFile=key.pem
 	```
 	
 === "配置文件"
@@ -141,12 +132,9 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 		  dialer:
 			type: tls
 			tls:
-			  cert: cert.pem
-			  key: key.pem
+			  certFile: cert.pem
+			  keyFile: key.pem
 	```
 
 !!! note "注意"
 	通过命令行设置的证书信息仅会应用到监听器或拨号器上。
-
-    GOST会将命令行中的`cert`, `key`, `ca`, `secure`, `serverName`参数提取出来设置到`listener.tls`或`dialer.tls`中，
-	如果通过命令行自动生成配置文件，在metadata中不会出现这些参数项。
