@@ -1,7 +1,6 @@
 site_name: GOST
-site_url: https://example.com/
-repo_name: ginuerzh/gost
-repo_url: https://github.com/ginuerzh/gost
+repo_name: go-gost/gost
+repo_url: https://github.com/go-gost/gost
 edit_uri: ""
 
 theme:
@@ -33,9 +32,9 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/ginuerzh/gost
+      link: https://github.com/go-gost/gost
     - icon: fontawesome/brands/docker
-      link: https://hub.docker.com/r/ginuerzh/gost
+      link: https://hub.docker.com/r/gogost/gost
     - icon: fontawesome/brands/telegram
       link: https://t.me/gogost
   alternate:

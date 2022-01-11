@@ -23,12 +23,12 @@
 
 ### 二进制文件
 
-[https://github.com/ginuerzh/gost/releases](https://github.com/ginuerzh/gost/releases)
+[https://github.com/go-gost/gost/releases](https://github.com/go-gost/gost/releases)
 
 ### 源码编译
 
 ```
-git clone https://github.com/ginuerzh/gost.git
+git clone https://github.com/go-gost/gost.git
 cd gost/cmd/gost
 go build
 ```
@@ -36,7 +36,7 @@ go build
 ### Docker
 
 ```
-docker pull ginuerzh/gost
+docker pull gogost/gost
 ```
 
 ### Shadowsocks Android插件
@@ -45,7 +45,7 @@ docker pull ginuerzh/gost
 
 ## 问题建议
 
-提交Issue: [https://github.com/ginuerzh/gost/issues](https://github.com/ginuerzh/gost/issues)
+提交Issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
 
 Telegram讨论群: [https://t.me/gogost](https://t.me/gogost)
 
