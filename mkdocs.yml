@@ -7,7 +7,7 @@ theme:
   name: material
   logo: images/gost.png
   favicon: images/favicon.ico
-  # custom_dir: overrides
+  custom_dir: overrides
   features:
     - navigation.instant
     # - navigation.tabs
@@ -95,6 +95,7 @@ nav:
   - 教程:
     - 认证: tutorials/auth.md
     - TLS: tutorials/tls.md
+    - HTTP数据通道: tutorials/http-tunnel.md
   - 参考:
     - 配置: 
       - 命令行: reference/configuration/cmd.md

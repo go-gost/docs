@@ -1,6 +1,6 @@
 # 架构
 
-GOST主要由三大模块：服务(Service)，节点(Node)，转发链(Chain)，五个子模块：监听器(Listener)，处理器(Handler)，转发器(Forwarder)，拨号器(Dialer)和连接器(Connector)，外加若干辅助模块：节点选择器(Selector)，分流器(Bypass)，域名解析器(Resolver)，主机映射器(Hosts)组成。
+GOST主要由三大模块：服务(Service)，节点(Node)，转发链(Chain)，五个子模块：监听器(Listener)，处理器(Handler)，转发器(Forwarder)，拨号器(Dialer)和连接器(Connector)，外加若干辅助模块：节点选择器(Selector)，分流器(Bypass)，域名解析器(Resolver)，主机映射器(Hosts)等组成。
 
 ## 服务(Service)
 
