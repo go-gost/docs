@@ -103,7 +103,7 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
 
     hosts:
     - name: hosts-0
-      entries:
+      mappings:
       - ip: 127.0.0.1
         hostname: localhost
       - ip: 192.168.1.10
@@ -342,10 +342,10 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
 `name` (string, required)
 :    映射表名称
 
-`entries` (list)
+`mappings` (list)
 :    映射列表
 
-### 映射项(Entry)
+### 映射列表项(mapping)
 
 `ip` (string)
 :    IP地址

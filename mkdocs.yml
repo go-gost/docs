@@ -90,12 +90,23 @@ nav:
     - FAQ: /getting-started/faq.md
   - 概念:
     - 架构: concepts/architecture.md
-    - 代理和转发: concepts/proxy.md
+    - 代理转发和通道: concepts/proxy.md
+    - 服务: concepts/service.md
     - 转发链: concepts/chain.md
+    - 节点选择: concepts/selector.md
+    - 分流: concepts/bypass.md
+    - 域名解析: concepts/resolver.md
+    - 主机映射: concepts/hosts.md
   - 教程:
     - 认证: tutorials/auth.md
     - TLS: tutorials/tls.md
-    - HTTP数据通道: tutorials/http-tunnel.md
+    - 端口转发: tutorials/port-forwarding.md
+    - Relay协议: tutorials/relay.md
+    - HTTP通道: tutorials/http-tunnel.md
+    - 探测防御: tutorials/probe-resistance.md
+    - DNS代理: tutorials/dns.md
+    - 透明代理: tutorials/redirect.md
+    - TUN/TAP设备: tutorials/tuntap.md
   - 参考:
     - 配置: 
       - 命令行: reference/configuration/cmd.md
