@@ -270,7 +270,6 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 	gost -L socks5+h2c://user:pass@:8443
 	```
 
-
 === "配置文件"
     ```yaml
 	services:
@@ -333,6 +332,57 @@ HTTP/3协议中支持CONNECT方法和WebTransport两种方式建立数据通道�
 
 GOST目前不支持以上两种方式，而是通过在HTTP/3之上通过pht来建立数据通道。
 
+### 服务端
 
+=== "命令行"
+    ```
+	gost -L http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8443"
+	  handler:
+		type: auto
+	  listener:
+		type: http3
+		metadata:
+          authorizePath: /authorize
+          pullPath: /pull
+          pushPath: /push
+	```
 
+### 客户端
 
+=== "命令行"
+    ```
+	gost -L http://:8000 -F http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+	```
+
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8000"
+	  handler:
+		type: http
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8443
+		  connector:
+			type: http
+		  dialer:
+			type: http3
+		    metadata:
+              authorizePath: /authorize
+              pullPath: /pull
+              pushPath: /push
+	```

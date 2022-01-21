@@ -11,6 +11,7 @@
 
 	通过`resolver`参数来指定上级域名解析服务列表。
 
+
 === "配置文件"
     ```yaml
     services:
@@ -25,12 +26,18 @@
 	- name: resolver-0
 	  nameservers:
 	  - addr: 1.1.1.1
-	  - addr: tcp://8.8.8.8:53
+	  - addr: tcp://8.8.8.8
 	  - addr: tls://8.8.8.8:853
 	  - addr: https://1.0.0.1/dns-query
 	```
 
 	服务中的处理器使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
+
+每个DNS服务的格式为：每个DNS服务的格式为：[protocol://]ip[:port]。
+
+`protocol`支持的类型有`udp`，`tcp`，`tls`，`https`，默认值为`udp`。
+
+`port`默认值为53。
 
 ## 使用转发链
 
