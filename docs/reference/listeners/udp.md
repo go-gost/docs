@@ -35,7 +35,7 @@ UDP监听器根据服务配置，监听在指定UDP端口。
 `readBufferSize` (int, default=1024)
 :    设置UDP读数据缓冲区大小(字节)
 
-`readQueueSize` (int, default=128)
+`readQueueSize` (int, default=1024)
 :    设置UDP连接读数据队列大小
 
 !!! note "限制"
