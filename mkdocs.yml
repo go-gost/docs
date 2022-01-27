@@ -119,10 +119,13 @@ nav:
       - WS: reference/listeners/ws.md
       - MWS: reference/listeners/mws.md
       - HTTP2: reference/listeners/http2.md
-      - H2: reference/listeners/h2.md
+      - H2(C): reference/listeners/h2.md
+      - PHT: reference/listeners/pht.md
       - QUIC: reference/listeners/quic.md
+      - HTTP3: reference/listeners/http3.md
       - KCP: reference/listeners/kcp.md
       - SSH: reference/listeners/ssh.md
+      - SSHD: reference/listeners/sshd.md
       - REDU: reference/listeners/redu.md
       - RTCP: reference/listeners/rtcp.md
       - RUDP: reference/listeners/rudp.md
@@ -137,4 +140,16 @@ nav:
       - SOCKS5: reference/handlers/socks5.md
       - Relay: reference/handlers/relay.md
       - Auto: reference/handlers/auto.md
-      - Shadowsocks: reference/handlers/ss.md
+      - HTTP2: reference/handlers/http2.md
+      - SNI: reference/handlers/sni.md
+      - SS: reference/handlers/ss.md
+      - SSU: reference/handlers/ssu.md
+      - TCP: reference/handlers/tcp.md
+      - UDP: reference/handlers/udp.md
+      - RTCP: reference/handlers/rtcp.md
+      - RUDP: reference/handlers/rudp.md
+      - SSHD: reference/handlers/sshd.md
+      - DNS: reference/handlers/dns.md
+      - TUN: reference/handlers/tun.md
+      - TAP: reference/handlers/tap.md
+

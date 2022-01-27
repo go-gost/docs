@@ -2,6 +2,8 @@
 
 监听器名称: `kcp`
 
+状态：Stable
+
 KCP监听器根据服务配置，监听在指定UDP端口，并使用[KCP协议](https://github.com/xtaci/kcptun)进行通讯。
 
 === "命令行"
@@ -26,10 +28,10 @@ KCP监听器根据服务配置，监听在指定UDP端口，并使用[KCP协议]
 
 ## 参数列表
 
-`backlog`
-:    单个连接的数据流队大小，默认值: 128
+`backlog` (int, default=128)
+:    单个连接的数据流队大小
 
-`config`
+`config` (object)
 :    KCP配置
 
 ## KCP配置

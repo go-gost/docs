@@ -2,6 +2,8 @@
 
 处理器名称: `http`
 
+状态：Stable
+
 HTTP处理器使用标准HTTP代理协议进行数据交互，接收并处理客户端的HTTP请求。
 
 === "命令行"
@@ -21,14 +23,14 @@ HTTP处理器使用标准HTTP代理协议进行数据交互，接收并处理客
 
 ## 参数列表
 
-`header`
+`header` (map)
 :    自定义HTTP响应头
 
-`probeResistance`
+`probeResistance` (string)
 :    探测防御配置
 
-`knock`
+`knock` (string)
 :    探测防御配置
 
-`udp`
+`udp` (bool, default=false)
 :    是否开启UDP转发

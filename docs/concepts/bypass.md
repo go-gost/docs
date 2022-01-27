@@ -25,10 +25,13 @@
     - name: chain-0
       hops:
       - name: hop-0
+        # hop level
+        bypass: bypass-0
         nodes:
         - name: node-0
           addr: 192.168.1.1:8080
-		  bypass: bypass-0
+          # node level
+          # bypass: bypass-0
           connector:
             type: http
           dialer:
@@ -44,6 +47,11 @@
 	```
 
 	节点中使用`bypass`属性通过引用分流器名称(name)来使用指定的分流器。
+
+!!! tip
+    bypass可以设置在hop或node上，如果node上未设置则使用hop上指定的bypass。
+
+    命令行模式下的bypass参数配置会应用到hop级别。
 
 ## 黑名单与白名单
 
@@ -72,10 +80,11 @@
     - name: chain-0
       hops:
       - name: hop-0
+        bypass: bypass-0
         nodes:
         - name: node-0
           addr: 192.168.1.1:8080
-		  bypass: bypass-0
+          # bypass: bypass-0
           connector:
             type: http
           dialer:

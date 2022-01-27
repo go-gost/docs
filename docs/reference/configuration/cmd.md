@@ -24,7 +24,7 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tcp` - 等价与`tcp+tcp`，处理器tcp与监听器tcp的组合，指定TCP端口转发
 	   * `tls` - 等价与`auto+tls`，处理器auto与监听器tls的组合
 
-!!! example
+!!! example "示例"
 	```
 	gost -L http://:8080
 	```
@@ -39,6 +39,12 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	```
 	```
 	gost -L tls://:8443
+	```
+
+!!! tip "转发地址列表"
+    端口转发模式支持转发目标地址列表形式：
+	```
+	gost -L tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080
 	```
 
 > **`-F`** - 指定转发服务，可设置多个，构成转发链。
@@ -59,6 +65,12 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 !!! example
 	```
     gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080 -F socks5+tls://192.168.1.2:1080?foo=bar
+	```
+
+!!! tip "节点组"
+    也可以通过设置地址列表构成节点组：
+	```
+	gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080,192.168.1.2:8080
 	```
 
 > **`-C`** - 指定外部配置文件。

@@ -2,6 +2,8 @@
 
 监听器名称: `quic`
 
+状态： GA
+
 QUIC监听器根据服务配置，监听在指定UDP端口，并使用[QUIC协议](https://github.com/lucas-clemente/quic-go)进行通讯。
 
 === "命令行"
@@ -21,16 +23,16 @@ QUIC监听器根据服务配置，监听在指定UDP端口，并使用[QUIC协�
 
 ## 参数列表
 
-`backlog`
-:    单个连接的数据流队大小，默认值: 128
+`backlog` (int, default=128)
+:    单个连接的数据流队大小
 
-`keepAlive`
-:    是否开启心跳, 默认值: false
+`keepAlive` (bool, default=false)
+:    是否开启心跳
 
-`handshakeTimeout`
-:    握手超时时长, 默认值: 5s
+`handshakeTimeout` (duration, default=5s)
+:    握手超时时长
 
-`maxIdleTimeout`
-:    最大空闲时长, 默认值: 30s
+`maxIdleTimeout` (duration, default=30s)
+:    最大空闲时长
 
 TLS配置请参考[TLS配置说明](/components/tls/)。

@@ -33,7 +33,7 @@
 
 	服务中的处理器使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
 
-每个DNS服务的格式为：每个DNS服务的格式为：[protocol://]ip[:port]。
+每个DNS服务的格式为：[protocol://]ip[:port]。
 
 `protocol`支持的类型有`udp`，`tcp`，`tls`，`https`，默认值为`udp`。
 

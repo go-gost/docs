@@ -1,6 +1,8 @@
-# HTTP2
+# HTTP/2
 
 监听器名称: `http2`
+
+状态：Stable
 
 HTTP2监听器根据服务配置，监听在指定TCP端口，并使用HTTP2协议进行通讯。
 
@@ -21,10 +23,10 @@ HTTP2监听器根据服务配置，监听在指定TCP端口，并使用HTTP2协�
 
 ## 参数列表
 
-`backlog`
-:    单个连接的数据流队大小，默认值: 128
+`backlog` (int, default=128)
+:    单个连接的数据流队大小
 
 TLS配置请参考[TLS配置说明](/components/tls/)。
 
-!!! note "注意"
-    HTTP2监听器只能与[HTTP2处理器](/components/handlers/http2/)一起使用，构建标准HTTP2代理。
+!!! note "限制"
+    HTTP2监听器只能与[HTTP2处理器](/components/handlers/http2/)一起使用，构建标准HTTP2代理服务。

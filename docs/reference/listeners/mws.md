@@ -2,6 +2,8 @@
 
 监听器名称: `mws`, `mwss`
 
+状态：Stable
+
 多路复用Websocket监听器根据服务配置，监听在指定TCP端口，使用Websocket或Websocket Secure(Websocket Over TLS)协议进行通讯，并建立多路复用会话和数据流通道。
 
 ## Websocket
@@ -50,46 +52,46 @@
 
 ## 参数列表
 
-`path`
-:    请求URI, 默认值: /ws
+`path` (string, default=/ws)
+:    请求URI
 
-`backlog`
-:    请求队列大小，默认值: 128
+`backlog` (int, default=128)
+:    请求队列大小
 
-`header`
+`header` (map)
 :    自定义HTTP响应头
 
-`handshakeTimeout`
+`handshakeTimeout` (duration)
 :    设置握手超时时长
 
-`readHeaderTimeout`
+`readHeaderTimeout` (duration)
 :    设置请求头读取超时时长
 
-`readBufferSize`
+`readBufferSize` (int)
 :    读缓冲区大小
 
-`writeBufferSize`
+`writeBufferSize` (int)
 :    写缓冲区大小
 
-`enableCompression`
-:    开启压缩, 默认值: false
+`enableCompression` (bool, default=false)
+:    开启压缩
 
-`muxKeepAliveDisabled`
-:    多路复用会话设置。禁用心跳保活，默认值: false
+`muxKeepAliveDisabled` (bool, default=false)
+:    多路复用会话设置。禁用心跳保活
 
-`muxKeepAliveInterval`
+`muxKeepAliveInterval` (duration, default=10s)
 :    多路复用会话设置。心跳间隔，默认值: 10s
 
-`muxKeepAliveTimeout`
-:    多路复用会话设置。心跳超时，默认值: 30s
+`muxKeepAliveTimeout` (duration, default=30s)
+:    多路复用会话设置。心跳超时
 
-`muxMaxFrameSize`
-:    多路复用会话设置。最大数据帧大小(字节)，默认值: 32768
+`muxMaxFrameSize` (int, default=32768)
+:    多路复用会话设置。最大数据帧大小(字节)
 
-`muxMaxReceiveBuffer`
-:    多路复用会话设置。最大接收缓冲大小(字节)，默认值: 4194304
+`muxMaxReceiveBuffer` (int, default=4194304)
+:    多路复用会话设置。最大接收缓冲大小(字节)
 
-`muxMaxStreamBuffer`
-:    多路复用会话设置。最大流缓冲大小(字节)，默认值: 65536
+`muxMaxStreamBuffer` (int, default=65536)
+:    多路复用会话设置。最大流缓冲大小(字节)
 
 TLS证书相关配置请参考[TLS配置说明](/components/tls/)。

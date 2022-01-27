@@ -92,13 +92,17 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
 	  listener:
 		type: pht
 		# type: phts
+		metadata:
+          authorizePath: /authorize
+          pullPath: /pull
+          pushPath: /push
 	```
 
 ### 客户端
 
 === "命令行"
     ```
-	gost -L http://:8000 -F relay+pht://:8080
+	gost -L http://:8000 -F relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 	或
     ```
@@ -127,6 +131,10 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
 		  dialer:
 			type: pht
 			# type: phts
+		    metadata:
+              authorizePath: /authorize
+              pullPath: /pull
+              pushPath: /push
 	```
 
 !!! caution
@@ -330,7 +338,7 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 
 HTTP/3协议中支持CONNECT方法和WebTransport两种方式建立数据通道。
 
-GOST目前不支持以上两种方式，而是通过在HTTP/3之上通过pht来建立数据通道。
+GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来建立数据通道。
 
 ### 服务端
 

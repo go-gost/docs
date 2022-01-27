@@ -2,6 +2,8 @@
 
 监听器名称: `ws`, `wss`
 
+状态： Stable
+
 Websocket监听器根据服务配置，监听在指定TCP端口，并使用Websocket或Websocket Secure(Websocket Over TLS)协议进行通讯。
 
 ## Websocket
@@ -50,29 +52,29 @@ Websocket监听器根据服务配置，监听在指定TCP端口，并使用Webso
 
 ## 参数列表
 
-`path`
-:    请求URI, 默认值: /ws
+`path` (string, default=/ws)
+:    请求URI
 
-`backlog`
-:    请求队列大小，默认值: 128
+`backlog` (int, default=128)
+:    请求队列大小
 
-`header`
+`header` (map)
 :    自定义HTTP响应头
 
-`handshakeTimeout`
+`handshakeTimeout` (duration)
 :    设置握手超时时长
 
-`readHeaderTimeout`
+`readHeaderTimeout` (duration)
 :    设置请求头读取超时时长
 
-`readBufferSize`
+`readBufferSize` (duration)
 :    读缓冲区大小
 
-`writeBufferSize`
+`writeBufferSize` (duration)
 :    写缓冲区大小
 
-`enableCompression`
-:    开启压缩, 默认值: false
+`enableCompression` (bool, default=false)
+:    开启压缩
 
 
 TLS证书相关配置请参考[TLS配置说明](/components/tls/)。

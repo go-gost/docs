@@ -2,6 +2,8 @@
 
 处理器名称: `ss`
 
+状态：Stable
+
 ss处理器使用Shadowsocks协议进行数据交互，接收并处理客户端请求。
 
 === "命令行"
@@ -24,6 +26,6 @@ ss处理器使用Shadowsocks协议进行数据交互，接收并处理客户端�
 
 ## 参数列表
 
-`readTimeout` (time.Duration)
+`readTimeout` (duration)
 :    请求数据读取超时时长
 

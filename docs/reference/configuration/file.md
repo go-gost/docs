@@ -8,6 +8,9 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
     services:
     - name: service-0
       addr: ":8080"
+      bypass: bypass-0
+      resolver: resolver-0
+      hosts: hosts-0
       handler:
         type: http
         auths:
@@ -17,9 +20,6 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
           password: pass2
         chain: chain-0
         retries: 1
-        bypass: bypass-0
-        resolver: resolver-0
-        hosts: hosts-0
         metadata: 
           foo: bar
           bar: baz
@@ -54,6 +54,7 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
           strategy: rand
           maxFails: 3
           failTimeout: 60s
+        bypass: bypass-0
         nodes:
         - name: node-0
           addr: ":1080"
@@ -134,6 +135,15 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
 `addr` (string, required)
 :    服务地址
 
+`bypass` (string, ref)
+:    bypass名称，引用`bypasses.name`
+
+`resolver` (string, ref)
+:    resolver名称，引用`resolvers.name`
+
+`hosts` (string, ref)
+:    hosts名称，对应`hosts.name`
+
 `handler` (object, required)
 :    处理器对象
 
@@ -156,15 +166,6 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
 
 `retries` (int, default=0)
 :    请求处理失败后重试次数
-
-`bypass` (string, ref)
-:    bypass名称，引用`bypasses.name`
-
-`resolver` (string, ref)
-:    resolver名称，引用`resolvers.name`
-
-`hosts` (string, ref)
-:    hosts名称，对应`hosts.name`
 
 `metadata` (map)
 :    处理器实例相关参数
@@ -210,6 +211,9 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
 `selector` (object)
 :    跳跃点层级节点选择器，如果设置，则覆盖转发链层级选择器
 
+`bypass` (string, ref)
+:    bypass名称，引用`bypasses.name`
+
 `nodes` (node-list)
 :    节点列表
 
@@ -222,7 +226,8 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
 :    节点地址
 
 `bypass` (string, ref)
-:    bypass名称，引用`bypasses.name`
+:    bypass名称，引用`bypasses.name`。
+     如果未设置，则使用`hop.bypass`
 
 `connector` (object)
 :    连接器对象

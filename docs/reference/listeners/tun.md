@@ -2,6 +2,8 @@
 
 监听器名称: `tun`
 
+状态： GA
+
 TUN监听器根据服务配置，监听在指定UDP端口，并创建和初始化TUN设备。
 
 === "命令行"
@@ -23,20 +25,20 @@ TUN监听器根据服务配置，监听在指定UDP端口，并创建和初始�
 
 ## 参数列表
 
-`name`
+`name` (string)
 :    指定TUN设备的名字，默认值为系统预设
 
-`net`
-:    必须，指定TUN设备的地址
+`net` (string, required)
+:    指定TUN设备的地址
 
-`mtu`
-:    设置TUN设备的MTU值，默认值: 1350
+`mtu` (int, default=1350)
+:    设置TUN设备的MTU值
 
-`routes`
+`routes` (strings)
 :    路由列表
 
-`gw`
+`gw` (string)
 :    默认网关IP
 
-!!! note "注意"
+!!! note "限制"
     TUN监听器只能与[TUN处理器](/components/handlers/tun/)一起使用，构建基于TUN设备的VPN。

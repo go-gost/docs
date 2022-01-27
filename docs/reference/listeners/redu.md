@@ -2,6 +2,8 @@
 
 监听器名称: `redu`
 
+状态： GA
+
 UDP透明代理基于iptables的tproxy模块实现。
 
 === "命令行"
@@ -21,14 +23,14 @@ UDP透明代理基于iptables的tproxy模块实现。
 
 ## 参数列表
 
-`ttl`
-:    传输通道超时时间，默认值: 60s
+`ttl` (duration, default=60s)
+:    传输通道超时时长
 
-`readBufferSize`
-:    读缓冲区字节大小, 默认值: 1024
+`readBufferSize` (duration, default=1024)
+:    读缓冲区字节大小
 
 
-!!! note "注意"
+!!! note "限制"
     redu监听器只能与[redu处理器](/components/handlers/redu/)一起使用，构建UDP透明代理。
 
     UDP透明代理仅支持Linux系统。
