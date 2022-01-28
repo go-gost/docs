@@ -17,9 +17,9 @@
     services:
     - name: service-0
       addr: ":8080"
+      resolver: resolver-0
       handler:
         type: http
-		resolver: resolver-0
       listener:
         type: tcp
 	resolvers:
@@ -31,7 +31,7 @@
 	  - addr: https://1.0.0.1/dns-query
 	```
 
-	服务中的处理器使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
+	服务中使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
 
 每个DNS服务的格式为：[protocol://]ip[:port]。
 
@@ -43,57 +43,54 @@
 
 域名解析器中的每个上级域名服务可以分别设置转发链。
 
-    ```yaml
-    services:
-    - name: service-0
-      addr: ":8080"
-      handler:
-        type: http
-		resolver: resolver-0
-      listener:
-        type: tcp
-	chains:
-	- name: chain-0
-	  hops:
-	  - name: hop-0
-		nodes:
-		- name: node-0
-		  addr: 192.168.1.1:8081
-		  connector:
-			type: http
-		  dialer:
-		    type: tcp
-	- name: chain-1
-	  hops:
-	  - name: hop-0
-		nodes:
-		- name: node-0
-		  addr: 192.168.1.2:8082
-		  connector:
-			type: socks5
-		  dialer:
-		    type: tcp
-	- name: chain-2
-	  hops:
-	  - name: hop-0
-		nodes:
-		- name: node-0
-		  addr: 192.168.1.3:8083
-		  connector:
-			type: relay
-		  dialer:
-		    type: tls
-	resolvers:
-	- name: resolver-0
-	  nameservers:
-	  - addr: 1.1.1.1
-	  - addr: tcp://8.8.8.8:53
-	    chain: chain-0
-	  - addr: tls://8.8.8.8:853
-	    chain: chain-1
-	  - addr: https://1.0.0.1/dns-query
-	    chain: chain-2
-	```
-
-
-
+```yaml
+services:
+- name: service-0
+  addr: ":8080"
+  resolver: resolver-0
+  handler:
+	type: http
+  listener:
+	type: tcp
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+	nodes:
+	- name: node-0
+	  addr: 192.168.1.1:8081
+	  connector:
+		type: http
+	  dialer:
+		type: tcp
+- name: chain-1
+  hops:
+  - name: hop-0
+	nodes:
+	- name: node-0
+	  addr: 192.168.1.2:8082
+	  connector:
+		type: socks5
+	  dialer:
+		type: tcp
+- name: chain-2
+  hops:
+  - name: hop-0
+	nodes:
+	- name: node-0
+	  addr: 192.168.1.3:8083
+	  connector:
+		type: relay
+	  dialer:
+		type: tls
+resolvers:
+- name: resolver-0
+  nameservers:
+  - addr: 1.1.1.1
+  - addr: tcp://8.8.8.8:53
+	chain: chain-0
+  - addr: tls://8.8.8.8:853
+	chain: chain-1
+  - addr: https://1.0.0.1/dns-query
+	chain: chain-2
+```

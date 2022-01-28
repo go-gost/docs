@@ -16,9 +16,9 @@
 	services:
 	- name: service-0
 	  addr: ":8080"
+      hosts: hosts-0
 	  handler:
 		type: http
-		hosts: hosts-0
 	  listener:
 		type: tcp
 	hosts:
@@ -32,7 +32,7 @@
 		hostname: example.com
 	```
 
-	服务中的处理器使用`hosts`属性通过引用映射器名称(name)来使用指定的映射器。
+	服务使用`hosts`属性通过引用映射器名称(name)来使用指定的映射器。
 
 ## DNS代理服务
 
