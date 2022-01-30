@@ -96,7 +96,7 @@ nav:
     - 节点选择: concepts/selector.md
     - 分流: concepts/bypass.md
     - 域名解析: concepts/resolver.md
-    - 主机映射: concepts/hosts.md
+    - 主机IP映射: concepts/hosts.md
   - 教程:
     - 认证: tutorials/auth.md
     - TLS: tutorials/tls.md
