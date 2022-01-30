@@ -334,6 +334,120 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 !!! tip "服务端推送"
     GOST不支持HTTP/2的服务端推送功能。
 
+## gRPC
+
+gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然的支持双向流传输，因此很适合作为数据通道。
+
+### 服务端
+
+=== "命令行"
+    ```
+	gost -L relay+grpc://user:pass@:8443
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8443"
+	  handler:
+		type: relay 
+		auths:
+		- username: user
+		  password: pass
+	  listener:
+		type: grpc
+	```
+
+### 客户端
+
+=== "命令行"
+    ```
+	gost -L http://:8000 -F relay+grpc://user:pass@:8443
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8000"
+	  handler:
+		type: http
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8443
+		  connector:
+			type: relay
+			auth:
+			  username: user
+			  password: pass
+		  dialer:
+			type: grpc
+	```
+
+gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文进行通讯。
+
+### 服务端
+
+=== "命令行"
+    ```
+	gost -L relay+grpc://user:pass@:8443?grpcInsecure=true
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8443"
+	  handler:
+		type: relay 
+		auths:
+		- username: user
+		  password: pass
+	  listener:
+		type: grpc
+		metadata:
+		  grpcInsecure: true
+	```
+
+### 客户端
+
+=== "命令行"
+    ```
+	gost -L http://:8000 -F relay+grpc://user:pass@:8443?grpcInsecure=true
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8000"
+	  handler:
+		type: http
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8443
+		  connector:
+			type: relay
+			auth:
+			  username: user
+			  password: pass
+		  dialer:
+			type: grpc
+		    metadata:
+		      grpcInsecure: true
+	```
+
 ## HTTP/3
 
 HTTP/3协议中支持CONNECT方法和WebTransport两种方式建立数据通道。
