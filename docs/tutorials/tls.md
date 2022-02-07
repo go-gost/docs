@@ -62,16 +62,6 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?secure=true&serverName=www.example.com
 	```
 	
-	`caFile`
-	:    CA证书文件路径。设置CA证书将会开启证书锁定(Certificate Pinning)。
-
-	`secure`
-	:    开启服务器证书和域名校验。默认值: false
-
-	`serverName`
-	:    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。
-         默认使用设置中`IP_OR_DOMAIN`作为serverName。
-
 === "配置文件"
 
 	```yaml
@@ -98,6 +88,15 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 			  secure: true
 			  serverName: www.example.com
 	```
+
+`caFile` (string)
+:    CA证书文件路径。设置CA证书将会开启证书锁定(Certificate Pinning)。
+
+`secure` (bool, default=false)
+:    开启服务器证书和域名校验。
+
+`serverName` (string)
+:    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。默认使用设置中`IP_OR_DOMAIN`作为serverName。
 
 ## 双向证书校验
 

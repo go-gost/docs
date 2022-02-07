@@ -161,7 +161,7 @@
 	* SSU服务。
 
 !!! tip "UDP-over-TCP"
-    UDP-over-TCP是指使用TCP连接来传输UDP数据包。在GOST中这个说法可能并不太准确，例如使用SOCKS5进行UDP端口转发，SOCKS5服务可以是基于TCP类型的传输通道(TLS, Websocket等)，也可以是基于UDP类型的传输通道(KCP, QUIC等)，这里使用UDP-over-Steam更合适一些，(相对于UDP不可靠的数据报式传输来说)任何可靠的流式传输协议均可以用在此处。
+    UDP-over-TCP是指使用TCP连接来传输UDP数据包。在GOST中这个说法可能并不太准确，例如使用SOCKS5进行UDP端口转发，SOCKS5服务可以是基于TCP类型的传输通道(TLS, Websocket等)，也可以是基于UDP类型的传输通道(KCP, QUIC等)，这里使用UDP-over-Stream更合适一些(相对于UDP不可靠的数据报式传输来说)，任何可靠的流式传输协议均可以用在此处。
 
 ### SSH
 

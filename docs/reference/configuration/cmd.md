@@ -81,16 +81,22 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
     gost -C gost.yml
 	```
 
-> **`-O`** - 将当前配置写入文件，使用`-`可以输出到标准输出中。
+> **`-O`** - 指定配置输出格式，目前支持yaml或json。
 
 !!! example
-    将当前配置保存到文件`gost.yml`：
+	输出yaml格式配置
 	```
-	gost -L http://:8080 -O gost.yml 
+	gost -L http://:8080 -O yaml
 	```
-    将当前配置输出到标准输出：
+
+	输出json格式配置
 	```
-    gost -L http://:8080 -O - 
+    gost -L http://:8080 -O json
+	```
+
+	将json格式配置转成yaml格式
+	```
+	gost -C gost.json -O yaml
 	```
 
 > **`-D`** - 开启Debug模式，更详细的日志输出。

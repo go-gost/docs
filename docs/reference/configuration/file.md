@@ -1,9 +1,8 @@
 # 配置文件
 
-GOST配置文件使用yaml格式，完整的配置文件的结构如下：
+GOST配置文件使用yaml或json格式，完整的配置文件的结构如下：
 
-??? example "配置示例"
-
+=== "yaml格式"
     ```yaml
     services:
     - name: service-0
@@ -125,6 +124,188 @@ GOST配置文件使用yaml格式，完整的配置文件的结构如下：
     profiling:
       addr: ":6060"
       enabled: true
+    ```
+
+=== "json格式"
+    ```json
+    {
+      "services": [
+        {
+          "name": "service-0",
+          "addr": ":8080",
+          "bypass": "bypass-0",
+          "resolver": "resolver-0",
+          "hosts": "hosts-0",
+          "handler": {
+            "type": "http",
+            "retries": 1,
+            "chain": "chain-0",
+            "auths": [
+              {
+                "username": "user1",
+                "password": "pass1"
+              },
+              {
+                "username": "user2",
+                "password": "pass2"
+              }
+            ],
+            "metadata": {
+              "bar": "baz",
+              "foo": "bar"
+            }
+          },
+          "listener": {
+            "type": "tcp",
+            "chain": "chain-0",
+            "tls": {
+              "certFile": "cert.pem",
+              "keyFile": "key.pem",
+              "caFile": "ca.pem"
+            },
+            "metadata": {
+              "abc": "xyz",
+              "def": 456
+            }
+          },
+          "forwarder": {
+            "targets": [
+              "192.168.1.1:1234",
+              "192.168.1.2:2345"
+            ],
+            "selector": {
+              "strategy": "rand",
+              "maxFails": 1,
+              "failTimeout": 30
+            }
+          }
+        }
+      ],
+      "chains": [
+        {
+          "name": "chain-0",
+          "selector": {
+            "strategy": "round",
+            "maxFails": 1,
+            "failTimeout": 30
+          },
+          "hops": [
+            {
+              "name": "hop-0",
+              "selector": {
+                "strategy": "rand",
+                "maxFails": 3,
+                "failTimeout": 60
+              },
+              "bypass": "bypass-0",
+              "nodes": [
+                {
+                  "name": "node-0",
+                  "addr": ":1080",
+                  "bypass": "bypass-0",
+                  "connector": {
+                    "type": "socks5",
+                    "auth": {
+                      "username": "user",
+                      "password": "pass"
+                    },
+                    "metadata": {
+                      "foo": "bar"
+                    }
+                  },
+                  "dialer": {
+                    "type": "tcp",
+                    "tls": {
+                      "caFile": "ca.pem",
+                      "secure": true,
+                      "serverName": "example.com"
+                    },
+                    "metadata": {
+                      "bar": "baz"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "bypasses": [
+        {
+          "name": "bypass-0",
+          "matchers": [
+            "*.example.com",
+            ".example.org",
+            "0.0.0.0/8"
+          ]
+        }
+      ],
+      "resolvers": [
+        {
+          "name": "resolver-0",
+          "nameservers": [
+            {
+              "addr": "udp://8.8.8.8:53",
+              "chain": "chain-0",
+              "prefer": "ipv4",
+              "clientIP": "1.2.3.4",
+              "ttl": 60,
+              "timeout": 30
+            },
+            {
+              "addr": "tcp://1.1.1.1:53"
+            },
+            {
+              "addr": "tls://1.1.1.1:853"
+            },
+            {
+              "addr": "https://1.0.0.1/dns-query",
+              "hostname": "cloudflare-dns.com"
+            }
+          ]
+        }
+      ],
+      "hosts": [
+        {
+          "name": "hosts-0",
+          "mappings": [
+            {
+              "ip": "127.0.0.1",
+              "hostname": "localhost"
+            },
+            {
+              "ip": "192.168.1.10",
+              "hostname": "foo.mydomain.org",
+              "aliases": [
+                "foo"
+              ]
+            },
+            {
+              "ip": "192.168.1.13",
+              "hostname": "bar.mydomain.org",
+              "aliases": [
+                "bar",
+                "baz"
+              ]
+            }
+          ]
+        }
+      ],
+      "tls": {
+        "certFile": "cert.pem",
+        "keyFile": "key.pem",
+        "caFile": "ca.pem"
+      },
+      "log": {
+        "output": "stderr",
+        "level": "debug",
+        "format": "json"
+      },
+      "profiling": {
+        "addr": ":6060",
+        "enabled": true
+      }
+    }
     ```
 
 ## 服务(Service)
