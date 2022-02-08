@@ -108,6 +108,11 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 
 > **`-V`** - 查看版本，显示当前运行的GOST版本号。
 
+!!! example
+    ```
+	gost -V
+	```
+
 > **`-api`** - 指定WebAPI地址。
 
 !!! example

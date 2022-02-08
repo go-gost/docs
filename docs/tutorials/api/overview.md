@@ -1,6 +1,6 @@
 # WebAPI
 
-GOST可以开启WebAPI服务通过RESTful API和GOST进程进行交互。
+GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 
 === "命令行"
     ```sh
