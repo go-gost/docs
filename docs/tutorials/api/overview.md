@@ -31,4 +31,4 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 	  addr: 18080
 	```
 
-具体请参考[在线API文档](https://petstore.swagger.io/?url=https://latest.gost.run/swagger.yaml)
+具体请参考[在线API文档](https://latest.gost.run/swagger-ui/?url=https://latest.gost.run/swagger.yaml)
