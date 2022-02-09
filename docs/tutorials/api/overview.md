@@ -17,6 +17,8 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 		type: tcp
 	api:
 	  addr: 18080
+	  pathPrefix: /api
+	  accesslog: true
 	```
 
 甚至可以只开启API服务，后续通过API来动态配置服务和其他组件。
@@ -29,6 +31,12 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
     ```yaml
 	api:
 	  addr: 18080
+	  pathPrefix: /api
+	  accesslog: true
 	```
 
-具体请参考[在线API文档](https://latest.gost.run/swagger-ui/?url=https://latest.gost.run/swagger.yaml)
+接口说明请参考[在线API文档](/swagger-ui/)。
+
+你可以使用[线上环境](https://latest.gost.run/play/webapi/config)进行测试，或在上面的swagger UI中直接尝试。
+
+GOST程序已经内置了swagger API文档，如果本地开启了WebAPI服务，也可以通过[https://latest.gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml](https://latest.gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml)来尝试配置本地服务(这里假设本地WebAPI服务运行在18080端口)。
