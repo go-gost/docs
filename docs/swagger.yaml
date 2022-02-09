@@ -4,9 +4,15 @@ consumes:
 definitions:
   APIConfig:
     properties:
+      accesslog:
+        type: boolean
+        x-go-name: AccessLog
       addr:
         type: string
         x-go-name: Addr
+      pathPrefix:
+        type: string
+        x-go-name: PathPrefix
     type: object
     x-go-package: github.com/go-gost/gost/pkg/config
   AuthConfig:
@@ -384,7 +390,7 @@ definitions:
     type: object
     x-go-package: github.com/go-gost/gost/pkg/config
 info:
-  title: Documentation of web API.
+  title: Documentation of Web API.
   version: 1.0.0
 paths:
   /config:
