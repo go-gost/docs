@@ -755,6 +755,7 @@ responses:
     schema:
       $ref: '#/definitions/Response'
 schemes:
+- https
 - http
 securityDefinitions:
   api_key: null

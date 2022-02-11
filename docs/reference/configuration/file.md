@@ -12,11 +12,10 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       hosts: hosts-0
       handler:
         type: http
-        auths:
-        - username: user1
+        auth:
+          username: user1
           password: pass1
-        - username: user2
-          password: pass2
+        auther: auther-0
         chain: chain-0
         retries: 1
         metadata: 
@@ -24,6 +23,10 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
           bar: baz
       listener:
         type: tcp
+        auth:
+          username: user1
+          password: pass1
+        auther: auther-0
         chain: chain-0
         tls:
           certFile: cert.pem
@@ -78,6 +81,14 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       certFile: "cert.pem"
       keyFile: "key.pem"
       caFile: "ca.pem"
+
+    authers:
+    - name: auther-0
+      auths:
+      - username: user1
+        password: pass1
+      - username: user2
+        password: pass2
 
     bypasses:
     - name: bypass-0
@@ -233,6 +244,21 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
           ]
         }
       ],
+      "authers": [
+        {
+          "name": "auther-0",
+          "auths": [
+            {
+              "username": "user1",
+              "password": "pass1"
+            },
+            {
+              "username": "user2",
+              "password": "pass2"
+            }
+          ]
+        }
+      ],
       "bypasses": [
         {
           "name": "bypass-0",
@@ -345,8 +371,11 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `type` (string, required)
 :    处理器类型
 
-`auths` (auth-list)
-:    认证信息列表
+`auther` (string)
+:    认证器名称，引用`authers.name`
+
+`auth` (object)
+:    认证信息，如果设置了`auther`，此字段无效。
 
 `chain` (string, ref)
 :    转发链名称，引用`chains.name`
@@ -364,6 +393,12 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `chain` (string, ref)
 :    转发链名称，对应`chains.name`
+
+`auther` (string)
+:    认证器名称，引用`authers.name`
+
+`auth` (object)
+:    认证信息，如果设置了`auther`，此字段无效。
 
 `tls` (object)
 :    监听器实例TLS配置
@@ -460,6 +495,14 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `serverName` (string)
 :    服务器域名，用于域名校验
+
+## 认证器(Auther)
+
+`name` (string, required)
+:    名称
+
+`auths` (list)
+:    认证信息列表
 
 ## 认证信息(Auth)
 
