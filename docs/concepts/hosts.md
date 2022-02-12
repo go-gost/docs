@@ -153,3 +153,13 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,exa
     ;; ANSWER SECTION:
     example.com.		3600	IN	AAAA	2001:db8::1
 	```
+
+## 域名通配符
+
+映射器中的域名也支持以`.`开头的特殊通配符格式。
+
+例如：`.example.org`匹配example.org， abc.example.org，def.abc.example.org等子域名。
+
+在查询一个域名映射时，会先查找完全匹配项，如果没有找到再查找通配符项，如果没有找到再依次查找上级域名通配符。
+
+例如：abc.example.org，会先查找abc.example.org映射值，如果没有则查找.abc.example.org通配符项，如果没有则继续依次查找.example.org和.org通配符项。
