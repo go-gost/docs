@@ -32,7 +32,7 @@ curl -X PUT https://latest.gost.run/play/webapi/config/services/service-0 -d \
 删除一个现有服务会立即关闭并删除此服务。
 
 ```sh
-curl -X DELETE https://latest.gost.run/play/webapi/config/services/service-1 
+curl -X DELETE https://latest.gost.run/play/webapi/config/services/service-0 
 ```
 
 ## 转发链

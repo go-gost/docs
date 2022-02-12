@@ -138,6 +138,12 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
     
     api:
       addr: ":18080"
+      pathPrefix: /api
+      accesslog: true
+      auth:
+        username: user
+        password: pass
+      auther: auther-0
     ```
 
 === "json格式"
@@ -335,7 +341,14 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         "enabled": true
       }
       "api": {
-        "addr": ":18080"
+        "addr": ":18080",
+        "pathPrefix": "/api",
+        "accesslog": true,
+        "auth": {
+          "username": "user",
+          "password": "password"
+        },
+        "auther": "auther-0"
       }
     }
     ```
@@ -620,4 +633,16 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 ## API
 
 `addr` (string)
-:    WebAPI服务地址，设置后将开启WebAPI服务。
+:    WebAPI服务地址，设置后将开启WebAPI服务
+
+`pathPrefix` (string)
+:    设置API路径前缀
+
+`accesslog` (bool, default=false)
+:    开启API访问日志
+
+`auth` (object)
+:    认证信息，如果设置了`auther`，此字段无效。
+
+`auther` (string)
+:    认证器名称，引用`authers.name`

@@ -99,10 +99,10 @@ nav:
     - 域名解析: concepts/resolver.md
     - 主机IP映射: concepts/hosts.md
   - 教程:
-    - TLS: tutorials/tls.md
     - WebAPI:
       - 概述: tutorials/api/overview.md
       - 动态配置: tutorials/api/config.md
+    - TLS: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
     - Relay协议: tutorials/relay.md
