@@ -39,14 +39,14 @@
             type: http
           dialer:
             type: tcp
-	bypasses:
+    bypasses:
     - name: bypass-0
       matchers:
-	  - 172.10.0.0/16
-	  - 127.0.0.1
-	  - localhost
-	  - '*.example.com'
-	  - .example.org
+      - 172.10.0.0/16
+      - 127.0.0.1
+      - localhost
+      - '*.example.com'
+      - .example.org
 	```
 
 	节点中使用`bypass`属性通过引用分流器名称(name)来使用指定的分流器。
@@ -92,15 +92,15 @@
             type: http
           dialer:
             type: tcp
-	bypasses:
+    bypasses:
     - name: bypass-0
-	  reverse: true
+      reverse: true
       matchers:
-	  - 172.10.0.0/16
-	  - 127.0.0.1
-	  - localhost
-	  - '*.example.com'
-	  - .example.org
+      - 172.10.0.0/16
+      - 127.0.0.1
+      - localhost
+      - '*.example.com'
+      - .example.org
 	```
 
-	在bypass中通过设置`reverse`属性为`true`来开启白名单模式。
+	在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。

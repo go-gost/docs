@@ -7,6 +7,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
     services:
     - name: service-0
       addr: ":8080"
+      admission: admission-0
       bypass: bypass-0
       resolver: resolver-0
       hosts: hosts-0
@@ -90,6 +91,13 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       - username: user2
         password: pass2
 
+    admissions:
+    - name: admission-0
+      reverse: false
+      matchers:
+      - 127.0.0.1
+      - 192.168.0.0/16
+
     bypasses:
     - name: bypass-0
       reverse: false
@@ -153,6 +161,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         {
           "name": "service-0",
           "addr": ":8080",
+          "admission": "admission-0",
           "bypass": "bypass-0",
           "resolver": "resolver-0",
           "hosts": "hosts-0",
@@ -262,6 +271,15 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
               "username": "user2",
               "password": "pass2"
             }
+          ]
+        }
+      ],
+      "admissions": [
+        {
+          "name": "admission-0",
+          "matchers": [
+            "127.0.0.1",
+            "192.168.0.0/16"
           ]
         }
       ],
@@ -539,6 +557,17 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `failTimeout` (duration, default=30s)
 :    节点失败标记超时时长
+
+## 准入控制器(Admission)
+
+`name` (string, required)
+:    admission名称
+
+`reverse` (bool, default=false)
+:    切换为白名单
+
+`matchers` (strings)
+:    地址列表，支持IP，CIDR
 
 ## 分流器(Bypass)
 
