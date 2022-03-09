@@ -109,9 +109,10 @@ nav:
     - Relay协议: tutorials/relay.md
     - 探测防御: tutorials/probe-resistance.md
     - DNS代理: tutorials/dns.md
-    - 多网络接口: tutorials/multi-homed.md
     - 透明代理: tutorials/redirect.md
+    - 多网络接口: tutorials/multi-homed.md
     - TUN/TAP设备: tutorials/tuntap.md
+    - ICMP通道: tutorials/icmp.md
   - 参考:
     - 配置: 
       - 命令行: reference/configuration/cmd.md

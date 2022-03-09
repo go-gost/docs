@@ -92,67 +92,13 @@
 
 ## DNS代理服务
 
-映射器在DNS代理服务中会直接应用到DNS查询。
+映射器在DNS代理服务中会直接应用到DNS查询请求，用来实现自定义域名解析。
 
 ```
-gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,example.com:2001:db8::1
+gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 ```
 
-此时解析example.org会匹配到映射器而不会使用1.1.1.1查询。
-
-!!! example "DNS查询example.org(ipv4)"
-	```
-	dig -p 10053 example.org
-	```
-
-	```
-	;; QUESTION SECTION:
-    ;example.org.				IN	A
-
-    ;; ANSWER SECTION:
-    example.org.		3600	IN	A	127.0.0.1
-	```
-
-!!! example "DNS查询example.org(ipv6)"
-	```
-	dig -p 10053 AAAA example.org
-	```
-
-	```
-	;; QUESTION SECTION:
-    ;example.org.				IN	AAAA
-
-    ;; ANSWER SECTION:
-    example.org.		3600	IN	AAAA	::1
-	```
-
-解析example.com时，由于ipv4在映射器中无对应项，因此会使用1.1.1.1进行解析。
-
-!!! example "DNS查询example.com(ipv4)"
-	```
-	dig -p 10053 example.com
-	```
-
-	```
-	;; QUESTION SECTION:
-    ;example.com.				IN	A
-
-    ;; ANSWER SECTION:
-    example.com.		10610	IN	A	93.184.216.34
-	```
-
-!!! example "DNS查询example.com(ipv6)"
-	```
-	dig -p 10053 AAAA example.com
-	```
-
-	```
-	;; QUESTION SECTION:
-    ;example.com.				IN	AAAA
-
-    ;; ANSWER SECTION:
-    example.com.		3600	IN	AAAA	2001:db8::1
-	```
+此时通过此DNS代理服务查询example.org会匹配到映射器中的定义而不会使用1.1.1.1查询。
 
 ## 域名通配符
 

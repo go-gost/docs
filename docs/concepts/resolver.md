@@ -41,11 +41,20 @@
 
 	服务中使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
 
-每个DNS服务的格式为：[protocol://]ip[:port]。
+每个DNS服务的格式为：
 
-`protocol`支持的类型有`udp`，`tcp`，`tls`，`https`，默认值为`udp`。
+`[protocol://]ip[:port]`
 
-`port`默认值为53。
+* `protocol`支持的类型有`udp`，`tcp`，`tls`，`https`，默认值为`udp`。
+
+* `port`默认值为53。
+
+例如：
+
+* udp://1.1.1.1:53，或udp://1.1.1.1
+* tcp://1.1.1.1:53
+* tls://1.1.1.1:853
+* https://1.0.0.1/dns-query
 
 ## 转发链上的解析器
 
