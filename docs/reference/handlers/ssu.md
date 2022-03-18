@@ -2,7 +2,7 @@
 
 处理器名称: `ssu`
 
-状态：Stable
+状态： Stable
 
 ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UDP数据。
 
@@ -17,8 +17,8 @@ ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UD
 	  addr: ":8338"
 	  handler:
 		type: ssu
-		auths:
-		- username: AEAD_CHACHA20_POLY1305
+		auth:
+		  username: AEAD_CHACHA20_POLY1305
 		  password: "123456"
 	  listener:
 		type: udp
@@ -28,3 +28,6 @@ ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UD
 
 `bufferSize` (int, default=1024)
 :    UDP数据缓冲大小
+
+!!! note "认证信息"
+    SSU理器只能使用单认证信息方式设置加密信息，不能支持认证器。

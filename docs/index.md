@@ -8,15 +8,13 @@
 - [x] 支持转发链，并支持多级转发
 - [x] 支持多种协议(HTTP，HTTPS，HTTP2，SOCKS5，Websocket，QUIC...)
 - [x] 本地/远程TCP/UDP端口转发
-- [x] Tunnel UDP over TCP
 - [x] TCP/UDP透明代理
-- [x] DNS解析和代理
+- [x] TUN/TAP设备
 - [x] 负载均衡
 - [x] 路由控制
-- [x] TUN/TAP设备
-- [ ] 流量统计
-- [ ] 配置文件热更新
-- [ ] Web API
+- [x] 动态配置
+- [x] Prometheus Metrics
+- [x] Web API
 - [ ] Web UI
 
 ## 下载安装

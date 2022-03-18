@@ -41,4 +41,4 @@ TUN监听器根据服务配置，监听在指定UDP端口，并创建和初始�
 :    默认网关IP
 
 !!! note "限制"
-    TUN监听器只能与[TUN处理器](/components/handlers/tun/)一起使用，构建基于TUN设备的VPN。
+    TUN监听器只能与[TUN处理器](/reference/handlers/tun/)一起使用，构建基于TUN设备的VPN。

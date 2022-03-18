@@ -31,6 +31,6 @@ UDP透明代理基于iptables的tproxy模块实现。
 
 
 !!! note "限制"
-    redu监听器只能与[redu处理器](/components/handlers/redu/)一起使用，构建UDP透明代理。
+    redu监听器只能与[redu处理器](/reference/handlers/redu/)一起使用，构建UDP透明代理。
 
     UDP透明代理仅支持Linux系统。

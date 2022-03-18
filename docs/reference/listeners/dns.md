@@ -2,7 +2,7 @@
 
 监听器名称: `dns`
 
-状态：Stable
+状态： GA
 
 DNS监听器根据服务配置，监听在指定TCP或UDP端口，并使用DNS协议进行通讯。
 
@@ -46,4 +46,4 @@ DNS监听器根据服务配置，监听在指定TCP或UDP端口，并使用DNS�
 :    写数据超时时长
 
 !!! note "限制"
-    DNS监听器只能与[DNS处理器](/components/handlers/dns/)一起使用，构建DNS代理服务。
+    DNS监听器只能与[DNS处理器](/reference/handlers/dns/)一起使用，构建DNS代理服务。

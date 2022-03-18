@@ -2,7 +2,7 @@
 
 处理器名称: `dns`
 
-状态：Stable
+状态： GA
 
 DNS处理器使用接收DNS查询请求并返回DNS查询结果。
 
@@ -17,11 +17,13 @@ DNS处理器使用接收DNS查询请求并返回DNS查询结果。
 	  addr: ":10053"
 	  handler:
 		type: dns
+		dns:
+		- 8.8.8.8
+		- tls://1.1.1.1:853
 	  listener:
 		type: dns
 		metadata:
 		  mode: udp
-		  dns: 1.1.1.1:53
 	```
 
 ## 参数列表
@@ -36,7 +38,7 @@ DNS处理器使用接收DNS查询请求并返回DNS查询结果。
 :    客户端IP，设置后会开启ECS(EDNS Client Subnet)扩展功能。
 
 !!! note "限制"
-    DNS处理器只能与[DNS监听器](/components/listeners/dns/)一起使用，构建DNS代理服务。
+    DNS处理器只能与[DNS监听器](/reference/listeners/dns/)一起使用，构建DNS代理服务。
 
 
 

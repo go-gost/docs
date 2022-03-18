@@ -2,7 +2,7 @@
 
 处理器名称: `http`
 
-状态：Stable
+状态： Stable
 
 HTTP处理器使用标准HTTP代理协议进行数据交互，接收并处理客户端的HTTP请求。
 
@@ -17,6 +17,9 @@ HTTP处理器使用标准HTTP代理协议进行数据交互，接收并处理客
 	  addr: ":8080"
 	  handler:
 		type: http
+		metadata:
+		  header:
+		    foo: bar
 	  listener:
 		type: tcp
 	```

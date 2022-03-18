@@ -1,14 +1,14 @@
-# QUIC
+# ICMP
 
-监听器名称: `quic`
+监听器名称: `icmp`
 
-状态： GA
+状态： Alpha
 
-QUIC监听器根据服务配置，监听在指定UDP端口，并使用[QUIC协议](https://github.com/lucas-clemente/quic-go)进行通讯。
+ICMP监听器采用ICMP协议进行数据传输。
 
 === "命令行"
     ```
-	gost -L http+quic://:8443
+	gost -L http+icmp://:0?keepAlive=true
 	```
 === "配置文件"
     ```yaml
@@ -18,7 +18,9 @@ QUIC监听器根据服务配置，监听在指定UDP端口，并使用[QUIC协�
 	  handler:
 		type: http
 	  listener:
-		type: quic 
+		type: icmp
+		metadata:
+		  keepAlive: true
 	```
 
 ## 参数列表
@@ -34,5 +36,3 @@ QUIC监听器根据服务配置，监听在指定UDP端口，并使用[QUIC协�
 
 `maxIdleTimeout` (duration, default=30s)
 :    最大空闲时长
-
-TLS配置请参考[TLS配置说明](/tutorials/tls/)。

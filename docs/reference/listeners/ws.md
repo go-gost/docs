@@ -77,4 +77,4 @@ Websocket监听器根据服务配置，监听在指定TCP端口，并使用Webso
 :    开启压缩
 
 
-TLS证书相关配置请参考[TLS配置说明](/components/tls/)。
+TLS配置请参考[TLS配置说明](/tutorials/tls/)。

@@ -2,9 +2,9 @@
 
 处理器名称: `http2`
 
-状态：Stable
+状态： GA
 
-http2处理器使用HTTP2协议进行数据交互，接收并处理客户端请求。
+HTTP2处理器使用HTTP2协议进行数据交互，接收并处理客户端请求。
 
 === "命令行"
     ```
@@ -33,6 +33,6 @@ http2处理器使用HTTP2协议进行数据交互，接收并处理客户端请�
 :    探测防御配置
 
 !!! note "限制"
-    HTTP2处理器只能与[HTTP2监听器](/components/listeners/http2/)一起使用，构建标准HTTP2代理。
+    HTTP2处理器只能与[HTTP2监听器](/reference/listeners/http2/)一起使用，构建标准HTTP2代理。
 
 

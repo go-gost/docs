@@ -2,7 +2,7 @@
 
 处理器名称: `rtcp`
 
-状态：Stable
+状态： Stable
 
 RTCP处理器根据服务中的转发器配置，将数据转发给指定的目标主机。
 
@@ -29,5 +29,5 @@ RTCP处理器根据服务中的转发器配置，将数据转发给指定的目�
 无
 
 !!! note "限制"
-    rtcp处理器只能与[rtcp监听器](/components/listeners/rtcp/)一起使用，构建TCP远程端口转发服务。
+    RTCP处理器只能与[rtcp监听器](/reference/listeners/rtcp/)一起使用，构建TCP远程端口转发服务。
 

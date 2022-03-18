@@ -25,8 +25,8 @@
 
 ## 参数列表
 
-`bufferSize` (int, default=1024)
+`bufferSize` (int, default=1500)
 :   数据读写缓冲区字节大小 
 
 !!! note "限制"
-    TUN处理器只能与[TUN监听器](/components/listeners/tun/)一起使用，构建基于TUN设备的VPN。
+    TUN处理器只能与[TUN监听器](/reference/listeners/tun/)一起使用，构建基于TUN设备的VPN。

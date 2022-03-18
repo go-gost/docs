@@ -2,7 +2,7 @@
 
 监听器名称: `mws`, `mwss`
 
-状态：Stable
+状态： GA
 
 多路复用Websocket监听器根据服务配置，监听在指定TCP端口，使用Websocket或Websocket Secure(Websocket Over TLS)协议进行通讯，并建立多路复用会话和数据流通道。
 
@@ -94,4 +94,5 @@
 `muxMaxStreamBuffer` (int, default=65536)
 :    多路复用会话设置。最大流缓冲大小(字节)
 
-TLS证书相关配置请参考[TLS配置说明](/components/tls/)。
+
+TLS配置请参考[TLS配置说明](/tutorials/tls/)。

@@ -32,11 +32,11 @@ UDP监听器根据服务配置，监听在指定UDP端口。
 `ttl` (duration, default=5s)
 :    UDP连接超时时长
 
-`readBufferSize` (int, default=1024)
-:    设置UDP读数据缓冲区大小(字节)
+`readBufferSize` (int, default=1500)
+:    UDP读数据缓冲区字节大小
 
-`readQueueSize` (int, default=1024)
-:    设置UDP连接读数据队列大小
+`readQueueSize` (int, default=128)
+:    UDP连接读数据队列大小
 
 !!! note "限制"
-    UDP监听器目前只能够与[ssu处理器](/components/handlers/ssu/)组合使用，或与[UDP处理器](/components/handlers/udp/)组合用作UDP端口转发。
+    UDP监听器目前只能够与[ssu处理器](/reference/handlers/ssu/)组合使用，或与[UDP处理器](/reference/handlers/udp/)组合用做UDP端口转发。

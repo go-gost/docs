@@ -2,7 +2,7 @@
 
 处理器名称: `rudp`
 
-状态：Stable
+状态： Stable
 
 RUDP处理器根据服务中的转发器配置，将数据转发给指定的目标主机。
 
@@ -29,6 +29,6 @@ RUDP处理器根据服务中的转发器配置，将数据转发给指定的目�
 无
 
 !!! note "限制"
-    rudp处理器只能与[rudp监听器](/components/listeners/rudp/)一起使用，构建UDP远程端口转发服务。
+    rudp处理器只能与[rudp监听器](/reference/listeners/rudp/)一起使用，构建UDP远程端口转发服务。
 
 

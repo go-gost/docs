@@ -12,7 +12,7 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 
 === "命令行"
     ```
-	gost -L sshd://user:pass@:2222
+	gost -L sshd://gost:gost@:2222
 	```
 === "配置文件"
     ```yaml
@@ -21,9 +21,26 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 	  addr: ":2222"
 	  handler:
 		type: sshd
-		auths:
-		- username: user1
-		  password: pass1
+	  listener:
+		type: sshd
+		auth:
+		  username: gost
+		  password: gost
+	```
+
+!!! caution "认证信息"
+    认证信息作用于监听器，如果需要对处理器设置认证可以通过配置文件指定
+	```yaml
+	services:
+	- name: service-0
+	  addr: ":8443"
+	  handler:
+		type: sshd
+		auth:
+		  username: gost 
+		  password: gost
+		# or use auther
+		# auther: auther-0
 	  listener:
 		type: sshd
 	```
@@ -32,7 +49,7 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 
 === "命令行"
     ```
-	gost -L sshd://user@:2222?authorizedKeys=/path/to/authorized_keys
+	gost -L sshd://gost@:2222?authorizedKeys=/path/to/authorized_keys
 	```
 === "配置文件"
     ```yaml
@@ -41,8 +58,8 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 	  addr: ":2222"
 	  handler:
 		type: sshd
-		auths:
-		- username: user
+		auth:
+		  username: gost
 	  listener:
 		type: sshd
 		metadata:
@@ -64,4 +81,4 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 :    客户端公钥列表文件
 
 !!! note "限制"
-    SSHD监听器只能与[SSHD处理器](/components/handlers/sshd/)一起使用，构建基于SSH协议的标准端口转发服务。
+    SSHD监听器只能与[SSHD处理器](/reference/handlers/sshd/)一起使用，构建基于SSH协议的标准端口转发服务。

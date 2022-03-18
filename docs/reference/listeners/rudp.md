@@ -60,7 +60,17 @@ RUDP监听器根据服务配置，监听在指定的本地或远程(通过转发
 	
 ## 参数列表
 
-无
+`backlog` (int, default=128)
+:    请求队列长度
+
+`ttl` (duration, default=5s)
+:    每个客户端通道超时时长
+
+`readQueueSize` (int, default=128)
+:    数据读取队列长度
+
+`readBufferSize` (int, default=1500)
+:    数据读取缓冲区字节大小
 
 !!! note "限制"
     RUDP监听器只能与[RUDP处理器](/components/handlers/rudp/)一起使用，构建UDP远程端口转发服务。

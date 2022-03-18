@@ -8,7 +8,7 @@ TLS监听器根据服务配置，监听在指定TCP端口，并使用TLS协议�
 
 === "命令行"
     ```
-	gost -L http+tls://:8443?cert=cert.pem&key=key.pem&ca=ca.pem
+	gost -L http+tls://:8443
 	```
 === "配置文件"
     ```yaml
@@ -18,10 +18,6 @@ TLS监听器根据服务配置，监听在指定TCP端口，并使用TLS协议�
 	  handler:
 		type: http
 	  listener:
-	    tls:
-		  cert: cert.pem
-		  key: key.pem
-		  ca: ca.pem
 		type: tls
 	```
 
@@ -29,4 +25,4 @@ TLS监听器根据服务配置，监听在指定TCP端口，并使用TLS协议�
 
 无
 
-TLS配置请参考[TLS配置说明](/components/tls/)。
+TLS配置请参考[TLS配置说明](/tutorials/tls/)。

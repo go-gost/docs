@@ -12,7 +12,7 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 
 === "命令行"
     ```
-	gost -L http+ssh://user:pass@:8443
+	gost -L http+ssh://gost:gost@:8443
 	```
 === "配置文件"
     ```yaml
@@ -21,18 +21,35 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 	  addr: ":8443"
 	  handler:
 		type: http
-		auths:
-		- username: user1
-		  password: pass1
+		auth:
+		  username: gost 
+		  password: gost
 	  listener:
 		type: ssh
+	```
+
+!!! caution "认证信息"
+    认证信息默认作用于处理器，如果需要对监听器设置认证可以通过配置文件指定
+	```yaml
+	services:
+	- name: service-0
+	  addr: ":8443"
+	  handler:
+		type: http
+	  listener:
+		type: ssh
+		auth:
+		  username: gost 
+		  password: gost
+		# or use auther
+		# auther: auther-0
 	```
 
 ## 公钥认证
 
 === "命令行"
     ```
-	gost -L http+ssh://user@:8443?authorizedKeys=/path/to/authorized_keys
+	gost -L http+ssh://gost@:8443?authorizedKeys=/path/to/authorized_keys
 	```
 === "配置文件"
     ```yaml
@@ -41,8 +58,8 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 	  addr: ":8443"
 	  handler:
 		type: http
-		auths:
-		- username: user
+		auth:
+		  username: gost
 	  listener:
 		type: ssh
 		metadata:

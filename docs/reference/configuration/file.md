@@ -7,6 +7,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
     services:
     - name: service-0
       addr: ":8080"
+      interface: eth0
       admission: admission-0
       bypass: bypass-0
       resolver: resolver-0
@@ -14,8 +15,8 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       handler:
         type: http
         auth:
-          username: user1
-          password: pass1
+          username: user
+          password: pass
         auther: auther-0
         chain: chain-0
         retries: 1
@@ -25,8 +26,8 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       listener:
         type: tcp
         auth:
-          username: user1
-          password: pass1
+          username: user
+          password: pass
         auther: auther-0
         chain: chain-0
         tls:
@@ -53,6 +54,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         failTimeout: 30s
       hops:
       - name: hop-0
+        interface: 192.168.1.2
         selector:
           strategy: rand
           maxFails: 3
@@ -61,6 +63,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         nodes:
         - name: node-0
           addr: ":1080"
+          interface: eth1
           bypass: bypass-0
           connector:
             type: socks5
@@ -71,6 +74,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
               foo: bar
           dialer:
             type: tcp
+            auth:
+              username: user
+              password: pass
             tls:
               caFile: "ca.pem"
               secure: true
@@ -142,7 +148,6 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
     profiling:
       addr: ":6060"
-      enabled: true
     
     api:
       addr: ":18080"
@@ -152,6 +157,10 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         username: user
         password: pass
       auther: auther-0
+
+    metrics:
+      addr: :9000
+      path: /metrics
     ```
 
 === "json格式"
@@ -161,24 +170,20 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         {
           "name": "service-0",
           "addr": ":8080",
+          "interface": "eth0",
           "admission": "admission-0",
           "bypass": "bypass-0",
           "resolver": "resolver-0",
           "hosts": "hosts-0",
           "handler": {
             "type": "http",
+            "auth": {
+              "username": "gost",
+              "password": "gost"
+            },
+            "auther": "auther-0",
             "retries": 1,
             "chain": "chain-0",
-            "auths": [
-              {
-                "username": "user1",
-                "password": "pass1"
-              },
-              {
-                "username": "user2",
-                "password": "pass2"
-              }
-            ],
             "metadata": {
               "bar": "baz",
               "foo": "bar"
@@ -186,6 +191,11 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
           },
           "listener": {
             "type": "tcp",
+            "auth": {
+              "username": "user",
+              "password": "pass"
+            },
+            "auther": "auther-0",
             "chain": "chain-0",
             "tls": {
               "certFile": "cert.pem",
@@ -221,6 +231,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
           "hops": [
             {
               "name": "hop-0",
+              "interface": "192.168.1.2",
               "selector": {
                 "strategy": "rand",
                 "maxFails": 3,
@@ -231,6 +242,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
                 {
                   "name": "node-0",
                   "addr": ":1080",
+                  "interface": "eth1",
                   "bypass": "bypass-0",
                   "connector": {
                     "type": "socks5",
@@ -244,6 +256,10 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
                   },
                   "dialer": {
                     "type": "tcp",
+                    "auth": {
+                      "username": "user",
+                      "password": "pass"
+                    },
                     "tls": {
                       "caFile": "ca.pem",
                       "secure": true,
@@ -277,6 +293,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "admissions": [
         {
           "name": "admission-0",
+          "reverse": false,
           "matchers": [
             "127.0.0.1",
             "192.168.0.0/16"
@@ -286,6 +303,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "bypasses": [
         {
           "name": "bypass-0",
+          "reverse": false,
           "matchers": [
             "*.example.com",
             ".example.org",
@@ -357,7 +375,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "profiling": {
         "addr": ":6060",
         "enabled": true
-      }
+      },
       "api": {
         "addr": ":18080",
         "pathPrefix": "/api",
@@ -367,6 +385,10 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
           "password": "password"
         },
         "auther": "auther-0"
+      },
+      "metrics": {
+        "addr": ":9000",
+        "path": "/metrics"
       }
     }
     ```
@@ -378,6 +400,12 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `addr` (string, required)
 :    服务地址
+
+`interface` (string)
+:    网络接口名或IP地址
+
+`admission` (string, ref)
+:    admission名称，引用`admissions.name`
 
 `bypass` (string, ref)
 :    bypass名称，引用`bypasses.name`
@@ -461,6 +489,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `name` (string, required)
 :    跳跃点名称
 
+`interface` (string)
+:    网络接口名或IP地址
+
 `selector` (object)
 :    跳跃点层级节点选择器，如果设置，则覆盖转发链层级选择器
 
@@ -477,6 +508,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `addr` (string, required)
 :    节点地址
+
+`interface` (string)
+:    网络接口名或IP地址，如果设置，则会覆盖`hop.interface`
 
 `bypass` (string, ref)
 :    bypass名称，引用`bypasses.name`。
@@ -503,6 +537,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `type` (string, required)
 :    拨号器类型
+
+`auth` (object)
+:    认证信息
 
 `tls` (object)
 :    TLS配置
@@ -675,3 +712,11 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `auther` (string)
 :    认证器名称，引用`authers.name`
+
+## Metrics
+
+`addr` (string)
+:    服务地址
+
+`path` (string, default=/metrics)
+:    访问路径

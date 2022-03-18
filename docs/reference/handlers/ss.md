@@ -2,9 +2,9 @@
 
 处理器名称: `ss`
 
-状态：Stable
+状态： Stable
 
-ss处理器使用Shadowsocks协议进行数据交互，接收并处理客户端请求。
+SS处理器使用Shadowsocks协议进行数据交互，接收并处理客户端请求。
 
 === "命令行"
     ```
@@ -17,8 +17,8 @@ ss处理器使用Shadowsocks协议进行数据交互，接收并处理客户端�
 	  addr: ":8338"
 	  handler:
 		type: ss
-		auths:
-		- username: AEAD_CHACHA20_POLY1305
+		auth:
+		  username: AEAD_CHACHA20_POLY1305
 		  password: "123456"
 	  listener:
 		type: tcp
@@ -29,3 +29,6 @@ ss处理器使用Shadowsocks协议进行数据交互，接收并处理客户端�
 `readTimeout` (duration)
 :    请求数据读取超时时长
 
+
+!!! note "认证信息"
+    SS理器只能使用单认证信息方式设置加密信息，不能支持认证器。

@@ -41,4 +41,4 @@ TAP监听器根据服务配置，监听在指定UDP端口，并创建和初始�
 :    默认网关IP
 
 !!! note "限制"
-    TAP监听器只能与[TAP处理器](/components/handlers/tap/)一起使用，构建基于TAP设备的VPN。
+    TAP监听器只能与[TAP处理器](/reference/handlers/tap/)一起使用，构建基于TAP设备的VPN。

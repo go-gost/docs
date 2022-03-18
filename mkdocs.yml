@@ -126,8 +126,9 @@ nav:
       - MWS: reference/listeners/mws.md
       - HTTP2: reference/listeners/http2.md
       - H2(C): reference/listeners/h2.md
-      - PHT: reference/listeners/pht.md
+      - gRPC: reference/listeners/grpc.md
       - QUIC: reference/listeners/quic.md
+      - PHT: reference/listeners/pht.md
       - HTTP3: reference/listeners/http3.md
       - KCP: reference/listeners/kcp.md
       - SSH: reference/listeners/ssh.md
@@ -138,24 +139,28 @@ nav:
       - DNS: reference/listeners/dns.md
       - TUN: reference/listeners/tun.md
       - TAP: reference/listeners/tap.md
+      - ICMP: reference/listeners/icmp.md
       - OHTTP: reference/listeners/ohttp.md
       - OTLS: reference/listeners/otls.md
+      - FTCP: reference/listeners/ftcp.md
     - 处理器(Handlers):
       - HTTP: reference/handlers/http.md
+      - HTTP2: reference/handlers/http2.md
       - SOCKS4: reference/handlers/socks4.md
       - SOCKS5: reference/handlers/socks5.md
-      - Relay: reference/handlers/relay.md
       - Auto: reference/handlers/auto.md
-      - HTTP2: reference/handlers/http2.md
-      - SNI: reference/handlers/sni.md
-      - SS: reference/handlers/ss.md
-      - SSU: reference/handlers/ssu.md
+      - Relay: reference/handlers/relay.md
       - TCP: reference/handlers/tcp.md
       - UDP: reference/handlers/udp.md
       - RTCP: reference/handlers/rtcp.md
       - RUDP: reference/handlers/rudp.md
+      - SS: reference/handlers/ss.md
+      - SSU: reference/handlers/ssu.md
+      - SNI: reference/handlers/sni.md
       - SSHD: reference/handlers/sshd.md
       - DNS: reference/handlers/dns.md
+      - RED: reference/handlers/red.md
+      - REDU: reference/handlers/redu.md
       - TUN: reference/handlers/tun.md
       - TAP: reference/handlers/tap.md
 

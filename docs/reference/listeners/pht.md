@@ -2,7 +2,7 @@
 
 监听器名称: `pht`
 
-状态： Experimental
+状态： Alpha
 
 PHT监听器根据服务配置，监听在指定TCP端口，并使用HTTP协议进行数据传输。
 

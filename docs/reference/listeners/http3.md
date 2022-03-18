@@ -2,7 +2,7 @@
 
 监听器名称: `http3`
 
-状态： Experimental
+状态： Alpha
 
 HTTP3监听器根据服务配置，监听在指定UDP端口，并使用HTTP/3协议进行数据传输。
 
@@ -35,3 +35,4 @@ HTTP3监听器根据服务配置，监听在指定UDP端口，并使用HTTP/3协
 `pullPath` (string, default=/pull)
 :   数据接收URI
 
+TLS配置请参考[TLS配置说明](/tutorials/tls/)。

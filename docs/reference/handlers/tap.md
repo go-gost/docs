@@ -16,7 +16,7 @@
 	  handler:
 		type: tap
 		metadata:
-		  bufferSize: 1024
+		  bufferSize: 1500
 	  listener:
 		type: tap
 		metadata:
@@ -25,8 +25,8 @@
 
 ## 参数列表
 
-`bufferSize` (int, default=1024)
+`bufferSize` (int, default=1500)
 :   数据读写缓冲区字节大小 
 
 !!! note "限制"
-    TAP处理器只能与[TAP监听器](/components/listeners/tap/)一起使用，构建基于TAP设备的VPN。
+    TAP处理器只能与[TAP监听器](/reference/listeners/tap/)一起使用，构建基于TAP设备的VPN。

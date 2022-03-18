@@ -2,29 +2,29 @@
 
 监听器名称: `kcp`
 
-状态：Stable
+状态： GA
 
 KCP监听器根据服务配置，监听在指定UDP端口，并使用[KCP协议](https://github.com/xtaci/kcptun)进行通讯。
 
 === "命令行"
     ```
-	gost -L http+kcp://:8443
-	```
+    gost -L http+kcp://:8443
+    ```
 === "配置文件"
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: http
-	  listener:
-		type: kcp
-		metadata:
-		  config:
-		    crypt: aes
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: http
+      listener:
+        type: kcp
+        metadata:
+          config:
+            crypt: aes
             mode: fast
             mtu: 1350
-	```
+    ```
 
 ## 参数列表
 

@@ -4,7 +4,7 @@
 
 状态： GA
 
-OBFS监听器根据服务配置，监听在指定TCP端口，并使用HTTP协议进行握手。
+OHTTP监听器根据服务配置，监听在指定TCP端口，并使用HTTP协议进行握手。
 
 === "命令行"
     ```
@@ -19,6 +19,9 @@ OBFS监听器根据服务配置，监听在指定TCP端口，并使用HTTP协议
 		type: http
 	  listener:
 		type: ohttp
+		metadata:
+		  header:
+		    foo: bar
 	```
 
 ## 参数列表

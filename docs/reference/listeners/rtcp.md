@@ -2,7 +2,7 @@
 
 监听器名称: `rtcp`
 
-状态： Stable 
+状态： Stable
 
 RTCP监听器根据服务配置，监听在指定的本地或远程(通过转发链)TCP端口。
 
@@ -63,4 +63,4 @@ RTCP监听器根据服务配置，监听在指定的本地或远程(通过转发
 无
 
 !!! note "限制"
-    RTCP监听器只能与[RTCP处理器](/components/handlers/rtcp/)一起使用，构建TCP远程端口转发服务。
+    RTCP监听器只能与[RTCP处理器](/reference/handlers/rtcp/)一起使用，构建TCP远程端口转发服务。

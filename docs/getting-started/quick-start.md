@@ -1,6 +1,6 @@
 # 快速开始
 
-!!!tip "提示"
+!!!tip "零配置"
     GOST可以通过命令行参数直接开启一个或多个服务，无需额外的配置文件。
 
 ## 代理模式
@@ -24,7 +24,7 @@
 		type: tcp
 	```
 
-启动一个监听在8080端口的HTTP/SOCKS5代理服务。
+启动一个监听在8080端口的HTTP代理服务。
 
 ### 开启多个代理服务
 
@@ -95,7 +95,7 @@
 	- name: service-0
 	  addr: ":8080"
 	  handler:
-		type: http
+		type: auto
 		chain: chain-0
 	  listener:
 		type: tcp
