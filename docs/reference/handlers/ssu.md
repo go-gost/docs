@@ -26,7 +26,7 @@ ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UD
 
 ## 参数列表
 
-`bufferSize` (int, default=1024)
+`bufferSize` (int, default=1500)
 :    UDP数据缓冲大小
 
 !!! note "认证信息"

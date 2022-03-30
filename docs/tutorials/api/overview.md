@@ -56,6 +56,8 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 
 通过`auth`或`auther`参数可以设置身份认证信息。如果设置了`auther`参数，`auth`参数则会被忽略。
 
+身份认证采用[HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication)方式。
+
 ## 在线测试
 
 你可以使用[线上环境](https://latest.gost.run/play/webapi/config)进行测试，或在下面的swaggerUI中直接尝试。接口说明请参考[在线API文档](/swagger-ui/)。

@@ -29,7 +29,7 @@ Relay处理器使用GOST Relay协议进行数据交互，接收并处理客户�
 `bind` (bool, default=false)
 :    启用BIND功能，默认不启用
 
-`udpBufferSize` (int, default=1024)
+`udpBufferSize` (int, default=1500)
 :    UDP数据缓冲区字节大小
 
 `nodelay` (bool, default=false)

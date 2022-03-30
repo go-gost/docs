@@ -35,7 +35,7 @@ SOCKS5处理器使用SOCKSv5代理协议进行数据交互，接收并处理客�
 `udp` (bool, default=false)
 :    启用UDP转发
 
-`udpBufferSize` (int, default=1024)
+`udpBufferSize` (int, default=1500)
 :    UDP数据缓冲区字节大小
 
 `comp` (bool, default=false)

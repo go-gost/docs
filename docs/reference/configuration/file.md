@@ -8,6 +8,8 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
     - name: service-0
       addr: ":8080"
       interface: eth0
+      sockopts:
+        mark: 1
       admission: admission-0
       bypass: bypass-0
       resolver: resolver-0
@@ -55,6 +57,8 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       hops:
       - name: hop-0
         interface: 192.168.1.2
+        sockopts:
+          mark: 1
         selector:
           strategy: rand
           maxFails: 3
@@ -64,6 +68,8 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
         - name: node-0
           addr: ":1080"
           interface: eth1
+          sockopts:
+            mark: 1
           bypass: bypass-0
           connector:
             type: socks5
@@ -404,6 +410,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `interface` (string)
 :    网络接口名或IP地址
 
+`sockopts` (object)
+:    Socket参数
+
 `admission` (string, ref)
 :    admission名称，引用`admissions.name`
 
@@ -492,6 +501,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `interface` (string)
 :    网络接口名或IP地址
 
+`sockopts` (object)
+:    Socket参数
+
 `selector` (object)
 :    跳跃点层级节点选择器，如果设置，则覆盖转发链层级选择器
 
@@ -511,6 +523,9 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `interface` (string)
 :    网络接口名或IP地址，如果设置，则会覆盖`hop.interface`
+
+`sockopts` (object)
+:    Socket参数，如果设置，则会覆盖`hop.sockopts`
 
 `bypass` (string, ref)
 :    bypass名称，引用`bypasses.name`。
@@ -669,6 +684,11 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `aliases` (strings)
 :    主机别名列表
+
+## Socket参数(SockOpts)
+
+`mark` (int)
+:    Linux Socket SO_MARK参数选项
 
 ## 日志(log)
 

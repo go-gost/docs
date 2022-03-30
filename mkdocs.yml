@@ -113,6 +113,7 @@ nav:
     - 多网络接口: tutorials/multi-homed.md
     - TUN/TAP设备: tutorials/tuntap.md
     - ICMP通道: tutorials/icmp.md
+    - 监控指标: tutorials/metrics.md
   - 参考:
     - 配置: 
       - 命令行: reference/configuration/cmd.md

@@ -26,7 +26,7 @@ UDP透明代理基于iptables的tproxy模块实现。
 `ttl` (duration, default=60s)
 :    传输通道超时时长
 
-`readBufferSize` (duration, default=1024)
+`readBufferSize` (duration, default=1500)
 :    读缓冲区字节大小
 
 

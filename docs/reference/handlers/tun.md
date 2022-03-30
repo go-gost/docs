@@ -16,7 +16,7 @@
 	  handler:
 		type: tun
 		metadata:
-		  bufferSize: 1024
+		  bufferSize: 1500
 	  listener:
 		type: tun
 		metadata:
