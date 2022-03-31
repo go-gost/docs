@@ -6,7 +6,7 @@
     透明代理仅支持Linux系统。
 
 !!! note "流量嗅探"
-    透明代理支持对HTTP和TLS流量进行识别，识别后将使用HTTP`Host`头部信息或TLS的`SNI`扩展信息作为目标访问地址。
+    TCP透明代理支持对HTTP和TLS流量进行识别，识别后将使用HTTP`Host`头部信息或TLS的`SNI`扩展信息作为目标访问地址。
 
     通过`sniffing`参数开启流量嗅探，默认不开启。
 
@@ -146,6 +146,7 @@
         type: red
         metadata:
           sniffing: true
+          tproxy: true
       listener:
         type: red
         metadata:
