@@ -35,6 +35,7 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 开启之后可以通过`http://localhost:9000/metrics`地址查看到指标数据。
 
 !!! example "指标示例"
+    ```
     gost_chain_errors_total{chain="chain-0",host="host-0"} 1
 
 	gost_service_handler_errors_total{host="host-0",service="service-0"} 1
@@ -66,6 +67,7 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 	gost_service_transfer_output_bytes_total{host="host-0",service="service-0"} 7327
 
 	gost_services{host="host-0"} 1
+	```
 
 ## 指标说明
 
