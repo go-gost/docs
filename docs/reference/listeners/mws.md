@@ -1,6 +1,6 @@
 # 多路复用Websocket
 
-监听器名称: `mws`, `mwss`
+名称: `mws`, `mwss`
 
 状态： GA
 

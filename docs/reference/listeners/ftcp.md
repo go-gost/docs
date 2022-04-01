@@ -1,6 +1,6 @@
 # Fake TCP
 
-监听器名称: `ftcp`
+名称: `ftcp`
 
 状态： Alpha
 

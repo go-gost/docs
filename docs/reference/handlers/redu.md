@@ -1,10 +1,10 @@
-# UDP Redirect
+# UDP透明代理
 
-处理器名称: `redu`
+名称: `redu`
 
 状态： GA
 
-REDU处理器用于构建UDP透明代理。
+REDU处理器用于构建基于tproxy的UDP透明代理。
 
 === "命令行"
 	```bash

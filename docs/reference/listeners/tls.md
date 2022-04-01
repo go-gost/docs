@@ -1,6 +1,6 @@
 # TLS
 
-监听器名称: `tls`
+名称: `tls`
 
 状态： Stable
 

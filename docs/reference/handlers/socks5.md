@@ -1,6 +1,6 @@
 # SOCKSv5
 
-处理器名称: `socks`, `socks5`
+名称: `socks`, `socks5`
 
 状态： Stable
 

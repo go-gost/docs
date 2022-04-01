@@ -1,6 +1,6 @@
 # HTTP
 
-处理器名称: `http`
+名称: `http`
 
 状态： Stable
 

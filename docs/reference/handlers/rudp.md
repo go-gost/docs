@@ -1,6 +1,6 @@
 # UDP远程端口转发
 
-处理器名称: `rudp`
+名称: `rudp`
 
 状态： Stable
 

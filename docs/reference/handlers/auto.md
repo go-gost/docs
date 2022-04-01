@@ -1,6 +1,6 @@
 # Auto
 
-处理器名称: `auto`
+名称: `auto`
 
 状态： Stable
 

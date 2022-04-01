@@ -1,6 +1,6 @@
 # Websocket
 
-监听器名称: `ws`, `wss`
+名称: `ws`, `wss`
 
 状态： Stable
 

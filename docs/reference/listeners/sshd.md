@@ -1,6 +1,6 @@
 # SSHD
 
-监听器名称: `sshd`
+名称: `sshd`
 
 状态： GA
 

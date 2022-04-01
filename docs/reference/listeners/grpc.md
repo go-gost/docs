@@ -1,6 +1,6 @@
 # gRPC
 
-监听器名称: `grpc`
+名称: `grpc`
 
 状态： Alpha
 

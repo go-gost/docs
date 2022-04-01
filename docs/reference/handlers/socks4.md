@@ -1,6 +1,6 @@
 # SOCKSv4(a)
 
-处理器名称: `socks4`
+名称: `socks4`
 
 状态： GA
 

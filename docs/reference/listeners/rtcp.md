@@ -1,6 +1,6 @@
 # TCP远程端口转发
 
-监听器名称: `rtcp`
+名称: `rtcp`
 
 状态： Stable
 

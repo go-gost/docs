@@ -1,6 +1,6 @@
 # OBFS-TLS
 
-监听器名称: `otls`
+名称: `otls`
 
 状态： GA
 

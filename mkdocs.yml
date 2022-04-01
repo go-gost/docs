@@ -134,6 +134,7 @@ nav:
       - KCP: reference/listeners/kcp.md
       - SSH: reference/listeners/ssh.md
       - SSHD: reference/listeners/sshd.md
+      - RED: reference/listeners/red.md
       - REDU: reference/listeners/redu.md
       - RTCP: reference/listeners/rtcp.md
       - RUDP: reference/listeners/rudp.md
@@ -164,4 +165,15 @@ nav:
       - REDU: reference/handlers/redu.md
       - TUN: reference/handlers/tun.md
       - TAP: reference/handlers/tap.md
+    - 连接器(Connectors):
+      - HTTP: reference/connectors/http.md
+      - HTTP2: reference/connectors/http2.md
+      - SOCKS4: reference/connectors/socks4.md
+      - SOCKS5: reference/connectors/socks5.md
+      - Forward: reference/connectors/forward.md
+      - Relay: reference/connectors/relay.md
+      - SS: reference/connectors/ss.md
+      - SSU: reference/connectors/ssu.md
+      - SNI: reference/connectors/sni.md
+      - SSHD: reference/connectors/sshd.md
 

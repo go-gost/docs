@@ -1,6 +1,6 @@
 # QUIC
 
-监听器名称: `quic`
+名称: `quic`
 
 状态： GA
 

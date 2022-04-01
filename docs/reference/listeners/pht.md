@@ -1,6 +1,6 @@
 # Plain HTTP Tunnel
 
-监听器名称: `pht`
+名称: `pht`
 
 状态： Alpha
 

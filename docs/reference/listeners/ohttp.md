@@ -1,6 +1,6 @@
 # OBFS-HTTP
 
-监听器名称: `ohttp`
+名称: `ohttp`
 
 状态： GA
 

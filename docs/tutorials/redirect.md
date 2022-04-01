@@ -169,6 +169,7 @@
         chain: chain-0
         metadata:
           sniffing: true
+          tproxy: true
       listener:
         type: red
         metadata:

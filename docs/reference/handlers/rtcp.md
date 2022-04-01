@@ -1,6 +1,6 @@
 # TCP远程端口转发
 
-处理器名称: `rtcp`
+器名称: `rtcp`
 
 状态： Stable
 
