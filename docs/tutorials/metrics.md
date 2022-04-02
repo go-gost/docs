@@ -94,3 +94,11 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 
 `gost_chain_errors_total` (type=counter)
 :    转发链本身建立连接失败数
+
+## Grafana Dashboard
+
+你可以使用以下的Dashboard来呈现监控指标数据
+
+[https://grafana.com/grafana/dashboards/16037](https://grafana.com/grafana/dashboards/16037)
+
+![GOST Dashboard](../images/dashboard.png)
