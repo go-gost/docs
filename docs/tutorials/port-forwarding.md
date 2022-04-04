@@ -156,7 +156,13 @@
 	当UDP本地端口转发中使用转发链时，转发链末端最后一个节点必须是以下类型：
 
 	* GOST HTTP代理服务并开启了UDP转发功能，采用UDP-over-TCP方式。
+	```
+	gost -L http://:8080?udp=true
+	```
 	* GOST SOCKS5代理服务并开启了UDP转发功能，采用UDP-over-TCP方式。
+	```
+	gost -L socks5://:1080?udp=true
+	```
 	* Relay服务，采用UDP-over-TCP方式。
 	* SSU服务。
 
@@ -347,7 +353,13 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 	当远程端口转发中使用转发链时，转发链末端最后一个节点必须是以下类型：
 
 	* GOST SOCKS5代理服务并开启了BIND功能，采用UDP-over-TCP方式。
+	```
+	gost -L socks5://:1080?bind=true
+	```
 	* Relay服务并开启了BIND功能，采用UDP-over-TCP方式。
+	```
+	gost -L socks5://:8421?bind=true
+	```
 
 ### SSH
 
@@ -387,3 +399,60 @@ TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能�
 	```
 
 这里的192.168.1.2:22服务可以是系统本身的标准SSH服务，也可以是GOST的sshd类型服务。
+
+## 服务端转发
+
+以上的转发方式可以看作是客户端转发，由客户端来控制转发的目标地址。目标地址也可以由服务端指定。
+
+### 服务端
+
+=== "命令行"
+	```bash
+	gost -L tls://:8443/192.168.1.1:80
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: :8080
+	  handler:
+		type: forward
+	  listener:
+		type: tls
+	  forwarder:
+		targets:
+		- 192.168.1.1:80
+	```
+### 客户端
+
+=== "命令行"
+	```bash
+    gost -L=tcp://:8080 -F forward+tls://:8443
+	```
+=== "配置文件"
+    ```yaml
+	services:
+	- name: service-0
+	  addr: :8080
+	  handler:
+		type: tcp
+	  listener:
+		type: tcp
+		chain: chain-0
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8443
+		  connector:
+			type: forward
+		  dialer:
+			type: tls
+	```
+
+!!! note "forward连接器和处理器"
+    这里服务的处理器和转发链的连接器必须为`forward`类型，由于目标地址由服务端指定，因此客户端无需指定目标地址。`forward`连接器不做任何逻辑处理。
+	
+	这里的`tcp://:8080`等同于`tcp://:8080/:0`，转发目标地址`:0`在这里作为占位符。仅当配合`forward`连接器使用时，这种用法才是有效的。

@@ -29,8 +29,12 @@ UDP监听器根据服务配置，监听在指定UDP端口。
 `backlog` (int, default=128)
 :    UDP连接队列大小
 
+`keepAlive` (bool, default=false)
+:    是否保持连接，默认当返回响应数据给客户端后立即断开连接。
+
 `ttl` (duration, default=5s)
-:    UDP连接超时时长
+:    UDP连接超时时长，当`keepAlive`为`true`时有效。
+
 
 `readBufferSize` (int, default=1500)
 :    UDP读数据缓冲区字节大小

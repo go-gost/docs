@@ -87,7 +87,7 @@ nav:
   - 入门:
     - 快速开始: getting-started/quick-start.md
     - 配置概述: getting-started/configuration-overview.md
-    - FAQ: /getting-started/faq.md
+    - 常见问题: getting-started/faq.md
   - 概念:
     - 架构: concepts/architecture.md
     - 代理转发和通道: concepts/proxy.md
