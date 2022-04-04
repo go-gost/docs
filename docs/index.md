@@ -18,9 +18,15 @@
 - [x] Web API
 - [ ] Web UI
 
-## 下载安装
+Telegram讨论群：[https://t.me/gogost](https://t.me/gogost)
 
-如果想继续使用旧版请访问[v2.gost.run](https://v2.gost.run)。
+Google讨论组：[https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
+
+提交Issue：[https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+
+旧版入口：[v2.gost.run](https://v2.gost.run)
+
+## 下载安装
 
 ### 二进制文件
 
@@ -43,11 +49,3 @@ docker pull gogost/gost
 ### Shadowsocks Android插件
 
 [xausky/ShadowsocksGostPlugin](https://github.com/xausky/ShadowsocksGostPlugin)
-
-## 问题建议
-
-提交Issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
-
-Telegram讨论群: [https://t.me/gogost](https://t.me/gogost)
-
-Google讨论组: [https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
