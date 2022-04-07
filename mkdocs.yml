@@ -165,6 +165,26 @@ nav:
       - REDU: reference/handlers/redu.md
       - TUN: reference/handlers/tun.md
       - TAP: reference/handlers/tap.md
+    - 拨号器(Dialers):
+      - TCP: reference/dialers/tcp.md
+      - UDP: reference/dialers/udp.md
+      - TLS: reference/dialers/tls.md
+      - MTLS: reference/dialers/mtls.md
+      - WS: reference/dialers/ws.md
+      - MWS: reference/dialers/mws.md
+      - HTTP2: reference/dialers/http2.md
+      - H2(C): reference/dialers/h2.md
+      - gRPC: reference/dialers/grpc.md
+      - QUIC: reference/dialers/quic.md
+      - PHT: reference/dialers/pht.md
+      - HTTP3: reference/dialers/http3.md
+      - KCP: reference/dialers/kcp.md
+      - SSH: reference/dialers/ssh.md
+      - SSHD: reference/dialers/sshd.md
+      - ICMP: reference/dialers/icmp.md
+      - OHTTP: reference/dialers/ohttp.md
+      - OTLS: reference/dialers/otls.md
+      - FTCP: reference/dialers/ftcp.md
     - 连接器(Connectors):
       - HTTP: reference/connectors/http.md
       - HTTP2: reference/connectors/http2.md

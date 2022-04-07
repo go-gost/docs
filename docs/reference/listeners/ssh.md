@@ -6,9 +6,9 @@
 
 SSH监听器根据服务配置，监听在指定TCP端口，并使用SSH协议进行通讯。
 
-SSH监听器支持简单用户名+密码认证和公钥认证。
+SSH监听器支持简单用户名/密码认证和公钥认证。
 
-## 用户名+密码认证
+## 用户名/密码认证
 
 === "命令行"
     ```
@@ -21,28 +21,28 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 	  addr: ":8443"
 	  handler:
 		type: http
+	  listener:
+		type: ssh
 		auth:
 		  username: gost 
 		  password: gost
-	  listener:
-		type: ssh
 	```
 
 !!! caution "认证信息"
-    认证信息默认作用于处理器，如果需要对监听器设置认证可以通过配置文件指定
+    认证信息作用于监听器，如果需要对处理器设置认证可以通过配置文件指定
 	```yaml
 	services:
 	- name: service-0
 	  addr: ":8443"
 	  handler:
 		type: http
-	  listener:
-		type: ssh
 		auth:
 		  username: gost 
 		  password: gost
 		# or use auther
 		# auther: auther-0
+	  listener:
+		type: ssh
 	```
 
 ## 公钥认证
@@ -58,10 +58,10 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 	  addr: ":8443"
 	  handler:
 		type: http
-		auth:
-		  username: gost
 	  listener:
 		type: ssh
+		auth:
+		  username: gost
 		metadata:
 		  authorizedKeys: /path/to/authorized_keys
 	```
@@ -72,7 +72,7 @@ SSH监听器支持简单用户名+密码认证和公钥认证。
 :    单个连接的数据流队大小
 
 `privateKeyFile` (string)
-:    证书私钥文件
+:    证书私钥文件，如果未指定则使用全局默认TLS证书私钥
 
 `passphrase` (string)
 :    证书密码
