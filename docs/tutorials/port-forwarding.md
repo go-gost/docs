@@ -221,8 +221,8 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 		type: sshd
 	  listener:
 		type: sshd
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	```
 

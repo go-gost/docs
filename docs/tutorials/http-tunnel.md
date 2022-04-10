@@ -23,8 +23,8 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 	  addr: ":8080"
 	  handler:
 		type: http
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	  listener:
 		type: tcp
@@ -158,8 +158,8 @@ Websocket是HTTP/1中为了建立长连接而增加的扩展协议。
 	  addr: ":1080"
 	  handler:
 		type: socks5
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	  listener:
 		type: ws
@@ -223,8 +223,8 @@ HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
 	  addr: ":8443"
 	  handler:
 		type: http2
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	  listener:
 		type: http2
@@ -285,8 +285,8 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 	  addr: ":8443"
 	  handler:
 		type: socks5
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	  listener:
 		type: h2
@@ -351,8 +351,8 @@ gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然
 	  addr: ":8443"
 	  handler:
 		type: relay 
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	  listener:
 		type: grpc
@@ -405,8 +405,8 @@ gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文�
 	  addr: ":8443"
 	  handler:
 		type: relay 
-		auths:
-		- username: user
+		auth:
+		  username: user
 		  password: pass
 	  listener:
 		type: grpc
