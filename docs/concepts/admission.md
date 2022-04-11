@@ -100,9 +100,9 @@ admissions:
 192.168.0.0/16
 ```
 
-#### redis
+#### Redis
 
-通过指定Redis服务作为数据源，redis数据类型必须为集合(Set)类型。
+通过指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
 
 ```yaml
 admissions:
@@ -114,7 +114,7 @@ admissions:
 	key: gost:admissions:admission-0
 ```
 
-`addr` (string)
+`addr` (string, required)
 :    redis服务地址
 
 `db` (int, default=0)

@@ -99,6 +99,7 @@ nav:
     - 准入控制: concepts/admission.md
     - 域名解析: concepts/resolver.md
     - 主机IP映射: concepts/hosts.md
+    - 数据记录: concepts/recorder.md
   - 教程:
     - WebAPI:
       - 概述: tutorials/api/overview.md

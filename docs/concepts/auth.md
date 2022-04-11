@@ -160,9 +160,9 @@ test\user001    123456
 test.user@002   12345678
 ```
 
-#### redis
+#### Redis
 
-通过指定Redis服务作为数据源，redis数据类型必须为哈希(Hash)类型。
+通过指定redis服务作为数据源，redis数据类型必须为哈希(Hash)类型。
 
 ```yaml
 authers:
@@ -174,7 +174,7 @@ authers:
 	key: gost:authers:auther-0
 ```
 
-`addr` (string)
+`addr` (string, required)
 :    redis服务地址
 
 `db` (int, default=0)
