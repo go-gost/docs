@@ -105,11 +105,11 @@
 
 	在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。
 
-### 数据源
+## 数据源
 
 分流器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
 
-#### 内联
+### 内联
 
 内联数据源是指直接在配置文件中通过`matchers`参数设置数据。
 
@@ -124,7 +124,7 @@ bypasses:
   - .example.org
 ```
 
-#### 文件
+### 文件
 
 通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
 
@@ -146,7 +146,7 @@ localhost
 .example.org
 ```
 
-#### Redis
+### Redis
 
 通过指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
 
@@ -172,7 +172,7 @@ bypasses:
 `key` (string, default=gost)
 :    redis key
 
-### 热加载
+## 热加载
 
 文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 

@@ -23,11 +23,11 @@ recorders:
     sep: "\n"
 ```
 
-### 记录器类型
+## 记录器类型
 
 目前支持的记录器类型有：文件，redis。
 
-#### 文件
+### 文件
 
 文件记录器将数据记录到指定文件。
 
@@ -45,7 +45,7 @@ recorders:
 `sep` (string)
 :    记录分割符，如果设置则会在两条记录中间插入此分割符
 
-#### Redis
+### Redis
 
 Redis记录器将数据记录到redis服务中。
 
@@ -75,7 +75,7 @@ recorders:
 `type` (string, default=set)
 :    数据类型，支持的类型有集合(`set`), 列表(`list`)。
 
-### 使用记录器
+## 使用记录器
 
 通过`service.recorders`指定所使用的记录器列表。
 
@@ -100,7 +100,7 @@ services:
 `record` (string, required)
 :    记录对象
 
-#### 记录对象
+### 记录对象
 
 目前支持的记录对象有：
 
