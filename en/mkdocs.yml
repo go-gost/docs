@@ -1,0 +1,200 @@
+site_name: GOST
+repo_name: go-gost/gost
+repo_url: https://github.com/go-gost/gost
+edit_uri: ""
+
+theme:
+  name: material
+  logo: images/gost.png
+  favicon: images/favicon.ico
+  custom_dir: overrides
+  features:
+    - navigation.instant
+    # - navigation.tabs
+    # - navigation.sections
+    - navigation.indexes
+    - header.autohide
+    # - navigation.top
+  palette: 
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+      primary: teal
+      accent: indigo
+    - scheme: slate 
+      media: "(prefers-color-scheme: dark)"
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/go-gost/gost
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/gogost/gost
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/gogost
+  alternate:
+    - name: English
+      link: /en/ 
+      lang: en
+    - name: 中文
+      link: /
+      lang: zh
+
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+copyright: Copyright &copy; 2015 - 2022 GOST
+
+nav:
+  - Welcome: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Configuration: getting-started/configuration-overview.md
+    - FAQs: getting-started/faq.md
+  - Concepts:
+    - Architecture: concepts/architecture.md
+    - Proxy and Tunnel: concepts/proxy.md
+    - Service: concepts/service.md
+    - Chain: concepts/chain.md
+    - Node Selecting: concepts/selector.md
+    - Authentication: concepts/auth.md
+    - Traffic Bypass: concepts/bypass.md
+    - Admission: concepts/admission.md
+    - DNS Resolver: concepts/resolver.md
+    - Host-IP Mapping: concepts/hosts.md
+    - Data Recording: concepts/recorder.md
+  - Tutorials:
+    - WebAPI:
+      - Overview: tutorials/api/overview.md
+      - Dynamic Configuration: tutorials/api/config.md
+    - TLS: tutorials/tls.md
+    - HTTP Tunnel: tutorials/http-tunnel.md
+    - Port Forwarding: tutorials/port-forwarding.md
+    - Relay Protocol: tutorials/relay.md
+    - Probe Resistance: tutorials/probe-resistance.md
+    - DNS Proxy: tutorials/dns.md
+    - Transparent Proxy: tutorials/redirect.md
+    - Multi-homed Host: tutorials/multi-homed.md
+    - TUN/TAP Device: tutorials/tuntap.md
+    - ICMP Tunnel: tutorials/icmp.md
+    - Prometheus Metrics: tutorials/metrics.md
+  - References:
+    - Configuration: 
+      - CLI: reference/configuration/cmd.md
+      - File: reference/configuration/file.md
+    - Listeners:
+      - TCP: reference/listeners/tcp.md
+      - UDP: reference/listeners/udp.md
+      - TLS: reference/listeners/tls.md
+      - MTLS: reference/listeners/mtls.md
+      - WS: reference/listeners/ws.md
+      - MWS: reference/listeners/mws.md
+      - HTTP2: reference/listeners/http2.md
+      - H2(C): reference/listeners/h2.md
+      - gRPC: reference/listeners/grpc.md
+      - QUIC: reference/listeners/quic.md
+      - PHT: reference/listeners/pht.md
+      - HTTP3: reference/listeners/http3.md
+      - KCP: reference/listeners/kcp.md
+      - SSH: reference/listeners/ssh.md
+      - SSHD: reference/listeners/sshd.md
+      - RED: reference/listeners/red.md
+      - REDU: reference/listeners/redu.md
+      - RTCP: reference/listeners/rtcp.md
+      - RUDP: reference/listeners/rudp.md
+      - DNS: reference/listeners/dns.md
+      - TUN: reference/listeners/tun.md
+      - TAP: reference/listeners/tap.md
+      - ICMP: reference/listeners/icmp.md
+      - OHTTP: reference/listeners/ohttp.md
+      - OTLS: reference/listeners/otls.md
+      - FTCP: reference/listeners/ftcp.md
+    - Handlers:
+      - HTTP: reference/handlers/http.md
+      - HTTP2: reference/handlers/http2.md
+      - SOCKS4: reference/handlers/socks4.md
+      - SOCKS5: reference/handlers/socks5.md
+      - Auto: reference/handlers/auto.md
+      - Relay: reference/handlers/relay.md
+      - TCP: reference/handlers/tcp.md
+      - UDP: reference/handlers/udp.md
+      - RTCP: reference/handlers/rtcp.md
+      - RUDP: reference/handlers/rudp.md
+      - SS: reference/handlers/ss.md
+      - SSU: reference/handlers/ssu.md
+      - SNI: reference/handlers/sni.md
+      - SSHD: reference/handlers/sshd.md
+      - DNS: reference/handlers/dns.md
+      - RED: reference/handlers/red.md
+      - REDU: reference/handlers/redu.md
+      - TUN: reference/handlers/tun.md
+      - TAP: reference/handlers/tap.md
+    - Dialers:
+      - TCP: reference/dialers/tcp.md
+      - UDP: reference/dialers/udp.md
+      - TLS: reference/dialers/tls.md
+      - MTLS: reference/dialers/mtls.md
+      - WS: reference/dialers/ws.md
+      - MWS: reference/dialers/mws.md
+      - HTTP2: reference/dialers/http2.md
+      - H2(C): reference/dialers/h2.md
+      - gRPC: reference/dialers/grpc.md
+      - QUIC: reference/dialers/quic.md
+      - PHT: reference/dialers/pht.md
+      - HTTP3: reference/dialers/http3.md
+      - KCP: reference/dialers/kcp.md
+      - SSH: reference/dialers/ssh.md
+      - SSHD: reference/dialers/sshd.md
+      - ICMP: reference/dialers/icmp.md
+      - OHTTP: reference/dialers/ohttp.md
+      - OTLS: reference/dialers/otls.md
+      - FTCP: reference/dialers/ftcp.md
+    - Connectors:
+      - HTTP: reference/connectors/http.md
+      - HTTP2: reference/connectors/http2.md
+      - SOCKS4: reference/connectors/socks4.md
+      - SOCKS5: reference/connectors/socks5.md
+      - Forward: reference/connectors/forward.md
+      - Relay: reference/connectors/relay.md
+      - SS: reference/connectors/ss.md
+      - SSU: reference/connectors/ssu.md
+      - SNI: reference/connectors/sni.md
+      - SSHD: reference/connectors/sshd.md
+

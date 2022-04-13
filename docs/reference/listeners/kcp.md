@@ -34,6 +34,9 @@ KCP监听器根据服务配置，监听在指定UDP端口，并使用[KCP协议]
 `config` (object)
 :    KCP配置
 
+`c` (string)
+:    KCP配置JSON文件
+
 ## KCP配置
 
 ```yaml
@@ -54,6 +57,9 @@ config
   resend: 0
   nc: 0
   sockbuf: 4194304
+  smuxbuf: 4194304
+  streambuf: 2097152
+  smuxver: 1
   keepalive: 10
   snmplog: ""
   snmpperiod: 60

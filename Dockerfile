@@ -4,7 +4,11 @@ ADD . /src
 
 WORKDIR /src
 
-RUN mkdocs build
+RUN mkdocs build -d site
+
+WORKDIR /src/en
+
+RUN mkdocs build -d /src/site/en/
 
 FROM nginx:1.21-alpine
 

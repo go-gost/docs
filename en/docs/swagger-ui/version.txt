@@ -1,0 +1,2 @@
+https://github.com/swagger-api/swagger-ui
+v3.52.5
