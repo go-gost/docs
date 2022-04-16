@@ -5,14 +5,14 @@
 ## Features
 
 - [x] Listening on multiple ports
-- [x] Multi-level forward chain.
+- [x] Multi-level forwarding chain.
 - [x] Rich protocol
 - [x] TCP/UDP port forwarding
 - [x] TCP/UDP transparent proxy
 - [x] DNS resolver and proxy
 - [x] TUN/TAP device
 - [x] Load balancing
-- [x] Traffic control
+- [x] Routing control
 - [x] Admission control
 - [x] Dynamic configuration
 - [x] Prometheus metrics
@@ -23,7 +23,7 @@ Telegram: [https://t.me/gogost](https://t.me/gogost)
 
 Google group: [https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
 
-Github issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+Git issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
 
 Legacy version: [v2.gost.run](https://v2.gost.run)
 

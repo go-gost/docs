@@ -1,19 +1,21 @@
-# 快速开始
+# Quick Start
 
-!!!tip "零配置"
-    GOST可以通过命令行参数直接开启一个或多个服务，无需额外的配置文件。
+!!!tip "Zero Configuration"
+    You can run GOST directly from the command line without additional configuration files.
+    
+## Proxy Mode
 
-## 代理模式
+Start one or more proxy services, and can be forwarded through the forwarding chain. 
 
-开启一个或多个代理服务，并可以设置转发链进行转发。
+### HTTP Proxy
 
-### 开启一个HTTP代理服务
+Start an HTTP proxy service listening on port 8080:
 
-=== "命令行"
+=== "CLI"
     ```sh
 	gost -L http://:8080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -24,15 +26,15 @@
 		type: tcp
 	```
 
-启动一个监听在8080端口的HTTP代理服务。
+### Multiple Services
 
-### 开启多个代理服务
+Start two services, an HTTP proxy service listening on port 8080, and a SOCKS5 proxy service listening on port 1080:
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L http://:8080 -L socks5://:1080 
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -49,15 +51,15 @@
 		type: tcp
 	```
 
-启动两个服务，一个监听在8080端口的HTTP代理服务，和一个监听在1080端口的SOCKS5代理服务。
+### Forwading
 
-### 使用转发
+Start an HTTP proxy service listening on port 8080, and use 192.168.1.1:8080 as the upper-level proxy for forwarding:
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8080 -F http://192.168.1.1:8080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -80,16 +82,15 @@
 		    type: tcp
 	```
 
+### Multi-level Forwarding Chain
 
-监听在8080端口的HTTP代理服务，使用192.168.1.1:8080做为上级代理进行转发。
+GOST finally forwards the request to 192.168.1.2:1080 through the forwarding chain in the order set by `-F`:
 
-### 使用多级转发(转发链)
-
-=== "命令行"
+=== "CLI"
 	```
 	gost -L :8080 -F http://192.168.1.1:8080 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -120,17 +121,15 @@
 		    type: tcp
 	```
 
-GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
+## Forwarding Mode
 
-## 转发模式
+### TCP Local Port Forwarding
 
-### TCP本地端口转发
-
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -144,15 +143,15 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 		- 192.168.1.1:80
 	```
 
-将本地的TCP端口8080映射到192.168.1.1的80端口，所有到本地8080端口的数据会被转发到192.168.1.1:80。
+Map local TCP port 8080 to port 80 of 192.168.1.1, all data sent to the local port 8080 will be forwarded to 192.168.1.1:80.
 
-### UDP本地端口转发
+### UDP Local Port Forwarding
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L udp://:10053/192.168.1.1:53
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -166,15 +165,15 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 		- 192.168.1.1:53
 	```
 
-将本地的UDP端口10053映射到192.168.1.1的53端口，所有到本地10053端口的数据会被转发到192.168.1.1:53。
+Map local UDP port 10053 to port 53 of 192.168.1.1, all data sent to the local port 10053 will be forwarded to 192.168.1.1:53.
 
-### TCP本地端口转发(转发链)
+### TCP Local Port Forwarding (With Chain)
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=tcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -200,15 +199,15 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 			type: tcp
 	```
 
-将本地的TCP端口8080通过转发链映射到192.168.1.1的80端口。
+Map local TCP port 8080 to port 80 of 192.168.1.2 through the forwarding chain `chain-0`.
 
-### TCP远程端口转发
+### TCP Remote Port Forwarding
 
-=== "命令行"
+=== "CLI"
 	```sh
     gost -L=rtcp://:2222/:22 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -234,15 +233,15 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 			type: tcp
 	```
 
-在192.168.1.2上开启并监听TCP端口2222，并将192.168.1.2上的2222端口映射到本地TCP端口22，所有到192.168.1.2:2222的数据会被转发到本地端口22。
+Listen on TCP port 2222 on 192.168.1.2, and map it to local TCP port 22, all data sent to 192.168.1.2:2222 will be forwarded to local port 22.
 
-### UDP远程端口转发
+### UDP Remote Port Forwarding
 
-=== "命令行"
+=== "CLI"
 	```sh
     gost -L=rudp://:10053/:53 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -268,4 +267,4 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 			type: tcp
 	```
 
-在192.168.1.2上开启并监听UDP端口10053，并将192.168.1.2上的10053端口映射到本地UDP端口53，所有到192.168.1.2:10053的数据会被转发到本地端口53。
+Listen on UDP port 10053 on 192.168.1.2, and map it to local UDP port 53, all data sent to 192.168.1.2:10053 will be forwarded to local port 53.

@@ -13,6 +13,7 @@
 - [x] TUN/TAP设备
 - [x] 负载均衡
 - [x] 路由控制
+- [x] 准入控制
 - [x] 动态配置
 - [x] Prometheus监控指标
 - [x] Web API

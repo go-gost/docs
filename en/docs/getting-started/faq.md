@@ -1,27 +1,27 @@
-# 常见问题
+# Frequently Asked Questions
 
-> ### GOST v3和v2版本有何区别？
+> ### What is the difference between versions v2 and v3?
 
-GOST的每一个大版本都是在上一个版本基础之上进行架构的重大调整，v3版本也不例外。
-在尽量保证使用上的兼容性的情况下，v3版本基于v2版做了完全的重构，使得整个架构更加的清晰合理，易于扩展，为后续的开发打下基础。
+Every major version is a significant upgrade of the architecture based on the previous version, v3 is no exception.
+In the case of ensuring the compatibility of use as much as possible, the v3 has been completely refactored based on the v2 version, making the entire architecture clearer and more reasonable.
 
-> ### GOST v3为什么独立出来了？
+> ### Why is v3 in the separate repository?
 
-GOST v3版本是一次重大的升级，除了功能和用法上的相似外，完全可以认为是一个全新的应用。v2版本功能也已经成熟，为了不对之前的版本造成影响，也为了不受之前版本的影响，独立出来是比较好的选择。
+Version v3 is a major upgrade, except for the similarities in function and usage, it can be considered a completely new application. The function of the v2 is also mature. In order not to affect the previous version, but also to not be affected by the previous version, it is a better choice to be independent.
 
-> ### GOST支持定制开发吗？
+> ### Does GOST support custom development?
 
-不支持。
+No.
 
-> ### GOST会商业化收费吗？
+> ### Will GOST be charged?
 
-没有这方面的打算。GOST是一款开源软件，所有源代码均公开，任何人都可以自由使用和修改。
+GOST is an open source software, all source codes are open, and anyone can use and modify them freely.
 
-> ### 我该如何支持该项目？
+> ### How can I support this project?
 
-您的使用和意见反馈就是对项目最大的支持！
+Your feedback is the best support!
 
-如果您还想请开发者喝杯咖啡可以通过以下渠道(喝茶就免了)
+Buy me a coffee if you want:
 
 ![BTC](../images/btc.png) 
 ![ETH](../images/eth.png)
