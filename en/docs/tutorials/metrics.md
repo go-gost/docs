@@ -1,14 +1,16 @@
-# 监控指标
+# Prometheus Metrics
 
-GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供监控数据。
+GOST internally provides monitoring data through the [Prometheus](https://prometheus.io/) metrics.
 
-## 开启监控
+## Enable Metrics
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L :8080 -metrics=:9000
 	```
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -24,17 +26,17 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 	```
 
 	`metrics.addr` (string)
-	:    监控指标HTTP API服务地址
+	:    Metrics HTTP API service addresss
 
 	`metrics.path` (string, default=/metrics)
-	:    API路径
+	:    API path
 
 
-通过`metrics`参数来开启监控指标记录，默认不开启。
+Use the `metrics` option to enable metrics, which is disabled by default.
 
-开启之后可以通过`http://localhost:9000/metrics`地址查看到指标数据。
+After enabling, you can view the metrics data through the `http://localhost:9000/metrics` endpoint.
 
-!!! example "指标示例"
+!!! example "Metrics"
     ```
     gost_chain_errors_total{chain="chain-0",host="host-0"} 1
 
@@ -69,35 +71,35 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 	gost_services{host="host-0"} 1
 	```
 
-## 指标说明
+## Metrics Description
 
 `gost_services` (type=gauge)
-:    运行的服务数量
+:    Current number of services
 
 `gost_service_requests_total` (type=counter)
-:    服务处理的请求总数
+:    Total number of requests
 
 `gost_service_transfer_input_bytes_total` (type=counter)
-:    服务接收到的数据字节数
+:    Total service input data transfer size in bytes
 
 `gost_service_transfer_output_bytes_total` (type=counter)
-:    服务发送出的数据字节数
+:    Total service output data transfer size in bytes
 
 `gost_service_requests_in_flight` (type=gauge)
-:    服务当前正在处理中的请求数
+:    Current in-flight requests
 
 `gost_service_request_duration_seconds` (type=histogram)
-:    服务请求处理的时长分布
+:    Distribution of request latencies
 
 `gost_service_handler_errors_total` (type=counter)
-:    服务处理请求失败数
+:    Total service handler errors
 
 `gost_chain_errors_total` (type=counter)
-:    转发链本身建立连接失败数
+:    Total chain connection errors
 
 ## Grafana Dashboard
 
-你可以使用以下的Dashboard来呈现监控指标数据
+You can use the following Dashboard to present metrics data.
 
 [https://grafana.com/grafana/dashboards/16037](https://grafana.com/grafana/dashboards/16037)
 

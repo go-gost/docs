@@ -1,6 +1,6 @@
-# WebAPI
+# Web API
 
-GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
+GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 
 === "命令行"
     ```sh
@@ -60,9 +60,9 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 
 ## 在线测试
 
-你可以使用[线上环境](https://latest.gost.run/play/webapi/config)进行测试，或在下面的swaggerUI中直接尝试。接口说明请参考[在线API文档](/swagger-ui/)。
+你可以使用[线上环境](https://gost.run/play/webapi/config)进行测试，或在下面的swaggerUI中直接尝试。接口说明请参考[在线API文档](/swagger-ui/)。
 
-GOST程序已经内置了swagger API文档，如果本地开启了WebAPI服务，也可以通过[https://gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml](/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml)来尝试配置本地服务(这里假设本地WebAPI服务运行在18080端口)。
+GOST程序已经内置了swagger API文档，如果本地开启了Web API服务，也可以通过[https://gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml](/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml)来尝试配置本地服务(这里假设本地Web API服务运行在18080端口)。
 
 !!! note "Scheme切换"
     SwaggerUI中默认的scheme为HTTPS，如果要测试本地服务则需要手动切换到HTTP。

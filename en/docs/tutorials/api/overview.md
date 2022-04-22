@@ -1,12 +1,14 @@
-# WebAPI
+# Web API
 
-GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
+GOST can use the RESTful API to interact with the GOST process by starting the Web API service.
 
-=== "命令行"
+=== "CLI"
     ```sh
 	gost -L http://:8080 -api :18080
 	```
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -25,13 +27,15 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 	  auther: auther-0
 	```
 
-甚至可以只开启API服务，后续通过API来动态配置服务和其他组件。
+You can even only open the API service, and then dynamically configure the service and other components through the API.
 
-=== "命令行"
+=== "CLI"
     ```sh
 	gost -api :18080
 	```
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
 	api:
 	  addr: :18080
@@ -42,27 +46,27 @@ GOST可以通过开启WebAPI服务使用RESTful API和GOST进程进行交互。
 		password: pass
 	  auther: auther-0
 	```
-## 路径前缀
+## Path Prefix
 
-通过`pathPrefix`参数可以设置URL路径前缀。
+The URL path prefix can be set via the `pathPrefix` property.
 
-例如默认路径为http://localhost:18080/config，当设置`pathPrefix`为`/api`后变为http://localhost:18080/api/config。
+For example, the default path is http://localhost:18080/config, when `pathPrefix` is set to `/api`, it becomes http://localhost:18080/api/config.
 
-## 访问日志
+## Access Log
 
-通过`accesslog`参数开启接口访问日志，默认不输出访问日志。
+Use the `accesslog` property to enable the API access log. By default, no access log is output.
 
-## 身份认证
+## Authentication
 
-通过`auth`或`auther`参数可以设置身份认证信息。如果设置了`auther`参数，`auth`参数则会被忽略。
+Authentication information can be set through the `auth` or `auther` property. If the `auther` property is set, the `auth` property is ignored.
 
-身份认证采用[HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication)方式。
+Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
 
-## 在线测试
+## Online Test
 
-你可以使用[线上环境](https://latest.gost.run/play/webapi/config)进行测试，或在下面的swaggerUI中直接尝试。接口说明请参考[在线API文档](/swagger-ui/)。
+You can use [online environment](https://gost.run/play/webapi/config) to test, or try it directly in swaggerUI below. For API documentation, please refer to [API Documentation](/swagger-ui/).
 
-GOST程序已经内置了swagger API文档，如果本地开启了WebAPI服务，也可以通过[https://gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml](/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml)来尝试配置本地服务(这里假设本地WebAPI服务运行在18080端口)。
+The GOST program has built-in swagger API documentation. If the Web API service is enabled locally, you can also use [https://gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml]( /swagger-ui/?url=http://localhost:18080/docs/swagger.yaml) to try to configure the local service (this assumes that the local Web API service is running on port 18080).
 
-!!! note "Scheme切换"
-    SwaggerUI中默认的scheme为HTTPS，如果要测试本地服务则需要手动切换到HTTP。
+!!! note "Switch Scheme"
+	The default scheme in SwaggerUI is HTTPS. If you want to test local services, you need to manually switch to HTTP.

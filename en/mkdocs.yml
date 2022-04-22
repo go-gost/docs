@@ -93,7 +93,7 @@ nav:
     - Proxy and Tunnel: concepts/proxy.md
     - Service: concepts/service.md
     - Chain: concepts/chain.md
-    - Node Selecting: concepts/selector.md
+    - Node Selection: concepts/selector.md
     - Authentication: concepts/auth.md
     - Traffic Bypass: concepts/bypass.md
     - Admission: concepts/admission.md

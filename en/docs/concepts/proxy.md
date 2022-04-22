@@ -6,7 +6,6 @@ The two most commonly used functions in GOST are proxy and forwarding, and both 
 
 Generally speaking, it refers to a proxy protocol, such as HTTP, SOCKS5, etc., which is an application-layer data exchange protocol. Unlike general protocols, the server acts as an intermediary or a proxy here, and the client's request destination address is not A proxy service, but a third-party service negotiated through a proxy protocol. After establishing a connection with a third-party service, the proxy service is just a data forwarding role here.
 
-代理由于使用了特定协议，因此可以实现许多额外功能，例如身份认证，权限管理等。
 Because the proxy uses a specific protocol, it can achieve many additional functions, such as identity authentication, permission control, etc.
 
 ## Forwarding
@@ -59,7 +58,6 @@ Both proxy and forwarding can work individually, but using them in combination c
 
 ### Port Forwarding Using a Proxy
 
-某些情况下，端口转发中的两个端口之间不能直接建立连接，这时可以通过转发链利用代理服务来进行中转。
 In some cases, a direct connection cannot be established between the two ports in port forwarding, which can be achieved through a forwarding chain.
 
 ```
