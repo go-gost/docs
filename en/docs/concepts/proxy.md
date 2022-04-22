@@ -1,73 +1,76 @@
-# 代理转发和通道
+# Proxy, Forwarding and Tunnel
 
-在GOST中最常用到的两个功能是代理和转发，而这两个功能都需要一个载体，这个载体就是通道，或称为数据通道。这三个概念彼此之间有差异，又有类似的地方，甚至三者之间可以互相转换。
+The two most commonly used functions in GOST are proxy and forwarding, and both functions require a carrier, which is a tunnel, or a data channel. These three concepts are different from each other, and there are similarities, and even the three can be converted into each other.
 
-## 代理
+## Proxy
 
-通常意义上指的是代理协议，例如HTTP, SOCKS5等，是一种应用层数据交换协议，和一般的协议不同的是，服务端在这里充当中间人或代理者的角色，客户端的请求目标地址不是代理服务，而是通过代理协议协商的第三方服务。与第三方服务建立了连接后，代理服务在这里就只是一个数据转发的作用。
+Generally speaking, it refers to a proxy protocol, such as HTTP, SOCKS5, etc., which is an application-layer data exchange protocol. Unlike general protocols, the server acts as an intermediary or a proxy here, and the client's request destination address is not A proxy service, but a third-party service negotiated through a proxy protocol. After establishing a connection with a third-party service, the proxy service is just a data forwarding role here.
 
 代理由于使用了特定协议，因此可以实现许多额外功能，例如身份认证，权限管理等。
+Because the proxy uses a specific protocol, it can achieve many additional functions, such as identity authentication, permission control, etc.
 
-## 转发
+## Forwarding
 
-一般指的是端口转发或端口映射，在两个不同的端口之间建立一种联系，一般是单向映射，发送到其中一个端口的数据最终会原封不动的发到另一个端口，但反过来是不行的。转发可以不使用任何应用协议(纯TCP转发)，也可以使用特定的转发协议(Relay)。转发也可以看作是一种定向透明代理，客户端无法指定目标地址，甚至不需要区分转发服务与实际的目标服务。
+Generally it refers to port forwarding or port mapping, which establishes a connection between two different ports, usually a one-way mapping. The data sent to one port will eventually be sent to the other port intact, but the reverse is infeasible. Forwarding can be performed without any application protocol (pure TCP forwarding), or a specific forwarding protocol such as relay can be used. Forwarding can also be regarded as a kind of directional transparent proxy, the client cannot specify the target address, and even does not need to distinguish the forwarding service from the actual target service.
 
-## 通道
+## Tunnel
 
-通道或叫数据通道，是指一个可以双向传输的数据流，通道的两端都可以同时收发数据，以实现全双工通信。
-任何可以实现此功能定义的通信协议都可以用来作为数据通道，例如TCP/UDP协议，Websocket，HTTP/2，QUIC等，甚至代理和转发采用一些手段也可以被用作通道。
+Tunnel or data channel refers to a data stream that can be transmitted in both directions. Both ends of the tunnel can send and receive data at the same time to achieve full-duplex communication.
 
-## 逻辑分层
+Any communication protocol that can implement this function can be used as a tunnel, such as TCP/UDP protocol, Websocket, HTTP/2, QUIC, etc. Even proxy and forwarding can be used as a channel by some means.
 
-虽然三者紧密相关，但在GOST中还是做了稍微严格的划分，一个GOST服务或节点被分为两层，数据通道层和数据处理层。数据通道层对应的是拨号器和监听器，数据处理层对应的是连接器，处理器和转发器，这里又根据是否使用转发器来区分是代理还是转发。
+## Logical Layering
 
-这是一种逻辑上的划分，具体到协议是没有这些限制的。例如HTTP/2协议既可以作为数据通道也可以作为代理，Relay协议兼具代理和转发功能，甚至HTTP也被用来作为数据通道(pht)。
+Although they are closely related, a slightly strict division is made in GOST. A GOST service or node is divided into two layers, the data channel layer and the data processing layer. The data channel layer corresponds to the dialer and the listener, and the data processing layer corresponds to the connector, the handler and the forwarder. Proxy mode or forward mode is distinguished according to whether a forwarder is used or not.
 
-=== "Relay代理模式"
+It is a logical division, specific protocols do not have these restrictions. For example, the HTTP/2 protocol can be used as both a data channel and a proxy, the Relay protocol has both proxy and forwarding functions, and even HTTP can be used as a data channel (pht).
 
-    服务端
-	```
-	gost -L relay+wss://gost:gost@:8420
-	```
+=== "Relay Proxy Mode"
 
-	客户端
-	```
-	gost -L http://:8080 -F relay+wss://gost:gost@:8420
-	```
+    Server
+    ```
+    gost -L relay+wss://gost:gost@:8420
+    ```
 
-	客户端使用TCP数据通道通过HTTP代理协议接收请求，使用Websocket数据通道通过relay协议转发给服务端处理，并开启认证。这里数据在两层代理(HTTP代理和Relay代理)之间进行传输。
+	Client
+    ```
+    gost -L http://:8080 -F relay+wss://gost:gost@:8420
+    ```
 
-=== "Relay转发模式"
+	The client uses the TCP data channel to receive the request through the HTTP proxy protocol, uses the Websocket data channel to forward it to the server through the relay protocol for processing, and enables authentication. Here data is transferred between two layers of proxies (HTTP proxy and Relay proxy).
 
-    服务端
-	```
-	gost -L relay+wss://:8420/:18080
-	```
+=== "Relay Forwarding Mode"
 
-    客户端
-	```
-	gost -L tcp://:8080 -F relay+wss://:8420
-	```
+    Server
+    ```
+    gost -L relay+wss://:8420/:18080
+    ```
 
-	客户端使用TCP数据通道进行转发，再使用Websocket数据通道通过relay协议进行转发，服务端最终将数据发送给18080端口。这里使用了两层转发，最终将客户端的8080端口映射到服务端的18080端口，访问客户端的8080端口和直接访问服务端的18080端口是没有区别的。
+    Client
+    ```
+    gost -L tcp://:8080 -F relay+wss://:8420
+    ```
 
-## 协同效应
+	The client uses the TCP data channel to forward, and then uses the Websocket data channel to forward through the relay protocol, and the server finally sends the data to port 18080. Two-layer forwarding is used here, and finally the 8080 port of the client is mapped to the 18080 port of the server. There is no difference between accessing the 8080 port of the client and directly accessing the 18080 port of the server.
 
-代理和转发都可以单独工作，但把三者组合使用会产生一些不同的效果。
+## Collaboration
 
-### 使用代理进行端口转发
+Both proxy and forwarding can work individually, but using them in combination can have some different effects.
+
+### Port Forwarding Using a Proxy
 
 某些情况下，端口转发中的两个端口之间不能直接建立连接，这时可以通过转发链利用代理服务来进行中转。
+In some cases, a direct connection cannot be established between the two ports in port forwarding, which can be achieved through a forwarding chain.
 
 ```
 gost -L tcp://:8080/192.168.1.1:80 -F http://192.168.1.2:8080
 ```
 
-8080端口通过转发链中的192.168.1.2:8080代理节点间接映射到192.168.1.1:80。
+Port 8080 is indirectly mapped to 192.168.1.1:80 through the 192.168.1.2:8080 proxy node in the forwarding chain.
 
-### 添加数据通道
+### Adding a Data Channel
 
-通过转发可以为已存在的服务动态增加数据通道。
+Data channel can be dynamically added to existing services through forwarding.
 
 #### HTTP-over-TLS
 
@@ -75,9 +78,9 @@ gost -L tcp://:8080/192.168.1.1:80 -F http://192.168.1.2:8080
 gost -L tls://:8443/:8080 -L http://:8080
 ```
 
-通过使用TLS数据通道的端口转发，给8080端口的HTTP代理服务增加了TLS加密数据通道。
+Added a TLS encrypted data channel to the HTTP proxy service on port 8080 by using port forwarding of the TLS data channel.
 
-此时8443端口等同于：
+Service on port 8443 is equivalent to:
 
 ```
 gost -L https://:8443
@@ -89,21 +92,21 @@ gost -L https://:8443
 gost -L kcp://:8338/:8388 -L ss://:8388
 ```
 
-通过使用KCP数据通道的端口转发，给8388端口的shadowsocks代理服务增加了KCP数据通道。
+By using port forwarding of the KCP data channel, a KCP data channel is added to the shadowsocks proxy service on port 8388.
 
-此时8338端口等同于：
+Service on port 8338 is equivalent to:
 
 ```
 gost -L ss+kcp://:8338
 ```
 
-### 去除数据通道
+### Remove a Data Channel
 
-与上面的例子相反，也可以通过转发将现有服务的数据通道去除。
+Contrary to the above example, the data channel of an existing service can also be removed by forwarding.
 
 #### HTTPS to HTTP
 
-将HTTPS代理服务转成HTTP代理服务
+Convert HTTPS proxy service to HTTP proxy service:
 
 ```
 gost -L https://:8443
@@ -113,7 +116,8 @@ gost -L https://:8443
 gost -L tcp://:8080 -F forward+tls://:8443
 ```
 
-此时8080端口等同于：
+Service on port 8080 is equivalent to:
+
 ```
 gost -L http://:8080
 ```
@@ -128,7 +132,8 @@ gost -L ss+kcp://:8338
 gost -L ss://:8388 -F forward+kcp://:8338
 ```
 
-此时8388端口等同于：
+Service on port 8388 is equivalent to:
+
 ```
 gost -L ss://:8388
 ```

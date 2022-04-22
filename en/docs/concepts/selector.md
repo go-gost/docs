@@ -2,30 +2,32 @@
 
 ## Selector
 
-在GOST中，节点组中节点的选择是通过节点选择器来完成的。选择器负责在一个节点组中使用节点选择策略选择出零个或一个节点。选择其可以应用于转发链，转发链中的跳跃点，和转发器上。节点选择器在GOST中用来实现负载均衡。
+In GOST, the selection of nodes in a node group is done through node selector. The selector is responsible for selecting zero or one nodes in a node group using the node selection strategy. Selector can be applied to forwarding chains, hops, and forwarders. Node selectors are used in GOST for load balancing.
 
 `strategy` (string, default=round)
-:    指定节点选择策略。
+:    Node selection strategy:
     
-     * `round` - 轮询
-     * `rand` - 随机
-     * `fifo` - 自上而下，主备模式
+     * `round` - round robin
+     * `rand` - random
+     * `fifo` - top-down 
 
 `maxFails` (int, default=1)
-:    指定节点连接的最大失败次数，当与一个节点建立连接失败次数超过此设定值时，此节点会被标记为死亡节点(Dead)，死亡节点不会被选择使用。
+:    The maximum number of failed connections for a specified node, When the number of failed connections with a node exceeds this set value, the node will be marked as a dead node, dead node will not be selected to use.
 
 `failTimeout` (duration, default=30s)
-:    指定死亡节点的超时时长，当一个节点被标记为死亡节点后，在此设定的时间间隔内不会被选择使用，超过此设定时间间隔后，会再次参与节点选择。
+:    Specify the dead node's timeout period. When a node is marked as a dead node, it will not be selected within this set time interval. After this set time interval, it will participate in node selection again.
 
-## 转发链
+## Forwarding Chain
 
-转发链本身和其中的每一层级跳跃点上可以设置一个选择器，如果跳跃点上没有设置选择器，则使用转发链上的选择器，默认选择器使用轮询策略进行节点选择。
+Selector can be set on the forwarding chain itself and each hop level in it. If no selector is set on the hop, the selector on the forwarding chain is used. The default selector uses the `round` strategy for node selection.
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8080 -F socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=rand&maxFails=3&failTimeout=60s
 	```
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -65,15 +67,16 @@
             type: tcp
 	```
 
-## 转发器
+## Forwarder
 
-转发器用于端口转发，其本身由一个节点组和一个节点选择器组成，当进行转发时，通过选择器在节点组中选择出零个或一个节点用于转发的目标地址。此时转发器类似于单跳跃点的转发链。
+Forwarder is used for port forwarding, it consists of a node group and a node selector. When forwarding is performed, zero or one node is selected from the node group for the forwarding destination address through the selector. The forwarder is now similar to a single-hop forwarding chain.
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L "tcp://:8080/192.168.1.1:8081,192.168.1.2:8082?strategy=round&maxFails=1&failTimeout=30s
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -92,6 +95,6 @@
 		  failTimeout: 30s
 	```
 
-## 负载均衡
+## Load Balancing
 
-通过节点组和选择器的组合使用，我们就可以在数据转发中实现负载均衡的功能。
+Through the combination of node groups and selectors, we can achieve the function of load balancing in data forwarding.

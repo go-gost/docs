@@ -185,7 +185,6 @@ resolvers:
 
 ## ECS
 
-通过`clientIP`参数设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
 Set the client IP through the `clientIP` property, and enable the ECS (EDNS Client Subnet) extension function.
 
 ```yaml

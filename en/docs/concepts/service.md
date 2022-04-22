@@ -1,21 +1,22 @@
-# 服务
+# Service
 
-!!! tip "一切皆服务"
-    在GOST中客户端和服务端是相对的，客户端本身也是一个服务，如果使用了转发链或转发器，则其中的节点就被当作服务端。
+!!! tip "Everything as a Service"
+    In GOST, the client and the server are relative, and the client itself is also a service. If a forwarding chain or forwarder is used, the node in it is regarded as the server.
 
-服务是GOST的基础模块，是GOST程序的入口，无论是服务端还是客户端都是以服务为基础构建。
-一个服务包括一个监听器作为数据通道，一个处理器用于数据处理和一个可选的转发器用于端口转发。
+Service is the fundamental module of GOST and the entrance to the GOST program. Both the server and the client are built on the basis of services.
 
-!!! tip "动态配置"
-    服务支持通过Web API进行动态配置。
+A service consists of a listener as a data channel, a handler for data processing and an optional forwarder for port forwarding.
 
-## 流程
+!!! tip "Dynamic configuration"
+    Service supports dynamic configuration via Web API.
 
-当一个服务运行后，监听器会根据服务的配置监听在指定的端口并使用指定的协议进行通讯。收到正确的数据后，监听器建立一个数据通道连接，将此连接交给处理器使用。处理器按照指定的协议进行数据通讯，收到客户端的请求后，获取到目标地址，如果使用了转发器，则使用转发器中指定的目标地址，再使用路由器将请求发送到此目标主机。
+## Workflow
 
-!!! info "路由器"
-	路由器是处理器内部的一个抽象模块，其内部包含了转发链，域名解析器，主机映射器等，用于服务和目标主机之间的请求路由。
+When a service is running, the listener will listen on the specified port according to the configuration of the service and communicate using the specified protocol. After receiving the correct data, the listener establishes a data channel connection and hands this connection to the handler for use. The handler performs data communication according to the specified protocol, and after receiving the request from the client, obtains the target address. If a forwarder is used, the target address specified in the forwarder is used, and then the router is used to send the request to the target host.
 
-## 服务网格
+!!! info "Router"
+    Router is an abstract module inside the handler, which contains the forwarding chain, resolver, host mapper, etc., for request routing between the service and the target host.
 
-服务和服务之间是独立的，而通过转发链或转发器可以在服务之间建立联系，形成一个服务网。数据可以在服务之间进行任意的跳跃和中转。利用服务网可以实现一些额外的功能，例如：负载均衡，分流等。
+## Service Mesh
+
+Services and services are independent, and a link between services can be established through forwarding chains or forwarders to form a service mesh. Data can hop and transfer arbitrarily between services. Some additional functions can be realized by using the service network, such as load balancing, bypass, etc.
