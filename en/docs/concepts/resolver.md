@@ -1,26 +1,25 @@
-# 域名解析
+# Domain Name Resolution
 
-通过在服务或转发链中设置域名解析器，可以更改域名解析行为。
+!!! tip "Dynamic configuration"
+    Resolver supports dynamic configuration via Web API.
 
-!!! tip "动态配置"
-    解析器支持通过Web API进行动态配置。
+## Resolver
 
-## 域名解析器
+Resolver resolves the domain name by setting the upper-level DNS list, and the resolver can be applied to the service or forwarding chain. The resolver in the service resolves the target address of the request, and the resolver in the forwarding chain resolves the node addresses.
 
-域名解析器通过设置上级域名服务列表对指定的域名进行解析，域名解析器可以应用于服务或转发链中。服务中的域名解析器对请求的目标地址进行解析，转发链中的域名解析器对转发链中的节点地址进行解析。
+## Resolver In Service
 
-## 服务上的解析器
+Use Resolver to resolve the request target address.
 
-当服务中的处理器在与目标主机建立连接之前，会使用域名解析器对请求目标地址进行解析。
-
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8080?resolver=1.1.1.1,tcp://8.8.8.8,tls://8.8.8.8:853,https://1.0.0.1/dns-query
 	```
 
-	通过`resolver`参数来指定上级域名解析服务列表。
+	Use the `resolver` option to specify the list of upper-level DNS.
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -39,35 +38,36 @@
 	  - addr: https://1.0.0.1/dns-query
 	```
 
-	服务中使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
+	The `resolver` property is used in the service to use the specified resolver by referencing the resolver name.
 
-每个DNS服务的格式为：
+The format of each DNS is:
 
 `[protocol://]ip[:port]`
 
-* `protocol`支持的类型有`udp`，`tcp`，`tls`，`https`，默认值为`udp`。
+* `protocol` types: `udp`, `tcp`, `tls`, `https`. Default value is `udp`.
 
-* `port`默认值为53。
+* `port` default value is 53.
 
-例如：
+!!! example
 
-* udp://1.1.1.1:53，或udp://1.1.1.1
-* tcp://1.1.1.1:53
-* tls://1.1.1.1:853
-* https://1.0.0.1/dns-query
+    * udp://1.1.1.1:53，或udp://1.1.1.1
+    * tcp://1.1.1.1:53
+    * tls://1.1.1.1:853
+    * https://1.0.0.1/dns-query
 
-## 转发链上的解析器
+## Resolver In Chain
 
-转发链中可以在跳跃点上或节点上设置解析器，当节点上未设置解析器，则使用跳跃点上的解析器。
+Resolver can be set on a hop or a node in the forwarding chain. When no resolver is set on the node, the resolver on the hop is used.
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8000 -F http://example.com:8080?resolver=1.1.1.1,tcp://8.8.8.8,tls://8.8.8.8:853,https://1.0.0.1/dns-query
 	```
 
-	通过`resolver`参数来指定上级域名解析服务列表。`resolver`参数对应配置文件中hop级别的解析器。
+	Use the `resolver` option to specify the list of upper-level DNS. The `resolver` option corresponds to the hop-level resolver in the configuration file.
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -101,11 +101,11 @@
 	  - addr: https://1.0.0.1/dns-query
 	```
 
-	转发链的hop或node中使用`resolver`属性通过引用解析器名称(name)来使用指定的解析器。
+	Use the `resolver` property in the hop or node of the forwarding chain to use the specified resolver by referencing the resolver name.
 
-## 使用转发链
+## Use Forwarding Chain
 
-域名解析器中的每个上级域名服务可以分别设置转发链。
+Each upper-level DNS in the resolver can set the forwarding chain separately.
 
 ```yaml
 services:
@@ -159,9 +159,9 @@ resolvers:
 	chain: chain-2
 ```
 
-## 缓存
+## Cache
 
-每个解析器内部有一个缓存，通过`ttl`参数可以设置缓存时长，默认使用DNS查询返回结果中的TTL，当设置为负值，则不使用缓存。
+There is a cache inside each resolver. The cache duration can be set through the `ttl` property. By default, the TTL in the result returned by the DNS query is used. When it is set to a negative value, the cache is not used.
 
 ```yaml
 resolvers:
@@ -173,7 +173,7 @@ resolvers:
 
 ## IPv6
 
-解析器默认返回IPv4地址，可以通过`prefer`参数设置切换到IPv6地址。
+Resolver returns IPv4 addresses by default and can be switched to IPv6 addresses by setting the `prefer` property.
 
 ```yaml
 resolvers:
@@ -186,6 +186,7 @@ resolvers:
 ## ECS
 
 通过`clientIP`参数设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
+Set the client IP through the `clientIP` property, and enable the ECS (EDNS Client Subnet) extension function.
 
 ```yaml
 resolvers:

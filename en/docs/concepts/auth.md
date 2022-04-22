@@ -1,24 +1,26 @@
-# 认证
+# Authentication
 
-GOST中可以通过设置单认证信息或认证器进行简单的身份认证。
+Authentication can be performed by setting single authentication information or authenticator.
 
-!!! tip "动态配置"
-    认证器支持通过Web API进行动态配置。
+!!! tip "Dynamic configuration"
+    Authenticator supports dynamic configuration via Web API.
 
-## 单认证信息
+## Single Authentication
 
-如果不需要多用户认证，则可以通过直接设置单认证信息来进行单用户认证。
+If multi-user authentication is not required, single-user authentication can be performed by directly setting the single authentication information.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
 
-	直接通过`username:password`方式设置
+	Set directly by `username:password`:
 
     ```sh
 	gost -L http://user:pass@:8080
 	```
-	如果认证信息中包含特殊字符，也可以通过`auth`参数来设置，`auth`的值为`username:password`形式的base64编码值。
+
+	If the authentication information contains special characters, it can also be set through the `auth` option. The value of `auth` is a base64 encoded value in the form of `username:password`.
+
 	```sh
 	echo -n user:pass | base64
 	```
@@ -27,7 +29,7 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 	gost -L http://:8080?auth=dXNlcjpwYXNz
 	```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
 	services:
@@ -42,24 +44,25 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 		type: tcp
 	```
 
-    服务的处理器或监听器上通过`auth`属性设置单认证信息。
+	Single authentication information is set via the `auth` property on the service's handler or listener.
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
 
-	直接通过`username:password`方式设置
+	Set directly by `username:password`:
 
     ```
 	gost -L http://:8080 -F socks5://user:pass@:1080
 	```
-	如果认证信息中包含特殊字符，也可以通过`auth`参数来设置，`auth`的值为`username:password`形式的base64编码值。
+
+	If the authentication information contains special characters, it can also be set through the `auth` option. The value of `auth` is a base64 encoded value in the form of `username:password`.
 
 	```
 	gost -L http://:8080 -F socks5://:1080?auth=dXNlcjpwYXNz
 	```
 
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
@@ -84,15 +87,17 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 		  dialer:
 		    type: tcp
 	```
-	节点的连接器或拨号器上通过`auth`属性设置单认证信息。
 
-## 认证器
+	Single authentication information is set via the `auth` property on the node's connector or dialer.
 
-认证器包含一组或多组认证信息。服务通过认证器可以实现多用户认证功能。
+## Authenticator
 
-认证器仅支持配置文件设置。
+An authenticator contains one or more sets of authentication information. Service can achieve the multi-user authentication function through the authenticator.
 
-=== "配置文件"
+!!! note 
+    Authenticator only supports the configuration file method.
+
+=== "File (YAML)"
     ```yaml
     services:
     - name: service-0
@@ -111,23 +116,23 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
         password: pass2
 	```
 
-服务的处理器或监听器上通过`auther`属性引用认证器名称(name)来使用指定的认证器。
+Use the specified authenticator by referencing the authenticator name via the `auther` property on the service's handler or listener.
 
-!!! caution "优先级"
-    如果使用了认证器，则单认证信息会被忽略。
+!!! caution "Priority"
+	If an authenticator is used, single authentication information will be ignored.
 
-	如果设置了`auth`参数，则路径中直接设置的认证信息会被忽略。
+	If the `auth` option is set, the authentication information set directly in the path will be ignored.
 
-!!! caution "Shadowsocks处理器"
-    Shadowsocks处理器无法使用认证器，仅支持通过设置单认证信息作为加密参数。
+!!! caution "Shadowsocks Handler"
+	The Shadowsocks handler cannot use authenticator, and only supports setting single authentication information as encryption parameter.
 
-## 数据源
+## Data Source
 
-认证器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
+Authenticator can configure multiple data sources, currently supported data sources are: inline, file, redis.
 
-### 内联
+### Inline
 
-内联数据源是指直接在配置文件中通过`auths`参数设置数据。
+An inline data source means setting the data directly in the configuration file via the `auths` property.
 
 ```yaml
 authers:
@@ -139,9 +144,9 @@ authers:
     password: pass2
 ```
 
-### 文件
+### File
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+Specify an external file as the data source. Specify the file path via the `file.path` property.
 
 ```yaml
 authers:
@@ -150,7 +155,7 @@ authers:
     path: /path/to/auth/file
 ```
 
-文件格式为按行分割的认证信息，每一行认证信息为用空格分割的user-pass对，以`#`开始的行为注释行。
+The file format is the authentication information separated by lines, each line of authentication information is a user-pass pair separated by spaces, and the lines starting with `#` are commented out.
 
 ```text
 # username password
@@ -162,7 +167,7 @@ test.user@002   12345678
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型必须为哈希(Hash)类型。
+Specify the redis service as the data source, and the redis data type must be [Hash](https://redis.io/docs/manual/data-types/#hashes).
 
 ```yaml
 authers:
@@ -175,24 +180,25 @@ authers:
 ```
 
 `addr` (string, required)
-:    redis服务地址
+:    redis server address
 
 `db` (int, default=0)
-:    数据库名
+:    database name
 
 `password` (string)
-:    密码
+:    password
 
 `key` (string, default=gost)
 :    redis key
 
-## 优先级
+## Priority
 
-当同时配置多个数据源时，优先级从高到低为: redis，文件，内联。如果在不同数据源中存在相同的用户名，则优先级高的会覆盖优先级低的数据。
+When configuring multiple data sources at the same time, the priority from high to low is: redis, file, inline. If the same username exists in different data sources, the data with higher priority will overwrite the data with lower priority.
 
-## 热加载
+## Hot Reload
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
+
 
 ```yaml
 authers:
@@ -207,7 +213,7 @@ authers:
 	key: gost:authers:auther-0
 ```
 
-!!! note "注意"
-	通过命令行设置的认证信息仅会应用到处理器或连接器上，对于ssh和sshd服务则会应用到监听器和拨号器上。
+!!! note 
+	Authentication information set via the command line applies only to the handler or connector, and for ssh and sshd services it applies to the listener and dialer.
 
-	如果通过命令行自动生成配置文件，在metadata中不会出现此参数项。
+	If the configuration file is automatically generated through the command line, this parameter item will not appear in the metadata.

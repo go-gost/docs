@@ -1,17 +1,20 @@
-# 转发链
+# Forwarding Chain
 
-!!! tip "动态配置"
-    转发链支持通过Web API进行动态配置。
+!!! tip "Dynamic configuration"
+    Forwarding chain supports dynamic configuration via Web API.
 
-转发链是由若干个节点按照特定的层级分组所形成的节点组列表，每一层级节点组构成一个跳跃点，数据依次经过每个跳跃点进行转发。转发链是GOST中一个重要模块，是服务与服务之间建立连接的纽带。
+Forwarding chain is a list of node groups formed by several nodes grouped according to a specific level. Each level of node group is a hop, and data is forwarded through each hop in turn. Forwarding chain is an important module in GOST, it is the link for establishing connections between services.
 
-转发链中的节点彼此之间相互独立，每个节点可以单独使用不同的数据通道和数据处理协议。
+The nodes in the forwarding chain are independent of each other, and each node can use different data channels and data processing protocols independently.
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8080 -F https://192.168.1.1:8080 -F socks5+ws://192.168.1.2:1080
 	```
-=== "配置文件"
+	All `-F` parameters on the command line form a forwarding chain, and all services use this forwarding chain.
+
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -41,20 +44,19 @@
 		  dialer:
 		    type: ws
 	```
+	Listeners or handlers of a service use the specified forwarding chain by referring to the forwarding chain's name via the `chain` property.
 
-在命令行中所有的`-F`参数构成一个转发链，所有的服务使用此转发链。
-在配置文件中服务的监听器或处理器通过`chain`属性引用转发链的名称(`name`属性)使用指定的转发链。
+## Node Group
 
-## 节点组
+Each hop level can add multiple nodes to form a node group.
 
-每一层级可以添加多个节点组成节点组。
-
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8080 -F https://192.168.1.1:8080,192.168.1.1:8081,192.168.1.2:8082 -F socks5+ws://192.168.0.1:1080,192.168.0.1:1081,192.168.0.2:1082
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -109,13 +111,14 @@
 		    type: ws
 	```
 
-第一个跳跃点(hop-0)节点组中有三个节点：192.168.1.1:8080(node-0)，192.168.1.1:8081(node-1)，192.168.1.2:8082(node-2)，它们使用相同的节点配置。
+There are three nodes in the first hop level (hop-0): 192.168.1.1:8080(node-0), 192.168.1.1:8081(node-1), 192.168.1.2:8082(node-2). They use the same node configuration.
 
-第二个跳跃点(hop-1)节点组中有三个节点：192.168.0.1:1080(node-0)，192.168.0.1:1081(node-1)，192.168.0.2:1082(node-2)，它们使用相同的节点配置。
+There are three nodes in the second hop level (hop-1): 192.168.0.1:1080(node-0)，192.168.0.1:1081(node-1)，192.168.0.2:1082(node-2). They use the same node configuration.
 
-如果需要自由配置每个节点可以使用配置文件。
+If you need to configure each node freely, you can use the configuration file.
 
-??? example "多类型节点"
+??? example "Multiple types"
+
     ```yaml
 	services:
 	- name: service-0
@@ -170,11 +173,12 @@
 		    type: h2
 	```
 
-## 多条转发链
+## Multiple Forwarding Chains
 
-在配置文件中可以设置多个转发链，不同的服务可以根据名称来使用不同的转发链。
+Multiple forwarding chains can be set in the configuration file, and different services can use different forwarding chains according to the chain names.
 
-??? example "示例"
+??? example
+
     ```yaml
 	services:
 	- name: service-0
@@ -228,7 +232,7 @@
 		    type: tls
 	```
 
-服务service-0使用转发链chain-0，服务service-1使用转发链chain-1。
+The service `service-0` uses the forwarding chain `chain-0`, and the service `service-1` uses the forwarding chain `chain-1`.
 
-!!! caution "限制"
-    如果节点的数据通道使用UDP协议，例如QUIC, KCP等，则此节点只能用于转发链第一层级。
+!!! caution "Limitation"
+	If the data channel of the node uses the UDP protocol, such as QUIC, KCP, etc., this node can only be used for the first level of the forwarding chain.

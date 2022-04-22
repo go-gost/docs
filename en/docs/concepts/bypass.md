@@ -1,20 +1,23 @@
-# 分流
+# Bypass
 
-!!! tip "动态配置"
-    分流器支持通过Web API进行动态配置。
+!!! tip "Dynamic configuration"
+    Bypass supports dynamic configuration via Web API.
 
-## 分流器
+## Bypass Controller
 
-在转发链中可以对每个节点设置分流器，在数据转发过程中，根据节点分流器中的规则来决定是否继续转发。
+Bypass can be set for each node in the forwarding chain. During the data forwarding, whether to continue forwarding is decided according to the node bypass.
 
-=== "命令行"
-    ```
+=== "CLI"
+
+    ```bash
     gost -L http://:8080 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
-    通过`bypass`参数来指定请求的目标地址匹配规则列表(以逗号分割的IP,CIDR,域名或域名通配符)。
+    Specify a list of client address matching rules (comma-separated IP or CIDR) via the `bypass` option.
 
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -49,27 +52,29 @@
       - .example.org
     ```
 
-    节点中使用`bypass`属性通过引用分流器名称(name)来使用指定的分流器。
+    Use the `bypass` property in node to use the specified bypass by referencing the bypass name.
 
-!!! tip "Hop级别的分流器"
-    bypass可以设置在hop或node上，如果node上未设置则使用hop上指定的bypass。
+!!! tip "Hop Level Bypass"
+    Bypass can be set on hop or node, if not set on node, the bypass specified on hop will be used.
 
-    命令行模式下的bypass参数配置会应用到hop级别。
+    The bypass option in command line mode will be applied to the hop level.
 
-### 黑名单与白名单
+### Blacklist And Whitelist
 
-分流器默认为黑名单模式，当执行转发链的节点选择时，每当确定一个层级节点后，会应用此节点上的分流器，若请求的目标地址与分流器中的规则相匹配，则转发链终止于此节点(且不包含此节点)。
+Bypass defaults to blacklist mode. When a node is determined in a hop by node selection, the bypass on this node will be applied. If the target address of the request matches the rules in the bypass, the chain terminates at this node (and does not contain this node).
 
-也可以将分流器设置为白名单模式，与黑名单相反，只有目标地址与分流器中的规则相匹配，才继续进行下一层级的节点选择。
+Bypass can also be set to whitelist mode, as opposed to blacklist, only if the target address matches the rules in the bypass will proceed to the next hop of node selection.
 
-=== "命令行"
-	```
-	gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
-	```
+=== "CLI"
 
-	通过在`bypass`参数中增加`~`前缀将分流器设置为白名单模式。
+    ```bash
+    gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
+    ```
 
-=== "配置文件"
+    Set the bypass to blacklist mode by adding the `~` prefix to the `bypass` opiton.
+
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -101,17 +106,18 @@
       - localhost
       - '*.example.com'
       - .example.org
-	```
+    ```
 
-	在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。
+    Enable blacklist mode in `bypasses` by setting the `reverse` property to `true`.
 
-## 数据源
 
-分流器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
+## Data Source
 
-### 内联
+Bypass can configure multiple data sources, currently supported data sources are: inline, file, redis.
 
-内联数据源是指直接在配置文件中通过`matchers`参数设置数据。
+### Inline
+
+An inline data source means setting the data directly in the configuration file via the `matchers` property.
 
 ```yaml
 bypasses:
@@ -124,9 +130,9 @@ bypasses:
   - .example.org
 ```
 
-### 文件
+### File
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+Specify an external file as the data source. Specify the file path via the `file.path` property.
 
 ```yaml
 bypasses:
@@ -135,7 +141,7 @@ bypasses:
     path: /path/to/bypass/file
 ```
 
-文件格式为按行分割的地址列表，以`#`开始的部分为注释信息。
+The file format is a list of addresses separated by lines, and the part starting with `#` is the comment information.
 
 ```text
 # ip, cidr, domain or wildcard
@@ -148,7 +154,7 @@ localhost
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
+Specify the redis service as the data source, and the redis data type must be [Set](https://redis.io/docs/manual/data-types/#sets).
 
 ```yaml
 bypasses:
@@ -161,20 +167,20 @@ bypasses:
 ```
 
 `addr` (string, required)
-:    redis服务地址
+:    redis server address
 
 `db` (int, default=0)
-:    数据库名
+:    database name
 
 `password` (string)
-:    密码
+:    password
 
 `key` (string, default=gost)
 :    redis key
 
-## 热加载
+## Hot Reload
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
 ```yaml
 bypasses:

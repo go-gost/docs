@@ -82,7 +82,7 @@ admissions:
 
 ### 文件
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+指定外部文件作为数据源。通过`file.path`参数指定文件路径。
 
 ```yaml
 admissions:
@@ -102,7 +102,7 @@ admissions:
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
+指定redis服务作为数据源，redis数据类型必须为[集合(Set)类型](https://redis.io/docs/manual/data-types/#sets)。
 
 ```yaml
 admissions:

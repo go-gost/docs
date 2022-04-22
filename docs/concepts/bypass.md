@@ -63,11 +63,11 @@
 也可以将分流器设置为白名单模式，与黑名单相反，只有目标地址与分流器中的规则相匹配，才继续进行下一层级的节点选择。
 
 === "命令行"
-	```
-	gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
-	```
+    ```
+    gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
+    ```
 
-	通过在`bypass`参数中增加`~`前缀将分流器设置为白名单模式。
+    通过在`bypass`参数中增加`~`前缀将分流器设置为白名单模式。
 
 === "配置文件"
     ```yaml
@@ -101,9 +101,9 @@
       - localhost
       - '*.example.com'
       - .example.org
-	```
+    ```
 
-	在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。
+    在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。
 
 ## 数据源
 
@@ -126,7 +126,7 @@ bypasses:
 
 ### 文件
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+指定外部文件作为数据源。通过`file.path`参数指定文件路径。
 
 ```yaml
 bypasses:
@@ -148,7 +148,7 @@ localhost
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
+指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
 
 ```yaml
 bypasses:

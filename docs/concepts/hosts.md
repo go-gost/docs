@@ -21,6 +21,7 @@
 	通过`hosts`参数来指定映射表。映射项为以`:`分割的host:ip对，ip可以是ipv4或ipv6格式。
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -55,6 +56,7 @@
 	通过`hosts`参数来指定映射表。`hosts`参数对应配置文件中hop级别的映射器。
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -130,7 +132,7 @@ hosts:
 
 ### 文件
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+指定外部文件作为数据源。通过`file.path`参数指定文件路径。
 
 ```yaml
 hosts:
@@ -139,7 +141,7 @@ hosts:
     path: /path/to/auth/file
 ```
 
-文件格式为按行分割的认证信息，每一行认证信息为用空格分割的ip-host对，以`#`开始的部分注释行。
+文件格式为按行分割的映射项，每一行为用空格分割的IP-host对，以`#`开始的部分为注释信息。
 
 ```text
 # ip host
@@ -149,7 +151,9 @@ hosts:
 ```
 
 !!! tip "系统hosts文件"
+
     文件数据源兼容系统本身的hosts文件格式，可以直接使用系统的hosts文件。
+
     ```yaml
     hosts:
     - name: hosts-0
@@ -159,7 +163,7 @@ hosts:
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型为集合(Set)或列表(List)类型。
+指定redis服务作为数据源，redis数据类型为[集合(Set)](https://redis.io/docs/manual/data-types/#sets)或[列表(List)](https://redis.io/docs/manual/data-types/#lists)类型。
 
 ```yaml
 hosts:
@@ -187,7 +191,7 @@ hosts:
 `type` (string, default=set)
 :    数据类型，支持的类型有：集合(`set`)，列表(`list`)。
 
-与文件数据源的格式类似，数据的每一项为空格分割的ip-host对：
+与文件数据源的格式类似，数据的每一项为空格分割的IP-host对：
 
 ```redis
 > SMEMBERS gost:hosts

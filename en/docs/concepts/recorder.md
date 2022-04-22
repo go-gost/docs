@@ -1,8 +1,8 @@
-# 数据记录
+# Data Recording
 
-## 记录器
+## Recorder
 
-记录器可以用来记录特定数据，通过配置和引用不同的记录器类型将数据记录到不同的目标中。
+Recorder can be used to record specific data, by configuring and referencing different recorder types to record data to different targets.
 
 ```yaml
 services:
@@ -23,13 +23,13 @@ recorders:
     sep: "\n"
 ```
 
-## 记录器类型
+## Recorder Types
 
-目前支持的记录器类型有：文件，redis。
+Currently supported recorder types are: file, redis.
 
-### 文件
+### File
 
-文件记录器将数据记录到指定文件。
+File recorder records data to the specified file.
 
 ```yaml
 recorders:
@@ -40,14 +40,14 @@ recorders:
 ```
 
 `file.path` (string)
-:    文件路径
+:    file path
 
 `sep` (string)
-:    记录分割符，如果设置则会在两条记录中间插入此分割符
+:    Record separator. If set, this separator will be inserted between two records
 
 ### Redis
 
-Redis记录器将数据记录到redis服务中。
+Redis recorder records data to the redis server.
 
 ```yaml
 recorders:
@@ -61,23 +61,23 @@ recorders:
 ```
 
 `addr` (string, required)
-:    redis服务地址
+:    redis server address
 
 `db` (int, default=0)
-:    数据库名
+:    database name 
 
 `password` (string)
-:    密码
+:    redis password
 
 `key` (string, required)
 :    redis key
 
 `type` (string, default=set)
-:    数据类型，支持的类型有集合(`set`), 列表(`list`)。
+:    data type: `set`, `list`.
 
-## 使用记录器
+## Recorder Usage
 
-通过`service.recorders`指定所使用的记录器列表。
+The list of recorders to use is specified via `service.recorders`.
 
 ```yaml
 services:
@@ -95,17 +95,17 @@ services:
 ```
 
 `name` (string, required)
-:    记录器名，引用定义的记录器
+:    recorder name
 
 `record` (string, required)
-:    记录对象
+:    record object
 
-### 记录对象
+### Record Object
 
-目前支持的记录对象有：
+Currently supported record objects are:
 
 `recorder.service.router.dial.address`
-:   所有访问的目标地址
+:   All visited destination addresses
 
 `recorder.service.router.dial.address.error`
-:   建立连接失败的目标地址
+:   All destination addresses that failed to establish a connection

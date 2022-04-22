@@ -1,43 +1,43 @@
-# 架构
+# Architecture
 
-GOST主要由三大模块：服务(Service)，节点(Node)，转发链(Chain)，五个子模块：监听器(Listener)，处理器(Handler)，转发器(Forwarder)，拨号器(Dialer)和连接器(Connector)，外加若干辅助模块：节点选择器(Selector)，分流器(Bypass)，域名解析器(Resolver)，主机映射器(Hosts)等组成。
+GOST mainly consists of three modules: Service, Node, Chain, and five sub-modules: Listener, Handler, Forwarder, Dialer and Connector, plus several auxiliary modules: Selector, Admission, Bypass, Resolver, Host Mapper and other components.
 
-## 服务(Service)
+## Service
 
-服务是数据的出入口，客户端的数据由服务接收并进行处理，最后将处理完的数据再发送给客户端。
+The service is the entrance and exit of the data. The data of the client is received and processed by the service, and finally the processed data is sent back to the client.
 
-每个服务包含一个监听器(Listener)和一个处理器(Handler)。
+Each service contains a Listener and a Handler.
 
-## 节点(Node)
+## Node
 
-节点是客户端视角下转发链所使用的服务的总称，转发链中的节点可以看作是服务所对应的客户端。当前程序所运行的服务以外的服务均可看作是节点(甚至当前程序开启的服务也可以被视为节点)，并且不局限于GOST程序提供的服务。
+A node is the general term for the services used by the forwarding chain from the perspective of the client, and the nodes in the forwarding chain can be regarded as the client corresponding to the service. Services other than the services run by the current program can be regarded as nodes (even the services started by the current program can be regarded as nodes), and are not limited to the services provided by the GOST program.
 
-每个节点包含一个拨号器(Dialer)和一个连接器(Connector)。
+Each node contains a Dialer and a Connector.
 
-## 转发链(Chain)
+## Chain
 
-转发链是由若干个节点按照一定顺序构成的节点组。一个转发链可以由一个或多个跳跃点(Hop)组成，每个跳跃点是一组服务节点列表。当进行数据转发时会根据转发策略(节点选择器，分流器)在每个跳跃点中选取一个节点，最终构成一条转发路径(Route)，服务会使用这条路径来进行数据转发。
+A chain, a.k.a Forwarding Chain, is a node group composed of several nodes in a certain order. A chain can consist of one or more hops, each hop is a list of service nodes. When forwarding data, a node will be selected from each hop according to the forwarding strategy (node selector, bypass), and finally a route will be formed, and the service will use this route for data forwarding.
 
-!!! info "跳跃点(Hop)"
+!!! info "Hop"
 
-    跳跃点是一组节点(Node)的集合，是对转发链逻辑层级的抽象。一个长度为3的转发链，对应有3个跳跃点，数据会依次经过每个跳跃点中的某个节点进行处理。
+    A hop is a set of nodes, which is an abstraction of the logical level of the forwarding chain. A chain of length 3 corresponds to 3 hops, and the data will be processed by a node in each hop in turn.
 
-## 监听器(Listener)
+## Listener
 
-监听器在本地打开指定的端口，负责数据的收发及数据通道的建立和初始化工作(例如加解密，会话和数据流通道初始化等)，与客户端进行直接的数据交互。
+Listener opens the specified port locally. It is responsible for data transmission, data channel establishment and initialization (such as encryption and decryption, session and data stream channel initialization, etc.), and direct data interaction with the client.
 
-## 处理器(Handler)
+## Handler
 
-处理器是监听器上的一个逻辑抽象层，当监听器建立好数据通道之后，客户端的实际请求数据会交给处理器进行处理，其中包括路由判断，域名解析，权限控制等处理逻辑。
+Handler is a logical abstraction layer of the listener. After the listener establishes a data channel, the client request data will be handed over to the handler for processing, including request routing, domain name resolution, permission control etc.
 
-## 转发器(Forwarder)
+## Forwarder
 
-转发器用于端口转发，被处理器使用。处理器根据转发器配置的节点组和节点选择器对每个请求数据进行转发处理。
+Forwarder is used for port forwarding and is used by handler. The handler forwards each request data according to the node group and node selector configured by the forwarder.
 
-## 拨号器(Dialer)
+## Dialer
 
-拨号器与服务的监听器相对应，负责与服务进行数据交互，数据通道建立和初始化工作。
+Dialer corresponds to the listener of service and is responsible for data interaction with the service, establishment and initialization of the data channel.
 
-## 连接器(Connector)
+## Connector
 
-连接器是拨号器上的一个逻辑抽象层，与服务的处理器相对应，当拨号器与服务建立好数据通道后，再由连接器进行实际请求数据的处理工作。
+Connector is a logical abstraction layer of dialer, which corresponds to the handler of service. After the dialer and the service have established a data channel, the connector will process the actual requested data.

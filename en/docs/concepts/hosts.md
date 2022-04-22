@@ -1,26 +1,27 @@
-# 主机IP映射
+# Host-IP Mapping
 
-通过在服务或转发链中设置映射器，可以自定义域名解析。
+Domain name resolution can be customized by setting a Host mapper in the service or forwarding chain.
 
-!!! tip "动态配置"
-    映射器支持通过Web API进行动态配置。
+!!! tip "Dynamic configuration"
+    Host mapper supports dynamic configuration via Web API.
 
-## 映射器
+## Host Mapper
 
-映射器是一个主机名到IP地址的映射表，通过映射器可在DNS请求之前对域名解析进行人为干预。当需要进行域名解析时，先通过映射器查找是否有对应的IP定义，如果有则直接使用此IP地址。如果映射器中没有定义，再使用DNS服务查询。
+A host mapper is a hostname-to-IP address mapping table. When domain name resolution needs to be performed, first check whether there is a corresponding mapping in the mapper, and if so, use the IP address directly. If it is not defined in the mapper, then use the DNS service to query.
 
-### 服务上的映射器
+### Mapper In Service
 
-当服务中的处理器在与目标主机建立连接之前，会使用映射器对请求目标地址进行解析。
+The handler in service will use the mapper to try to resolve the request target address before establishing a connection with the target host.
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8080?hosts=example.org:127.0.0.1,example.org:::1,example.com:2001:db8::1
 	```
 
-	通过`hosts`参数来指定映射表。映射项为以`:`分割的host:ip对，ip可以是ipv4或ipv6格式。
+	The mapping table is specified by the `hosts` option. The mapping item is a host:IP pair separated by `:`, and the IP can be in IPv4 or IPv6 format.
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -41,20 +42,21 @@
 		hostname: example.com
 	```
 
-	服务使用`hosts`属性通过引用映射器名称(name)来使用指定的映射器。
+	Services use the `hosts` property to use the specified mapper by referencing the mapper name.
 
-### 转发链上的映射器
+### Mapper In Chain
 
-转发链中可以在跳跃点上或节点上设置映射器，当节点上未设置映射器，则使用跳跃点上的映射器。
+A mapper can be set on hop or node in the forwarding chain. When no mapper is set on the node, the mapper on the hop is used.
 
-=== "命令行"
+=== "CLI"
 	```
 	gost -L http://:8000 -F http://example.com:8080?hosts=example.com:127.0.0.1,example.com:2001:db8::1
 	```
 
-	通过`hosts`参数来指定映射表。`hosts`参数对应配置文件中hop级别的映射器。
+	The mapping table is specified by the `hosts` option. The `hosts` option corresponds to the mapper at the hop level in the configuration file.
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -88,35 +90,35 @@
 		hostname: example.com
 	```
 
-	转发链的hop或node中使用`hosts`属性通过引用映射器名称(name)来使用指定的映射器。
+	Use the `hosts` property in the hop or node of the forwarding chain to use the specified mapper by referencing the mapper name.
 
-## DNS代理服务
+## DNS Proxy
 
-映射器在DNS代理服务中会直接应用到DNS查询请求，用来实现自定义域名解析。
+The mapper is directly applied to DNS query requests in the DNS proxy service to implement custom domain name resolution.
 
 ```
 gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 ```
 
-此时通过此DNS代理服务查询example.org会匹配到映射器中的定义而不会使用1.1.1.1查询。
+Then query example.org through this DNS proxy service will match the definition in the mapper and not query with 1.1.1.1.
 
-## 域名通配符
+## Wildcard
 
-映射器中的域名也支持以`.`开头的特殊通配符格式。
+Domain names in mappers also support a special wildcard format starting with `.`.
 
-例如：`.example.org`匹配example.org， abc.example.org，def.abc.example.org等子域名。
+For example: `.example.org` matches domain example.org, and subdomains like abc.example.org, def.abc.example.org, etc.
 
-在查询一个域名映射时，会先查找完全匹配项，如果没有找到再查找通配符项，如果没有找到再依次查找上级域名通配符。
+When querying, it will first look for the exact match, if not found, then look for the wildcard item, if not found again, then look for the upper-level domain name wildcard in turn.
 
-例如：abc.example.org，会先查找abc.example.org映射值，如果没有则查找.abc.example.org通配符项，如果没有则继续依次查找.example.org和.org通配符项。
+For example: abc.example.org, the mapping value of abc.example.org will be searched first (exact match), if not found, the .abc.example.org wildcard item will be searched, and if not, the .example.org and .org wildcard items will be searched in turn.
 
-## 数据源
+## Data Source
 
-映射器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
+Mapper can configure multiple data sources, currently supported data sources are: inline, file, redis.
 
-#### 内联
+#### Inline
 
-内联数据源是指直接在配置文件中通过`mappings`参数设置数据。
+An inline data source means setting the data directly in the configuration file via the `mappings` property.
 
 ```yaml
 hosts:
@@ -128,9 +130,9 @@ hosts:
 	hostname: example.com
 ```
 
-### 文件
+### File
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+Specify an external file as the data source. Specify the file path via the `file.path` property.
 
 ```yaml
 hosts:
@@ -139,7 +141,8 @@ hosts:
     path: /path/to/auth/file
 ```
 
-文件格式为按行分割的认证信息，每一行认证信息为用空格分割的ip-host对，以`#`开始的部分注释行。
+The file format is mapping items separated by lines, each line is an IP-host pair separated by spaces, and the part starting with `#` is the comment information.
+
 
 ```text
 # ip host
@@ -148,8 +151,10 @@ hosts:
 2001:db8::1  example.com
 ```
 
-!!! tip "系统hosts文件"
-    文件数据源兼容系统本身的hosts文件格式，可以直接使用系统的hosts文件。
+!!! tip "System hosts File"
+
+	The file data source is compatible with the system hosts file format, and the hosts file of the system can be used directly.
+
     ```yaml
     hosts:
     - name: hosts-0
@@ -159,7 +164,7 @@ hosts:
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型为集合(Set)或列表(List)类型。
+Specify the redis service as the data source, and the redis data type can be [Set](https://redis.io/docs/manual/data-types/#sets) or [List](https://redis.io/docs/manual/data-types/#lists).
 
 ```yaml
 hosts:
@@ -173,34 +178,34 @@ hosts:
 ```
 
 `addr` (string, required)
-:    redis服务地址
+:    redis server address
 
 `db` (int, default=0)
-:    数据库名
+:    database name
 
 `password` (string)
-:    密码
+:    password
 
 `key` (string, default=gost)
 :    redis key
 
 `type` (string, default=set)
-:    数据类型，支持的类型有：集合(`set`)，列表(`list`)。
+:    data type: `set`, `list`.
 
-与文件数据源的格式类似，数据的每一项为空格分割的ip-host对：
+Similar to the format of file data sources, each item is a space-separated IP-host pair:
 
 ```redis
 > SMEMBERS gost:hosts
 1) "127.0.0.1 example.com"
 2) "2001:db8::1 example.com"
 ```
-## 优先级
+## Priority
 
-当同时配置多个数据源时，优先级从高到低为: redis，文件，内联。
+When configuring multiple data sources at the same time, the priority from high to low is: redis, file, inline.
 
-## 热加载
+## Hot Reload
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
 ```yaml
 hosts:

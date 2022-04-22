@@ -90,7 +90,8 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 
 认证器包含一组或多组认证信息。服务通过认证器可以实现多用户认证功能。
 
-认证器仅支持配置文件设置。
+!!! note
+    认证器仅支持配置文件设置。
 
 === "配置文件"
     ```yaml
@@ -141,7 +142,7 @@ authers:
 
 ### 文件
 
-通过指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+指定外部文件作为数据源。通过`file.path`参数指定文件路径。
 
 ```yaml
 authers:
@@ -162,7 +163,7 @@ test.user@002   12345678
 
 ### Redis
 
-通过指定redis服务作为数据源，redis数据类型必须为哈希(Hash)类型。
+指定redis服务作为数据源，redis数据类型必须为[哈希(Hash)类型](https://redis.io/docs/manual/data-types/#hashes)。
 
 ```yaml
 authers:
