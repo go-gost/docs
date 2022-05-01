@@ -1,20 +1,23 @@
-# 多网络接口
+# Multi-homed Hosts
 
-当主机具有多个网络接口(Multi-homed host)时，可以根据需要对不同服务的路由指定不同的网络出口。
+Hosts that have more than one network interface usually have one Internet Protocol (IP) address for each interface. Such hosts are called multi-homed hosts.
 
-!!! note "系统限制"
-    多网络接口配置仅支持Linux系统。
+When a host is multi-homed host, different network exits can be specified for routes of different services as required.
 
-## `interface`参数
+!!! note "Limitation"
+	Multiple network interface configurations are only supported on Linux systems.
 
-通过`interface`参数来指定所使用的网络出口。`interface`参数的值可以是网络接口名(例如`eth0`)，也可以是网络接口的IP地址(IPv4或IPv6)。
+## `interface` Option
 
-=== "命令行"
+Use the `interface` option to specify the network exit to use. The value of the `interface` option can be either a network interface name (such as `eth0`) or the IP address (IPv4 or IPv6) of a network interface.
+
+=== "CLI"
     ```
 	gost -L :8080?interface=eth0
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -28,18 +31,19 @@
 		type: tcp
 	```
 
-## 转发链
+## Forwarding Chain
 
-如果使用了转发链，则需要在转发链的第一层级跳跃点上或其中的节点上设置网络出口。
-如果节点上未设置`interface`参数，则使用跳跃点上的参数。
-命令行中的`interface`参数对应于跳跃点上的参数。
+If a forwarding chain is used, a network exit needs to be set up at the first level hop of the forwarding chain or on a node within it.
+If the `interface` option is not set on the node, the option on the hop is used.
+The `interface` option on the command line corresponds to the option on the hop.
 
-=== "命令行"
+=== "CLI"
     ```
-	./gost -L :8080 -F :8000?interface=192.168.0.1 
+	gost -L :8080 -F :8000?interface=192.168.0.1 
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0

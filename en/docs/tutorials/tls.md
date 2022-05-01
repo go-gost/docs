@@ -1,20 +1,20 @@
 # TLS
 
-GOST有三种类型TLS证书：自生成证书，全局证书，服务层级证书。
+GOST has three types of TLS certificates: self-generated certificate, global certificate, and service-level certificate.
 
-## 自生成证书
+## Self-generated Certificate
 
-GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会使用此证书作为默认证书。
+GOST automatically generates a TLS certificate on every run, and if no certificate is specified, this certificate is used as the default.
 
-## 全局证书
+## Global Certificate
 
-全局证书默认使用自动生成的证书，也可以通过配置指定自定义证书文件。
+The global certificate uses the automatically generated certificate by default, or you can specify a custom certificate file through configuration.
 
-=== "命令行"
+=== "CLI"
 
-    命令行模式下暂不支持设置全局证书。
+	Setting a global certificate is not currently supported in command line mode.
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
 	tls:
@@ -23,20 +23,20 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 	  caFile: "ca.pem"
 	```
 
-!!! tip "提示"
-    GOST会自动加载当前工作目录下的`cert.pem`, `key.pem`, `ca.pem`文件来初始化全局证书。
+!!! tip "Default Files)
+	GOST will automatically load the `cert.pem`, `key.pem`, `ca.pem` files in the current working directory to initialize the global certificate.
 
-## 服务层级证书
+## Service-level Certificate
 
-每个服务的监听器和处理器可以分别设置各自的证书，默认使用全局证书。
+The listeners and handlers of each service can set their own certificates separately, and the global certificate is used by default.
 
-=== "命令行"
+=== "CLI"
 
     ```
 	gost -L http+tls://:8443?certFile=cert.pem&keyFile=key.pem&caFile=ca.pem
 	```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
 	services:
@@ -52,17 +52,17 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
           caFile: ca.pem
 	```
 
-## 客户端设置
+## Client Settings
 
-客户端可以对每个节点的拨号器和连接器分别设置证书。
+Clients can set certificates separately for dialers and connectors for each node.
 
-=== "命令行"
+=== "CLI"
 
 	```
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?secure=true&serverName=www.example.com
 	```
 	
-=== "配置文件"
+=== "File (YAML)"
 
 	```yaml
 	services:
@@ -90,25 +90,25 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 	```
 
 `caFile` (string)
-:    CA证书文件路径。设置CA证书将会开启证书锁定(Certificate Pinning)。
+:    CA certificate file path. Setting up a CA certificate will enable Certificate Pinning.
 
 `secure` (bool, default=false)
-:    开启服务器证书和域名校验。
+:    Enable server certificate and domain name verification.
 
 `serverName` (string)
-:    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。默认使用设置中`IP_OR_DOMAIN`作为serverName。
+:    If `secure` is set to true, you need to specify the server domain name through this option for domain name verification. By default, `IP_OR_DOMAIN` in the setting is used as the serverName.
 
-## 双向证书校验
+## Mutual TLS authentication
 
-如果服务端设置了CA证书，则会对客户端证书进行强制校验，此时客户端须提供证书。
+If a CA certificate is set on the server, the client certificate will be verified, and the client must provide the certificate.
 
-=== "命令行"
+=== "CLI"
 
 	```
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?certFile=cert.pem&keyFile=key.pem
 	```
 	
-=== "配置文件"
+=== "File (YAML)"
 
 	```yaml
 	services:
@@ -135,5 +135,5 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 			  keyFile: key.pem
 	```
 
-!!! note "注意"
-	通过命令行设置的证书信息仅会应用到监听器或拨号器上。
+!!! note 
+    Certificate information set via the command line applies only to the listener or dialer.

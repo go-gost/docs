@@ -1,13 +1,14 @@
-# DNS代理
+# DNS Proxy
 
-与域名解析器类似，DNS代理服务支持多种协议类型，支持自定义域名解析(映射器)，具有缓存功能，并支持转发链。
+Similar to the domain name resolver, the DNS proxy service supports multiple protocol types, supports custom domain name resolution (host mapper), has a caching function, and supports forwarding chains.
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L dns://:10053?mode=udp&dns=1.1.1.1,tls://1.1.1.1:853
     ```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -26,40 +27,40 @@
     ```
 
 `mode` (string, default=udp)
-:    DNS代理模式
+:    Proxy mode
 
-    * `udp` - UDP模式(DNS over UDP)
-	* `tcp` - TCP模式(DNS over TCP)
-	* `tls` - TLS模式(DNS over TLS)
-	* `https` - HTTPS模式(DNS over HTTPS)
+    * `udp` - DNS over UDP
+	* `tcp` - DNS over TCP
+	* `tls` - DNS over TLS
+	* `https` - DNS over HTTPS
 
 `dns` (string, default=127.0.0.1:53)
-:    上级域名解析服务列表
+:    List of upstream DNS
 
-     每个DNS服务的格式为：`[protocol://]ip[:port]`。
+     The format of each DNS is: `[protocol://]ip[:port]`.
 
-	 `protocol`支持的类型有udp，tcp，tls，https。默认值为udp。
+	 `protocol`: udp, tcp, tls and https. Default value is udp.
 
-	 `port`默认值为53。
+	 `port`: default value is 53.
 
-	 例如：
+	 Examples:
 	 
-	 * udp://1.1.1.1:53，或udp://1.1.1.1
+	 * udp://1.1.1.1:53, or udp://1.1.1.1
 	 * tcp://1.1.1.1:53
 	 * tls://1.1.1.1:853
 	 * https://1.0.0.1/dns-query
 
-## 自定义域名解析
+## Custom domain name resolution
 
-通过设置主机IP映射器，可以对域名进行自定义解析。
+Domain name resolution can be customized by setting the host-IP mapper.
 
 ```
 gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,example.com:2001:db8::1
 ```
 
-此时解析example.org会匹配到映射器而不会使用1.1.1.1查询。
+Then parsing `example.org` will match the mapper without using the 1.1.1.1 query.
 
-!!! example "DNS查询example.org(ipv4)"
+!!! example "DNS Query example.org(ipv4)"
 	```
 	dig -p 10053 example.org
 	```
@@ -72,7 +73,7 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,exa
     example.org.		3600	IN	A	127.0.0.1
 	```
 
-!!! example "DNS查询example.org(ipv6)"
+!!! example "DNS Query example.org(ipv6)"
 	```
 	dig -p 10053 AAAA example.org
 	```
@@ -85,9 +86,9 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,exa
     example.org.		3600	IN	AAAA	::1
 	```
 
-解析example.com时，由于ipv4在映射器中无对应项，因此会使用1.1.1.1进行解析。
+When parsing `example.com`, since ipv4 has no counterpart in the mapper, 1.1.1.1 is used for parsing.
 
-!!! example "DNS查询example.com(ipv4)"
+!!! example "DNS Query example.com(ipv4)"
 	```
 	dig -p 10053 example.com
 	```
@@ -100,7 +101,7 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,exa
     example.com.		10610	IN	A	93.184.216.34
 	```
 
-!!! example "DNS查询example.com(ipv6)"
+!!! example "DNS Query example.com(ipv6)"
 	```
 	dig -p 10053 AAAA example.com
 	```
@@ -113,16 +114,17 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,exa
     example.com.		3600	IN	AAAA	2001:db8::1
 	```
 
-## 缓存
+## Cache
 
-通过`ttl`参数可以设置缓存时长，默认使用DNS查询返回结果中的TTL，当设置为负值，则不使用缓存。
+The cache duration can be set through the `ttl` parameter. By default, the TTL in the result returned by the DNS query is used. When it is set to a negative value, the cache is not used.
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L dns://:10053?dns=1.1.1.1&ttl=60s
     ```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -139,14 +141,15 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1,exa
 
 ## ECS
 
-通过`clientIP`参数设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
+Set the client IP through the `clientIP` parameter, and enable the ECS (EDNS Client Subnet) extension function.
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L dns://:10053?dns=1.1.1.1&clientIP=1.2.3.4
     ```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0

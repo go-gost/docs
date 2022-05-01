@@ -1,22 +1,23 @@
-# HTTP数据通道
+# HTTP Tunnel
 
-HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互联网的发展，协议也进行了几次重大的版本升级，从最原始的HTTP/1到HTTP/2，再到现在的基于QUIC协议的HTTP/3。
+HTTP is the most widely used data exchange protocol on the Internet. With the development of the Internet, the protocol has undergone several major version upgrades, from the original HTTP/1 to HTTP/2, and then to the current QUIC-based protocol HTTP/3.
 
-原始HTTP协议是一种请求响应式的交互方式，由客户端主动发起请求，服务端收到请求后再将处理结果发送回客户端，这种方式无法在客户端和服务端之间保持长连接，因此很难做到双向实时数据传输。为了实现全双工通信，HTTP协议又进行了多种扩展，例如增加CONNECT方法，Websocket扩展协议，HTTP/2的服务端推送和HTTP/3的WebTransport等。GOST已经支持了以上大部分的功能。
+The original HTTP protocol is a request-response interaction method. The client initiates the request actively, and the server sends the processing result back to the client after receiving the request. This method cannot maintain a long connection between the client and the server, so it is difficult to achieve two-way real-time data transmission. In order to realize full-duplex communication, the HTTP protocol has been extended in various ways, such as adding CONNECT method, Websocket extension protocol, HTTP/2 server push and HTTP/3 WebTransport. GOST already supports most of the above functions.
 
-!!! note "注意"
-    CONNECT方法用于HTTP建立代理连接，严格来说不能称之为数据通道，然而其本质都是建立了可以双向通讯的长连接，所以在这里统一被当作数据通道。
+!!! note
+    The CONNECT method is used to establish a proxy connection for HTTP. Strictly speaking, it cannot be called a tunnel. However, its essence is to establish a long connection that can communicate in both directions, so it is uniformly regarded as a tunnel here.
 
-## HTTP CONNECT方法
+## HTTP CONNECT MEthod
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://user:pass@:8080
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -30,16 +31,17 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 		type: tcp
 	```
 
-以上是一个最简单的带有认证功能的HTTP代理服务。
+The above is a simplest HTTP proxy service with authentication function.
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F http://user:pass@:8080
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -65,24 +67,25 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 			type: tcp
 	```
 
-客户端本身也是一个HTTP代理服务，并通过转发链将请求转发给上面的HTTP代理服务。
+The client itself is also an HTTP proxy service and forwards the request to the up-stream HTTP proxy service through the forwarding chain.
 
 ## Plain HTTP Tunnel(pht)
 
-CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用原始HTTP协议中的GET和POST方法来实现数据通道，包括加密的phts和明文的pht两种模式。
+The CONNECT method is not supported by all services. In order to be as general as possible, GOST uses the GET and POST methods in the original HTTP protocol to implement data tunnel, including encrypted phts and plaintext pht modes.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
-	或
+	or
     ```
 	gost -L relay+phts://:8080
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -98,18 +101,19 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
           pushPath: /push
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
-	或
+	or
     ```
 	gost -L http://:8000 -F relay+phts://:8080
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -137,21 +141,19 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
               pushPath: /push
 	```
 
-!!! caution
-    PHT是一个实验性功能，还在不断完善中。
-
 ## Websocket
 
-Websocket是HTTP/1中为了建立长连接而增加的扩展协议。
+Websocket is an extension protocol added in HTTP/1 for establishing long connections.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L socks5+ws://user:pass@:1080
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -165,14 +167,15 @@ Websocket是HTTP/1中为了建立长连接而增加的扩展协议。
 		type: ws
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F socks5+ws://user:pass@:1080
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -198,25 +201,26 @@ Websocket是HTTP/1中为了建立长连接而增加的扩展协议。
 			type: ws
 	```
 
-!!! caution "注意"
-    这里的认证信息设置的是SOCKS5代理的认证，Websocket暂不支持认证设置。
+!!! caution
+	The authentication information here is set for SOCKS5 proxy, and websocket currently does not support authentication settings.
 
 ## HTTP/2
 
-GOST中HTTP/2有两种使用方式，代理模式和标准数据通道模式。
+There are two ways to use HTTP/2 in GOST, proxy mode and tunnel mode.
 
-### HTTP/2 CONNECT方法
+### HTTP/2 CONNECT Method
 
-HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
+HTTP/2 implements proxy mode using the same CONNECT method as HTTP.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http2://user:pass@:8443
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -230,14 +234,15 @@ HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
 		type: http2
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F http2://user:pass@:8443
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -263,22 +268,23 @@ HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
 			type: http2
 	```
 
-### HTTP/2数据通道
+### HTTP/2 Tunnel
 
-HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
+HTTP/2 can use encrypted (h2) and plaintext (h2c) modes as a tunnel.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L socks5+h2://user:pass@:8443
 	```
-	或
+	or
     ```
 	gost -L socks5+h2c://user:pass@:8443
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -293,18 +299,19 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 		# type: h2c
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F socks5+h2://user:pass@:8443
 	```
-	或
+	or
     ```
 	gost -L http://:8000 -F socks5+h2c://user:pass@:8443
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -331,20 +338,21 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 			# type: h2c
 	```
 
-!!! tip "服务端推送"
-    GOST不支持HTTP/2的服务端推送功能。
+!!! tip "Server Push"
+	GOST does not support the server push function of HTTP/2.
 
 ## gRPC
 
-gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然的支持双向流传输，因此很适合作为数据通道。
+gRPC is based on HTTP/2, so it has the inherent advantages of HTTP/2 itself. In addition, gRPC naturally supports bidirectional streaming, so it is very suitable as a tunnel.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L relay+grpc://user:pass@:8443
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -358,13 +366,14 @@ gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然
 		type: grpc
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F relay+grpc://user:pass@:8443
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -390,15 +399,17 @@ gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然
 			type: grpc
 	```
 
-gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文进行通讯。
+gRPC uses TLS encryption by default and can communicate in clear text by setting the `grpcInsecure` parameter.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L relay+grpc://user:pass@:8443?grpcInsecure=true
 	```
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -414,13 +425,15 @@ gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文�
 		  grpcInsecure: true
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F relay+grpc://user:pass@:8443?grpcInsecure=true
 	```
-=== "配置文件"
+
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -450,17 +463,21 @@ gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文�
 
 ## HTTP/3
 
-HTTP/3协议中支持CONNECT方法和WebTransport两种方式建立数据通道。
+The HTTP/3 protocol supports the CONNECT method and the WebTransport method to establish a tunnel.
 
-GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来建立数据通道。
+GOST currently does not support the above two methods, but establishes a tunnel by using pht on top of HTTP/3
 
-### 服务端
+!!! note "WebTransport"
+    [WebTransport](https://web.dev/webtransport/) is currently in the early draft stage, and GOST will add support for it when the time is right.
 
-=== "命令行"
+### Server
+
+=== "CLI"
     ```
 	gost -L http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -475,14 +492,15 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
           pushPath: /push
 	```
 
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http://:8000 -F http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0

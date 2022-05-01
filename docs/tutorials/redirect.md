@@ -5,7 +5,7 @@
 !!! note "系统限制"
     透明代理仅支持Linux系统。
 
-!!! note "流量嗅探"
+!!! tip "流量嗅探"
     TCP透明代理支持对HTTP和TLS流量进行识别，识别后将使用HTTP`Host`头部信息或TLS的`SNI`扩展信息作为目标访问地址。
 
     通过`sniffing`参数开启流量嗅探，默认不开启。
@@ -270,7 +270,7 @@
     ```
 
 `ttl` (duration, default=30s)
-:   传输通道超时时长。
+:    传输通道超时时长。
 
 !!! example "routing和iptables规则"
     ```

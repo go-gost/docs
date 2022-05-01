@@ -1,35 +1,35 @@
-# ICMP通道
+# ICMP Tunnel
 
-ICMP通道是利用ICMP协议的Echo类型报文(ping命令所采用)进行数据传输。由于ICMP类似于UDP，是一种不可靠的协议，存在丢包和乱序情况，因此不能直接用于流式数据传输。GOST在ICMP之上利用QUIC协议来实现安全可靠的数据传输，因此ICMP通道可以看作是QUIC-over-ICMP数据通道。
+The [ICMP](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol) tunnel uses the Echo type message of the ICMP protocol (used by the ping command) for data transmission. Since ICMP is similar to UDP, it is an unreliable protocol with packet loss and disorder, so it cannot be directly used for streaming data transmission. GOST uses the QUIC protocol on top of ICMP to achieve secure and reliable data transmission, so the ICMP tunnel can be regarded as a QUIC-over-ICMP data tunnel.
 
-!!! note
-    ICMP通道目前仅支持ICMPv4，不支持ICMPv6。
+!!! note "ICMPv6"
+	The ICMP tunnel currently only supports ICMPv4, not ICMPv6.
 
-!!! 关闭系统默认Echo响应
-    在Linux系统中可以通过以下命令关闭系统本身的echo响应数据，减少不必要的数据传输。此为可选操作，GOST会自动丢弃无效数据包。
+!!! tip "Turn off the system default Echo response"
+	In the Linux system, you can use the following command to close the echo response data of the system itself to reduce unnecessary data transmission. This is optional, GOST will automatically drop invalid packets.
 	```
 	echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_all
 	```
 
-## 使用方法
+## Usage
 
-服务端
-
-```
-gost -L icmp://:0?keepAlive=1
-```
-
-客户端
+### Server
 
 ```
-gost -L :8080 -F relay+icmp://server_ip:12345
+gost -L icmp://:0
 ```
 
-!!! note 权限
-    执行以上命令需要root权限。
+### Client
 
-## 客户端标识
+```
+gost -L :8080 -F relay+icmp://server_ip:12345?keepAlive=1
+```
 
-ICMP与通常的传输层协议，例如TCP，UDP不同，没有端口的概念，但为了区分不同的客户端，需要对客户端进行标识。GOST中采用IP+ID的方式来标识一个客户端，IP即客户端IP地址，ID是ICMP Echo报文中的Identifier字段值。
+!!! note "root"
+	Root privileges are required to execute the above commands.
 
-在客户端可以通过类似于指定端口的方式来指定ID，例如上面例子中的12345。也可以设置为0，GOST会自动生成一个随机ID。对于服务端这个值无效。
+## Client ID
+
+Unlike common transport layer protocols, such as TCP and UDP, ICMP has no concept of ports, but in order to distinguish different clients, clients need to be identified. GOST uses IP+ID to identify a client. IP is the IP address of the client, and ID is the value of the Identifier field in the ICMP Echo packet.
+
+The ID can be specified on the client side in a manner similar to specifying the port, such as 12345 in the above example. It can also be set to 0, GOST will automatically generate a random ID. This value is invalid for the server.

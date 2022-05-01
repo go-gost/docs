@@ -1,15 +1,16 @@
-# 探测防御
+# Probing Resistance
 
-GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到非法请求时，会按照探测防御策略返回对应的响应内容。
+GOST provides probing resistance for the HTTP/HTTPS/HTTP2 proxies. When the proxy server receives an invalid request, it will return the corresponding response according to the probing resistance policy.
 
 !!! note
-    只有当代理服务开启了用户认证，探测防御功能才有效。
+    The probing resistance feature is only valid when the proxy server has user authentication enabled.
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L=http://gost:gost@:8080?probeResistance=code:400&knock=www.example.com
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -25,32 +26,32 @@ GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到
       listener:
         type: tcp
     ```
-## probeResistance
+## `probeResistance` Option
 
-代理服务通过`probeResistance`参数来指定防御策略。参数值的格式为：`type:value`。
+The proxy server specifies the policy through the `probeResistance` option. The format of the parameter is: `type:value`.
 
-type可选值有:
+The optional values for type are:
 
-* `code` - 对应value为HTTP响应码，代理服务器会回复客户端指定的响应码。例如：
+* `code` - Corresponding value is HTTP response code. The proxy server will reply to client the specified status code. For example:
     ```
     gost -L=http://gost:gost@:8080?probeResistance=code:403
     ```
 
-* `web` - 对应的value为URL，代理服务器会使用HTTP GET方式访问此URL，并将响应返回给客户端。例如: 
+* `web` - Corresponding value is HTTP URL. The proxy server will request this URL using HTTP GET method and return the response to the client. For example:
     ```
     gost -L=http://gost:gost@:8080?probeResistance=web:example.com/page.html
     ```
 
-* `host` - 对应的value为主机地址，代理服务器会将客户端请求转发给设置的主机地址，并将主机的响应返回给客户端，代理服务器在这里相当于端口转发服务。例如：
+* `host` - Corresponding value is host[:port]. The proxy server forwards the client request to the specified host and returns the host's response to the client. The proxy server is equivalent to the port forwarding service here. For example:
 	```
 	gost -L=https://gost:gost@:443?probeResistance=host:www.example.com:8080
 	```
 
-* `file` - 对应的value为本地文件路径，代理服务器会回复客户端200响应码，并将指定的文件内容作为Body发送给客户端。例如：
+* `file` - The corresponding value is the local file path. The proxy server will reply to the client 200 response code, and the content of the specified file is sent to the client as response Body. For example:
 	```
 	gost -L=http2://gost:gost@:443?probeResistance=file:/send/to/client/file.txt
 	```
 
 ## knock
 
-开启了探测防御功能后，当认证失败时服务器默认不会响应`407 Proxy Authentication Required`，但某些情况下客户端需要服务器告知代理是否需要认证(例如Chrome中的SwitchyOmega插件)。通过`knock`参数设置一个私有地址，只有访问此地址时服务器才会发送`407`响应。
+After the probe resistance is enabled, the server will not respond the `407 Proxy Authentication` Required to the client by default when authentication fails. But in some cases the client needs the server to tell if it needs authentication (for example, the SwitchyOmega plugin in Chrome). Set a private host with the `knock` parameter, the server will only send a `407` response when accessing this host.

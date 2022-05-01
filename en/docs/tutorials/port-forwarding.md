@@ -1,18 +1,19 @@
-# 端口转发
+# Port Forwarding
 
-端口转发根据协议类型分为TCP和UDP端口转发，根据转发类型又分为本地转发和远程转发，总共有四种组合。
+Port forwarding is divided into TCP and UDP port forwarding according to the protocol type, and local forwarding and remote forwarding according to the forwarding type. There are four combinations in total.
 
-## 本地端口转发
+## Local Port Forwarding
 
 ### TCP
 
-可以设置单一的转发目标地址进行一对一端口转发
+You can set a single forwarding destination address for one-to-one port forwarding:
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -26,15 +27,16 @@
 		- 192.168.1.1:80
 	```
 
-将本地的TCP端口8080映射到192.168.1.1的80端口，所有到本地8080端口的数据会被转发到192.168.1.1:80。
+Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local port 8080 will be forwarded to 192.168.1.1:80.
 
-也可以设置多个目标地址进行一对多端口转发
+You can also set multiple destination addresses for one-to-many port forwarding:
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080?strategy=round&maxFails=1&failTimeout=30s
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -54,17 +56,18 @@
           failTimeout: 30s
 	```
 
-在每次收到转发请求后，会利用转发器中的节点选择器在目标地址列表中选择一个节点作为本次转发的目标地址。
+After each forwarding request is received, the node selector in the forwarder will be used to select a node in the target address list as the target address of this forwarding.
 
 ### UDP
 
-和TCP端口转发类似，也可以指定单个和多个目标转发地址。
+Similar to TCP port forwarding, single and multiple destination forwarding addresses can also be specified.
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L udp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?ttl=5s
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0

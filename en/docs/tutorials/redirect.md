@@ -1,26 +1,27 @@
-# 透明代理
+# Transparent Proxy
 
-透明代理支持REDIRECT和TPROXY两种方式，REDIRECT方式仅支持TCP。
+Transparent proxy supports two modes: REDIRECT and TPROXY. The REDIRECT mode only supports TCP.
 
-!!! note "系统限制"
-    透明代理仅支持Linux系统。
+!!! note "Limitation"
+    Transparent proxy is only available on Linux.
 
-!!! note "流量嗅探"
-    TCP透明代理支持对HTTP和TLS流量进行识别，识别后将使用HTTP`Host`头部信息或TLS的`SNI`扩展信息作为目标访问地址。
+!!! tip "Traffic Sniffing"
+    The TCP transparent proxy supports the detection of HTTP and TLS traffic. The HTTP `Host` header information or the `SNI` extension information of TLS is used as the target access address.
 
-    通过`sniffing`参数开启流量嗅探，默认不开启。
+    Traffic sniffing is enabled through the `sniffing` option, which is not enabled by default.
 
 ## REDIRECT
 
-采用REDIRECT方式的透明代理可以选择给数据包打标记(Mark)。使用Mark需要管理员权限运行。
+Transparent proxy using REDIRECT can choose to mark packets. Using Mark requires administrator privileges to run.
 
-### 不使用Mark
+### Without Mark
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L red://:12345?sniffing=true -F 192.168.1.1:1080
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -46,20 +47,21 @@
     ```
 
 
-!!! example "iptables-本地全局TCP代理"
+!!! example "iptables-Local Global TCP Proxy"
     ```
     iptables -t nat -A OUTPUT -p tcp --match multiport ! --dports 12345,1080 -j DNAT --to-destination 127.0.0.1:12345
     ```
 
-### 使用Mark
+### With Mark
 
-使用Mark可以避免出口流量被二次拦截造成死循环。
+Using Mark can avoid an infinite loop caused by secondary interception of egress traffic.
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L "red://:12345?sniffing=true&so_mark=100"
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -74,13 +76,14 @@
         type: red
     ```
 
-#### 使用转发链
+#### Forwarding Chain
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L red://:12345?sniffing=true -F "http://192.168.1.1:1080?so_mark=100"
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -110,20 +113,19 @@
             type: tcp
     ```
 
-通过`so_mark`(命令行)或`sockopts`(配置文件)参数来设置mark值。
+Set the mark value via the `so_mark` (command line) or `sockopts` (config file) parameter.
 
-!!! example "iptables规则"
+!!! example "iptables Rules"
     ```
     iptables -t nat -N GOST
-    # 忽略局域网流量，请根据实际网络环境进行调整
+    # Ignore LAN traffic, please adjust it according to the actual network environment
     iptables -t nat -A GOST -d 192.168.0.0/16 -j RETURN
-    # 忽略出口流量
+    # Ignore egress traffic
     iptables -t nat -A GOST -p tcp -m mark --mark 100 -j RETURN
-    # 重定向TCP流量到12345端口
+    # Redirect TCP traffic to port 12345
     iptables -t nat -A GOST -p tcp -j REDIRECT --to-ports 12345
-    # 拦截局域网流量
+    # Intercept LAN traffic
     iptables -t nat -A PREROUTING -p tcp -j GOST
-    # 拦截本机流量
     iptables -t nat -A OUTPUT -p tcp -j GOST
     ```
 
@@ -131,11 +133,12 @@
 
 ### TCP
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L "red://:12345?sniffing=true&tproxy=true&so_mark=100"
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -153,13 +156,14 @@
           tproxy: true
     ```
 
-#### 使用转发链
+#### Forwarding Chain
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L "red://:12345?sniffing=true&tproxy=true" -F http://192.168.1.1:8080?so_mark=100
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -189,7 +193,7 @@
             type: tcp
     ```
 
-!!! example "routing和iptables规则"
+!!! example "Routing and iptables Rules"
     ```
     ip rule add fwmark 1 lookup 100
     ip route add local 0.0.0.0/0 dev lo table 100
@@ -217,11 +221,12 @@
 
 ### UDP
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L "redu://:12345?ttl=30s&so_mark=100"
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -236,13 +241,14 @@
           ttl: 30s
     ```
 
-#### 使用转发链
+#### Forwarding Chain
 
-=== "命令行"
+=== "CLI"
     ```
     gost -L redu://:12345?ttl=30s -F relay://192.168.1.1:8421?so_mark=100
     ```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -270,9 +276,9 @@
     ```
 
 `ttl` (duration, default=30s)
-:   传输通道超时时长。
+:    UDP tunnel timeout period.
 
-!!! example "routing和iptables规则"
+!!! example "Routing and iptables Rules"
     ```
     ip rule add fwmark 1 lookup 100
     ip route add local 0.0.0.0/0 dev lo table 100
