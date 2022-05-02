@@ -119,3 +119,10 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	```
 	gost -L http://:8080 -api :18080
 	```
+
+> ** `-metrics`** - 指定prometheus metrics API地址。
+
+!!! example
+    ```
+	gost -L http://:8080 -metrics :9000
+	```

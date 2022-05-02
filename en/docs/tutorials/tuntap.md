@@ -1,75 +1,76 @@
-# TUN/TAP设备
+# TUN/TAP Device
 
-!!! note "Windows系统"
-    Windows下需要安装tap驱动后才能使用，可以选择安装[OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6)或[OpenVPN client](https://github.com/OpenVPN/openvpn)。
+!!! note "Windows"
+    You need to install the tap driver [OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6) or [OpenVPN client](https://github.com/OpenVPN/openvpn) for Windows.
 
 
 ## TUN
 
-### 使用说明
+### Usage
 
 ```
 gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
-`method:password` - 可选，指定UDP隧道数据加密方法和密码。所支持的加密方法与[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)一致。
+`method:password` (string)
+:    encryption method and password for UDP tunnel. Supported methods are the same as [shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2).
 
 `local_ip:port` (string, required)
-:    本地监听的UDP隧道地址。
+:    Local UDP tunnel listen address.
 
 `remote_ip:port` (string)
-:    目标UDP地址。本地TUN设备收到的IP包会通过UDP转发到此地址。
+:    Remote UDP server address, IP packets received by the local TUN device will be forwarded to the remote server via UDP tunnel.
 
 `net` (string, required)
-:    指定TUN设备的地址。
+:    CIDR IP address of the TUN device, such as: 192.168.123.1/24.
 
 `name` (string)
-:    指定TUN设备的名字，默认值为系统预设。
+:    TUN device name.
 
 `mtu` (int, default=1350)
-:    设置TUN设备的MTU值。
+:    MTU for TUN device.
 
 `routes` (string)
-:    逗号分割的路由列表:，例如：10.100.0.0/16,172.20.1.0/24,1.2.3.4/32
+:    Comma-separated routing table, such as: 10.100.0.0/16,172.20.1.0/24,1.2.3.4/32.
 
 `gw` (string)
-:    设置TUN设备路由默认网关IP。
+:    Default routing gateway.
 
 
-### 服务端路由
+### Server Side Routing
 
-服务端可以通过设置路由表和网关，来访问客户端所在的网络。
+The server can access the client network by setting up routing table and gateway.
 
-#### 默认网关
+#### Default gateway
 
-服务端可以通过`gw`参数设置默认网关，来指定`route`参数的路由路径。
+The server can set the default gateway through the `gw` option to specify the gateway of the routes in route parameter.
 
 ```
 gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,10.138.0.0/16"
 ```
 
-发往172.10.0.0/16和10.138.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.2的客户端。
+Packets send to network 172.10.0.0/16 and 10.138.0.0/16 will be forwarded to the client with the IP 192.168.123.2 through the TUN tunnel.
 
-### 构建基于TUN设备的VPN (Linux)
+### TUN-based VPN (Linux)
 
 !!! tip
-    `net`所指定的地址可能需要根据实际情况进行调整。
+    The value specified by `net` option may need to be adjusted according to your actual situation.
 
-#### 创建TUN设备并建立UDP隧道
+#### Create a TUN Device and Establish a UDP Tunnel
 
-##### 服务端
+##### Server
 
 ```
 gost -L tun://:8421?net=192.168.123.1/24
 ```
 
-##### 客户端
+##### Client
 
 ```
 gost -L tun://:8421/SERVER_IP:8421?net=192.168.123.2/24
 ```
 
-当以上命令运行无误后，可以通过`ip addr`命令来查看创建的TUN设备：
+When no error occurred, you can use the `ip addr` command to inspect the created TUN device:
 
 ```
 $ ip addr show tun0
@@ -81,7 +82,7 @@ $ ip addr show tun0
        valid_lft forever preferred_lft forever
 ```
 
-可以通过在客户端执行`ping`命令来测试一下隧道是否连通：
+Now you can `ping` the server address:
 
 ```
 $ ping 192.168.123.1
@@ -90,30 +91,27 @@ $ ping 192.168.123.1
 64 bytes from 192.168.123.1: icmp_seq=3 ttl=64 time=7.18 ms
 ```
 
-如果能ping通，说明隧道已经成功建立。
+#### iperf3 Testing
 
-
-#### iperf3测试
-
-##### 服务端
+##### Server
 
 ```
 $ iperf3 -s
 ```
 
-##### 客户端
+##### Client
 
 ```
 $ iperf3 -c 192.168.123.1
 ```
 
-#### 路由规则和防火墙设置
+#### IP Routing and Firewall Rules
 
-如果想让客户端访问到服务端的网络，还需要根据需求设置相应的路由和防火墙规则。例如可以将客户端的所有外网流量转发给服务端处理
+If you want the client to access the server network, you need to set the corresponding routing table and firewall rules according to your needs. For example, all the client external network traffic can be forwarded to the server.
 
-##### 服务端
+##### Server
 
-开启IP转发并设置防火墙规则
+Enable IP forwarding and set up firewall rules
 
 ```
 $ sysctl -w net.ipv4.ip_forward=1
@@ -123,71 +121,70 @@ $ iptables -A FORWARD -i tun0 ! -o tun0 -j ACCEPT
 $ iptables -A FORWARD -o tun0 -j ACCEPT
 ```
 
-##### 客户端
+##### Client
 
-设置路由规则
+Set up firewall rules
 
-{{< hint danger >}}
-以下操作会更改客户端的网络环境，除非你知道自己在做什么，请谨慎操作！
-{{< /hint >}}
+!!! caution
+    The following operations will change the client's network environment, unless you know what you are doing, please be careful!
 
 ```
-$ ip route add SERVER_IP/32 dev eth0   # 请根据实际情况替换SERVER_IP和eth0
-$ ip route del default   # 删除默认的路由
-$ ip route add default via 192.168.123.2  # 使用新的默认路由
+$ ip route add SERVER_IP/32 dev eth0   # replace the SERVER_IP and eth0
+$ ip route del default   # delete the default route
+$ ip route add default via 192.168.123.2  # add new default route
 ```
 
 ## TAP
 
-!!! note "注意"
-    目前不支持MacOS。
+!!! note "Limitation"
+    TAP devices are not supported by macOS.
 
-### 使用说明
+### Usage
 
 ```
 gost -L="tap://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
-## 基于TCP的TUN/TAP隧道
+## TUN/TAP tunnel over TCP
 
-GOST中的TUN/TAP隧道默认是基于UDP协议进行数据传输。
+The TUN/TAP tunnel in GOST is based on the UDP protocol by default.
 
-如果想使用TCP传输，可以选择采用以下几种方式：
+If you want to use TCP, you can choose the following methods:
 
-### 转发链
+### Forwarding Chain
 
-可以通过使用转发链进行转发，用法与UDP本地端口转发类似。
+You can add a forwarding chain to forward UDP data, analogous to UDP port forwarding.
 
-此方式比较灵活通用，推荐使用。
+This method is more flexible and general, and is recommended.
 
-##### 服务端
+##### Server
 
 ```
 gost -L tun://:8421?net=192.168.123.1/24" -L relay://:1080
 ```
 
-##### 客户端
+##### Client
 
 ```
 gost -L tun://:0/:8421?net=192.168.123.2/24 -F relay://SERVER_IP:1080
 ```
 
-### 端口转发
+### Port Forwarding
 
-利用UDP端口转发配合转发链。
+Based on UDP port forwarding and forwarding chain.
 
-##### 服务端
+##### Server
 
 ```
 gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080
 ```
 
-##### 客户端
+##### Client
 
 ```
 gost -L tun://:8421/:8420?net=192.168.123.2/24 -L udp://:8420/:8421 -F relay://server_ip:1080
 ```
 
-### 第三方转发工具
+### Third-party tools
 
-[udp2raw-tunnel](https://github.com/wangyu-/udp2raw-tunnel)。
+[udp2raw-tunnel](https://github.com/wangyu-/udp2raw-tunnel).

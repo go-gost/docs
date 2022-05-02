@@ -12,7 +12,8 @@
 gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
-`method:password` - 可选，指定UDP隧道数据加密方法和密码。所支持的加密方法与[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)一致。
+`method:password` (string)
+:    指定UDP隧道数据加密方法和密码。所支持的加密方法与[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)一致。
 
 `local_ip:port` (string, required)
 :    本地监听的UDP隧道地址。
@@ -127,9 +128,8 @@ $ iptables -A FORWARD -o tun0 -j ACCEPT
 
 设置路由规则
 
-{{< hint danger >}}
-以下操作会更改客户端的网络环境，除非你知道自己在做什么，请谨慎操作！
-{{< /hint >}}
+!!! caution
+    以下操作会更改客户端的网络环境，除非你知道自己在做什么，请谨慎操作！
 
 ```
 $ ip route add SERVER_IP/32 dev eth0   # 请根据实际情况替换SERVER_IP和eth0

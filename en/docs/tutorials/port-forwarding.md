@@ -64,7 +64,7 @@ Similar to TCP port forwarding, single and multiple destination forwarding addre
 
 === "CLI"
 	```bash
-	gost -L udp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?ttl=5s
+	gost -L udp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?keepAlive=true&ttl=5s
 	```
 === "File (YAML)"
 
@@ -77,6 +77,7 @@ Similar to TCP port forwarding, single and multiple destination forwarding addre
 	  listener:
 		type: udp
 		metadata:
+		  keepAlive: true
 		  ttl: 5s
 	  forwarder:
 		targets:
@@ -85,17 +86,20 @@ Similar to TCP port forwarding, single and multiple destination forwarding addre
 		- 192.168.1.3:53
 	```
 
-每一个客户端对应一条转发通道，当转发服务一定时间内收不到转发目标主机数据时，此转发通道会被标记为空闲状态。转发服务内部会按照`ttl`参数指定的周期检查转发通道是否空闲，如果空闲则此通道将被关闭。一个空闲通道最多会在两个检查周期内被关闭。
+Each client corresponds to a forwarding channel. When the `keepAlive` option is set to `false`, the channel will be closed immediately after the requested response data is returned to the client.
 
-### 转发链
+When the `keepAlive` option is set to `true`, the forwarding service does not receive data from the forwarding target host within a certain period of time, and the forwarding channel will be marked as idle. The forwarding service internally checks whether the forwarding channel is idle according to the period specified by the `ttl` option (default value is 5 seconds). If it is idle, the channel will be closed. An idle channel will be closed for at most two check cycles.
 
-端口转发可以配合转发链进行间接转发。
+### Forwarding Chain
 
-=== "命令行"
+Port forwarding can be used in conjunction with forwarding chains to perform indirect forwarding.
+
+=== "CLI"
 	```bash
     gost -L=tcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -121,13 +125,14 @@ Similar to TCP port forwarding, single and multiple destination forwarding addre
 			type: tcp
 	```
 
-将本地的TCP端口8080通过转发链映射到192.168.1.1的80端口。
+Map the local TCP port 8080 to port 80 of 192.168.1.1 through the forwarding chain.
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=udp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -153,34 +158,35 @@ Similar to TCP port forwarding, single and multiple destination forwarding addre
 			type: tcp
 	```
 
-将本地的UDP端口10053通过转发链映射到192.168.1.1的53端口。
+Map the local UDP port 10053 to port 53 of 192.168.1.1 through the forwarding chain.
 
-!!! caution "限制"
-	当UDP本地端口转发中使用转发链时，转发链末端最后一个节点必须是以下类型：
+!!! caution "Limitation"
+	When forwarding chains are used in UDP local port forwarding, the last node at the end of the forwarding chain must be of the following type:
 
-	* GOST HTTP代理服务并开启了UDP转发功能，采用UDP-over-TCP方式。
+	* GOST HTTP proxy service and enable UDP forwarding function, using UDP-over-TCP method.
 	```
 	gost -L http://:8080?udp=true
 	```
-	* GOST SOCKS5代理服务并开启了UDP转发功能，采用UDP-over-TCP方式。
+	* GOST SOCKS5 proxy service and enable UDP forwarding function, using UDP-over-TCP method.
 	```
 	gost -L socks5://:1080?udp=true
 	```
-	* Relay服务，采用UDP-over-TCP方式。
-	* SSU服务。
+	* Relay service, using UDP-over-TCP method.
+	* SSU service.
 
 !!! tip "UDP-over-TCP"
-    UDP-over-TCP是指使用TCP连接来传输UDP数据包。在GOST中这个说法可能并不太准确，例如使用SOCKS5进行UDP端口转发，SOCKS5服务可以是基于TCP类型的传输通道(TLS, Websocket等)，也可以是基于UDP类型的传输通道(KCP, QUIC等)，这里使用UDP-over-Stream更合适一些(相对于UDP不可靠的数据报式传输来说)，任何可靠的流式传输协议均可以用在此处。
+	UDP-over-TCP refers to using a TCP connection to transmit UDP datagrams. In GOST, this statement may not be accurate. For example, SOCKS5 is used for UDP port forwarding. SOCKS5 services can be based on TCP type transport channels (TLS, Websocket, etc.) or UDP type transport channels (KCP, QUIC, etc.), it is more appropriate to use UDP-over-Stream here (as opposed to the unreliable datagram transmission of UDP), any reliable streaming protocol can be used here.
 
 ### SSH
 
-TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接转发
+TCP port forwarding can be indirectly forwarded by means of the port forwarding function of the standard SSH protocol
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=tcp://:8080/192.168.1.1:80 -F sshd://user:pass@192.168.1.2:22
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -209,13 +215,14 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 			  password: pass
 	```
 
-这里的192.168.1.2:22服务可以是系统本身的标准SSH服务，也可以是GOST的sshd类型服务
+The 192.168.1.2:22 service here can be the standard SSH service of the system itself, or the sshd type service of GOST
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L sshd://user:pass@:22
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -229,15 +236,16 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 		  password: pass
 	```
 
-## 远程端口转发
+## Remote Port Forwarding
 
 ### TCP
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L rtcp://:8080/192.168.1.1:80
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -251,15 +259,16 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 		- 192.168.1.1:80
 	```
 
-将本地的TCP端口8080映射到192.168.1.1的80端口，所有到本地8080端口的数据会被转发到192.168.1.1:80。
+Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local port 8080 will be forwarded to 192.168.1.1:80.
 
 ### UDP
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L rudp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?ttl=5s
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -277,16 +286,17 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 		- 192.168.1.3:53
 	```
 
-!!! note "注意"
-    在不使用转发链的情况下，远程端口转发与本地端口转发没有区别。
+!!! note 
+	Remote port forwarding is no different from local port forwarding without the use of forwarding chains.
 
-### 转发链
+### Forwarding Chain
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=rtcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -312,13 +322,14 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 			type: tcp
 	```
 
-根据rtcp服务指定的地址，通过转发链在主机192.168.1.2上监听8080TCP端口。当收到请求后再通过转发链将数据转发给rtcp服务，rtcp服务再将请求转发到192.168.1.1:80端口。
+According to the address specified by the rtcp service, listen on the 8080 TCP port on the host 192.168.1.2 through the forwarding chain. After receiving the request, it forwards the data to the rtcp service through the forwarding chain, and the rtcp service forwards the request to port 192.168.1.1:80.
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=rudp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -344,35 +355,36 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 			type: tcp
 	```
 
-根据rudp服务指定的地址，通过转发链在主机192.168.1.2上监听10053端口。当收到请求后再通过转发链将数据转发给rudp服务，rudp服务再将请求转发到192.168.1.1:53端口。
+According to the address specified by the rudp service, listen on port 10053 on the host 192.168.1.2 through the forwarding chain. After receiving the request, it forwards the data to the rudp service through the forwarding chain, and the rudp service forwards the request to port 192.168.1.1:53.
 
-!!! note "注意"
-    远程端口转发上的转发链默认设置在监听器上，此时处理器上也可以再设置另外的转发链。
+!!! note 
+	The forwarding chain on remote port forwarding is set on the listener by default, and another forwarding chain can also be set on the handler at the same time.
 
-	远程端口转发服务中的监听地址，在使用转发链时将监听在转发链末端最后一个节点服务所在的主机上。
+	The listening address in the remote port forwarding service will listen on the host where the service of the last node at the end of the forwarding chain is located when using the forwarding chain.
 
 
-!!! caution "限制"
-	当远程端口转发中使用转发链时，转发链末端最后一个节点必须是以下类型：
+!!! caution "Limitation"
+	When forwarding chains are used in remote port forwarding, the last node at the end of the forwarding chain must be of the following type:
 
-	* GOST SOCKS5代理服务并开启了BIND功能，采用UDP-over-TCP方式。
+	* GOST SOCKS5 proxy service and enable BIND function, using UDP-over-TCP method.
 	```
 	gost -L socks5://:1080?bind=true
 	```
-	* Relay服务并开启了BIND功能，采用UDP-over-TCP方式。
+	* Relay service and enable BIND function, using UDP-over-TCP method.
 	```
 	gost -L socks5://:8421?bind=true
 	```
 
 ### SSH
 
-TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能进行间接转发
+TCP remote port forwarding can be indirectly forwarded by means of the remote port forwarding function of the standard SSH protocol:
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=rtcp://:8080/192.168.1.1:80 -F sshd://user:pass@192.168.1.2:22
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -401,19 +413,20 @@ TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能�
 			  password: pass
 	```
 
-这里的192.168.1.2:22服务可以是系统本身的标准SSH服务，也可以是GOST的sshd类型服务。
+The 192.168.1.2:22 service here can be the standard SSH service of the system itself, or the sshd type service of GOST.
 
-## 服务端转发
+## Server-side Forwarding
 
-以上的转发方式可以看作是客户端转发，由客户端来控制转发的目标地址。目标地址也可以由服务端指定。
+The above forwarding method can be regarded as client forwarding, and the client controls the forwarding target address. The target address can also be specified by the server.
 
-### 服务端
+### Server
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L tls://:8443/192.168.1.1:80
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -426,13 +439,14 @@ TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能�
 		targets:
 		- 192.168.1.1:80
 	```
-### 客户端
+### Client
 
-=== "命令行"
+=== "CLI"
 	```bash
     gost -L=tcp://:8080 -F forward+tls://:8443
 	```
-=== "配置文件"
+=== "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -455,7 +469,7 @@ TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能�
 			type: tls
 	```
 
-!!! note "forward连接器和处理器"
-    这里服务的处理器和转发链的连接器必须为`forward`类型，由于目标地址由服务端指定，因此客户端无需指定目标地址。`forward`连接器不做任何逻辑处理。
+!!! note "forward type connector and handler"
+	The handler of this service and the connector of the forwarding chain must be of type `forward`. Since the target address is specified by the server, the client does not need to specify the target address. The `forward` connector does not do any logic processing.
 	
-	这里的`tcp://:8080`等同于`tcp://:8080/:0`，转发目标地址`:0`在这里作为占位符。仅当配合`forward`连接器使用时，这种用法才是有效的。
+	Here `tcp://:8080` is equivalent to `tcp://:8080/:0`, and the forwarding destination address `:0` is here as a placeholder. This usage is only valid when used with the `forward` connector.

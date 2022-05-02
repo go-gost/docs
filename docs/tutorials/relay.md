@@ -9,13 +9,14 @@ Relay协议是GOST特有的一个协议，同时具有代理和转发功能，�
 
 Relay协议可以像HTTP/SOCKS5一样用作代理协议。
 
-!!! example "示例"
-	服务端
+### 服务端
+
 	```
 	gost -L relay+tls://username:password@:12345
 	```
 
-	客户端
+### 客户端
+
 	```
 	gost -L :8080 -F relay+tls://username:password@:12345?nodelay=false
 	```
@@ -25,13 +26,14 @@ Relay协议可以像HTTP/SOCKS5一样用作代理协议。
 
 也可以配合端口转发支持同时转发TCP和UDP数据
 
-!!! example "示例"
-	服务端
+### 服务端
+
 	```
 	gost -L relay://:12345
 	```
 
-	客户端
+### 客户端
+
 	```
 	gost -L udp://:1053/:53 -L tcp://:1053/:53 -F relay://:12345
 	```
@@ -40,13 +42,14 @@ Relay协议可以像HTTP/SOCKS5一样用作代理协议。
 
 Relay服务本身也可以作为端口转发服务。
 
-!!! example "示例"
-	服务端
+### 服务端
+
 	```
 	gost -L relay://:12345/:53
 	```
 
-	客户端
+### 客户端
+
 	```
 	gost -L udp://:1053 -L tcp://:1053 -F relay://:12345
 	```
@@ -57,12 +60,14 @@ Relay协议实现了类似于SOCKS5的BIND功能，可以配合远程端口转�
 
 BIND功能默认未开启，需要通过设置`bind`参数为true来开启。
 
-!!! example "示例"
+### 服务端
+
 	```
 	gost -L relay://:12345?bind=true
 	```
 
-	客户端
+### 客户端
+
     ```
 	gost -L rtcp://:2222/:22 -L rudp://:10053/:53 -F relay://:12345
 	```

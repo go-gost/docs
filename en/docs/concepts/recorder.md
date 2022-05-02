@@ -104,6 +104,9 @@ services:
 
 Currently supported record objects are:
 
+`recorder.service.client.address`
+:    All client addresses accessing the service
+
 `recorder.service.router.dial.address`
 :   All visited destination addresses
 

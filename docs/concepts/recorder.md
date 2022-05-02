@@ -104,6 +104,9 @@ services:
 
 目前支持的记录对象有：
 
+`recorder.service.client.address`
+:    所有访问服务的客户端地址
+
 `recorder.service.router.dial.address`
 :   所有访问的目标地址
 
