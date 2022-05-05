@@ -1,6 +1,6 @@
-# 命令行参数
+# Command Line 
 
-GOST目前有以下几个命令行参数项：
+GOST currently has the following command line options:
 
 > **`-L`** - 指定本地服务，可设置多个。
 
@@ -120,7 +120,7 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	gost -L http://:8080 -api :18080
 	```
 
-> ** `-metrics`** - 指定prometheus metrics API地址。
+> **`-metrics`** - 指定prometheus metrics API地址。
 
 !!! example
     ```

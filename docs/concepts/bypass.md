@@ -5,20 +5,22 @@
 
 ## 分流器
 
-在转发链中可以对每个节点设置分流器，在数据转发过程中，根据节点分流器中的规则来决定是否继续转发。
+在服务和转发链每个节点上可以分别设置分流器，在数据转发过程中，根据分流器中的规则来决定是否继续转发。
 
 === "命令行"
     ```
-    gost -L http://:8080 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
+    gost -L http://:8080?bypass=10.0.0.0/8 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
     通过`bypass`参数来指定请求的目标地址匹配规则列表(以逗号分割的IP,CIDR,域名或域名通配符)。
 
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
       addr: ":8080"
+      bypass: bypass-0
       handler:
         type: http
         chain: chain-0
@@ -29,7 +31,7 @@
       hops:
       - name: hop-0
         # hop level
-        bypass: bypass-0
+        bypass: bypass-1
         nodes:
         - name: node-0
           addr: 192.168.1.1:8080
@@ -41,6 +43,9 @@
             type: tcp
     bypasses:
     - name: bypass-0
+      matchers:
+      - 10.0.0.0/8
+    - name: bypass-1
       matchers:
       - 172.10.0.0/16
       - 127.0.0.1
@@ -56,7 +61,7 @@
 
     命令行模式下的bypass参数配置会应用到hop级别。
 
-### 黑名单与白名单
+## 黑名单与白名单
 
 分流器默认为黑名单模式，当执行转发链的节点选择时，每当确定一个层级节点后，会应用此节点上的分流器，若请求的目标地址与分流器中的规则相匹配，则转发链终止于此节点(且不包含此节点)。
 
@@ -104,6 +109,9 @@
     ```
 
     在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。
+
+!!! note "服务上的分流器"
+    当服务上设置了分流器，其行为有别于转发链上的分流器。如果请求未通过分流器规则测试(未匹配白名单规则或匹配黑名单规则)，则此请求会被拒绝。
 
 ## 数据源
 

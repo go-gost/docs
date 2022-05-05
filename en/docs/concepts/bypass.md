@@ -10,7 +10,7 @@ Bypass can be set for each node in the forwarding chain. During the data forward
 === "CLI"
 
     ```bash
-    gost -L http://:8080 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
+    gost -L http://:8080?bypass=10.0.0.0/8 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
     Specify a list of client address matching rules (comma-separated IP or CIDR) via the `bypass` option.
@@ -22,6 +22,7 @@ Bypass can be set for each node in the forwarding chain. During the data forward
     services:
     - name: service-0
       addr: ":8080"
+      bypass: bypass-0
       handler:
         type: http
         chain: chain-0
@@ -32,7 +33,7 @@ Bypass can be set for each node in the forwarding chain. During the data forward
       hops:
       - name: hop-0
         # hop level
-        bypass: bypass-0
+        bypass: bypass-1
         nodes:
         - name: node-0
           addr: 192.168.1.1:8080
@@ -44,6 +45,9 @@ Bypass can be set for each node in the forwarding chain. During the data forward
             type: tcp
     bypasses:
     - name: bypass-0
+      matchers:
+      - 10.0.0.0/8
+    - name: bypass-1
       matchers:
       - 172.10.0.0/16
       - 127.0.0.1
@@ -59,7 +63,7 @@ Bypass can be set for each node in the forwarding chain. During the data forward
 
     The bypass option in command line mode will be applied to the hop level.
 
-### Blacklist And Whitelist
+## Blacklist And Whitelist
 
 Bypass defaults to blacklist mode. When a node is determined in a hop by node selection, the bypass on this node will be applied. If the target address of the request matches the rules in the bypass, the chain terminates at this node (and does not contain this node).
 
@@ -110,6 +114,8 @@ Bypass can also be set to whitelist mode, as opposed to blacklist, only if the t
 
     Enable blacklist mode in `bypasses` by setting the `reverse` property to `true`.
 
+!!! note "Bypass On Service"
+    When a bypass is set on the service, its behavior is different from the bypass on the forwarding chain. If the request fails the bypass rule test (does not match the whitelist rule or matches the blacklist rule), the request is rejected.
 
 ## Data Source
 
