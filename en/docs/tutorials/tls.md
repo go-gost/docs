@@ -6,6 +6,30 @@ GOST has three types of TLS certificates: self-generated certificate, global cer
 
 GOST automatically generates a TLS certificate on every run, and if no certificate is specified, this certificate is used as the default.
 
+### Customize Certificate Information
+
+=== "CLI"
+
+	Setting a global certificate is not currently supported in command line mode.
+
+=== "File (YAML)"
+
+    ```yaml
+    tls:
+      validity: 8760h
+      commonName: gost.run
+      organization: GOST
+    ```
+
+`validity` (duration, default=8760h)
+:    Validity period.
+
+`commonName` (string, default=gost.run)
+:    Common Name.
+
+`organization` (string, default=GOST)
+:    Organization.
+
 ## Global Certificate
 
 The global certificate uses the automatically generated certificate by default, or you can specify a custom certificate file through configuration.

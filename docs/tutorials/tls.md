@@ -6,6 +6,30 @@ GOST有三种类型TLS证书：自生成证书，全局证书，服务层级证�
 
 GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会使用此证书作为默认证书。
 
+### 自定义证书信息
+
+=== "命令行"
+
+    命令行模式下暂不支持设置全局证书。
+
+=== "配置文件"
+
+    ```yaml
+    tls:
+      validity: 8760h
+      commonName: gost.run
+      organization: GOST
+    ```
+
+`validity` (duration, default=8760h)
+:    证书有效期，默认1年。
+
+`commonName` (string, default=gost.run)
+:    证书CN信息。
+
+`organization` (string, default=GOST)
+:    证书的Organization信息。
+
 ## 全局证书
 
 全局证书默认使用自动生成的证书，也可以通过配置指定自定义证书文件。

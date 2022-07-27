@@ -29,4 +29,7 @@ GRPC监听器根据服务配置，监听在指定TCP端口，并使用gRPC协议
 `grpcInsecure` (bool, default=false)
 :    开启明文gRPC传输(不使用TLS)
 
+`path` (string, default=/GostTunel/Tunnel)
+:    请求URI
+
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

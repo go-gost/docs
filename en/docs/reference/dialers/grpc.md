@@ -41,4 +41,7 @@ GRPC拨号器使用gRPC协议与gRPC服务建立数据通道。
 `grpcInsecure` (bool, default=false)
 :    开启明文gRPC传输(不使用TLS)
 
+`path` (string, default=/GostTunel/Tunnel)
+:    请求URI，必须与服务端设置一致
+
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

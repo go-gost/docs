@@ -28,15 +28,15 @@ It can also be used with port forwarding to support simultaneous forwarding of T
 
 ### Server
 
-	```
-	gost -L relay://:12345
-	```
+```
+gost -L relay://:12345
+```
 
 ### Client
 
-	```
-	gost -L udp://:1053/:53 -L tcp://:1053/:53 -F relay://:12345
-	```
+```
+gost -L udp://:1053/:53 -L tcp://:1053/:53 -F relay://:12345
+```
 
 ## Port Forwarding
 
@@ -44,15 +44,15 @@ The Relay service itself can also act as a port forwarding service.
 
 ### Server
 
-	```
-	gost -L relay://:12345/:53
-	```
+```
+gost -L relay://:12345/:53
+```
 
 ### Client
 
-	```
-	gost -L udp://:1053 -L tcp://:1053 -F relay://:12345
-	```
+```
+gost -L udp://:1053 -L tcp://:1053 -F relay://:12345
+```
 
 ## Remote Port Forwarding
 
@@ -62,12 +62,12 @@ The BIND function is not enabled by default and needs to be enabled by setting t
 
 ### Server
 
-	```
-	gost -L relay://:12345?bind=true
-	```
+```
+gost -L relay://:12345?bind=true
+```
 
 ### Client
 
-    ```
-	gost -L rtcp://:2222/:22 -L rudp://:10053/:53 -F relay://:12345
-	```
+```
+gost -L rtcp://:2222/:22 -L rudp://:10053/:53 -F relay://:12345
+```
