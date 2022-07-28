@@ -160,7 +160,7 @@ This method is more flexible and general, and is recommended.
 ##### Server
 
 ```
-gost -L tun://:8421?net=192.168.123.1/24" -L relay://:1080
+gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080?bind=true
 ```
 
 ##### Client
@@ -182,7 +182,7 @@ gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080
 ##### Client
 
 ```
-gost -L tun://:8421/:8420?net=192.168.123.2/24 -L udp://:8420/:8421 -F relay://server_ip:1080
+gost -L tun://:8421/:8420?net=192.168.123.2/24 -L udp://:8420/:8421?keepAlive=true -F relay://server_ip:1080
 ```
 
 ### Third-party tools

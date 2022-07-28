@@ -54,10 +54,10 @@ recorders:
 - name: recorder-0
   redis:
     addr: 127.0.0.1:6379
-	  db: 1
-	  password: 123456
-	  key: gost:recorder:recorder-0
-	  type: set
+    db: 1
+    password: 123456
+    key: gost:recorder:recorder-0
+    type: set
 ```
 
 `addr` (string, required)
