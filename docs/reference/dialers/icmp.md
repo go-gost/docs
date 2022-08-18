@@ -35,8 +35,8 @@ ICMP拨号器使用ICMP协议建立数据通道。
 
 ## 参数列表
 
-`keepAlive` (bool, default=false)
-:    是否开启心跳
+`keepAlive` (duration, default=0)
+:    心跳间隔时长，默认发送心跳
 
 `handshakeTimeout` (duration, default=5s)
 :    握手超时时长

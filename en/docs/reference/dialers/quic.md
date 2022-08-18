@@ -35,8 +35,8 @@ QUIC拨号器使用[QUIC协议](https://github.com/lucas-clemente/quic-go)与QUI
 
 ## 参数列表
 
-`keepAlive` (bool, default=false)
-:    是否开启心跳
+`keepAlive` (duration, default=0)
+:    心跳间隔时长，默认发送心跳
 
 `handshakeTimeout` (duration, default=5s)
 :    握手超时时长
