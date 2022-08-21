@@ -1,19 +1,17 @@
 # TUN/TAP Device
 
-!!! note "Windows"
-    You need to install the tap driver [OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6) or [OpenVPN client](https://github.com/OpenVPN/openvpn) for Windows.
-
-
 ## TUN
+
+TUN is based on [wireguard-go](https://git.zx2c4.com/wireguard-go).
+
+!!! note "Windows"
+    You need to download a platform-specific `wintun.dll` file from [wintun](https://www.wintun.net/), and put it side-by-side with gost.
 
 ### Usage
 
 ```
 gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
-
-`method:password` (string)
-:    encryption method and password for UDP tunnel. Supported methods are the same as [shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2).
 
 `local_ip:port` (string, required)
 :    Local UDP tunnel listen address.
@@ -30,12 +28,64 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `mtu` (int, default=1350)
 :    MTU for TUN device.
 
-`routes` (string)
-:    Comma-separated routing table, such as: 10.100.0.0/16,172.20.1.0/24,1.2.3.4/32.
-
 `gw` (string)
 :    Default routing gateway.
 
+`route` (string)
+:    Comma-separated routing table, such as: 10.100.0.0/16,172.20.1.0/24,1.2.3.4/32.
+
+`routes` (list)
+:    Gateway-specific routing, Each entry in the list is a space-separated CIDR address and gateway, such as `10.100.0.0/16 192.168.123.2`
+
+### Example
+
+#### Server
+
+=== "CLI"
+
+    ```
+    gost -L=tun://:8421?net=192.168.123.1/24
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          name: tun0
+          net: 192.168.123.1/24
+          mtu: 1350
+    ```
+#### Client
+
+=== "CLI"
+
+    ```
+    gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        targets:
+        - SERVER_IP:8421
+    ```
 
 ### Server Side Routing
 
@@ -51,6 +101,30 @@ gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,1
 
 Packets send to network 172.10.0.0/16 and 10.138.0.0/16 will be forwarded to the client with the IP 192.168.123.2 through the TUN tunnel.
 
+#### Gateway-specific routing
+
+If you want to set a specific gateway for each route, you can specify it via `routes` option:
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+          routes:
+          - 72.10.0.0/16 192.168.123.2
+          - 10.138.0.0/16 192.168.123.3
+    ```
+Packets send to network 172.10.0.0/16 will be forwarded to the client with the IP 192.168.123.2 through the TUN tunnel.
+
+Packets send to network 10.138.0.0/16 will be forwarded to the client with the IP 192.168.123.3 through the TUN tunnel.
+
 ### TUN-based VPN (Linux)
 
 !!! tip
@@ -60,15 +134,50 @@ Packets send to network 172.10.0.0/16 and 10.138.0.0/16 will be forwarded to the
 
 ##### Server
 
-```
-gost -L tun://:8421?net=192.168.123.1/24
-```
+=== "CLI"
 
+    ```
+    gost -L=tun://:8421?net=192.168.123.1/24
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+    ```
 ##### Client
 
-```
-gost -L tun://:8421/SERVER_IP:8421?net=192.168.123.2/24
-```
+=== "CLI"
+
+    ```
+    gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        targets:
+        - SERVER_IP:8421
+    ```
+
 
 When no error occurred, you can use the `ip addr` command to inspect the created TUN device:
 
@@ -136,13 +245,19 @@ $ ip route add default via 192.168.123.2  # add new default route
 
 ## TAP
 
+TAP is based on [songgao/water](https://github.com/songgao/water).
+
+!!! note "Windows"
+    You need to install the tap driver [OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6) or [OpenVPN client](https://github.com/OpenVPN/openvpn) for Windows.
+
+
 !!! note "Limitation"
     TAP devices are not supported by macOS.
 
 ### Usage
 
 ```
-gost -L="tap://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
 ## TUN/TAP tunnel over TCP
@@ -151,40 +266,77 @@ The TUN/TAP tunnel in GOST is based on the UDP protocol by default.
 
 If you want to use TCP, you can choose the following methods:
 
-### Forwarding Chain
+### Forward Chain
 
-You can add a forwarding chain to forward UDP data, analogous to UDP port forwarding.
+You can use chain to forward UDP data, analogous to UDP port forwarding.
 
 This method is more flexible and general, and is recommended.
 
-##### Server
+#### Server
 
-```
-gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080?bind=true
-```
+=== "CLI"
 
-##### Client
+    ```
+    gost -L=tun://:8421?net=192.168.123.1/24 -L relay+wss://:8443?bind=true
+    ```
 
-```
-gost -L tun://:0/:8421?net=192.168.123.2/24 -F relay://SERVER_IP:1080
-```
+=== "File (YAML)"
 
-### Port Forwarding
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+    - name: service-1
+      addr: :8443
+      handler:
+        type: relay
+        metadata:
+          bind: true
+      listener:
+        type: wss
+    ```
+#### Client
 
-Based on UDP port forwarding and forwarding chain.
+=== "CLI"
 
-##### Server
+    ```
+    gost -L=tun://:0/:8421?net=192.168.123.2/24 -F relay+wss://SERVER_IP:8443
+    ```
 
-```
-gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080
-```
+=== "File (YAML)"
 
-##### Client
-
-```
-gost -L tun://:8421/:8420?net=192.168.123.2/24 -L udp://:8420/:8421?keepAlive=true -F relay://server_ip:1080
-```
-
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+        chain: chain-0
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        targets:
+        - :8421
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: SERVER_IP:8443
+          connector:
+            type: relay
+          dialer:
+            type: wss
+    ```
 ### Third-party tools
 
 [udp2raw-tunnel](https://github.com/wangyu-/udp2raw-tunnel).

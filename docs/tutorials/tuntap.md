@@ -35,7 +35,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 :    逗号分割的路由列表，例如：10.100.0.0/16,172.20.1.0/24,1.2.3.4/32
 
 `routes` (list)
-:    特定网关路由列表，列表每一项为空格分割的CIDR地址和网管，例如：`10.100.0.0/16 192.168.123.2`
+:    特定网关路由列表，列表每一项为空格分割的CIDR地址和网关，例如：`10.100.0.0/16 192.168.123.2`
 
 ### 使用示例
 
@@ -276,7 +276,7 @@ TAP的实现依赖于[songgao/water](https://github.com/songgao/water)库。
 ### 使用说明
 
 ```
-gost -L="tap://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
 ## 基于TCP的TUN/TAP隧道
