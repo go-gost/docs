@@ -63,7 +63,7 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 === "配置文件"
 
     ```yaml
-	services:
+    services:
     - name: service-0
       addr: :8443
       handler:

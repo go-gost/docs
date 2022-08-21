@@ -1,19 +1,17 @@
 # TUN/TAP设备
 
-!!! note "Windows系统"
-    Windows下需要安装tap驱动后才能使用，可以选择安装[OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6)或[OpenVPN client](https://github.com/OpenVPN/openvpn)。
-
-
 ## TUN
+
+TUN的实现依赖于[wireguard-go](https://git.zx2c4.com/wireguard-go)。
+
+!!! note "Windows系统"
+    Windows需要下载[wintun](https://www.wintun.net/)。
 
 ### 使用说明
 
 ```
-gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
-
-`method:password` (string)
-:    指定UDP隧道数据加密方法和密码。所支持的加密方法与[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)一致。
 
 `local_ip:port` (string, required)
 :    本地监听的UDP隧道地址。
@@ -30,12 +28,65 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `mtu` (int, default=1350)
 :    设置TUN设备的MTU值。
 
-`routes` (string)
-:    逗号分割的路由列表:，例如：10.100.0.0/16,172.20.1.0/24,1.2.3.4/32
-
 `gw` (string)
 :    设置TUN设备路由默认网关IP。
 
+`route` (string)
+:    逗号分割的路由列表，例如：10.100.0.0/16,172.20.1.0/24,1.2.3.4/32
+
+`routes` (list)
+:    特定网关路由列表，列表每一项为空格分割的CIDR地址和网管，例如：`10.100.0.0/16 192.168.123.2`
+
+### 使用示例
+
+#### 服务端
+
+=== "命令行"
+
+    ```
+    gost -L=tun://:8421?net=192.168.123.1/24
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          name: tun0
+          net: 192.168.123.1/24
+          mtu: 1350
+    ```
+
+#### 客户端
+
+=== "命令行"
+
+    ```
+    gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        targets:
+        - SERVER_IP:8421
+    ```
 
 ### 服务端路由
 
@@ -45,11 +96,51 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 
 服务端可以通过`gw`参数设置默认网关，来指定`route`参数的路由路径。
 
-```
-gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,10.138.0.0/16"
-```
+=== "命令行"
+
+    ```
+    gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,10.138.0.0/16"
+    ```
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+          gw: 192.168.123.2
+          route: 172.10.0.0/16,10.138.0.0/16
+    ```
 
 发往172.10.0.0/16和10.138.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.2的客户端。
+
+#### 特定网关路由
+
+如果要针对每个路由设置特定的网关，可以通过`routes`参数来指定。
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+          routes:
+          - 72.10.0.0/16 192.168.123.2
+          - 10.138.0.0/16 192.168.123.3
+    ```
+
+发往172.10.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.2的客户端。发往10.138.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.3的客户端。
 
 ### 构建基于TUN设备的VPN (Linux)
 
@@ -60,17 +151,52 @@ gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,1
 
 ##### 服务端
 
-```
-gost -L tun://:8421?net=192.168.123.1/24
-```
+=== "命令行"
+
+    ```
+    gost -L=tun://:8421?net=192.168.123.1/24
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+    ```
 
 ##### 客户端
 
-```
-gost -L tun://:8421/SERVER_IP:8421?net=192.168.123.2/24
-```
+=== "命令行"
 
-当以上命令运行无误后，可以通过`ip addr`命令来查看创建的TUN设备：
+    ```
+    gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        targets:
+        - SERVER_IP:8421
+    ```
+
+当以上命令运行正常后，可以通过`ip addr`命令来查看创建的TUN设备：
 
 ```
 $ ip addr show tun0
@@ -139,8 +265,13 @@ $ ip route add default via 192.168.123.2  # 使用新的默认路由
 
 ## TAP
 
+TAP的实现依赖于[songgao/water](https://github.com/songgao/water)库。
+
+!!! note "Windows系统"
+    Windows下需要安装tap驱动后才能使用，可以选择安装[OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6)或[OpenVPN client](https://github.com/OpenVPN/openvpn)。
+
 !!! note "注意"
-    目前不支持MacOS。
+    TAP目前不支持MacOS。
 
 ### 使用说明
 
@@ -160,33 +291,72 @@ GOST中的TUN/TAP隧道默认是基于UDP协议进行数据传输。
 
 此方式比较灵活通用，推荐使用。
 
-##### 服务端
+#### 服务端
 
-```
-gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080?bind=true
-```
+=== "命令行"
 
-##### 客户端
+    ```
+    gost -L=tun://:8421?net=192.168.123.1/24 -L relay+wss://:8443?bind=true
+    ```
 
-```
-gost -L tun://:0/:8421?net=192.168.123.2/24 -F relay://SERVER_IP:1080
-```
+=== "配置文件"
 
-### 端口转发
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+    - name: service-1
+      addr: :8443
+      handler:
+        type: relay
+        metadata:
+          bind: true
+      listener:
+        type: wss
+    ```
 
-利用UDP端口转发配合转发链。
+#### 客户端
 
-##### 服务端
+=== "命令行"
 
-```
-gost -L tun://:8421?net=192.168.123.1/24 -L relay://:1080
-```
+    ```
+    gost -L=tun://:0/:8421?net=192.168.123.2/24 -F relay+wss://SERVER_IP:8443
+    ```
 
-##### 客户端
+=== "配置文件"
 
-```
-gost -L tun://:8421/:8420?net=192.168.123.2/24 -L udp://:8420/:8421?keepAlive=true -F relay://server_ip:1080
-```
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+        chain: chain-0
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        targets:
+        - :8421
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: SERVER_IP:8443
+          connector:
+            type: relay
+          dialer:
+            type: wss
+    ```
 
 ### 第三方转发工具
 
