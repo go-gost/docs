@@ -28,8 +28,11 @@ ICMP监听器采用ICMP协议进行数据传输。
 `backlog` (int, default=128)
 :    单个连接的数据流队大小
 
-`keepAlive` (duration, default=0)
-:    心跳间隔时长，默认发送心跳
+`keepAlive` (bool, default=false)
+:    开启心跳检测。
+
+`ttl` (duration, default=10s)
+:    心跳间隔时长，当`keepAlive`为true时有效。
 
 `handshakeTimeout` (duration, default=5s)
 :    握手超时时长

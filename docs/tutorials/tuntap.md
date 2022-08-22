@@ -37,6 +37,15 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `routes` (list)
 :    特定网关路由列表，列表每一项为空格分割的CIDR地址和网关，例如：`10.100.0.0/16 192.168.123.2`
 
+`bufferSize` (int)
+:    数据读缓存区大小，默认1500字节
+
+`keepAlive` (bool)
+:    开启心跳，仅客户端有效
+
+`ttl` (duration)
+:    心跳间隔时长，默认10s
+
 ### 使用示例
 
 #### 服务端
@@ -55,6 +64,8 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
       addr: :8421
       handler:
         type: tun
+        metadata:
+          bufferSize: 1500
       listener:
         type: tun
         metadata:
@@ -79,6 +90,10 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
       addr: :8421
       handler:
         type: tun
+        metadata:
+          bufferSize: 1500
+          keepAlive: true
+          ttl: 10s
       listener:
         type: tun
         metadata:

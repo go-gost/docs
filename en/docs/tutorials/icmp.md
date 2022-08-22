@@ -22,7 +22,7 @@ gost -L icmp://:0
 ### Client
 
 ```
-gost -L :8080 -F relay+icmp://server_ip:12345?keepAlive=10s
+gost -L :8080 -F "relay+icmp://server_ip:12345?keepAlive=true&ttl=10s"
 ```
 
 !!! note "root"

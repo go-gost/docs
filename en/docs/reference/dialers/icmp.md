@@ -35,11 +35,14 @@ ICMP拨号器使用ICMP协议建立数据通道。
 
 ## 参数列表
 
-`keepAlive` (duration, default=0)
-:    心跳间隔时长，默认发送心跳
+`keepAlive` (bool, default=false)
+:    enable keepalive.
+
+`ttl` (duration, default=10s)
+:    keepalive period.
 
 `handshakeTimeout` (duration, default=5s)
-:    握手超时时长
+:    handshake timeout
 
 `maxIdleTimeout` (duration, default=30s)
-:    最大空闲时长
+:    max idle timeout

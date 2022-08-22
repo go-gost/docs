@@ -37,6 +37,15 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `routes` (list)
 :    Gateway-specific routing, Each entry in the list is a space-separated CIDR address and gateway, such as `10.100.0.0/16 192.168.123.2`
 
+`bufferSize` (int, default=1500)
+:    read buffer size in byte.
+
+`keepAlive` (bool, default=false)
+:    enable keepalive, valid for client.
+
+`ttl` (duration, default=10s)
+:    keepalive period, valid when `keepAlive` is true.
+
 ### Example
 
 #### Server
@@ -55,6 +64,8 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
       addr: :8421
       handler:
         type: tun
+        metadata:
+          bufferSize: 1500
       listener:
         type: tun
         metadata:
@@ -78,6 +89,10 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
       addr: :8421
       handler:
         type: tun
+        metadata:
+          bufferSize: 1500
+          keepAlive: true
+          ttl: 10s
       listener:
         type: tun
         metadata:
