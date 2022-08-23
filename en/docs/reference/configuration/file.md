@@ -1,8 +1,8 @@
-# 配置文件
+# Configuration file
 
-GOST配置文件使用yaml或json格式，完整的配置文件的结构如下：
+GOST configuration file supports `yaml` and `json` format, the complete configuration structure is as follows:
 
-=== "yaml格式"
+=== "yaml"
     ```yaml
     services:
     - name: service-0
@@ -105,14 +105,14 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
     admissions:
     - name: admission-0
-      reverse: false
+      whitelist: false
       matchers:
       - 127.0.0.1
       - 192.168.0.0/16
 
     bypasses:
     - name: bypass-0
-      reverse: false
+      whitelist: false
       matchers:
       - "*.example.com"
       - .example.org
@@ -169,7 +169,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       path: /metrics
     ```
 
-=== "json格式"
+=== "json"
     ```json
     {
       "services": [
@@ -299,7 +299,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "admissions": [
         {
           "name": "admission-0",
-          "reverse": false,
+          "whitelist": false,
           "matchers": [
             "127.0.0.1",
             "192.168.0.0/16"
@@ -309,7 +309,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "bypasses": [
         {
           "name": "bypass-0",
-          "reverse": false,
+          "whitelist": false,
           "matchers": [
             "*.example.com",
             ".example.org",
@@ -399,62 +399,62 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
     }
     ```
 
-## 服务(Service)
+## Service
 
 `name` (string, required)
-:    服务名称
+:    service name
 
 `addr` (string, required)
-:    服务地址
+:    service address
 
 `interface` (string)
-:    网络接口名或IP地址
+:    network interface name or IP address
 
 `sockopts` (object)
-:    Socket参数
+:    Socket options
 
 `admission` (string, ref)
-:    admission名称，引用`admissions.name`
+:    admission name, reference to `admissions.name`
 
 `bypass` (string, ref)
-:    bypass名称，引用`bypasses.name`
+:    bypass name, reference to `bypasses.name`
 
 `resolver` (string, ref)
-:    resolver名称，引用`resolvers.name`
+:    resolver name, reference to `resolvers.name`
 
 `hosts` (string, ref)
-:    hosts名称，对应`hosts.name`
+:    hosts name, reference to `hosts.name`
 
 `handler` (object, required)
-:    处理器对象
+:   handler object
 
 `listener` (object, required)
-:    监听器对象
+:    listener object
 
 `forwarder` (object)
-:    转发器对象，用于端口转发
+:    forward object
 
-### 处理器(Handler)
+### Handler
 
 `type` (string, required)
-:    处理器类型
+:    handler type
 
 `auther` (string)
-:    认证器名称，引用`authers.name`
+:    auther name, reference to `authers.name`
 
 `auth` (object)
-:    认证信息，如果设置了`auther`，此字段无效。
+:    auth info, ignored when `auther` is used.
 
 `chain` (string, ref)
-:    转发链名称，引用`chains.name`
+:    chain name, reference to `chains.name`
 
 `retries` (int, default=0)
-:    请求处理失败后重试次数
+:    retry times after handler error
 
 `metadata` (map)
-:    处理器实例相关参数
+:    options for handler
 
-### 监听器(Listener)
+### Listener
     
 `type` (string, required) 
 :    监听器类型
@@ -613,10 +613,10 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 ## 准入控制器(Admission)
 
 `name` (string, required)
-:    admission名称
+:    admission name
 
-`reverse` (bool, default=false)
-:    切换为白名单
+`whitelist` (bool, default=false)
+:    whitelist mode
 
 `matchers` (strings)
 :    地址列表，支持IP，CIDR

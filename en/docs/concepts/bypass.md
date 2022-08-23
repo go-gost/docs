@@ -103,7 +103,7 @@ Bypass can also be set to whitelist mode, as opposed to blacklist, only if the t
             type: tcp
     bypasses:
     - name: bypass-0
-      reverse: true
+      whitelist: true
       matchers:
       - 172.10.0.0/16
       - 127.0.0.1
@@ -112,11 +112,56 @@ Bypass can also be set to whitelist mode, as opposed to blacklist, only if the t
       - .example.org
     ```
 
-    Enable blacklist mode in `bypasses` by setting the `reverse` property to `true`.
+    Enable blacklist mode in `bypasses` by setting the `whitelist` property to `true`.
 
 !!! note "Bypass On Service"
     When a bypass is set on the service, its behavior is different from the bypass on the forwarding chain. If the request fails the bypass rule test (does not match the whitelist rule or matches the blacklist rule), the request is rejected.
 
+## Bypass Group
+
+Multiple bypasses are used by specifying a list of bypasses using the `bypasses` option. When any one of the bypass passes the rule test, it means the bypass is passed.
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        bypasses: 
+        - bypass-0
+        - bypass-1
+        nodes:
+        - name: node-0
+          addr: 192.168.1.1:8080
+          # bypasses: 
+          # - bypass-0
+          # - bypass-1
+          connector:
+            type: http
+          dialer:
+            type: tcp
+
+    bypasses:
+    - name: bypass-0
+      whitelist: true
+      matchers:
+      - 172.10.0.0/16
+    - name: bypass-1
+      matchers:
+      - 127.0.0.1
+      - localhost
+      - '*.example.com'
+      - .example.org
+    ```
 ## Data Source
 
 Bypass can configure multiple data sources, currently supported data sources are: inline, file, redis.

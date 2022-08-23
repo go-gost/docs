@@ -3,7 +3,7 @@
 !!! tip "Dynamic configuration"
     Admission Controller supports dynamic configuration via Web API.
 
-## Admission Control
+## Admission Controller
 
 An admission controller can be set on each service to control client access.
 
@@ -33,16 +33,16 @@ An admission controller can be set on each service to control client access.
 
     Use the `admission` property in the service to use the specified admission controller by referencing the admission controller name.
 
-### Blacklist And Whitelist
+## Blacklist And Whitelist
 
-Similar to the bypass, the admission controller can also set the blacklist or whitelist mode, the default is the whitelist mode.
+Similar to the bypass, the admission controller can also set the blacklist or whitelist mode, the default is the blacklist mode.
 
 === "CLI"
     ```
     gost -L http://:8080?admission=~127.0.0.1,192.168.0.0/16
     ```
 
-    Set the admission controller to blacklist mode by adding the `~` prefix to the `admission` option.
+    Set the admission controller to whitelist mode by adding the `~` prefix to the `admission` option.
 
 === "File (YAML)"
 
@@ -57,13 +57,41 @@ Similar to the bypass, the admission controller can also set the blacklist or wh
         type: tcp
     admissions:
     - name: admission-0
-      reverse: true
+      whitelist: true
       matchers:
       - 127.0.0.1
       - 192.168.0.0/16
     ```
 
-    Enable blacklist mode in `admissions` by setting the `reverse` property to `true`.
+    Enable blacklist mode in `admissions` by setting the `whitelist` property to `true`.
+
+## Admission Control Group
+
+Multiple controllers can be used by specifying a list of admission controllers using the `admissions` option. When any one of the controllers rejects, it means the rejection.
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      admissions: 
+      - admission-0
+      - admission-1
+      handler:
+        type: http
+      listener:
+        type: tcp
+    admissions:
+    - name: admission-0
+      whitelist: true
+      matchers:
+      - 192.168.0.0/16
+      - 127.0.0.1
+    - name: admission-1
+      matchers:
+      - 192.168.0.1
+    ```
 
 ## Data Source
 

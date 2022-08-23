@@ -68,6 +68,7 @@
 也可以将分流器设置为白名单模式，与黑名单相反，只有目标地址与分流器中的规则相匹配，才继续进行下一层级的节点选择。
 
 === "命令行"
+
     ```
     gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
@@ -75,6 +76,7 @@
     通过在`bypass`参数中增加`~`前缀将分流器设置为白名单模式。
 
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -99,7 +101,7 @@
             type: tcp
     bypasses:
     - name: bypass-0
-      reverse: true
+      whitelist: true
       matchers:
       - 172.10.0.0/16
       - 127.0.0.1
@@ -108,10 +110,55 @@
       - .example.org
     ```
 
-    在`bypasses`中通过设置`reverse`属性为`true`来开启白名单模式。
+    在`bypasses`中通过设置`whitelist`属性为`true`来开启白名单模式。
 
 !!! note "服务上的分流器"
     当服务上设置了分流器，其行为有别于转发链上的分流器。如果请求未通过分流器规则测试(未匹配白名单规则或匹配黑名单规则)，则此请求会被拒绝。
+
+## 分流器组
+
+通过使用`bypasses`属性来指定分流器列表来使用多个分流器，当任何一个分流器规则测试通过则代表通过。
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        bypasses: 
+        - bypass-0
+        - bypass-1
+        nodes:
+        - name: node-0
+          addr: 192.168.1.1:8080
+          # bypasses: 
+          # - bypass-0
+          # - bypass-1
+          connector:
+            type: http
+          dialer:
+            type: tcp
+    bypasses:
+    - name: bypass-0
+      whitelist: true
+      matchers:
+      - 172.10.0.0/16
+    - name: bypass-1
+      matchers:
+      - 127.0.0.1
+      - localhost
+      - '*.example.com'
+      - .example.org
+    ```
 
 ## 数据源
 

@@ -105,14 +105,14 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
     admissions:
     - name: admission-0
-      reverse: false
+      whitelist: false
       matchers:
       - 127.0.0.1
       - 192.168.0.0/16
 
     bypasses:
     - name: bypass-0
-      reverse: false
+      whitelist: false
       matchers:
       - "*.example.com"
       - .example.org
@@ -299,7 +299,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "admissions": [
         {
           "name": "admission-0",
-          "reverse": false,
+          "whitelist": false,
           "matchers": [
             "127.0.0.1",
             "192.168.0.0/16"
@@ -309,7 +309,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "bypasses": [
         {
           "name": "bypass-0",
-          "reverse": false,
+          "whitelist": false,
           "matchers": [
             "*.example.com",
             ".example.org",
@@ -615,7 +615,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `name` (string, required)
 :    admission名称
 
-`reverse` (bool, default=false)
+`whitelist` (bool, default=false)
 :    切换为白名单
 
 `matchers` (strings)
@@ -626,7 +626,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `name` (string, required)
 :    bypass名称
 
-`reverse` (bool, default=false)
+`whitelist` (bool, default=false)
 :    切换为白名单
 
 `matchers` (strings)

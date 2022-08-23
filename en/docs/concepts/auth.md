@@ -126,6 +126,34 @@ Use the specified authenticator by referencing the authenticator name via the `a
 !!! caution "Shadowsocks Handler"
 	The Shadowsocks handler cannot use authenticator, and only supports setting single authentication information as encryption parameter.
 
+## Authenticator Group
+
+Use multiple authenticators by specifying a list of authenticators using the `authers` option. When any one of the authenticators passes the authentication, it means the authentication is passed.
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+		authers:
+		- auther-0
+		- auther-1
+      listener:
+        type: tcp
+	authers:
+	- name: auther-0
+	  auths:
+	  - username: user1
+	    password: pass1
+	- name: auther-1
+	  auths:
+	  - username: user2
+        password: pass2
+	```
+
 ## Data Source
 
 Authenticator can configure multiple data sources, currently supported data sources are: inline, file, redis.
