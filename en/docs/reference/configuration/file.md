@@ -40,9 +40,11 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
           abc: xyz
           def: 456
       forwarder:
-        targets:
-        - 192.168.1.1:1234
-        - 192.168.1.2:2345
+        nodes:
+        - name: target-0
+          addr: 192.168.1.1:1234
+        - name: target-1
+          addr: 192.168.1.2:2345
         selector:
           strategy: rand
           maxFails: 1
@@ -214,9 +216,15 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
             }
           },
           "forwarder": {
-            "targets": [
-              "192.168.1.1:1234",
-              "192.168.1.2:2345"
+            "nodes": [
+              {
+                "name": "target-0",
+                "addr": "192.168.1.1:1234"
+              },
+              {
+                "name": "target-1",
+                "addr": "192.168.1.2:2345"
+              }
             ],
             "selector": {
               "strategy": "rand",
@@ -474,15 +482,15 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 `metadata` (map)
 :    监听器实例相关参数
 
-### 转发器(Forwarder)
+### Forwarder
 
-`targets` (strings)
-:    转发目标地址列表
+`nodes` (objects)
+:    target node list
 
 `selector` (object)
 :    负载均衡策略
 
-## 转发链(Chain)
+## Chain
 
 `name` (string, required)
 :    转发链名称

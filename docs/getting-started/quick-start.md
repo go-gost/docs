@@ -140,8 +140,9 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	```
 
 将本地的TCP端口8080映射到192.168.1.1的80端口，所有到本地8080端口的数据会被转发到192.168.1.1:80。
@@ -162,8 +163,9 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 	  listener:
 		type: udp
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	```
 
 将本地的UDP端口10053映射到192.168.1.1的53端口，所有到本地10053端口的数据会被转发到192.168.1.1:53。
@@ -185,8 +187,9 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
@@ -219,8 +222,9 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 		type: rtcp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- :22
+	    nodes:
+		- name: target-0
+		  addr: :22
 	chains:
 	- name: chain-0
 	  hops:
@@ -253,8 +257,9 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 		type: rudp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- :53
+	    nodes:
+		- name: target-0
+		  addr: :53
 	chains:
 	- name: chain-0
 	  hops:

@@ -5,8 +5,8 @@ edit_uri: ""
 
 theme:
   name: material
-  logo: images/gost.png
-  favicon: images/favicon.ico
+  logo: /images/gost.png
+  favicon: /images/favicon.ico
   custom_dir: overrides
   features:
     - navigation.instant
@@ -20,14 +20,14 @@ theme:
       media: "(prefers-color-scheme: light)"
       toggle:
         icon: material/weather-sunny
-        name: Switch to dark mode
+        name: Light mode
       primary: teal
       accent: indigo
     - scheme: slate 
       media: "(prefers-color-scheme: dark)"
       toggle:
         icon: material/weather-night
-        name: Switch to light mode
+        name: Dark mode
 
 extra:
   social:

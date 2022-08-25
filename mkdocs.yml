@@ -20,14 +20,14 @@ theme:
       media: "(prefers-color-scheme: light)"
       toggle:
         icon: material/weather-sunny
-        name: Switch to dark mode
+        name: 白天模式
       primary: teal
       accent: indigo
     - scheme: slate 
       media: "(prefers-color-scheme: dark)"
       toggle:
         icon: material/weather-night
-        name: Switch to light mode
+        name: 夜间模式
 
 extra:
   social:

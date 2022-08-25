@@ -40,9 +40,11 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
           abc: xyz
           def: 456
       forwarder:
-        targets:
-        - 192.168.1.1:1234
-        - 192.168.1.2:2345
+        nodes:
+        - name: target-0
+          addr: 192.168.1.1:1234
+        - name: target-1
+          addr: 192.168.1.2:2345
         selector:
           strategy: rand
           maxFails: 1
@@ -214,12 +216,18 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
             }
           },
           "forwarder": {
-            "targets": [
-              "192.168.1.1:1234",
-              "192.168.1.2:2345"
+            "nodes": [
+              {
+                "name": "target-0",
+                "addr": "192.168.1.1:1234"
+              },
+              {
+                "name": "target-1",
+                "addr": "192.168.1.2:2345"
+              }
             ],
             "selector": {
-              "strategy": "rand",
+              "strategy": "round",
               "maxFails": 1,
               "failTimeout": 30
             }
@@ -476,8 +484,8 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 ### 转发器(Forwarder)
 
-`targets` (strings)
-:    转发目标地址列表
+`nodes` (objects)
+:    转发目标节点列表
 
 `selector` (object)
 :    负载均衡策略
@@ -529,7 +537,6 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 `bypass` (string, ref)
 :    bypass名称，引用`bypasses.name`。
-     如果未设置，则使用`hop.bypass`
 
 `connector` (object)
 :    连接器对象

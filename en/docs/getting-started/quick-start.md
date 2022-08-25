@@ -139,8 +139,9 @@ GOST finally forwards the request to 192.168.1.2:1080 through the forwarding cha
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	```
 
 Map local TCP port 8080 to port 80 of 192.168.1.1, all data sent to the local port 8080 will be forwarded to 192.168.1.1:80.
@@ -161,8 +162,9 @@ Map local TCP port 8080 to port 80 of 192.168.1.1, all data sent to the local po
 	  listener:
 		type: udp
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	```
 
 Map local UDP port 10053 to port 53 of 192.168.1.1, all data sent to the local port 10053 will be forwarded to 192.168.1.1:53.
@@ -184,8 +186,9 @@ Map local UDP port 10053 to port 53 of 192.168.1.1, all data sent to the local p
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
@@ -218,8 +221,9 @@ Map local TCP port 8080 to port 80 of 192.168.1.2 through the forwarding chain `
 		type: rtcp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- :22
+	    nodes:
+		- name: target-0
+		  addr: :22
 	chains:
 	- name: chain-0
 	  hops:
@@ -252,8 +256,9 @@ Listen on TCP port 2222 on 192.168.1.2, and map it to local TCP port 22, all dat
 		type: rudp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- :53
+	    nodes:
+		- name: target-0
+		  addr: :53
 	chains:
 	- name: chain-0
 	  hops:

@@ -1,11 +1,11 @@
 # 分流
 
 !!! tip "动态配置"
-    分流器支持通过Web API进行动态配置。
+    分流器支持通过WebAPI进行动态配置。
 
 ## 分流器
 
-在服务和转发链每个节点上可以分别设置分流器，在数据转发过程中，根据分流器中的规则来决定是否继续转发。
+在服务，跳跃点和转发链每个节点上可以分别设置分流器，在数据转发过程中根据分流器中的规则对目标地址进行匹配测试来决定是否继续转发。
 
 === "命令行"
     ```
@@ -20,6 +20,7 @@
     services:
     - name: service-0
       addr: ":8080"
+      # service level bypass
       bypass: bypass-0
       handler:
         type: http
@@ -30,7 +31,7 @@
     - name: chain-0
       hops:
       - name: hop-0
-        # hop level
+        # hop level bypass
         bypass: bypass-1
         nodes:
         - name: node-0
@@ -54,23 +55,22 @@
       - .example.org
     ```
 
-    节点中使用`bypass`属性通过引用分流器名称(name)来使用指定的分流器。
+    使用`bypass`参数通过引用分流器名称(`bypasses.name`)来使用指定的分流器。
 
 !!! tip "Hop级别的分流器"
-    bypass可以设置在hop或node上，如果node上未设置则使用hop上指定的bypass。
 
     命令行模式下的bypass参数配置会应用到hop级别。
 
 ## 黑名单与白名单
 
-分流器默认为黑名单模式，当执行转发链的节点选择时，每当确定一个层级节点后，会应用此节点上的分流器，若请求的目标地址与分流器中的规则相匹配，则转发链终止于此节点(且不包含此节点)。
+分流器默认为黑名单模式，如果目标地址匹配上黑名单则数据转发将终止。
 
-也可以将分流器设置为白名单模式，与黑名单相反，只有目标地址与分流器中的规则相匹配，才继续进行下一层级的节点选择。
+也可以将分流器设置为白名单模式，与黑名单相反，只有目标地址与分流器中的规则相匹配才继续进行数据中转。
 
 === "命令行"
 
     ```
-    gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
+    gost -L http://:8080 -F http://:8081?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
     通过在`bypass`参数中增加`~`前缀将分流器设置为白名单模式。
@@ -93,7 +93,7 @@
         bypass: bypass-0
         nodes:
         - name: node-0
-          addr: 192.168.1.1:8080
+          addr: :8081
           # bypass: bypass-0
           connector:
             type: http
@@ -112,12 +112,93 @@
 
     在`bypasses`中通过设置`whitelist`属性为`true`来开启白名单模式。
 
-!!! note "服务上的分流器"
-    当服务上设置了分流器，其行为有别于转发链上的分流器。如果请求未通过分流器规则测试(未匹配白名单规则或匹配黑名单规则)，则此请求会被拒绝。
-
 ## 分流器组
 
-通过使用`bypasses`属性来指定分流器列表来使用多个分流器，当任何一个分流器规则测试通过则代表通过。
+通过使用`bypasses`参数来指定分流器列表来使用多个分流器，当任何一个分流器规则未匹配成功则代表未通过。
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      # bypasses: 
+      # - bypass-0
+      # - bypass-1
+      handler:
+        type: http
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        bypasses: 
+        - bypass-0
+        - bypass-1
+        nodes:
+        - name: node-0
+          addr: :8081
+          # bypasses: 
+          # - bypass-0
+          # - bypass-1
+          connector:
+            type: http
+          dialer:
+            type: tcp
+    bypasses:
+    - name: bypass-0
+      whitelist: true
+      matchers:
+      - 172.10.0.0/16
+    - name: bypass-1
+      matchers:
+      - 127.0.0.1
+      - 172.10.0.1
+      - localhost
+      - '*.example.com'
+      - .example.org
+    ```
+
+## 服务上的分流器
+
+当服务上设置了分流器，如果请求的目标地址未通过分流器规则测试(未匹配白名单规则或匹配黑名单规则)，则此请求会被拒绝。
+
+=== "命令行"
+
+    ```
+    gost -L http://:8080?bypass=www.example.com
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      bypass: bypass-0
+      handler:
+        type: http
+      listener:
+        type: tcp
+    bypasses:
+    - name: bypass-0
+      matchers:
+      - www.example.com
+    ```
+
+8080端口的HTTP代理服务使用了黑名单分流，`example.com`的请求会正常处理，`www.example.com`的请求会被拒绝。
+
+## 跳跃点上的分流器
+
+当跳跃点(Hop)上设置了分流器，如果请求的目标地址未通过分流器规则测试(未匹配白名单规则或匹配黑名单规则)，则转发链将终止于此跳跃点，且不包括此跳跃点。
+
+=== "命令行"
+
+    ```
+    gost -L http://:8080 -F http://:8081?bypass=~example.com,.example.org -F http://:8082?bypass=example.com
+    ```
 
 === "配置文件"
 
@@ -134,15 +215,19 @@
     - name: chain-0
       hops:
       - name: hop-0
-        bypasses: 
-        - bypass-0
-        - bypass-1
+        bypass: bypass-0
         nodes:
         - name: node-0
-          addr: 192.168.1.1:8080
-          # bypasses: 
-          # - bypass-0
-          # - bypass-1
+          addr: :8081
+          connector:
+            type: http
+          dialer:
+            type: tcp
+      - name: hop-1
+        bypass: bypass-1
+        nodes:
+        - name: node-0
+          addr: :8082
           connector:
             type: http
           dialer:
@@ -151,14 +236,65 @@
     - name: bypass-0
       whitelist: true
       matchers:
-      - 172.10.0.0/16
+      - example.com
+      - .example.org
     - name: bypass-1
       matchers:
-      - 127.0.0.1
-      - localhost
-      - '*.example.com'
-      - .example.org
+      - example.com
     ```
+
+当请求`www.example.com`时未通过第一个跳跃点(hop-0)的分流器(bypass-0)，因此请求不会使用转发链。
+
+当请求`example.com`时，通过第一个跳跃点(hop-0)的分流器(bypass-0)，但未通过第二个跳跃点(hop-1)的分流器(bypass-1)，因此请求将使用转发链第一层级的节点:8081进行数据转发。
+
+当请求`www.example.org`时，通过两个跳跃点的分流器，因此请求将使用完整的转发链进行转发。
+
+## 节点上的分流器
+
+当转发链使用多个节点时，可以通过在节点上设置分流器来对请求进行精准分流。
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8081
+          bypass: bypass-0
+          connector:
+            type: http
+          dialer:
+            type: tcp
+        - name: node-1
+          addr: :8082
+          bypass: bypass-1
+          connector:
+            type: http
+          dialer:
+            type: tcp
+    bypasses:
+    - name: bypass-0
+      matchers:
+      - example.org
+    - name: bypass-1
+      matchers:
+      - example.com
+    ```
+
+当请求`example.com`时，通过了节点node-0上的分流器bypass-0，但未通过节点node-1上的分流器bypass-1，因此请求只会使用节点node-0进行转发。
+
+当请求`example.org`时，未通过节点node-0上的分流器bypass-0，通过了节点node-1上的分流器，因此请求只会使用节点node-1进行转发。
 
 ## 数据源
 

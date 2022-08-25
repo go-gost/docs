@@ -1,4 +1,4 @@
-FROM squidfunk/mkdocs-material:8.1.4 AS builder
+FROM squidfunk/mkdocs-material:8.4.1 AS builder
 
 ADD . /src
 
@@ -10,6 +10,10 @@ WORKDIR /src/en
 
 RUN mkdocs build -d /src/site/en/
 
-FROM nginx:1.21-alpine
+WORKDIR /src/blog
+
+RUN mkdocs build -d /src/site/blog/
+
+FROM nginx:1.23-alpine
 
 COPY --from=builder /src/site/ /usr/share/nginx/html/
