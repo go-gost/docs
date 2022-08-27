@@ -7,10 +7,13 @@
 UDP处理器仅做纯UDP数据转发工作。根据服务中的转发器配置，将数据转发给指定的目标主机。
 
 === "命令行"
+
 	```bash
 	gost -L udp://:10053/192.168.1.1:53
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -20,8 +23,9 @@ UDP处理器仅做纯UDP数据转发工作。根据服务中的转发器配置�
 	  listener:
 		type: udp 
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	```
 
 ## 参数列表

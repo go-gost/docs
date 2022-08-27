@@ -98,8 +98,9 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
         metadata:
           net: 192.168.123.1/24
       forwarder:
-        targets:
-        - SERVER_IP:8421
+	      nodes:
+        - name: target-0
+		      addr: SERVER_IP:8421
     ```
 
 ### Server Side Routing
@@ -189,8 +190,9 @@ Packets send to network 10.138.0.0/16 will be forwarded to the client with the I
         metadata:
           net: 192.168.123.1/24
       forwarder:
-        targets:
-        - SERVER_IP:8421
+	      nodes:
+        - name: target-0
+		      addr: SERVER_IP:8421
     ```
 
 
@@ -338,8 +340,9 @@ This method is more flexible and general, and is recommended.
         metadata:
           net: 192.168.123.1/24
       forwarder:
-        targets:
-        - :8421
+	      nodes:
+        - name: target-0
+		      addr: :8421
     chains:
     - name: chain-0
       hops:

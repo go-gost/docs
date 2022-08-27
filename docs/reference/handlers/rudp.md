@@ -20,8 +20,9 @@ RUDP处理器根据服务中的转发器配置，将数据转发给指定的目�
 	  listener:
 		type: rudp
 	  forwarder:
-		targets:
-		- :53
+	    nodes:
+		- name: target-0
+		  addr: :53
 	```
 
 ## 参数列表

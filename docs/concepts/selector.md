@@ -26,6 +26,7 @@
 	gost -L http://:8080 -F socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=rand&maxFails=3&failTimeout=60s
 	```
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -71,25 +72,28 @@
 
 === "命令行"
     ```
-	gost -L "tcp://:8080/192.168.1.1:8081,192.168.1.2:8082?strategy=round&maxFails=1&failTimeout=30s
+	gost -L "tcp://:8080/:8081,:8082?strategy=round&maxFails=1&failTimeout=30s"
 	```
 === "配置文件"
+
     ```yaml
-	services:
-	- name: service-0
-	  addr: :8080
-	  handler:
-		type: tcp
-	  listener:
-		type: tcp
-	  forwarder:
-		targets:
-		- 192.168.1.1:8081
-		- 192.168.1.2:8082
-		selector:
-		  strategy: round
-		  maxFails: 1
-		  failTimeout: 30s
+    services:
+    - name: service-0
+      addr: :8080
+	    handler:
+        type: tcp
+      listener:
+        type: tcp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :8081
+        - name: target-1
+          addr: :8082
+        selector:
+          strategy: round
+          maxFails: 1
+          failTimeout: 30s
 	```
 
 ## 负载均衡

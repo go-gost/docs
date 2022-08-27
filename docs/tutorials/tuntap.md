@@ -99,8 +99,9 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
         metadata:
           net: 192.168.123.1/24
       forwarder:
-        targets:
-        - SERVER_IP:8421
+        nodes:
+        - name: target-0
+          addr: SERVER_IP:8421
     ```
 
 ### 服务端路由
@@ -207,8 +208,9 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
         metadata:
           net: 192.168.123.1/24
       forwarder:
-        targets:
-        - SERVER_IP:8421
+        nodes:
+        - name: target-0
+          addr: SERVER_IP:8421
     ```
 
 当以上命令运行正常后，可以通过`ip addr`命令来查看创建的TUN设备：
@@ -358,8 +360,9 @@ GOST中的TUN/TAP隧道默认是基于UDP协议进行数据传输。
         metadata:
           net: 192.168.123.1/24
       forwarder:
-        targets:
-        - :8421
+        nodes:
+        - name: target-0
+          addr: :8421
     chains:
     - name: chain-0
       hops:

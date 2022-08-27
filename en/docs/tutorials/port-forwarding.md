@@ -23,8 +23,9 @@ You can set a single forwarding destination address for one-to-one port forwardi
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	```
 
 Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local port 8080 will be forwarded to 192.168.1.1:80.
@@ -46,10 +47,13 @@ You can also set multiple destination addresses for one-to-many port forwarding:
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
-		- 192.168.1.2:80
-		- 192.168.1.3:8080
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
+		- name: target-1
+		  addr: 192.168.1.2:80
+		- name: target-2
+		  addr: 192.168.1.3:8080
 		selector:
           strategy: round
           maxFails: 1
@@ -80,10 +84,13 @@ Similar to TCP port forwarding, single and multiple destination forwarding addre
 		  keepAlive: true
 		  ttl: 5s
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
-		- 192.168.1.2:53
-		- 192.168.1.3:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
+		- name: target-1
+		  addr: 192.168.1.2:53
+		- name: target-2
+		  addr: 192.168.1.3:53
 	```
 
 Each client corresponds to a forwarding channel. When the `keepAlive` option is set to `false`, the channel will be closed immediately after the requested response data is returned to the client.
@@ -110,8 +117,9 @@ Port forwarding can be used in conjunction with forwarding chains to perform ind
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
@@ -143,8 +151,9 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1 through the forwarding cha
 	  listener:
 		type: udp
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	chains:
 	- name: chain-0
 	  hops:
@@ -197,8 +206,9 @@ TCP port forwarding can be indirectly forwarded by means of the port forwarding 
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
@@ -255,8 +265,9 @@ The 192.168.1.2:22 service here can be the standard SSH service of the system it
 	  listener:
 		type: rtcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	```
 
 Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local port 8080 will be forwarded to 192.168.1.1:80.
@@ -280,10 +291,13 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 		metadata:
 		  ttl: 5s
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
-		- 192.168.1.2:53
-		- 192.168.1.3:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
+		- name: target-1
+		  addr: 192.168.1.2:53
+		- name: target-2
+		  addr: 192.168.1.3:53
 	```
 
 !!! note 
@@ -307,8 +321,9 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 		type: rtcp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
@@ -340,8 +355,9 @@ According to the address specified by the rtcp service, listen on the 8080 TCP p
 		type: rudp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	chains:
 	- name: chain-0
 	  hops:
@@ -395,8 +411,9 @@ TCP remote port forwarding can be indirectly forwarded by means of the remote po
 		type: rtcp
 		chain: chain-0
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
@@ -436,8 +453,9 @@ The above forwarding method can be regarded as client forwarding, and the client
 	  listener:
 		type: tls
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	```
 ### Client
 

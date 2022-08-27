@@ -10,7 +10,7 @@ RTCP监听器根据服务配置，监听在指定的本地或远程(通过转发
 
 === "命令行"
     ```
-	gost -L=rtcp://:2222/192.168.1.1:22
+	gost -L=rtcp://:2222/:22
 	```
 === "配置文件"
     ```yaml
@@ -22,8 +22,9 @@ RTCP监听器根据服务配置，监听在指定的本地或远程(通过转发
 	  listener:
 		type: rtcp
 	  forwarder:
-	    targets:
-		- 192.168.1.1:22
+	    nodes:
+		- name: target-0
+		  addr: :22
 	```
 
 ## 使用转发链
@@ -43,8 +44,9 @@ RTCP监听器根据服务配置，监听在指定的本地或远程(通过转发
 		type: rtcp
 		chain: chain-0
 	  forwarder:
-	    targets:
-		- 192.168.1.1:22
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:22
 	chains:
 	- name: chain-0
 	  hops:

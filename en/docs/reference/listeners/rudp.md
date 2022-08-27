@@ -9,10 +9,13 @@ RUDP监听器根据服务配置，监听在指定的本地或远程(通过转发
 ## 不使用转发链
 
 === "命令行"
+
     ```
 	gost -L=rudp://:10053/192.168.1.1:53
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -22,17 +25,21 @@ RUDP监听器根据服务配置，监听在指定的本地或远程(通过转发
 	  listener:
 		type: rudp
 	  forwarder:
-	    targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	```
 
 ## 使用转发链
 
 === "命令行"
+
     ```
 	gost -L=rtcp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -43,8 +50,9 @@ RUDP监听器根据服务配置，监听在指定的本地或远程(通过转发
 		type: rudp
 		chain: chain-0
 	  forwarder:
-	    targets:
-		- 192.168.1.1:53
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:53
 	chains:
 	- name: chain-0
 	  hops:

@@ -5,7 +5,7 @@
 
 ## Bypass Controller
 
-Bypass can be set for each node in the forwarding chain. During the data forwarding, whether to continue forwarding is decided according to the node bypass.
+Bypass can be set on the service, the hop and the nodes of the forwarding chain respectively, during the data forwarding process, the target address is tested according to the rules in the bypass to decide whether to continue forwarding.
 
 === "CLI"
 
@@ -65,9 +65,9 @@ Bypass can be set for each node in the forwarding chain. During the data forward
 
 ## Blacklist And Whitelist
 
-Bypass defaults to blacklist mode. When a node is determined in a hop by node selection, the bypass on this node will be applied. If the target address of the request matches the rules in the bypass, the chain terminates at this node (and does not contain this node).
+Bypass defaults to blacklist mode. If the destination address matches the blacklist, the data forwarding will be terminated.
 
-Bypass can also be set to whitelist mode, as opposed to blacklist, only if the target address matches the rules in the bypass will proceed to the next hop of node selection.
+Bypass can also be set to whitelist mode, as opposed to blacklist, data forward will continue only if the destination address matches the rules in the bypass.
 
 === "CLI"
 
@@ -114,9 +114,6 @@ Bypass can also be set to whitelist mode, as opposed to blacklist, only if the t
 
     Enable blacklist mode in `bypasses` by setting the `whitelist` property to `true`.
 
-!!! note "Bypass On Service"
-    When a bypass is set on the service, its behavior is different from the bypass on the forwarding chain. If the request fails the bypass rule test (does not match the whitelist rule or matches the blacklist rule), the request is rejected.
-
 ## Bypass Group
 
 Multiple bypasses are used by specifying a list of bypasses using the `bypasses` option. When any one of the bypass passes the rule test, it means the bypass is passed.
@@ -162,6 +159,148 @@ Multiple bypasses are used by specifying a list of bypasses using the `bypasses`
       - '*.example.com'
       - .example.org
     ```
+
+## Bypass Type
+
+### Service Level Bypass
+
+When a bypass is set on the service, if the requested target address fails the rule test (does not match the whitelist rule or matches the blacklist rule), the request will be rejected.
+
+=== "CLI"
+
+    ```
+    gost -L http://:8080?bypass=example.com
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      bypass: bypass-0
+      handler:
+        type: http
+      listener:
+        type: tcp
+    bypasses:
+    - name: bypass-0
+      matchers:
+      - example.com
+    ```
+
+The HTTP proxy service on port 8080 uses a blacklist bypass. The request of `example.org` will be processed normally, and the request of `example.com` will be rejected.
+
+### Hop Level Bypass
+
+When a bypass is set on a hop, if the requested destination address fails the rule test (does not match the whitelist rule or matches the blacklist rule), the forwarding chain will terminate at this hop, and excluding this hop.
+
+=== "CLI"
+
+    ```
+    gost -L http://:8080 -F http://:8081?bypass=~example.com,.example.org -F http://:8082?bypass=example.com
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        bypass: bypass-0
+        nodes:
+        - name: node-0
+          addr: :8081
+          connector:
+            type: http
+          dialer:
+            type: tcp
+      - name: hop-1
+        bypass: bypass-1
+        nodes:
+        - name: node-0
+          addr: :8082
+          connector:
+            type: http
+          dialer:
+            type: tcp
+    bypasses:
+    - name: bypass-0
+      whitelist: true
+      matchers:
+      - example.com
+      - .example.org
+    - name: bypass-1
+      matchers:
+      - example.com
+    ```
+
+When a request to `www.example.com` does not go through the bypass (bypass-0) of the hop (hop-0), the request will not use the forwarding chain.
+
+When requesting `example.com`, it passes the bypass (bypass-0) of the first hop (hop-0), but not the bypass (bypass-1) of the second hop (hop-1) , so the request will use the node(:8081) at the first level of the forwarding chain for data forwarding.
+
+When requesting `www.example.org`, it goes through all bypasses, so the request will be forwarded using the full forwarding chain.
+
+### Chain Node Level Bypass
+
+When the forwarding chain uses multiple nodes, the request can be fine-grained divided by setting bypasses on the nodes.
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8081
+          bypass: bypass-0
+          connector:
+            type: http
+          dialer:
+            type: tcp
+        - name: node-1
+          addr: :8082
+          bypass: bypass-1
+          connector:
+            type: http
+          dialer:
+            type: tcp
+    bypasses:
+    - name: bypass-0
+      matchers:
+      - example.org
+    - name: bypass-1
+      matchers:
+      - example.com
+    ```
+
+When requesting `example.com`, it passed the bypass bypass-0 on node node-0, but did not pass the bypass bypass-1 on node node-1, so the request will only be forwarded using node node-0.
+
+When requesting `example.org`, it does not pass the bypass-0 on node node-0, but passes the bypass on node-1, so the request will only be forwarded using node-1.
+
+### Forwarder Node Level Bypass
+
+This type of bypass is similar to the bypass on the chain node and currently only applies to the [DNS proxy service](/en/tutorials/dns/).
+
 ## Data Source
 
 Bypass can configure multiple data sources, currently supported data sources are: inline, file, redis.

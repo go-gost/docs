@@ -15,6 +15,7 @@ sshd处理器使用SSH协议进行数据交互，用于SSH端口转发。
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -25,8 +26,9 @@ sshd处理器使用SSH协议进行数据交互，用于SSH端口转发。
 	  listener:
 		type: tcp
 	  forwarder:
-		targets:
-		- 192.168.1.1:80
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:80
 	chains:
 	- name: chain-0
 	  hops:
