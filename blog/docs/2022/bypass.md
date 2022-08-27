@@ -2,7 +2,7 @@
 author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 30min
-publish_date: 2022-08-28 22:22
+publish_date: 2022-08-27 12:00
 ---
 
 
@@ -265,7 +265,7 @@ GOST最早是在v2.6版本中增加了[分流](https://v2.gost.run/bypass/)的�
 
 ### 上游DNS服务节点上的分流器
 
-类似于转发链节点上的分流器，DNS代理服务的转发器节点上也可以通过设置转发器来实现精细化分流。
+类似于转发链节点上的分流器，DNS代理服务的转发器节点上也可以通过设置分流器来实现精细化分流。
 
 === "配置文件"
 
