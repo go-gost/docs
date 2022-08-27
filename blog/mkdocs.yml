@@ -82,4 +82,4 @@ copyright: Copyright &copy; 2015 - 2022 GOST
 nav:
   - 主页: index.md
   - 2022:
-    - '节点分流': 2022/bypass.md
+    - '流量控制-分流器': 2022/bypass.md
