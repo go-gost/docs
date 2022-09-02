@@ -197,4 +197,5 @@ nav:
       - SSU: reference/connectors/ssu.md
       - SNI: reference/connectors/sni.md
       - SSHD: reference/connectors/sshd.md
+  - 博客: /blog/
 
