@@ -93,9 +93,9 @@ nav:
     - Proxy and Tunnel: concepts/proxy.md
     - Service: concepts/service.md
     - Chain: concepts/chain.md
-    - Node Selection: concepts/selector.md
+    - Selector: concepts/selector.md
     - Authentication: concepts/auth.md
-    - Traffic Bypass: concepts/bypass.md
+    - Bypass: concepts/bypass.md
     - Admission: concepts/admission.md
     - DNS Resolver: concepts/resolver.md
     - Host-IP Mapping: concepts/hosts.md

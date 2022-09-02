@@ -51,6 +51,7 @@ The nodes in the forwarding chain are independent of each other, and each node c
 Each hop level can add multiple nodes to form a node group.
 
 === "CLI"
+
 	```
 	gost -L http://:8080 -F https://192.168.1.1:8080,192.168.1.1:8081,192.168.1.2:8082 -F socks5+ws://192.168.0.1:1080,192.168.0.1:1081,192.168.0.2:1082
 	```
@@ -117,7 +118,7 @@ There are three nodes in the second hop level (hop-1): 192.168.0.1:1080(node-0)ï
 
 If you need to configure each node freely, you can use the configuration file.
 
-??? example "Multiple types"
+!!! example "Multiple types"
 
     ```yaml
 	services:
@@ -177,7 +178,7 @@ If you need to configure each node freely, you can use the configuration file.
 
 Multiple forwarding chains can be set in the configuration file, and different services can use different forwarding chains according to the chain names.
 
-??? example
+!!! example
 
     ```yaml
 	services:
@@ -232,7 +233,54 @@ Multiple forwarding chains can be set in the configuration file, and different s
 		    type: tls
 	```
 
-The service `service-0` uses the forwarding chain `chain-0`, and the service `service-1` uses the forwarding chain `chain-1`.
+	The service `service-0` uses the forwarding chain `chain-0`, and the service `service-1` uses the forwarding chain `chain-1`.
+
+## Chain Group
+
+Listener or handler of a service can also use the `chainGroup` parameter to specify a chain group to use multiple chains. You can also set a [Selector](/en/concepts/selector/) to specify the usage of the chains, the default selector strategy is round-robin.
+
+!!! example "Chain Group"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8080"
+	  handler:
+		type: http
+		chainGroup:
+		  chains:
+		  - chain-0
+		  - chain-1
+		  selector:
+		    strategy: round
+			maxFails: 1
+			failTimeout: 10s
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8081
+		  connector:
+			type: http
+		  dialer:
+		    type: tcp
+	- name: chain-1
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8082
+		  connector:
+			type: http
+		  dialer:
+		    type: tcp
+	```
+
+	The service service-0 uses two chains chain-0 and chain-1 in a round-robin manner.
 
 !!! caution "Limitation"
 	If the data channel of the node uses the UDP protocol, such as QUIC, KCP, etc., this node can only be used for the first level of the forwarding chain.

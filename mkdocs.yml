@@ -93,7 +93,7 @@ nav:
     - 代理转发和通道: concepts/proxy.md
     - 服务: concepts/service.md
     - 转发链: concepts/chain.md
-    - 节点选择: concepts/selector.md
+    - 选择器: concepts/selector.md
     - 认证: concepts/auth.md
     - 分流: concepts/bypass.md
     - 准入控制: concepts/admission.md

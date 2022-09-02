@@ -85,8 +85,11 @@ Websocket拨号器使用Websocket或Websocket Secure(Websocket Over TLS)协议�
 `header` (map)
 :    自定义HTTP请求头
 
-`keepAlive` (duration)
-:    设置心跳间隔时长，默认不开启Websocket心跳
+`keepAlive` (bool, default=false)
+:    开启心跳
+
+`ttl` (duration, default=15s)
+:    设置心跳间隔时长，仅当开启心跳后有效
 
 `handshakeTimeout` (duration)
 :    设置握手超时时长
