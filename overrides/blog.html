@@ -24,14 +24,19 @@
         {% endif %}
 
         <!-- Markdown content -->
-        {% if page and page.meta and page.meta.author_gh_user %}
+        {% if page and page.meta and page.meta.author %}
         <aside class="mdx-author">
             <p>
-            <img src="https://avatars.githubusercontent.com/{{ page.meta.author_gh_user }}" alt="@{{ page.meta.author_gh_user }}">
-            </p>
-            <p>
             <span> 
-            <b>{{ page.meta.author }}</b> · <a href="https://github.com/{{ page.meta.author_gh_user }}">@{{ page.meta.author_gh_user }}</a>
+            <b>
+              {% if page.meta.author_gh_user %}
+              <a href="https://github.com/{{ page.meta.author_gh_user }}">
+              {% endif %}
+                {{ page.meta.author }}
+              {% if page.meta.author_gh_user %}
+              </a>
+              {% endif %}
+            </b> ·
             </span>
             <span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2" viewBox="0 0 16 16">

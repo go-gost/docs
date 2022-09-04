@@ -1,4 +1,5 @@
 ---
+template: blog.html
 author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 1min

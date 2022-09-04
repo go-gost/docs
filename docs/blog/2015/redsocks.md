@@ -1,4 +1,5 @@
 ---
+template: blog.html
 author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 10min
@@ -63,7 +64,7 @@ redsocks -c redsocks.conf
 netstat -tlnp
 ```
 
-![netstat](../images/redsocks.png)
+![netstat](/images/redsocks.png)
 
 查看日志:
 

@@ -14,7 +14,7 @@ theme:
     # - navigation.sections
     - navigation.indexes
     - header.autohide
-    # - navigation.top
+    - navigation.top
   palette: 
     - scheme: default
       media: "(prefers-color-scheme: light)"
@@ -28,6 +28,12 @@ theme:
       toggle:
         icon: material/weather-night
         name: 夜间模式
+
+# Plugins
+plugins:
+  - search
+  - minify:
+      minify_html: true
 
 extra:
   social:
@@ -197,5 +203,21 @@ nav:
       - SSU: reference/connectors/ssu.md
       - SNI: reference/connectors/sni.md
       - SSHD: reference/connectors/sshd.md
-  - 博客: /blog/
+  - 博客: 
+    - 2022:
+      - '流量控制-分流器': blog/2022/bypass.md
+      - 'GOST v3动态分流功能的一种实现方式': blog/2022/dynamic-bypass.md
+    - 2017:
+      - 'Linux下基于L2TP/IPSec + iptables + gost实现全局网络访问': blog/2017/redirect.md
+    - 2016:
+      - '利用gost访问内网HTTP服务': blog/2016/rtcp2.md
+      - 'gost 2.1远程端口转发功能的使用说明': blog/2016/rtcp.md
+      - 'gost 2.1本地端口转发功能的使用说明': blog/2016/tcp.md
+    - 2015:
+      - '利用国内vps作为中间代理转发请求到国外vps': blog/2015/forward.md
+      - '利用letsencrypt和gost搭建https代理': blog/2015/lets.md
+      - 'linux下利用redsocks+iptables实现全局socks5代理上网': blog/2015/redsocks.md
+      - 'GOST的起源以及应用场景': blog/2015/origin.md
+      - '利用PPTP, redsocks, iptables, https/socks5 proxy实现全局代理上网': blog/2015/redirect.md
+      - 'GOST - GO Simple Tunnel': blog/2015/gost.md
 

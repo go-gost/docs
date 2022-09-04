@@ -1,4 +1,5 @@
 ---
+template: blog.html
 author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 30min
@@ -17,7 +18,7 @@ publish_date: 2015-07-23 18:27
 在手机(特别是iphone)上如果不使用VPN，仅通过https或socks5代理也是很难实现类似VPN的全局代理功能。
 
 
-![REDIRECT](../images/redirect01.png) 
+![REDIRECT](/images/redirect01.png) 
 
 这里linux pc使用ubuntu 14.04, vpn使用pptp, proxy使用socks5。
 
