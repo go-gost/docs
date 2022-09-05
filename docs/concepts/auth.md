@@ -178,7 +178,7 @@ authers:
 authers:
 - name: auther-0
   file:
-    path: /path/to/auth/file
+    path: /path/to/file
 ```
 
 文件格式为按行分割的认证信息，每一行认证信息为用空格分割的user-pass对，以`#`开始的行为注释行。
@@ -230,7 +230,7 @@ authers:
 - name: auther-0
   reload: 10s
   file:
-    path: /path/to/auth/file
+    path: /path/to/file
   redis:
     addr: 127.0.0.1:6379
 	db: 1

@@ -120,7 +120,7 @@ admissions:
 admissions:
 - name: admission-0
   file:
-    path: /path/to/admission/file
+    path: /path/to/file
 ```
 
 文件格式为按行分割的地址列表，以`#`开始的部分为注释信息。
@@ -167,7 +167,7 @@ admissions:
 - name: admission-0
   reload: 10s
   file:
-    path: /path/to/auth/file
+    path: /path/to/file
   redis:
     addr: 127.0.0.1:6379
 	db: 1
