@@ -206,7 +206,7 @@ nav:
       - SSHD: reference/connectors/sshd.md
   - 博客: 
     - 2022:
-      - '负载均衡-选择器': blog/2022/selector.md
+      # - '负载均衡-选择器': blog/2022/selector.md
       - '流量控制-分流器': blog/2022/bypass.md
       - 'GOST v3动态分流功能的一种实现方式': blog/2022/dynamic-bypass.md
     - 2017:
