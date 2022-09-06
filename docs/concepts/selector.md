@@ -99,7 +99,7 @@
           strategy: round
           maxFails: 1
           failTimeout: 30s
-	```
+    ```
 
 ## 转发链组
 
@@ -316,7 +316,3 @@ chains:
 ```
 
 通过`metadata.weight`选项对节点(转发链类似)设置权重。node-0与node-1权重比值为2:1，因此node-0被选中几率是node-1的两倍。
-
-## 负载均衡
-
-通过节点组和选择器的组合使用，我们就可以在数据转发中实现负载均衡的功能。

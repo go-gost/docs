@@ -334,7 +334,7 @@ bypasses:
 
 文件格式为按行分割的地址列表，以`#`开始的部分为注释信息。
 
-```text
+```yaml
 # ip, cidr, domain or wildcard
 127.0.0.1
 172.10.0.0/16

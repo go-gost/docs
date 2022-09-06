@@ -3,10 +3,13 @@
 GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 
 === "命令行"
+
     ```sh
 	gost -L http://:8080 -api :18080
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -28,10 +31,13 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 甚至可以只开启API服务，后续通过API来动态配置服务和其他组件。
 
 === "命令行"
+
     ```sh
 	gost -api :18080
 	```
+
 === "配置文件"
+
     ```yaml
 	api:
 	  addr: :18080
@@ -42,6 +48,7 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 		password: pass
 	  auther: auther-0
 	```
+
 ## 路径前缀
 
 通过`pathPrefix`参数可以设置URL路径前缀。

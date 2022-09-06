@@ -63,6 +63,7 @@ If multi-user authentication is not required, single-user authentication can be 
 	```
 
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -98,6 +99,7 @@ An authenticator contains one or more sets of authentication information. Servic
     Authenticator only supports the configuration file method.
 
 === "File (YAML)"
+
     ```yaml
     services:
     - name: service-0
@@ -185,7 +187,7 @@ authers:
 
 The file format is the authentication information separated by lines, each line of authentication information is a user-pass pair separated by spaces, and the lines starting with `#` are commented out.
 
-```text
+```yaml
 # username password
 
 admin           #123456
@@ -226,7 +228,6 @@ When configuring multiple data sources at the same time, the priority from high 
 ## Hot Reload
 
 File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
-
 
 ```yaml
 authers:
