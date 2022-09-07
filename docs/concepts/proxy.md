@@ -125,11 +125,11 @@ gost -L ss+kcp://:8338
 ```
 
 ```
-gost -L ss://:8388 -F forward+kcp://:8338
+gost -L tcp://:8080 -F forward+kcp://:8338
 ```
 
-此时8388端口等同于：
+此时8080端口等同于：
 ```
-gost -L ss://:8388
+gost -L ss://:8080
 ```
 

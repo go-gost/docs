@@ -1,7 +1,7 @@
 # Bypass
 
 !!! tip "Dynamic configuration"
-    Bypass supports dynamic configuration via Web API.
+    Bypass supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Bypass Controller
 

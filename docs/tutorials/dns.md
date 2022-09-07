@@ -16,7 +16,7 @@
       addr: :10053
       handler:
         type: dns
-		# chain: chain-0
+		    # chain: chain-0
       listener:
         type: dns
         metadata:
@@ -32,7 +32,7 @@
 `mode` (string, default=udp)
 :    DNS代理模式
 
-    * `udp` - UDP模式(DNS over UDP)
+  * `udp` - UDP模式(DNS over UDP)
 	* `tcp` - TCP模式(DNS over TCP)
 	* `tls` - TLS模式(DNS over TLS)
 	* `https` - HTTPS模式(DNS over HTTPS)
@@ -160,7 +160,7 @@
 === "命令行"
 
     ```bash
-	gost -L dns://:10053/1.1.1.1?bypass=example.com
+	  gost -L dns://:10053/1.1.1.1?bypass=example.com
     ```
 
 === "配置文件"

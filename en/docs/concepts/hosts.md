@@ -3,7 +3,7 @@
 Domain name resolution can be customized by setting a Host mapper in the service or forwarding chain.
 
 !!! tip "Dynamic configuration"
-    Host mapper supports dynamic configuration via Web API.
+    Host mapper supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Host Mapper
 

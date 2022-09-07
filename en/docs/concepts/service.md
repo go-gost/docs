@@ -8,7 +8,7 @@ Service is the fundamental module of GOST and the entrance to the GOST program. 
 A service consists of a listener as a data channel, a handler for data processing and an optional forwarder for port forwarding.
 
 !!! tip "Dynamic configuration"
-    Service supports dynamic configuration via Web API.
+    Service supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Workflow
 

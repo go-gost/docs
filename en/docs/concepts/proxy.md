@@ -127,12 +127,12 @@ gost -L ss+kcp://:8338
 ```
 
 ```
-gost -L ss://:8388 -F forward+kcp://:8338
+gost -L tcp://:8080 -F forward+kcp://:8338
 ```
 
-Service on port 8388 is equivalent to:
+Service on port 8080 is equivalent to:
 
 ```
-gost -L ss://:8388
+gost -L ss://:8080
 ```
 

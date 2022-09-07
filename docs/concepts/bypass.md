@@ -1,7 +1,7 @@
 # 分流
 
 !!! tip "动态配置"
-    分流器支持通过Web API进行动态配置。
+    分流器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
 
 ## 分流器
 
@@ -16,7 +16,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="5 16 21 27"
     services:
     - name: service-0
       addr: ":8080"
@@ -77,7 +77,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="24"
     services:
     - name: service-0
       addr: ":8080"
@@ -118,7 +118,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="4 5 6 16 17 18 22 23 24"
     services:
     - name: service-0
       addr: ":8080"
@@ -175,7 +175,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="4"
     services:
     - name: service-0
       addr: ":8080"
@@ -204,7 +204,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="13 22"
     services:
     - name: service-0
       addr: ":8080"
@@ -257,7 +257,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="16 23"
     services:
     - name: service-0
       addr: ":8080"
@@ -308,7 +308,7 @@
 
 ### 内联
 
-内联数据源是指直接在配置文件中通过`matchers`参数设置数据。
+内联数据源直接在配置文件中通过`matchers`参数设置数据。
 
 ```yaml
 bypasses:
@@ -369,11 +369,22 @@ bypasses:
 `key` (string, default=gost)
 :    redis key
 
+数据的没一项与文件数据源的格式类似：
+
+```redis
+> SMEMBERS gost:bypasses:bypass-0
+1) "127.0.0.1"
+2) "172.10.0.0/16"
+3) "localhost"
+4) "*.example.com"
+5) ".example.org"
+```
+
 ## 热加载
 
 文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
-```yaml
+```yaml hl_lines="3"
 bypasses:
 - name: bypass-0
   reload: 10s

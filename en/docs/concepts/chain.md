@@ -1,7 +1,7 @@
 # Forwarding Chain
 
 !!! tip "Dynamic configuration"
-    Forwarding chain supports dynamic configuration via Web API.
+    Forwarding chain supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 Forwarding chain is a list of node groups formed by several nodes grouped according to a specific level. Each level of node group is a hop, and data is forwarded through each hop in turn. Forwarding chain is an important module in GOST, it is the link for establishing connections between services.
 

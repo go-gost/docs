@@ -1,6 +1,6 @@
 # Architecture
 
-GOST mainly consists of three modules: Service, Node, Chain, and five sub-modules: Listener, Handler, Forwarder, Dialer and Connector, plus several auxiliary modules: Selector, Admission, Bypass, Resolver, Host Mapper and other components.
+GOST mainly consists of three modules: Service, Node, Chain, and five sub-modules: Listener, Handler, Forwarder, Dialer and Connector, plus several auxiliary modules: Selector, Admission, Bypass, Resolver, Host Mapper, Limiter and other components.
 
 ## Service
 

@@ -3,7 +3,7 @@
 通过在服务或转发链中设置域名解析器，可以更改域名解析行为。
 
 !!! tip "动态配置"
-    解析器支持通过Web API进行动态配置。
+    解析器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
 
 ## 域名解析器
 
@@ -22,7 +22,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="4 10"
     services:
     - name: service-0
       addr: ":8080"
@@ -69,7 +69,8 @@
 	通过`resolver`参数来指定上级域名解析服务列表。`resolver`参数对应配置文件中hop级别的解析器。
 
 === "配置文件"
-    ```yaml
+
+    ```yaml hl_lines="14 19"
     services:
     - name: service-0
       addr: ":8000"
@@ -108,7 +109,7 @@
 
 域名解析器中的每个上级域名服务可以分别设置转发链。
 
-```yaml
+```yaml hl_lines="45 47 49"
 services:
 - name: service-0
   addr: ":8080"

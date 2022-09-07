@@ -1,7 +1,7 @@
 # Admission Control
 
 !!! tip "Dynamic configuration"
-    Admission Controller supports dynamic configuration via Web API.
+    Admission Controller supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Admission Controller
 

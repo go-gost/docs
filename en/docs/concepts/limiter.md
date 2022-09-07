@@ -1,11 +1,11 @@
 # Rate Limiting
 
 !!! tip "Dynamic configuration"
-    Limiter supports dynamic configuration via Web API.
+    Limiter supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Limiter
 
-Requests can be limited by setting a Limiter on each service. The current Limiter supports the limit on the rate of input and output traffic, including three levels: service, connection and IP/CIDR, the three levels can be used in combination.
+Requests can be limited by setting a Limiter on each service. The current Limiter supports the limit on the rate of input and output traffic, including three levels: service, connection and IP, the three levels can be used in combination.
 
 === "CLI"
 

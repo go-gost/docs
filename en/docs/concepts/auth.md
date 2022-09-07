@@ -3,7 +3,7 @@
 Authentication can be performed by setting single authentication information or authenticator.
 
 !!! tip "Dynamic configuration"
-    Authenticator supports dynamic configuration via Web API.
+    Authenticator supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Single Authentication
 
@@ -31,7 +31,7 @@ If multi-user authentication is not required, single-user authentication can be 
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml linenums="1" hl_lines="6 7 8"
 	services:
 	- name: service-0
 	  addr: ":8080"
@@ -64,7 +64,7 @@ If multi-user authentication is not required, single-user authentication can be 
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml linenums="1" hl_lines="18 19 20"
 	services:
 	- name: service-0
 	  addr: ":8080"
@@ -100,7 +100,7 @@ An authenticator contains one or more sets of authentication information. Servic
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml linenums="1" hl_lines="6 10"
     services:
     - name: service-0
       addr: ":8080"
@@ -134,7 +134,7 @@ Use multiple authenticators by specifying a list of authenticators using the `au
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml linenums="1" hl_lines="6 7 8 12 16"
     services:
     - name: service-0
       addr: ":8080"
@@ -229,7 +229,7 @@ When configuring multiple data sources at the same time, the priority from high 
 
 File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
-```yaml
+```yaml linenums="1" hl_lines="3"
 authers:
 - name: auther-0
   reload: 10s

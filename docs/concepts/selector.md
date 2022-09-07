@@ -26,7 +26,7 @@
 	```
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="12 13 14 15 19 20 21 22"
     services:
     - name: service-0
       addr: ":8080"
@@ -35,7 +35,6 @@
         chain: chain-0
       listener:
         type: tcp
-
     chains:
     - name: chain-0
 	  # chain level selector
@@ -81,7 +80,7 @@
 	```
 === "配置文件"
 
-    ```yaml linenums="1" hl_lines="14 15 16 17"
+    ```yaml hl_lines="14 15 16 17"
     services:
     - name: service-0
       addr: :8080
@@ -103,7 +102,9 @@
 
 ## 转发链组
 
-```yaml linenums="1" hl_lines="10 11 12 13"
+转发链组中的选择器类似于转发器中的选择器，用来选择一条转发链。
+
+```yaml hl_lines="10 11 12 13"
 services:
 - name: service-0
   addr: ":8080"
@@ -148,7 +149,7 @@ chains:
 
 ### 备用节点
 
-```yaml linenums="1" hl_lines="20 21 22 35 36 43 44"
+```yaml hl_lines="20 21 22 35 36 43 44"
 services:
 - name: service-0
   addr: :8080
@@ -208,7 +209,7 @@ chains:
 
 ### 备用转发链
 
-```yaml linenums="1" hl_lines="40 41 52 53"
+```yaml hl_lines="40 41 52 53"
 services:
 - name: service-0
   addr: :8080
@@ -279,7 +280,7 @@ chains:
 
 选择器在随机选择策略基础上支持对节点和转发链设置权重，权重默认值为1。
 
-```yaml linenums="1" hl_lines="20 21 28 29"
+```yaml hl_lines="20 21 28 29"
 services:
 - name: service-0
   addr: :8080

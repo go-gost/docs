@@ -1,7 +1,7 @@
 # 转发链
 
 !!! tip "动态配置"
-    转发链支持通过Web API进行动态配置。
+    转发链支持通过[Web API](/tutorials/api/overview/)进行动态配置。
 
 转发链是由若干个节点按照特定的层级分组所形成的节点组列表，每一层级节点组构成一个跳跃点，数据依次经过每个跳跃点进行转发。转发链是GOST中一个重要模块，是服务与服务之间建立连接的纽带。
 
@@ -15,7 +15,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="6 10"
 	services:
 	- name: service-0
 	  addr: ":8080"
@@ -60,7 +60,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="14 20 26 34 40 46"
 	services:
 	- name: service-0
 	  addr: ":8080"
@@ -73,45 +73,45 @@
 	- name: chain-0
 	  hops:
 	  - name: hop-0
-		nodes:
-		- name: node-0
-		  addr: 192.168.1.1:8080
-		  connector:
-			type: http
-		  dialer:
-		    type: tls
-		- name: node-1
-		  addr: 192.168.1.1:8081
-		  connector:
-			type: http
-		  dialer:
-		    type: tls
-		- name: node-2
-		  addr: 192.168.1.2:8082
-		  connector:
-			type: http
-		  dialer:
-		    type: tls
-	  - name: hop-1
-		nodes:
-		- name: node-0
-		  addr: 192.168.0.1:1080
-		  connector:
-			type: socks5
-		  dialer:
-		    type: ws
-		- name: node-1
-		  addr: 192.168.0.1:1081
-		  connector:
-			type: socks5
-		  dialer:
-		    type: ws
-		- name: node-2
-		  addr: 192.168.0.2:1082
-		  connector:
-			type: socks5
-		  dialer:
-		    type: ws
+      nodes:
+      - name: node-0
+        addr: 192.168.1.1:8080
+        connector:
+          type: http
+        dialer:
+          type: tls
+      - name: node-1
+        addr: 192.168.1.1:8081
+        connector:
+          type: http
+        dialer:
+          type: tls
+      - name: node-2
+        addr: 192.168.1.2:8082
+        connector:
+          type: http
+        dialer:
+          type: tls
+    - name: hop-1
+      nodes:
+      - name: node-0
+        addr: 192.168.0.1:1080
+        connector:
+          type: socks5
+        dialer:
+          type: ws
+      - name: node-1
+        addr: 192.168.0.1:1081
+        connector:
+          type: socks5
+        dialer:
+          type: ws
+      - name: node-2
+        addr: 192.168.0.2:1082
+        connector:
+          type: socks5
+        dialer:
+          type: ws
 	```
 
 第一个跳跃点(hop-0)节点组中有三个节点：192.168.1.1:8080(node-0)，192.168.1.1:8081(node-1)，192.168.1.2:8082(node-2)，它们使用相同的节点配置。
@@ -178,7 +178,7 @@ chains:
 
 在配置文件中可以设置多个转发链，不同的服务可以根据名称来使用不同的转发链。
 
-```yaml linenums="1" hl_lines="6 13 17 27"
+```yaml hl_lines="6 13 17 27"
 services:
 - name: service-0
   addr: ":8080"
@@ -238,7 +238,7 @@ chains:
 在服务的监听器或处理器上也可以通过`chainGroup`参数来指定转发链组来使用多条转发链，同时也可以设置一个[选择器(selector)](/concepts/selector/)指定转发链使用方式，默认使用轮询策略。
 
 
-```yaml linenums="1" hl_lines="6 7 8 9 10 11 12 13"
+```yaml hl_lines="6 7 8 9 10 11 12 13"
 services:
 - name: service-0
   addr: ":8080"

@@ -1,11 +1,11 @@
 # 限速
 
 !!! tip "动态配置"
-    限速器支持通过Web API进行动态配置。
+    限速器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
 
 ## 限速器
 
-在每个服务上可以通过设置限速器来对请求进行限制，目前的限速器支持对上下行流量速率的限制，包括服务，连接和IP/CIDR三个级别的限速，三个级别可以组合使用。
+在每个服务上可以通过设置限速器来对请求进行限制，目前的限速器支持对上下行流量速率的限制，包括服务，连接和IP三个级别的限速，三个级别可以组合使用。
 
 === "命令行"
 
@@ -15,7 +15,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="4 10"
     services:
     - name: service-0
       addr: ":8080"
@@ -26,12 +26,12 @@
         type: tcp
     limiters:
     - name: limiter-0
-	  rate:
-	    limits:
-		- '$ 100MB 100MB'
-		- '$$ 10MB'
-		- '192.168.1.1  512KB 1MB'
-		- '192.168.0.0/16  1MB  5MB'
+	    rate:
+        limits:
+        - '$ 100MB 100MB'
+        - '$$ 10MB'
+        - '192.168.1.1  512KB 1MB'
+        - '192.168.0.0/16  1MB  5MB'
     ```
 
 命令行中通过`limiter.rate.in`和`limiter.rate.out`来设置服务级别的限速，通过`limiter.rate.conn.in`和`limiter.rate.conn.out`来设置连接级别的限速。
@@ -119,6 +119,16 @@ limiters:
 `type` (string, default=set)
 :    数据类型，支持的类型有：集合(`set`)，列表(`list`)。
 
+数据的每一项与文件数据源的格式类似：
+
+```redis
+> SMEMBERS gost:limiters:limiter-0
+1) "$ 100MB  200MB"
+2) "$$ 10MB"
+3) "192.168.1.1  1MB 10MB"
+4) "192.168.0.0/16  512KB  1MB"
+```
+
 ## 优先级
 
 当同时配置多个数据源时，优先级从高到低为: redis，文件，内联。如果在不同数据源中存在相同的作用域，则优先级高的会覆盖优先级低的配置。
@@ -127,7 +137,7 @@ limiters:
 
 文件和redis数据源支持热加载。通过设置`rate.reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
-```yaml
+```yaml hl_lines="4"
 limiters:
 - name: limiter-0
   rate:

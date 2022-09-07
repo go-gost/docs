@@ -1,7 +1,7 @@
 # Domain Name Resolution
 
 !!! tip "Dynamic configuration"
-    Resolver supports dynamic configuration via Web API.
+    Resolver supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 ## Resolver
 

@@ -1,4 +1,4 @@
-basePath: /
+basePath: /play/webapi/
 consumes:
     - application/json
 definitions:

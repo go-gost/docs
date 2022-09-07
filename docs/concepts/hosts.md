@@ -3,7 +3,7 @@
 通过在服务或转发链中设置映射器，可以自定义域名解析。
 
 !!! tip "动态配置"
-    映射器支持通过Web API进行动态配置。
+    映射器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
 
 ## 映射器
 
@@ -22,7 +22,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="4 10"
 	services:
 	- name: service-0
 	  addr: ":8080"
@@ -57,7 +57,7 @@
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="14"
 	services:
 	- name: service-0
 	  addr: ":8000"
@@ -100,7 +100,7 @@
 gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 ```
 
-此时通过此DNS代理服务查询example.org会匹配到映射器中的定义而不会使用1.1.1.1查询。
+此时通过此DNS代理服务查询example.org会匹配到映射器中的定义而不会使用1.1.1.1查询。详细信息请参考[DNS代理](/tutorials/dns/)。
 
 ## 域名通配符
 
@@ -118,7 +118,7 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 
 #### 内联
 
-内联数据源是指直接在配置文件中通过`mappings`参数设置数据。
+内联数据源直接在配置文件中通过`mappings`参数设置数据。
 
 ```yaml
 hosts:
@@ -191,13 +191,14 @@ hosts:
 `type` (string, default=set)
 :    数据类型，支持的类型有：集合(`set`)，列表(`list`)。
 
-与文件数据源的格式类似，数据的每一项为空格分割的IP-host对：
+数据的每一项与文件数据源的格式类似：
 
 ```redis
 > SMEMBERS gost:hosts
 1) "127.0.0.1 example.com"
 2) "2001:db8::1 example.com"
 ```
+
 ## 优先级
 
 当同时配置多个数据源时，优先级从高到低为: redis，文件，内联。
@@ -206,7 +207,7 @@ hosts:
 
 文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
-```yaml
+```yaml hl_lines="3"
 hosts:
 - name: hosts-0
   reload: 10s
