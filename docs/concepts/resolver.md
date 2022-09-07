@@ -165,7 +165,7 @@ resolvers:
 
 每个解析器内部有一个缓存，通过`ttl`参数可以设置缓存时长，默认使用DNS查询返回结果中的TTL，当设置为负值，则不使用缓存。
 
-```yaml
+```yaml hl_lines="5"
 resolvers:
 - name: resolver-0
   nameservers:
@@ -177,7 +177,7 @@ resolvers:
 
 解析器默认返回IPv4地址，可以通过`prefer`参数设置切换到IPv6地址。
 
-```yaml
+```yaml hl_lines="5"
 resolvers:
 - name: resolver-0
   nameservers:
@@ -189,7 +189,7 @@ resolvers:
 
 通过`clientIP`参数设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
 
-```yaml
+```yaml hl_lines="5"
 resolvers:
 - name: resolver-0
   nameservers:

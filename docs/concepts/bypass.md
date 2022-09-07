@@ -16,7 +16,7 @@
 
 === "配置文件"
 
-    ```yaml hl_lines="5 16 21 27"
+    ```yaml hl_lines="5 16 21 27 30"
     services:
     - name: service-0
       addr: ":8080"
@@ -369,7 +369,7 @@ bypasses:
 `key` (string, default=gost)
 :    redis key
 
-数据的没一项与文件数据源的格式类似：
+数据的每一项与文件数据源的格式类似：
 
 ```redis
 > SMEMBERS gost:bypasses:bypass-0

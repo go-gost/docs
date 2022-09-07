@@ -4,7 +4,7 @@
 
 记录器可以用来记录特定数据，通过配置和引用不同的记录器类型将数据记录到不同的目标中。
 
-```yaml
+```yaml hl_lines="4 5 6 12"
 services:
 - name: service-0
   addr: :8080
@@ -15,7 +15,6 @@ services:
     type: auto
   listener:
     type: tcp
-
 recorders:
 - name: recorder-0
   file:

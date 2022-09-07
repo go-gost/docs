@@ -57,7 +57,7 @@
 
 === "配置文件"
 
-    ```yaml hl_lines="14"
+    ```yaml hl_lines="14 19"
 	services:
 	- name: service-0
 	  addr: ":8000"
