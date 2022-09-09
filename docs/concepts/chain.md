@@ -279,6 +279,43 @@ chains:
 
 服务service-0采用轮询的方式使用两条转发链chain-0和chain-1。
 
+## 直连节点
+
+如果服务不需要使用上级代理，可以使用一种特殊的直连节点(`connector.type`和`dialer.type`均为`direct`)来直接连接目标地址，直连节点不需要对应的服务端，因此节点的`addr`参数无效。
+
+=== "配置文件"
+
+    ```yaml hl_lines="17 18 19 20"
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :0
+            interface: eth0
+            connector:
+              type: direct
+            dialer:
+              type: direct
+          - name: node-1
+            addr: :0
+            interface: eth1
+            connector:
+              type: direct
+            dialer:
+              type: direct
+	```
+
+这里node-0和node-1为直连节点，当主机具有[多个网络出口](/tutorials/multi-homed/)时，可以通过`interface`参数为每个节点指定不同的网络出口，从而达到网络出口级别的负载均衡。
 
 !!! caution "限制"
     如果节点的数据通道使用UDP协议，例如QUIC, KCP等，则此节点只能用于转发链第一层级。

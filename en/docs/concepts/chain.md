@@ -233,7 +233,7 @@ Multiple forwarding chains can be set in the configuration file, and different s
 		    type: tls
 	```
 
-	The service `service-0` uses the forwarding chain `chain-0`, and the service `service-1` uses the forwarding chain `chain-1`.
+The service `service-0` uses the forwarding chain `chain-0`, and the service `service-1` uses the forwarding chain `chain-1`.
 
 ## Chain Group
 
@@ -280,7 +280,45 @@ Listener or handler of a service can also use the `chainGroup` parameter to spec
 		    type: tcp
 	```
 
-	The service service-0 uses two chains chain-0 and chain-1 in a round-robin manner.
+The service service-0 uses two chains chain-0 and chain-1 in a round-robin manner.
+
+## Direct Connection Node
+
+If the service does not need to use an upper-stream proxy, a special direct connection node (`connector.type` and `dialer.type` are both `direct`) can be used to directly connect to the target address, and the node does not require a corresponding server, so the `addr` parameter of the node is ignored.
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="17 18 19 20"
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :0
+            interface: eth0
+            connector:
+              type: direct
+            dialer:
+              type: direct
+          - name: node-1
+            addr: :0
+            interface: eth1
+            connector:
+              type: direct
+            dialer:
+              type: direct
+	```
+
+Here node-0 and node-1 are direct connection nodes. When the host is [multi-homed] (/en/tutorials/multi-homed/), you can specify different interfaces for each node through the `interface` parameter, so that achieve load balancing at the network egress level.
 
 !!! caution "Limitation"
 	If the data channel of the node uses the UDP protocol, such as QUIC, KCP, etc., this node can only be used for the first level of the forwarding chain.

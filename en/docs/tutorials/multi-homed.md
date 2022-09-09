@@ -69,3 +69,39 @@ The `interface` option on the command line corresponds to the option on the hop.
           dialer:
             type: tcp
 	```
+
+## Direct Connection Mode
+
+If the service does not need to use an upper-stream proxy, you can use [direct connection node] (/en/concepts/chain/) to allow the service to use multiple network interfaces for load balancing.
+
+=== "File (YAML)"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8080"
+	  handler:
+		type: auto
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :0
+		  interface: eth0
+          connector:
+            type: direct
+          dialer:
+            type: direct
+        - name: node-1
+          addr: :0
+		  interface: eth1
+          connector:
+            type: direct
+          dialer:
+            type: direct
+	```
