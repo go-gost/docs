@@ -102,7 +102,7 @@ nav:
     - 选择器: concepts/selector.md
     - 认证: concepts/auth.md
     - 分流: concepts/bypass.md
-    - 限速: concepts/limiter.md
+    - 限速限流: concepts/limiter.md
     - 准入控制: concepts/admission.md
     - 域名解析: concepts/resolver.md
     - 主机IP映射: concepts/hosts.md

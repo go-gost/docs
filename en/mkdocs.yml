@@ -96,7 +96,7 @@ nav:
     - Selector: concepts/selector.md
     - Authentication: concepts/auth.md
     - Bypass: concepts/bypass.md
-    - Rate Limiting: concepts/limiter.md
+    - Limiter: concepts/limiter.md
     - Admission Control: concepts/admission.md
     - DNS Resolver: concepts/resolver.md
     - Host-IP Mapping: concepts/hosts.md
