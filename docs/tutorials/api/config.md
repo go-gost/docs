@@ -2,6 +2,8 @@
 
 GOST可以通过Web API来进行动态配置，支持动态配置的对象有：服务(Service)，转发链(Chain)，认证器(Auther)，分流器(Bypass)，准入控制器(Admission)，域名解析器(Resolver)，域名IP映射器(Hosts)，限速器(Limiter)。配置变更会立即生效。
 
+详细的接口说明请参考[在线API文档](/swagger-ui/)。
+
 !!! tip "不可变性"
     在GOST内部，所有动态配置的对象均为不可变的实例。后续的更新操作会生成一个新的对象实例替换现有实例。
 

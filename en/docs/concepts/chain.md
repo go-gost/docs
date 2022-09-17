@@ -286,6 +286,12 @@ The service service-0 uses two chains chain-0 and chain-1 in a round-robin manne
 
 If the service does not need to use an upper-stream proxy, a special direct connection node (`connector.type` and `dialer.type` are both `direct`) can be used to directly connect to the target address, and the node does not require a corresponding server, so the `addr` parameter of the node is ignored.
 
+=== "命令行"
+
+    ```
+    gost -L :8080 -F direct://:0?interface=eth0
+    ```
+
 === "File (YAML)"
 
     ```yaml hl_lines="17 18 19 20"

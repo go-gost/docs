@@ -283,6 +283,12 @@ chains:
 
 如果服务不需要使用上级代理，可以使用一种特殊的直连节点(`connector.type`和`dialer.type`均为`direct`)来直接连接目标地址，直连节点不需要对应的服务端，因此节点的`addr`参数无效。
 
+=== "命令行"
+
+    ```
+    gost -L :8080 -F direct://:0?interface=eth0
+    ```
+
 === "配置文件"
 
     ```yaml hl_lines="17 18 19 20"

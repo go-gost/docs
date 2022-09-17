@@ -2,6 +2,8 @@
 
 GOST can be dynamically configured through Web API. The objects that support dynamic configuration are: service, chain, auther, bypass, admission controller, resolver, hosts. Configuration changes take effect immediately.
 
+For detailed description, please refer to the online [API documentation](/swagger-ui/).
+
 !!! tip "Immutability"
     In GOST, all dynamically configured objects are immutable instances. Subsequent update operations generate a new object instance to replace the existing one.
 
