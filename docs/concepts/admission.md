@@ -98,7 +98,7 @@
 
 ## 数据源
 
-准入控制器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
+准入控制器可以配置多个数据源，目前支持的数据源有：内联，文件，redis，HTTP。
 
 ### 内联
 
@@ -141,9 +141,9 @@ admissions:
 - name: admission-0
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:admissions:admission-0
+    db: 1
+    password: 123456
+    key: gost:admissions:admission-0
 ```
 
 `addr` (string, required)
@@ -158,7 +158,6 @@ admissions:
 `key` (string, default=gost)
 :    redis key
 
-
 数据的每一项与文件数据源的格式类似：
 
 ```redis
@@ -167,9 +166,27 @@ admissions:
 2) "192.168.0.0/16"
 ```
 
+### HTTP
+
+指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式与文件数据源相同。
+
+```yaml
+admissions:
+- name: admission-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    请求的URL
+
+`timeout` (duration, default=0)
+:    请求超时时长
+
 ## 热加载
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+文件，redis，HTTP数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
 ```yaml hl_lines="3"
 admissions:
@@ -179,7 +196,7 @@ admissions:
     path: /path/to/file
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:admissions:admission-0
+    db: 1
+    password: 123456
+    key: gost:admissions:admission-0
 ```

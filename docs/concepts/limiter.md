@@ -328,13 +328,52 @@
     4) "192.168.0.0/16  50"
     ```
 
+### HTTP
+
+指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式与文件数据源相同。
+
+=== "流量速率"
+
+    ```yaml
+    limiters:
+    - name: limiter-0
+      http:
+        url: http://127.0.0.1:8000
+        timeout: 10s
+    ```
+
+=== "请求速率"
+
+    ```yaml
+    rlimiters:
+    - name: rlimiter-0
+      http:
+        url: http://127.0.0.1:8000
+        timeout: 10s
+    ```
+
+=== "并发连接"
+
+    ```yaml
+    climiters:
+    - name: climiter-0
+      http:
+        url: http://127.0.0.1:8000
+        timeout: 10s
+    ```
+
+`url` (string, required)
+:    请求的URL
+
+`timeout` (duration, default=0)
+:    请求超时时长
 ## 优先级
 
-当同时配置多个数据源时，优先级从高到低为: redis，文件，内联。如果在不同数据源中存在相同的作用域，则优先级高的会覆盖优先级低的配置。
+当同时配置多个数据源时，优先级从高到低为: HTTP，redis，文件，内联。如果在不同数据源中存在相同的作用域，则优先级高的会覆盖优先级低的配置。
 
 ## 热加载
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+文件，redis，HTTP数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
 ```yaml hl_lines="3"
 limiters:

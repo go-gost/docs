@@ -114,7 +114,7 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 
 ## 数据源
 
-映射器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
+映射器可以配置多个数据源，目前支持的数据源有：内联，文件，redis，HTTP。
 
 #### 内联
 
@@ -199,13 +199,31 @@ hosts:
 2) "2001:db8::1 example.com"
 ```
 
+### HTTP
+
+指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式与文件数据源相同。
+
+```yaml
+hosts:
+- name: hosts-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    请求的URL
+
+`timeout` (duration, default=0)
+:    请求超时时长
+
 ## 优先级
 
-当同时配置多个数据源时，优先级从高到低为: redis，文件，内联。
+当同时配置多个数据源时，优先级从高到低为: HTTP，redis，文件，内联。
 
 ## 热加载
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+文件，redis，HTTP数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
 ```yaml hl_lines="3"
 hosts:

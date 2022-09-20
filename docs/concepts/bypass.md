@@ -304,7 +304,7 @@
 
 ## 数据源
 
-分流器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。
+分流器可以配置多个数据源，目前支持的数据源有：内联，文件，redis，HTTP。
 
 ### 内联
 
@@ -380,9 +380,27 @@ bypasses:
 5) ".example.org"
 ```
 
+### HTTP
+
+指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式与文件数据源相同。
+
+```yaml
+bypasses:
+- name: bypass-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    请求的URL
+
+`timeout` (duration, default=0)
+:    请求超时时长
+
 ## 热加载
 
-文件和redis数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+文件，redis，HTTP数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
 
 ```yaml hl_lines="3"
 bypasses:
@@ -392,9 +410,9 @@ bypasses:
     path: /path/to/file
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:bypasses:bypass-0
+    db: 1
+    password: 123456
+    key: gost:bypasses:bypass-0
 ```
 
 ## 使用示例
