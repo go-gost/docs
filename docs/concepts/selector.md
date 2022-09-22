@@ -13,12 +13,12 @@
 `maxFails` (int, default=1)
 :    指定最大失败次数，当失败次数超过此设定值时，此对象会被标记为失败(Fail)状态，失败状态的对象不会被选择使用。
 
-`failTimeout` (duration, default=30s)
+`failTimeout` (duration, default=10s)
 :    指定失败状态的超时时长，当一个对象被标记为失败后，在此设定的时间间隔内不会被选择使用，超过此设定时间间隔后，会再次参与选择。
 
 ## 转发链
 
-转发链本身和其中的每一层级跳跃点上可以设置一个选择器，如果跳跃点上没有设置选择器，则使用转发链上的选择器，默认选择器使用轮询策略进行节点选择。
+转发链中的每一层级跳跃点上可以设置一个选择器，默认选择器使用轮询策略进行节点选择。
 
 === "命令行"
 	```
@@ -26,7 +26,7 @@
 	```
 === "配置文件"
 
-    ```yaml hl_lines="12 13 14 15 19 20 21 22"
+    ```yaml hl_lines="13 14 15 16"
     services:
     - name: service-0
       addr: ":8080"
@@ -37,14 +37,8 @@
         type: tcp
     chains:
     - name: chain-0
-	  # chain level selector
-      selector:
-        strategy: round
-        maxFails: 1
-        failTimeout: 10s
       hops:
       - name: hop-0
-	    # hop level selector
         selector:
           strategy: rand
           maxFails: 1
@@ -84,7 +78,7 @@
     services:
     - name: service-0
       addr: :8080
-	    handler:
+      handler:
         type: tcp
       listener:
         type: tcp
@@ -160,12 +154,12 @@ services:
     type: tcp
 chains:
 - name: chain-0
-  selector:
-    strategy: round
-    maxFails: 1
-    failTimeout: 10s
   hops:
   - name: hop-0
+    selector:
+      strategy: round
+      maxFails: 1
+      failTimeout: 10s
     nodes:
     - name: node-0
       addr: :8081
@@ -291,12 +285,12 @@ services:
     type: tcp
 chains:
 - name: chain-0
-  selector:
-    strategy: rand
-    maxFails: 1
-    failTimeout: 10s
   hops:
   - name: hop-0
+    selector:
+      strategy: rand
+      maxFails: 1
+      failTimeout: 10s
     nodes:
     - name: node-0
       addr: :8081

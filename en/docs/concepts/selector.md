@@ -12,12 +12,12 @@ In GOST, the selection of nodes in a node group is done through node selector. T
 `maxFails` (int, default=1)
 :    The maximum number of failed connections for a specified node, When the number of failed connections with a node exceeds this set value, the node will be marked as a dead node, dead node will not be selected to use.
 
-`failTimeout` (duration, default=30s)
+`failTimeout` (duration, default=10s)
 :    Specify the dead node's timeout period. When a node is marked as a dead node, it will not be selected within this set time interval. After this set time interval, it will participate in node selection again.
 
 ## Forwarding Chain
 
-Selector can be set on the forwarding chain itself and each hop level in it. If no selector is set on the hop, the selector on the forwarding chain is used. The default selector uses the `round` strategy for node selection.
+Selector can be set on each hop level of chain. The default selector uses the `round` strategy for node selection.
 
 === "CLI"
 	```
@@ -26,7 +26,7 @@ Selector can be set on the forwarding chain itself and each hop level in it. If 
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml hl_lines="13 14 15 16"
     services:
     - name: service-0
       addr: ":8080"
@@ -35,17 +35,10 @@ Selector can be set on the forwarding chain itself and each hop level in it. If 
         chain: chain-0
       listener:
         type: tcp
-
     chains:
     - name: chain-0
-	  # chain level selector
-      selector:
-        strategy: round
-        maxFails: 1
-        failTimeout: 30s
       hops:
       - name: hop-0
-	    # hop level selector
         selector:
           strategy: rand
           maxFails: 3
@@ -75,11 +68,11 @@ Forwarder is used for port forwarding, it consists of a node group and a node se
 	```
 === "File (YAML)"
 
-    ```yaml linenums="1" hl_lines="14 15 16 17"
+    ```yaml hl_lines="14 15 16 17"
     services:
     - name: service-0
       addr: :8080
-	    handler:
+      handler:
         type: tcp
       listener:
         type: tcp
@@ -97,7 +90,7 @@ Forwarder is used for port forwarding, it consists of a node group and a node se
 
 ## Chain Group
 
-```yaml linenums="1" hl_lines="10 11 12 13"
+```yaml hl_lines="10 11 12 13"
 services:
 - name: service-0
   addr: ":8080"
@@ -142,7 +135,7 @@ By marking one or more nodes or chains as backup, all backup nodes or chains wil
 
 ### Backup Nodes
 
-```yaml linenums="1" hl_lines="20 21 22 35 36 43 44"
+```yaml hl_lines="20 21 22 35 36 43 44"
 services:
 - name: service-0
   addr: :8080
@@ -153,12 +146,12 @@ services:
     type: tcp
 chains:
 - name: chain-0
-  selector:
-    strategy: round
-    maxFails: 1
-    failTimeout: 10s
   hops:
   - name: hop-0
+    selector:
+      strategy: round
+      maxFails: 1
+      failTimeout: 10s
     nodes:
     - name: node-0
       addr: :8081
@@ -202,7 +195,7 @@ Under normal circumstances, only two non-backup nodes node-0 and node-1 particip
 
 ### Backup Chains
 
-```yaml linenums="1" hl_lines="40 41 52 53"
+```yaml hl_lines="40 41 52 53"
 services:
 - name: service-0
   addr: :8080
@@ -273,7 +266,7 @@ Similar to backup nodes, chains chain-2 and chain-3 are marked as backup via the
 
 The selector supports setting weights for nodes and chains based on the random selection strategy. The default weight is 1.
 
-```yaml linenums="1" hl_lines="20 21 28 29"
+```yaml hl_lines="20 21 28 29"
 services:
 - name: service-0
   addr: :8080
@@ -284,12 +277,12 @@ services:
     type: tcp
 chains:
 - name: chain-0
-  selector:
-    strategy: rand
-    maxFails: 1
-    failTimeout: 10s
   hops:
   - name: hop-0
+    selector:
+      strategy: rand
+      maxFails: 1
+      failTimeout: 10s
     nodes:
     - name: node-0
       addr: :8081

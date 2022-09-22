@@ -1,6 +1,6 @@
 # Architecture
 
-GOST mainly consists of three modules: Service, Node, Chain, and five sub-modules: Listener, Handler, Forwarder, Dialer and Connector, plus several auxiliary modules: Selector, Admission, Bypass, Resolver, Host Mapper, Limiter and other components.
+GOST mainly consists of four modules: Service, Node, Hop, Chain, and five sub-modules: Listener, Handler, Forwarder, Dialer and Connector, plus several auxiliary modules: Selector, Admission, Bypass, Resolver, Host Mapper, Limiter and other components.
 
 ## Service
 
@@ -14,13 +14,13 @@ A node is the general term for the services used by the forwarding chain from th
 
 Each node contains a Dialer and a Connector.
 
+## Hop
+
+A hop is a set of nodes, which is an abstraction of the logical level of the forwarding chain. A chain of length 3 corresponds to 3 hops, and the data will be processed by a node in each hop in turn.
+
 ## Chain
 
-A chain, a.k.a Forwarding Chain, is a node group composed of several nodes in a certain order. A chain can consist of one or more hops, each hop is a list of service nodes. When forwarding data, a node will be selected from each hop according to the forwarding strategy (node selector, bypass), and finally a route will be formed, and the service will use this route for data forwarding.
-
-!!! info "Hop"
-
-    A hop is a set of nodes, which is an abstraction of the logical level of the forwarding chain. A chain of length 3 corresponds to 3 hops, and the data will be processed by a node in each hop in turn.
+A chain, a.k.a Forwarding Chain, is a hop group composed of several nodes in a certain order, a chain can consist of one or more hops. When forwarding data, a node will be selected from each hop according to the forwarding strategy (node selector, bypass), and finally a route will be formed, and the service will use this route for data forwarding.
 
 ## Listener
 
