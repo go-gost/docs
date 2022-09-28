@@ -4,7 +4,7 @@ Similar to the domain name resolver, the DNS proxy service supports multiple pro
 
 === "CLI"
     ```
-	gost -L dns://:10053/1.1.1.1,tls://1.1.1.1:853?mode=udp
+    gost -L dns://:10053/1.1.1.1,tls://1.1.1.1:853?mode=udp
     ```
 
 === "File (YAML)"
@@ -15,7 +15,7 @@ Similar to the domain name resolver, the DNS proxy service supports multiple pro
       addr: :10053
       handler:
         type: dns
-		# chain: chain-0
+        # chain: chain-0
       listener:
         type: dns
         metadata:
@@ -32,9 +32,9 @@ Similar to the domain name resolver, the DNS proxy service supports multiple pro
 :    Proxy mode
 
     * `udp` - DNS over UDP
-	* `tcp` - DNS over TCP
-	* `tls` - DNS over TLS
-	* `https` - DNS over HTTPS
+    * `tcp` - DNS over TCP
+    * `tls` - DNS over TLS
+    * `https` - DNS over HTTPS
 
 
 The format of each DNS is: `[protocol://]ip[:port]`.

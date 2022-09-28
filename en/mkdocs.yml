@@ -111,6 +111,7 @@ nav:
     - Port Forwarding: tutorials/port-forwarding.md
     - Relay Protocol: tutorials/relay.md
     - Probe Resistance: tutorials/probe-resistance.md
+    - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS Proxy: tutorials/dns.md
     - Transparent Proxy: tutorials/redirect.md
     - Multi-homed Host: tutorials/multi-homed.md

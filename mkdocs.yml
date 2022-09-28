@@ -117,6 +117,7 @@ nav:
     - 端口转发: tutorials/port-forwarding.md
     - Relay协议: tutorials/relay.md
     - 探测防御: tutorials/probe-resistance.md
+    - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS代理: tutorials/dns.md
     - 透明代理: tutorials/redirect.md
     - 多网络接口: tutorials/multi-homed.md

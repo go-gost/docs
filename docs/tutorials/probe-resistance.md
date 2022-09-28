@@ -6,10 +6,13 @@ GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到
     只有当代理服务开启了用户认证，探测防御功能才有效。
 
 === "命令行"
+
     ```
     gost -L=http://gost:gost@:8080?probeResistance=code:400&knock=www.example.com
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -25,6 +28,7 @@ GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到
       listener:
         type: tcp
     ```
+
 ## probeResistance
 
 代理服务通过`probeResistance`参数来指定防御策略。参数值的格式为：`type:value`。
