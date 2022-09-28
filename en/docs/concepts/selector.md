@@ -8,6 +8,7 @@ In GOST, the selection of nodes in a node group is done through node selector. T
      * `round` - round robin
      * `rand` - random
      * `fifo` - top-down 
+     * `hash` - Based on a specific hash value (client IP or destination address)
 
 `maxFails` (int, default=1)
 :    The maximum number of failed connections for a specified node, When the number of failed connections with a node exceeds this set value, the node will be marked as a dead node, dead node will not be selected to use.
@@ -303,3 +304,59 @@ chains:
 ```
 
 Set weights on nodes (or chains) via the `metadata.weight` option. The weight ratio of node-0 to node-1 is 2:1, so node-0 is twice as likely to be selected as node-1.
+
+## Hash Strategy
+
+Hash strategy is based on the Hash value of a specific data to select. The current Hash type supports the client IP and the request target host address, and the client IP is used by default.
+
+```
+gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash"
+```
+
+### Target Address Hash Value
+
+Each service can set the hash type individually.
+
+=== "CLI"
+
+    ```
+    gost -L http://:8080?hash=host -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash&maxFails=1&failTimeout=10s"
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="8 16"
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+        metadata:
+          hash: host
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        selector:
+          strategy: hash
+          maxFails: 1
+          failTimeout: 10s
+        nodes:
+        - name: node-0
+          addr: 192.168.1.1:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+        - name: node-1
+          addr: 192.168.1.2:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+	```
+
+Specify the hash type as `host` with the `hash` option.

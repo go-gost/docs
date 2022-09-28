@@ -9,6 +9,7 @@
      * `round` - 轮询
      * `rand` - 随机
      * `fifo` - 自上而下，主备模式
+     * `hash` - 基于特定Hash值(客户端IP或目标地址)
 
 `maxFails` (int, default=1)
 :    指定最大失败次数，当失败次数超过此设定值时，此对象会被标记为失败(Fail)状态，失败状态的对象不会被选择使用。
@@ -21,9 +22,11 @@
 转发链中的每一层级跳跃点上可以设置一个选择器，默认选择器使用轮询策略进行节点选择。
 
 === "命令行"
-	```
-	gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=rand&maxFails=1&failTimeout=10s"
-	```
+
+    ```
+    gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=rand&maxFails=1&failTimeout=10s"
+    ```
+
 === "配置文件"
 
     ```yaml hl_lines="13 14 15 16"
@@ -69,9 +72,11 @@
 转发器用于端口转发，其本身由一个节点组和一个节点选择器组成，当进行转发时，通过选择器在节点组中选择出零个或一个节点用于转发的目标地址。此时转发器类似于只有一个层级的转发链。
 
 === "命令行"
+
     ```
-	gost -L "tcp://:8080/:8081,:8082?strategy=round&maxFails=1&failTimeout=30s"
-	```
+    gost -L "tcp://:8080/:8081,:8082?strategy=round&maxFails=1&failTimeout=30s"
+    ```
+
 === "配置文件"
 
     ```yaml hl_lines="14 15 16 17"
@@ -311,3 +316,59 @@ chains:
 ```
 
 通过`metadata.weight`选项对节点(转发链类似)设置权重。node-0与node-1权重比值为2:1，因此node-0被选中几率是node-1的两倍。
+
+## Hash策略
+
+Hash策略是针对某一特定数据的Hash值来选择。目前的Hash类型支持客户端IP和请求目标主机地址，默认采用客户端IP。
+
+```
+gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash"
+```
+
+### 目标地址Hash
+
+每个服务可以单独设置hash类型。
+
+=== "命令行"
+
+    ```
+    gost -L http://:8080?hash=host -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash&maxFails=1&failTimeout=10s"
+    ```
+
+=== "配置文件"
+
+    ```yaml hl_lines="8 16"
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        chain: chain-0
+        metadata:
+          hash: host
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        selector:
+          strategy: hash
+          maxFails: 1
+          failTimeout: 10s
+        nodes:
+        - name: node-0
+          addr: 192.168.1.1:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+        - name: node-1
+          addr: 192.168.1.2:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+	```
+
+通过`hash`选项指定hash类型为`host`。
