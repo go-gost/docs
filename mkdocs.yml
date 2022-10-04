@@ -95,7 +95,7 @@ nav:
     - 配置概述: getting-started/configuration-overview.md
     - 常见问题: getting-started/faq.md
   - 概念:
-    - 架构: concepts/architecture.md
+    - 概述: concepts/architecture.md
     - 代理转发和通道: concepts/proxy.md
     - 服务: concepts/service.md
     - 转发链: concepts/chain.md

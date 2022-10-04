@@ -89,7 +89,7 @@ nav:
     - Configuration: getting-started/configuration-overview.md
     - FAQs: getting-started/faq.md
   - Concepts:
-    - Architecture: concepts/architecture.md
+    - Overview: concepts/architecture.md
     - Proxy and Tunnel: concepts/proxy.md
     - Service: concepts/service.md
     - Chain: concepts/chain.md

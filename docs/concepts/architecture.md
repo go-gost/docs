@@ -1,4 +1,4 @@
-# 架构
+# 概述
 
 GOST主要由四大模块：服务(Service)，节点(Node)，跳跃点(Hop)，转发链(Chain)，五个子模块：监听器(Listener)，处理器(Handler)，转发器(Forwarder)，拨号器(Dialer)和连接器(Connector)，外加若干辅助模块：节点选择器(Selector)，准入控制器(Admission)，分流器(Bypass)，域名解析器(Resolver)，主机映射器(Hosts)，限速器(Limiter)等组成。
 

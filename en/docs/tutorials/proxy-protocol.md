@@ -50,7 +50,7 @@ When accessing port 8000, the client IP obtained by the service on port 8080 is 
   "local":"127.0.0.1:8080",
   "msg":"127.0.0.1:53574 <> 127.0.0.1:8080",
   "remote":"127.0.0.1:53574",
-  "service":"service-1",
+  "service":"service-1"
 }
 ```
 

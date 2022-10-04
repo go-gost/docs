@@ -50,7 +50,7 @@ curl -H"Host: example.com" http://192.168.100.100:8000
   "local":"127.0.0.1:8080",
   "msg":"127.0.0.1:53574 <> 127.0.0.1:8080",
   "remote":"127.0.0.1:53574",
-  "service":"service-1",
+  "service":"service-1"
 }
 ```
 
