@@ -46,6 +46,9 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `ttl` (duration)
 :    心跳间隔时长，默认10s
 
+`passphrase` (string)
+:     客户端认证码，最多16个字符，仅客户端有效
+
 ### 使用示例
 
 #### 服务端
@@ -157,6 +160,79 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
     ```
 
 发往172.10.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.2的客户端。发往10.138.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.3的客户端。
+
+
+### 认证
+
+服务端可以使用[认证器](/concepts/auth/)来对客户端进行认证。
+
+#### 服务端
+
+```yaml
+services:
+- name: service-0
+  addr: :8421
+  handler:
+    type: tun
+    auther: tun
+  listener:
+    type: tun
+    metadata:
+      net: 192.168.123.1/24
+
+authers:
+- name: tun
+  auths:
+  - username: 192.168.123.2
+    password: userpass1
+  - username: 192.168.123.3
+    password: userpass2
+```
+
+认证器的用户名为客户端分配的IP。
+
+
+#### 客户端
+
+=== "命令行"
+
+    ```
+    gost -L "tun://:0/SERVER_IP:8421?net=192.168.123.2/24&passphrase=userpass1"
+    ```
+
+=== "配置文件"
+
+    ```yaml hl_lines="10"
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+        metadata:
+          bufferSize: 1500
+          keepAlive: true
+          ttl: 10s
+          passphrase: "userpass1"
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.1/24
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: SERVER_IP:8421
+    ```
+
+客户端通过`passphrase`选项指定认证码。
+
+!!! tip "认证与心跳"
+    当使用认证时，建议客户端开启心跳，认证信息会在心跳包中一起发送给服务端。当服务端重启后，心跳包会让连接恢复。
+
+!!! note "认证码长度限制"
+    认证码最长支持16个字符，当客户端超过此长度限制时只会使用前16个字符。
+
+!!! warn "安全传输"
+    TUN隧道的数据均为明文传输，包括认证信息。可以使用转发链利用加密隧道来使数据传输更安全。
 
 ### 构建基于TUN设备的VPN (Linux)
 
