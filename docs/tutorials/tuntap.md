@@ -100,7 +100,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
       listener:
         type: tun
         metadata:
-          net: 192.168.123.1/24
+          net: 192.168.123.2/24
       forwarder:
         nodes:
         - name: target-0
@@ -168,7 +168,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 #### 服务端
 
-```yaml
+```yaml hl_lines="6"
 services:
 - name: service-0
   addr: :8421
@@ -216,7 +216,7 @@ authers:
       listener:
         type: tun
         metadata:
-          net: 192.168.123.1/24
+          net: 192.168.123.2/24
       forwarder:
         nodes:
         - name: target-0
@@ -231,7 +231,7 @@ authers:
 !!! note "认证码长度限制"
     认证码最长支持16个字符，当客户端超过此长度限制时只会使用前16个字符。
 
-!!! warn "安全传输"
+!!! caution "安全传输"
     TUN隧道的数据均为明文传输，包括认证信息。可以使用转发链利用加密隧道来使数据传输更安全。
 
 ### 构建基于TUN设备的VPN (Linux)
@@ -347,7 +347,7 @@ $ iptables -A FORWARD -o tun0 -j ACCEPT
 
 设置路由规则
 
-!!! caution
+!!! caution "谨慎操作"
     以下操作会更改客户端的网络环境，除非你知道自己在做什么，请谨慎操作！
 
 ```
