@@ -7,6 +7,8 @@ TUN的实现依赖于[wireguard-go](https://git.zx2c4.com/wireguard-go)。
 !!! note "Windows系统"
     Windows需要下载[wintun](https://www.wintun.net/)。
 
+关于TUN设备更详细的使用示例可以参考这篇[博文](/blog/2022/tun/)。
+
 ### 使用说明
 
 ```
@@ -90,7 +92,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
     ```yaml
     services:
     - name: service-0
-      addr: :8421
+      addr: :0
       handler:
         type: tun
         metadata:
@@ -433,7 +435,7 @@ GOST中的TUN/TAP隧道默认是基于UDP协议进行数据传输。
       listener:
         type: tun
         metadata:
-          net: 192.168.123.1/24
+          net: 192.168.123.2/24
       forwarder:
         nodes:
         - name: target-0
