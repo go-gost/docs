@@ -3,6 +3,7 @@
 GOST配置文件使用yaml或json格式，完整的配置文件的结构如下：
 
 === "yaml格式"
+
     ```yaml
     services:
     - name: service-0
@@ -153,6 +154,12 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       output: stderr
       level: debug
       format: json
+      rotation:
+        maxSize: 100
+        maxAge: 10
+        maxBackups: 3
+        localTime: false
+        compress: false
 
     profiling:
       addr: ":6060"
@@ -172,6 +179,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
     ```
 
 === "json格式"
+
     ```json
     {
       "services": [
@@ -384,7 +392,14 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
       "log": {
         "output": "stderr",
         "level": "debug",
-        "format": "json"
+        "format": "json",
+        "rotation": {
+          "maxSize": 100,
+          "maxAge": 10,
+          "maxBackups": 3,
+          "localTime": false,
+          "compress": false
+        }
       },
       "profiling": {
         "addr": ":6060",
@@ -702,7 +717,7 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 日志配置，设置日志级别，格式和输出方式。
 
 `level` (string, default=info)
-:    日志级别，支持的选项：`debug`，`info`，`warn`，`error`，`fatal`。
+:    日志级别，支持的选项：`trace`，`debug`，`info`，`warn`，`error`，`fatal`。
 
 `format` (string, default=json)
 :    日志格式，支持的格式：`json`，`text`。
@@ -714,6 +729,21 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
      * `stderr` - 标准错误流
      * `stdout` - 标准输出流
      * `/path/to/file` - 指定的文件路径
+
+`rotation.maxSize` (int, default=100)
+:    文件存储大小，单位为MB。
+
+`rotation.maxAge` (int)
+:    备份日志文件保存天数，默认不根据时间清理旧文件。
+
+`rotation.maxBackups` (int)
+:    备份日志文件数量，默认保存所有文件。
+
+`rotation.localTime` (bool, default=false)
+:    备份文件名是否使用本地时间格式。默认使用UTC时间。
+
+`rotation.compress` (bool, default=false)
+:    备份文件是否(使用gzip)压缩。
 
 ## Profiling
 

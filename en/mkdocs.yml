@@ -106,6 +106,7 @@ nav:
     - WebAPI:
       - Overview: tutorials/api/overview.md
       - Dynamic Configuration: tutorials/api/config.md
+    - Log: tutorials/log.md
     - TLS: tutorials/tls.md
     - HTTP Tunnel: tutorials/http-tunnel.md
     - Port Forwarding: tutorials/port-forwarding.md

@@ -3,6 +3,7 @@
 GOST configuration file supports `yaml` and `json` format, the complete configuration structure is as follows:
 
 === "yaml"
+
     ```yaml
     services:
     - name: service-0
@@ -153,6 +154,12 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
       output: stderr
       level: debug
       format: json
+      rotation:
+        maxSize: 100
+        maxAge: 10
+        maxBackups: 3
+        localTime: false
+        compress: false
 
     profiling:
       addr: ":6060"
@@ -172,6 +179,7 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
     ```
 
 === "json"
+
     ```json
     {
       "services": [
@@ -384,7 +392,14 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
       "log": {
         "output": "stderr",
         "level": "debug",
-        "format": "json"
+        "format": "json",
+        "rotation": {
+          "maxSize": 100,
+          "maxAge": 10,
+          "maxBackups": 3,
+          "localTime": false,
+          "compress": false
+        }
       },
       "profiling": {
         "addr": ":6060",
@@ -703,7 +718,7 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 日志配置，设置日志级别，格式和输出方式。
 
 `level` (string, default=info)
-:    日志级别，支持的选项：`debug`，`info`，`warn`，`error`，`fatal`。
+:    日志级别，支持的选项：`trace`，`debug`，`info`，`warn`，`error`，`fatal`。
 
 `format` (string, default=json)
 :    日志格式，支持的格式：`json`，`text`。
@@ -715,6 +730,22 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
      * `stderr` - 标准错误流
      * `stdout` - 标准输出流
      * `/path/to/file` - 指定的文件路径
+
+`rotation.maxSize` (int, default=100)
+:    The maximum size in megabytes of the log file before it gets rotated. It defaults to 100 megabytes.
+
+`rotation.maxAge` (int)
+:    The maximum number of days to retain old log files based on the timestamp encoded in their filename. Note that a day is defined as 24 hours and may not exactly correspond to calendar days due to daylight savings, leap seconds, etc. The default is not to remove old log files based on age.
+
+`rotation.maxBackups` (int)
+:    the maximum number of old log files to retain. The default is to retain all old log files (though `maxAge` may still cause them to get deleted.)
+
+`rotation.localTime` (bool, default=false)
+:    Determines if the time used for formatting the timestamps in backup files is the computer's local time. The default is to use UTC time.
+
+`rotation.compress` (bool, default=false)
+:    Determines if the rotated log files should be compressed using gzip. The default is not to perform compression.
+
 
 ## Profiling
 

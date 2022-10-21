@@ -46,6 +46,10 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `ttl` (duration, default=10s)
 :    keepalive period, valid when `keepAlive` is true.
 
+`passphrase` (string)
+:     Client authentication code, up to 16 characters, only valid for the client.
+
+
 ### Example
 
 #### Server
@@ -96,7 +100,7 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
       listener:
         type: tun
         metadata:
-          net: 192.168.123.1/24
+          net: 192.168.123.2/24
       forwarder:
 	      nodes:
         - name: target-0
@@ -140,6 +144,78 @@ If you want to set a specific gateway for each route, you can specify it via `ro
 Packets send to network 172.10.0.0/16 will be forwarded to the client with the IP 192.168.123.2 through the TUN tunnel.
 
 Packets send to network 10.138.0.0/16 will be forwarded to the client with the IP 192.168.123.3 through the TUN tunnel.
+
+### Authentication
+
+The server can use [Auther](/en/concepts/auth/) to authenticate the client.
+
+#### Server
+
+```yaml hl_lines="6"
+services:
+- name: service-0
+  addr: :8421
+  handler:
+    type: tun
+    auther: tun
+  listener:
+    type: tun
+    metadata:
+      net: 192.168.123.1/24
+
+authers:
+- name: tun
+  auths:
+  - username: 192.168.123.2
+    password: userpass1
+  - username: 192.168.123.3
+    password: userpass2
+```
+
+The username of the auther is the IP assigned to the client.
+
+
+#### Client
+
+=== "CLI"
+
+    ```
+    gost -L "tun://:0/SERVER_IP:8421?net=192.168.123.2/24&passphrase=userpass1"
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="10"
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tun
+        metadata:
+          bufferSize: 1500
+          keepAlive: true
+          ttl: 10s
+          passphrase: "userpass1"
+      listener:
+        type: tun
+        metadata:
+          net: 192.168.123.2/24
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: SERVER_IP:8421
+    ```
+
+The client specifies the authentication code via the `passphrase` option.
+
+!!! tip "Authentication and Heartbeat"
+    When using authentication, it is recommended that the client enable heartbeat, and the authentication information will be sent to the server in the heartbeat packet. When the server restarts, the heartbeat packet will restore the connection.
+
+!!! note "Passphrase Length Limitation"
+    The passphrase supports up to 16 characters. When the client exceeds this length limit, only the first 16 characters are used.
+
+!!! caution "Secure Transmission"
+    The data of the TUN tunnel is transmitted in clear text, including authentication information. Data transmission can be made more secure by utilizing encrypted tunnels using forwarding chains.
 
 ### TUN-based VPN (Linux)
 
@@ -188,7 +264,7 @@ Packets send to network 10.138.0.0/16 will be forwarded to the client with the I
       listener:
         type: tun
         metadata:
-          net: 192.168.123.1/24
+          net: 192.168.123.2/24
       forwarder:
 	      nodes:
         - name: target-0

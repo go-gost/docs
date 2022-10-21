@@ -112,6 +112,7 @@ nav:
     - WebAPI:
       - 概述: tutorials/api/overview.md
       - 动态配置: tutorials/api/config.md
+    - 日志: tutorials/log.md
     - TLS: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
