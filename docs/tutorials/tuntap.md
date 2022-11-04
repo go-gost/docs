@@ -372,7 +372,7 @@ $ ip route add default via 192.168.123.2  # 使用新的默认路由
 TAP的实现依赖于[songgao/water](https://github.com/songgao/water)库。
 
 !!! note "Windows系统"
-    Windows下需要安装tap驱动后才能使用，可以选择安装[OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6)或[OpenVPN client](https://github.com/OpenVPN/openvpn)。
+    Windows下需要安装tap驱动后才能使用，可以选择安装[OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6)或[OpenVPN client](https://github.com/OpenVPN/openvpn)，也可以直接从[这里](https://build.openvpn.net/downloads/releases/)下载安装包。
 
 !!! note "注意"
     TAP目前不支持MacOS。
@@ -382,6 +382,90 @@ TAP的实现依赖于[songgao/water](https://github.com/songgao/water)库。
 ```
 gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
+
+`local_ip:port` (string, required)
+:    本地监听的UDP隧道地址。
+
+`remote_ip:port` (string)
+:    目标UDP地址。本地TAP设备收到的数据会通过UDP转发到此地址。
+
+`net` (string)
+:    指定TAP设备的地址。
+
+`name` (string)
+:    指定TAP设备的名字，默认值为系统预设。
+
+`mtu` (int, default=1350)
+:    设置TAP设备的MTU值。
+
+`gw` (string)
+:    设置TAP设备路由默认网关IP。
+
+`route` (string)
+:    逗号分割的路由列表，例如：10.100.0.0/16,172.20.1.0/24,1.2.3.4/32
+
+`routes` (list)
+:    特定网关路由列表，列表每一项为空格分割的CIDR地址和网关，例如：`10.100.0.0/16 192.168.123.2`
+
+`bufferSize` (int)
+:    数据读缓存区大小，默认1500字节
+
+
+### 使用示例
+
+#### 服务端
+
+=== "命令行"
+
+    ```
+    gost -L=tap://:8421?net=192.168.123.1/24
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tap
+        metadata:
+          bufferSize: 1500
+      listener:
+        type: tap
+        metadata:
+          name: tap0
+          net: 192.168.123.1/24
+          mtu: 1350
+    ```
+
+#### 客户端
+
+=== "命令行"
+
+    ```
+    gost -L=tap://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :0
+      handler:
+        type: tap
+        metadata:
+          bufferSize: 1500
+      listener:
+        type: tap
+        metadata:
+          net: 192.168.123.2/24
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: SERVER_IP:8421
+    ```
 
 ## 基于TCP的TUN/TAP隧道
 

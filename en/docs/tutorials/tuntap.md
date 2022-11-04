@@ -350,7 +350,7 @@ $ ip route add default via 192.168.123.2  # add new default route
 TAP is based on [songgao/water](https://github.com/songgao/water).
 
 !!! note "Windows"
-    You need to install the tap driver [OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6) or [OpenVPN client](https://github.com/OpenVPN/openvpn) for Windows.
+    You need to install the tap driver [OpenVPN/tap-windows6](https://github.com/OpenVPN/tap-windows6) or [OpenVPN client](https://github.com/OpenVPN/openvpn) for Windows. You can download the installer directly from [here](https://build.openvpn.net/downloads/releases/).
 
 
 !!! note "Limitation"
@@ -361,6 +361,88 @@ TAP is based on [songgao/water](https://github.com/songgao/water).
 ```
 gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
+
+`local_ip:port` (string, required)
+:    Local UDP tunnel listen address.
+
+`remote_ip:port` (string)
+:    Remote UDP server address, frames received by the local TAP device will be forwarded to the remote server via UDP tunnel.
+
+`net` (string, required)
+:    CIDR IP address of the TAP device, such as: 192.168.123.1/24.
+
+`name` (string)
+:    TAP device name.
+
+`mtu` (int, default=1350)
+:    MTU for TAP device.
+
+`gw` (string)
+:    Default routing gateway.
+
+`route` (string)
+:    Comma-separated routing table, such as: 10.100.0.0/16,172.20.1.0/24,1.2.3.4/32.
+
+`routes` (list)
+:    Gateway-specific routing, Each entry in the list is a space-separated CIDR address and gateway, such as `10.100.0.0/16 192.168.123.2`
+
+`bufferSize` (int, default=1500)
+:    read buffer size in byte.
+
+### Example
+
+#### Server
+
+=== "CLI"
+
+    ```
+    gost -L=tap://:8421?net=192.168.123.1/24
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tap
+        metadata:
+          bufferSize: 1500
+      listener:
+        type: tap
+        metadata:
+          name: tap0 
+          net: 192.168.123.1/24
+          mtu: 1350
+    ```
+#### Client
+
+=== "CLI"
+
+    ```
+    gost -L=tap://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8421
+      handler:
+        type: tap
+        metadata:
+          bufferSize: 1500
+      listener:
+        type: tap
+        metadata:
+          net: 192.168.123.2/24
+      forwarder:
+	      nodes:
+        - name: target-0
+		      addr: SERVER_IP:8421
+    ```
 
 ## TUN/TAP tunnel over TCP
 
