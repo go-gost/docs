@@ -38,4 +38,7 @@ QUIC监听器根据服务配置，监听在指定UDP端口，并使用[QUIC协�
 `maxIdleTimeout` (duration, default=30s)
 :    最大空闲时长
 
+`maxStreams` (int, default=100)
+:    最大并发stream数量
+
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

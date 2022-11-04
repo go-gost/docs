@@ -39,6 +39,9 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `routes` (list)
 :    特定网关路由列表，列表每一项为空格分割的CIDR地址和网关，例如：`10.100.0.0/16 192.168.123.2`
 
+`peer` (string)
+:    对端IP地址，仅MacOS系统有效
+
 `bufferSize` (int)
 :    数据读缓存区大小，默认1500字节
 
@@ -81,10 +84,16 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 #### 客户端
 
-=== "命令行"
+=== "命令行(Linux/Windows)"
 
     ```
     gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "命令行(MacOS)"
+
+    ```
+    gost -L="tun://:0/SERVER_IP:8421?net=192.168.123.2/24&peer=192.168.123.1"
     ```
 
 === "配置文件"
@@ -103,6 +112,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
         type: tun
         metadata:
           net: 192.168.123.2/24
+          # peer: 192.168.123.1 # MacOS only
       forwarder:
         nodes:
         - name: target-0

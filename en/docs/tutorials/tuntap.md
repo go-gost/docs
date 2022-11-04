@@ -37,6 +37,9 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `routes` (list)
 :    Gateway-specific routing, Each entry in the list is a space-separated CIDR address and gateway, such as `10.100.0.0/16 192.168.123.2`
 
+`peer` (string)
+:    Peer IP address，MacOS only
+
 `bufferSize` (int, default=1500)
 :    read buffer size in byte.
 
@@ -79,10 +82,16 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
     ```
 #### Client
 
-=== "CLI"
+=== "CLI (Linux/Windows)"
 
     ```
     gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    ```
+
+=== "CLI (MacOS)"
+
+    ```
+    gost -L="tun://:0/SERVER_IP:8421?net=192.168.123.2/24&peer=192.168.123.1"
     ```
 
 === "File (YAML)"

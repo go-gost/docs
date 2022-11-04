@@ -35,7 +35,7 @@ QUIC拨号器使用[QUIC协议](https://github.com/lucas-clemente/quic-go)与QUI
 
 ## 参数列表
 
-`keepAlive` (bool, default=false)
+`keepAlive` (bool, default=true)
 :    开启心跳检测。
 
 `ttl` (duration, default=10s)
@@ -46,5 +46,8 @@ QUIC拨号器使用[QUIC协议](https://github.com/lucas-clemente/quic-go)与QUI
 
 `maxIdleTimeout` (duration, default=30s)
 :    最大空闲时长
+
+`maxStreams` (int, default=100)
+:    最大并发stream数量
 
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

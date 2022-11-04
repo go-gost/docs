@@ -35,6 +35,8 @@ UDP监听器根据服务配置，监听在指定UDP端口。
 `ttl` (duration, default=5s)
 :    UDP连接超时时长，当`keepAlive`为`true`时有效。
 
+`relay` (string, default=tcp)
+:    UDP转发方式：`tcp` - 采用UDP-over-TCP方式，`udp` - 采用原生SOCKS5标准UDP转发协议。
 
 `readBufferSize` (int, default=1500)
 :    UDP读数据缓冲区字节大小
