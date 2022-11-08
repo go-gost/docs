@@ -126,3 +126,17 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
     ```
 	gost -L http://:8080 -metrics :9000
 	```
+
+
+!!! tip "scheme参数在命令行中的问题"
+    macOS系统默认的zsh不支持命令行参数使用`?`和`&`，所以在macOS环境下，如果你的scheme包含特殊字符，请使用双引号`""`，否则会报错：“zsh: no matches found: ...”。
+
+=== "Bash"
+    ```
+	gost -L http://:8080 -L socks5://:1080?foo=bar
+	```
+
+=== "Zsh"
+    ```
+	gost -L http://:8080 -L "socks5://:1080?foo=bar"
+	```
