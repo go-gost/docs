@@ -126,3 +126,16 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
     ```
 	gost -L http://:8080 -metrics :9000
 	```
+
+!!! tip "Handle special characters in command line scheme"
+    Zsh in macOS does not support `?` and `&`, you have to use `""` to quote them,otherwise you'll get warnings in Terminal: "zsh: no matches found: ..."。
+
+=== "Bash"
+    ```
+	gost -L http://:8080 -L socks5://:1080?foo=bar
+	```
+
+=== "Zsh"
+    ```
+	gost -L http://:8080 -L "socks5://:1080?foo=bar"
+	```
