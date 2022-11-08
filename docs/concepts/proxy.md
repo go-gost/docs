@@ -28,14 +28,15 @@
     服务端
 	```
 	gost -L relay+wss://gost:gost@:8420
+	# 或者：gost -L relay+wss://gost:gost@192.168.1.1:8420
 	```
 
 	客户端
 	```
-	gost -L http://:8080 -F relay+wss://gost:gost@:8420
+	gost -L http://:8080 -F relay+wss://gost:gost@192.168.1.1:8420
 	```
 
-	客户端使用TCP数据通道通过HTTP代理协议接收请求，使用Websocket数据通道通过relay协议转发给服务端处理，并开启认证。这里数据在两层代理(HTTP代理和Relay代理)之间进行传输。
+	客户端使用TCP数据通道通过HTTP代理协议接收请求，使用Websocket数据通道通过relay协议转发给服务端192.168.1.1处理，并开启认证。这里数据在两层代理(HTTP代理和Relay代理)之间进行传输。
 
 === "Relay转发模式"
 
