@@ -115,8 +115,11 @@ nav:
       - HTTP2: tutorials/protocols/http2.md
       - SOCKS: tutorials/protocols/socks.md
       - Shadowsocks: tutorials/protocols/ss.md
+      - SNI: tutorials/protocols/sni.md
       - Relay: tutorials/protocols/relay.md
-    - TLS: tutorials/tls.md
+      - TLS: tutorials/protocols/tls.md
+      - Websocket: tutorials/protocols/ws.md
+    - TLS设置: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
     - 探测防御: tutorials/probe-resistance.md

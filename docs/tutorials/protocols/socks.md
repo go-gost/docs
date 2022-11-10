@@ -271,7 +271,7 @@ GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此�
 
 ## 数据通道
 
-SOCKS4/5代理可以与各种数据通道组合使用。
+SOCKS代理可以与各种数据通道组合使用。
 
 ### SOCKS Over TLS
 

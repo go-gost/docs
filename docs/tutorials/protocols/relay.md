@@ -12,13 +12,13 @@ Relay协议可以像HTTP/SOCKS5一样用作代理协议。
 ### 服务端
 
 ```
-gost -L relay+tls://username:password@:12345
+gost -L relay://username:password@:12345
 ```
 
 ### 客户端
 
 ```
-gost -L :8080 -F relay+tls://username:password@:12345?nodelay=false
+gost -L :8080 -F relay://username:password@:12345?nodelay=false
 ```
 
 !!! tip "延迟发送"
@@ -28,15 +28,70 @@ gost -L :8080 -F relay+tls://username:password@:12345?nodelay=false
 
 ### 服务端
 
-```
-gost -L relay://:12345
-```
+=== "命令行"
+
+    ```
+    gost -L relay://:8420
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8420
+      handler:
+        type: relay
+      listener:
+        type: tcp
+    ```
 
 ### 客户端
 
-```
-gost -L udp://:1053/:53 -L tcp://:1053/:53 -F relay://:12345
-```
+=== "命令行"
+
+    ```
+    gost -L tcp://:2222/:22 -L udp://:1053/:53 -F relay://:8420
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :2222
+      handler:
+        type: tcp
+        chain: chain-0
+      listener:
+        type: tcp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :22
+    - name: service-1
+      addr: :1053
+      handler:
+        type: udp
+        chain: chain-0
+      listener:
+        type: udp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :53
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8420
+          connector:
+            type: relay
+          dialer:
+            type: tcp
+    ```
 
 ## 端口转发
 
@@ -44,30 +99,207 @@ Relay服务本身也可以作为端口转发服务。
 
 ### 服务端
 
-```
-gost -L relay://:12345/:53
-```
+=== "命令行"
+
+    ```
+    gost -L relay://:8420/:53
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8420
+      handler:
+        type: relay
+      listener:
+        type: tcp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :53
+    ```
 
 ### 客户端
 
-```
-gost -L udp://:1053 -L tcp://:1053 -F relay://:12345
-```
+=== "命令行"
+
+    ```
+    gost -L udp://:1053 -L tcp://:2222 -F relay://:8420
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :1053
+      handler:
+        type: udp
+        chain: chain-0
+      listener:
+        type: udp
+    - name: service-1
+      addr: :2222
+      handler:
+        type: tcp
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8420
+          connector:
+            type: relay
+          dialer:
+            type: tcp
+    ```
 
 ## 远程端口转发
 
 Relay协议实现了类似于SOCKS5的BIND功能，可以配合远程端口转发服务使用。
 
-BIND功能默认未开启，需要通过设置`bind`参数为true来开启。
+BIND功能默认未开启，需要通过设置`bind`选项为true来开启。
 
 ### 服务端
 
-```
-gost -L relay://:12345?bind=true
-```
+=== "命令行"
+
+    ```
+    gost -L relay://:8420?bind=true
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8420
+      handler:
+        type: relay
+        metadata:
+          bind: true
+      listener:
+        type: tcp
+    ```
 
 ### 客户端
 
-```
-gost -L rtcp://:2222/:22 -L rudp://:10053/:53 -F relay://:12345
-```
+=== "命令行"
+
+    ```
+    gost -L rtcp://:2222/:22 -L rudp://:10053/:53 -F relay://:8420
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :2222
+      handler:
+        type: rtcp
+      listener:
+        type: rtcp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :22
+    - name: service-1
+      addr: :10053
+      handler:
+        type: rudp
+      listener:
+        type: rudp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :53
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8420
+          connector:
+            type: relay
+          dialer:
+            type: tcp
+    ```
+
+## 数据通道
+
+Relay协议可以与各种数据通道组合使用。
+
+### Relay Over TLS
+
+=== "命令行"
+
+	```
+	gost -L relay+tls://:8443
+	```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8443
+      handler:
+        type: relay
+      listener:
+        type: tls
+    ```
+
+### Relay Over Websocket
+
+=== "命令行"
+
+    ```bash
+    gost -L relay+ws://:8080
+    ```
+
+    ```bash
+    gost -L relay+wss://:8080
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8080
+      handler:
+        type: relay
+      listener:
+        type: ws
+        # type: wss
+    ```
+
+### Relay Over KCP
+
+=== "命令行"
+
+    ```bash
+    gost -L relay+kcp://:8080
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8080
+      handler:
+        type: relay
+      listener:
+        type: kcp
+    ```
