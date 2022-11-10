@@ -109,14 +109,16 @@ nav:
     - 主机IP映射: concepts/hosts.md
     - 数据记录: concepts/recorder.md
   - 教程:
-    - WebAPI:
-      - 概述: tutorials/api/overview.md
-      - 动态配置: tutorials/api/config.md
-    - 日志: tutorials/log.md
+    - 协议:
+      - 概述: tutorials/protocols/overview.md
+      - HTTP: tutorials/protocols/http.md
+      - HTTP2: tutorials/protocols/http2.md
+      - SOCKS: tutorials/protocols/socks.md
+      - Shadowsocks: tutorials/protocols/ss.md
+      - Relay: tutorials/protocols/relay.md
     - TLS: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
-    - Relay协议: tutorials/relay.md
     - 探测防御: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS代理: tutorials/dns.md
@@ -125,6 +127,10 @@ nav:
     - TUN/TAP设备: tutorials/tuntap.md
     - ICMP通道: tutorials/icmp.md
     - 监控指标: tutorials/metrics.md
+    - 日志: tutorials/log.md
+    - WebAPI:
+      - 概述: tutorials/api/overview.md
+      - 动态配置: tutorials/api/config.md
   - 参考:
     - 配置: 
       - 命令行: reference/configuration/cmd.md
