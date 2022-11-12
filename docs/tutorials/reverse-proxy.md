@@ -167,6 +167,10 @@ services:
       host: .example.org
 ```
 
+```bash
+curl -k --resolve example.com:443:127.0.0.1 https://example.com
+```
+
 ### HTTP3转发通道
 
 HTTP3-to-HTTP反向代理。

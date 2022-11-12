@@ -456,13 +456,17 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
 
 !!! note "WebTransport"
     [WebTransport](https://web.dev/webtransport/)目前处在早期草案阶段，待时机成熟后GOST会添加对其的支持。
+
 ### 服务端
 
 === "命令行"
-    ```
-	gost -L h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+
+    ```bash
+	gost -L "h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
