@@ -1,10 +1,10 @@
 # 反向代理
 
-[反向代理](https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86)是代理服务器的一种。服务器根据客户端的请求，从其关系的一组或多组后端服务器（如Web服务器）上获取资源，然后再将这些资源返回给客户端，客户端只会得知反向代理的IP地址，而不知道在代理服务器后面的服务器集群的存在。因此反向代理也可以看作是透明转发。
+[反向代理](https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86)是代理服务的一种。服务器根据客户端的请求，从其关系的一组或多组后端服务器（如Web服务器）上获取资源，然后再将这些资源返回给客户端，客户端只会得知反向代理的IP地址，而不知道在代理服务器后面的服务器集群的存在。因此反向代理也可以看作是透明转发。
 
 GOST中的端口转发服务也可以被当作是一种功能受限的反向代理，因其只能转发到固定的一个或一组后端服务。
 
-反向代理是端口转发服务的一个扩展，其依托于端口转发功能，并通过嗅探转发的数据来获取特定协议(HTTP/HTTPS)中的目标主机信息。
+反向代理是端口转发服务的一个扩展，其依托于端口转发功能，并通过嗅探转发的数据来获取特定协议(目前支持HTTP/HTTPS)中的目标主机信息。
 
 ## 本地端口转发
 
@@ -25,7 +25,8 @@ services:
       host: www.google.com
     - name: github
       addr: github.com:443
-      host: github.com
+      host: "*.github.com"
+      # host: .github.com
 - name: http
   addr: :80
   handler:
@@ -46,7 +47,9 @@ services:
 
 通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`host`选项可以对每一个节点设置(虚拟)主机名。
 
-当开启流量嗅探后，转发服务会通过客户端的请求数据获取访问的目标主机，再通过转发器(forwarder)中的节点设置的虚拟主机(node.host)找到最终转发的目标地址(node.addr)。
+当开启流量嗅探后，转发服务会通过客户端的请求数据获取访问的目标主机，再通过转发器(forwarder)中的节点设置的虚拟主机名(node.host)找到最终转发的目标地址(node.addr)。
+
+`node.host`也支持通配符，*.example.com或.example.com匹配example.com及其子域名：abc.example.com，def.abc.example.com等。
 
 此时可以将对应的域名解析到本地通过反向代理来访问：
 
@@ -125,7 +128,7 @@ curl --resolve srv-0.local:443:SERVER_IP https://srv-0.local
 curl --resolve srv-1.local:80:SERVER_IP http://srv-1.local
 ```
 
-如果访问的目标主机没有与转发器中的节点设定的主机名匹配上，如果存在没有设置主机名的节点，则在这些节点中选择一个使用。
+如果访问的目标主机没有与转发器中的节点设定的主机名匹配上，当存在没有设置主机名的节点，则会在这些节点中选择一个使用。
 
 
 ```bash
@@ -133,3 +136,31 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 ```
 
 由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.443)。
+
+## 转发通道
+
+除了原始TCP数据通道可以用来作为端口转发，其他数据通道也可以作为端口转发服务。
+
+### TLS转发通道
+
+TLS转发通道可以动态的给后端HTTP服务添加TLS支持。
+
+```yaml
+services:
+- name: https
+  addr: :443
+  handler:
+    type: forward
+    metadata:
+      sniffing: true
+  listener:
+    type: tls
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: .example.com
+    - name: example-org
+      addr: example.org:80
+      host: .example.org
+```
