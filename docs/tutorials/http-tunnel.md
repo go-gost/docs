@@ -450,7 +450,7 @@ gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文�
 
 ## HTTP/3
 
-HTTP/3协议中支持CONNECT方法和WebTransport两种方式建立数据通道。
+HTTP/3协议规范中支持CONNECT方法和WebTransport两种方式建立数据通道。
 
 GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来建立数据通道。
 
@@ -460,7 +460,7 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
 
 === "命令行"
     ```
-	gost -L http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+	gost -L h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 === "配置文件"
     ```yaml
@@ -470,7 +470,7 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
 	  handler:
 		type: auto
 	  listener:
-		type: http3
+		type: h3
 		metadata:
           authorizePath: /authorize
           pullPath: /pull
@@ -481,10 +481,11 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
 
 === "命令行"
     ```
-	gost -L http://:8000 -F http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+	gost -L http://:8000 -F h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -504,7 +505,7 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
 		  connector:
 			type: http
 		  dialer:
-			type: http3
+			type: h3
 		    metadata:
               authorizePath: /authorize
               pullPath: /pull

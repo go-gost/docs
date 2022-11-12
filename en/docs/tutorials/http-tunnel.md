@@ -474,7 +474,7 @@ GOST currently does not support the above two methods, but establishes a tunnel 
 
 === "CLI"
     ```
-	gost -L http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+	gost -L h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 === "File (YAML)"
 
@@ -485,7 +485,7 @@ GOST currently does not support the above two methods, but establishes a tunnel 
 	  handler:
 		type: auto
 	  listener:
-		type: http3
+		type: h3
 		metadata:
           authorizePath: /authorize
           pullPath: /pull
@@ -496,7 +496,7 @@ GOST currently does not support the above two methods, but establishes a tunnel 
 
 === "CLI"
     ```
-	gost -L http://:8000 -F http3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
+	gost -L http://:8000 -F h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 
 === "File (YAML)"
@@ -520,7 +520,7 @@ GOST currently does not support the above two methods, but establishes a tunnel 
 		  connector:
 			type: http
 		  dialer:
-			type: http3
+			type: h3
 		    metadata:
               authorizePath: /authorize
               pullPath: /pull

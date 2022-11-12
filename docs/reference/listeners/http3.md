@@ -1,6 +1,6 @@
 # HTTP/3
 
-名称: `http3`
+名称: `h3`
 
 状态： Alpha
 
@@ -8,7 +8,7 @@ HTTP3监听器根据服务配置，监听在指定UDP端口，并使用HTTP/3协
 
 === "命令行"
     ```
-	gost -L http+http3://:8080
+	gost -L http+h3://:8080
 	```
 === "配置文件"
     ```yaml
@@ -18,7 +18,7 @@ HTTP3监听器根据服务配置，监听在指定UDP端口，并使用HTTP/3协
 	  handler:
 		type: http
 	  listener:
-		type: http3
+		type: h3
 	```
 
 ## 参数列表

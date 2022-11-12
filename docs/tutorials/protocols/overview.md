@@ -44,7 +44,7 @@
 * `ssh`，`sshd` - SSH协议
 * `kcp` - 基于UDP的KCP协议
 * `quic` - 基于UDP的QUIC协议
-* `http3` - 基于UDP的HTTP3协议，基于pht协议构建数据通道
+* `h3` - 基于UDP的HTTP3协议，基于pht协议构建数据通道
 * `ohttp` - HTTP Obfuscation
 * `otls` - TLS Obfuscation
 * `icmp` - ICMP协议
@@ -76,4 +76,4 @@
 
 ## 限制
 
-* 所有基于UDP协议的数据通道（例如kcp，quic，http3，包括icmp）仅能用于转发链的第一层级节点。
+* 所有基于UDP协议的数据通道（例如kcp，quic，h3，包括icmp）仅能用于转发链的第一层级节点。

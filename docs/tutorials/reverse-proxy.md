@@ -143,6 +143,8 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 ### TLS转发通道
 
+HTTPS-to-HTTP反向代理。
+
 TLS转发通道可以动态的给后端HTTP服务添加TLS支持。
 
 ```yaml
@@ -163,4 +165,32 @@ services:
     - name: example-org
       addr: example.org:80
       host: .example.org
+```
+
+### HTTP3转发通道
+
+HTTP3-to-HTTP反向代理。
+
+HTTP3转发通道可以动态的给后端HTTP服务添加HTTP/3支持。
+
+```yaml
+services:
+- name: http3
+  addr: :443
+  handler:
+    type: http3
+  listener:
+    type: http3
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: .example.com
+    - name: example-org
+      addr: example.org:80
+      host: .example.org
+```
+
+```bash
+curl -k --http3 --resolve example.com:443:127.0.0.1 https://example.com
 ```

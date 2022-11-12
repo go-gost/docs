@@ -1,6 +1,6 @@
 # HTTP/3
 
-名称: `http3`
+名称: `h3`
 
 状态： Alpha
 
@@ -8,7 +8,7 @@ HTTP3拨号器使用HTTP/3协议与HTTP3服务建立数据通道。
 
 === "命令行"
     ```
-	gost -L :8080 -F http+http3://:8443
+	gost -L :8080 -F http+h3://:8443
 	```
 === "配置文件"
     ```yaml
@@ -30,7 +30,7 @@ HTTP3拨号器使用HTTP/3协议与HTTP3服务建立数据通道。
 		  connector:
 			type: http
 		  dialer:
-			type: http3
+			type: h3
 	```
 
 ## 参数列表
