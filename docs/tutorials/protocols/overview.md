@@ -32,6 +32,7 @@
 * `tcp` - 原始TCP协议
 * `udp` - 原始UDP协议
 * `tls` - TLS协议
+* `dtls` - DTLS协议
 * `mtls` - Multiplex TLS，在TLS上增加多路复用功能
 * `ws` - Websocket
 * `mws` - Multiplex Websocket，在Websocket上增加多路复用功能

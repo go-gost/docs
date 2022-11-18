@@ -1,16 +1,16 @@
-# TLS
+# DTLS
 
-TLS是GOST中的一种数据通道类型。
+DTLS是GOST中的一种数据通道类型。DTLS的实现依赖于[pion/dtls](https://github.com/pion/dtls)库。
 
 !!! tip "TLS证书配置"
     TLS配置请参考[TLS配置说明](/tutorials/tls/)。
 
-## 标准TLS服务
+## DTLS服务
 
 === "命令行"
 
     ```
-    gost -L tls://:8443
+    gost -L dtls://:8443
     ```
 
 === "配置文件"
@@ -22,41 +22,19 @@ TLS是GOST中的一种数据通道类型。
       handler:
         type: auto
       listener:
-        type: tls
-    ```
-
-## 多路复用
-
-GOST在TLS基础之上扩展出具有多路复用(Multiplex)特性的TLS传输类型(mtls)。多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。
-
-=== "命令行"
-
-    ```
-    gost -L mtls://:8443
-    ```
-
-=== "配置文件"
-
-    ```yaml
-    services:
-    - name: service-0
-      addr: :
-      handler:
-        type: auto
-      listener:
-        type: mtls
+        type: dtls
     ```
 
 ## 代理协议
 
-TLS数据通道可以与各种代理协议组合使用。
+DTLS数据通道可以与各种代理协议组合使用。
 
-### HTTP Over TLS
+### HTTP Over DTLS
 
 === "命令行"
 
     ```bash
-    gost -L http+tls://:8443
+    gost -L http+dtls://:8443
     ```
 
 === "配置文件"
@@ -68,16 +46,15 @@ TLS数据通道可以与各种代理协议组合使用。
       handler:
         type: http
       listener:
-        type: tls
-        # type: mtls
+        type: dtls
     ```
 
-### SOCKS5 Over TLS
+### SOCKS5 Over DTLS
 
 === "命令行"
 
     ```bash
-    gost -L socks5+tls://:8443
+    gost -L socks5+dtls://:8443
     ```
 
 === "配置文件"
@@ -89,16 +66,15 @@ TLS数据通道可以与各种代理协议组合使用。
       handler:
         type: socks5
       listener:
-        type: tls
-        # type: mtls
+        type: dtls
     ```
 
-### Relay Over TLS
+### Relay Over DTLS
 
 === "命令行"
 
     ```bash
-    gost -L relay+tls://:8443
+    gost -L relay+dtls://:8443
     ```
 
 === "配置文件"
@@ -110,24 +86,23 @@ TLS数据通道可以与各种代理协议组合使用。
       handler:
         type: relay
       listener:
-        type: tls
-        # type: mtls
+        type: dtls
     ```
 
 ## 端口转发
 
-TLS通道也可以用作端口转发，相当于在TCP端口转发服务基础上增加TLS加密。
+DTLS通道也可以用作端口转发，相当于在UDP端口转发服务基础上增加TLS加密。
 
 ### 服务端
 
 === "命令行"
 
     ```bash
-    gost -L tls://:8443/:8080 -L http://:8080
+    gost -L dtls://:8443/:8080 -L http://:8080
     ```
 	等同于
     ```bash
-    gost -L forward+tls://:8443/:8080 -L http://:8080
+    gost -L forward+dtls://:8443/:8080 -L http://:8080
     ```
 
 === "配置文件"
@@ -139,7 +114,7 @@ TLS通道也可以用作端口转发，相当于在TCP端口转发服务基础�
       handler:
         type: forward
       listener:
-        type: tls
+        type: dtls
       forwarder:
         nodes:
         - name: target-0
@@ -152,10 +127,10 @@ TLS通道也可以用作端口转发，相当于在TCP端口转发服务基础�
         type: tcp
     ```
 
-通过使用TLS数据通道的端口转发，给8080端口的HTTP代理服务增加了TLS加密数据通道。
+通过使用DTLS数据通道的端口转发，给8080端口的HTTP代理服务增加了DTLS加密数据通道。
 
 此时8443端口等同于：
 
 ```bash
-gost -L http+tls://:8443
+gost -L http+dtls://:8443
 ```

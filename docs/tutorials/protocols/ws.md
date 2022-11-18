@@ -290,12 +290,12 @@ Websocket数据通道可以与各种代理协议组合使用。
         # type: mwss
     ```
 
-### SS Over Websocket
+### Relay Over Websocket
 
 === "命令行"
 
     ```bash
-    gost -L ss+wss://:8443
+    gost -L relay+wss://:8443
     ```
 
 === "配置文件"
@@ -305,7 +305,7 @@ Websocket数据通道可以与各种代理协议组合使用。
     - name: service-0
       addr: :8443
       handler:
-        type: ss
+        type: relay
       listener:
         type: wss
         # type: mwss

@@ -114,12 +114,12 @@ PHT数据通道可以与各种代理协议组合使用。
         # type: phts
     ```
 
-### SS Over PHT
+### Relay Over PHT
 
 === "命令行"
 
     ```bash
-    gost -L ss+pht://:8443
+    gost -L relay+pht://:8443
     ```
 
 === "配置文件"
@@ -129,7 +129,7 @@ PHT数据通道可以与各种代理协议组合使用。
     - name: service-0
       addr: :8443
       handler:
-        type: ss
+        type: relay
       listener:
         type: pht
         # type: phts

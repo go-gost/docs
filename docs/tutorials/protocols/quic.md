@@ -109,12 +109,12 @@ QUIC数据通道可以与各种代理协议组合使用。
         type: quic
     ```
 
-### SS Over QUIC
+### Relay Over QUIC
 
 === "命令行"
 
     ```bash
-    gost -L ss+quic://:8443
+    gost -L relay+quic://:8443
     ```
 
 === "配置文件"
@@ -124,7 +124,7 @@ QUIC数据通道可以与各种代理协议组合使用。
     - name: service-0
       addr: :8443
       handler:
-        type: ss
+        type: relay
       listener:
         type: quic
     ```
