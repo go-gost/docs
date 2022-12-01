@@ -19,17 +19,17 @@ Use the `interface` option to specify the network exit to use. The value of the 
 === "File (YAML)"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8080"
-	  interface: eth0
-	  # or use IP address
-	  # interface: 192.168.0.123
-	  handler:
-		type: auto
-	  listener:
-		type: tcp
-	```
+    services:
+    - name: service-0
+      addr: ":8080"
+      interface: eth0
+      # or use IP address
+      # interface: 192.168.0.123
+      handler:
+        type: auto
+      listener:
+        type: tcp
+    ```
 
 ## Forwarding Chain
 
@@ -45,34 +45,34 @@ The `interface` option on the command line corresponds to the option on the hop.
 === "File (YAML)"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8080"
-	  handler:
-		type: auto
-		chain: chain-0
-	  listener:
-		type: tcp
-	chains:
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
     - name: chain-0
       hops:
       - name: hop-0
-	    # hop level interface
+        # hop level interface
         interface: 192.168.0.1
         nodes:
         - name: node-0
           addr: :8000
-		  # node level interface
-		  interface: eth0
+          # node level interface
+          interface: eth0
           connector:
             type: http
           dialer:
             type: tcp
-	```
+    ```
 
 ## Direct Connection Mode
 
-If the service does not need to use an upper-stream proxy, you can use [direct connection node] (/en/concepts/chain/) to allow the service to use multiple network interfaces for load balancing.
+If the service does not need to use an upper-stream proxy, you can use [Virtual Node](/en/concepts/chain/) to allow the service to use multiple network interfaces for load balancing.
 
 === "File (YAML)"
 
@@ -94,14 +94,14 @@ If the service does not need to use an upper-stream proxy, you can use [direct c
           addr: :0
 		  interface: eth0
           connector:
-            type: direct
+            type: virtual
           dialer:
-            type: direct
+            type: virtual
         - name: node-1
           addr: :0
 		  interface: eth1
           connector:
-            type: direct
+            type: virtual
           dialer:
-            type: direct
+            type: virtual
 	```

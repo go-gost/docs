@@ -54,9 +54,11 @@
 
 ## 一些特殊的协议
 
-`https` - 等同于HTTP代理与TLS通道组合（http+tls）
+`https`
+:    等同于HTTP代理与TLS通道组合（http+tls）
 
-`http3` - 用于HTTP3反向代理服务
+`http3`
+:    用于HTTP3反向代理服务
 
 `dns`
 :    DNS代理
@@ -76,8 +78,8 @@
 `forward`
 :    特殊的转发类型
 
-`direct`
-:    直连模式
+`virtual`
+:    虚拟节点
 
 
 ## 限制

@@ -44,15 +44,15 @@
 === "配置文件"
 
     ```yaml hl_lines="14 19 27"
-	services:
-	- name: service-0
-	  addr: ":8080"
-	  handler:
-		type: auto
-		chain: chain-0
-	  listener:
-		type: tcp
-	chains:
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
     - name: chain-0
       hops:
       - name: hop-0
@@ -61,56 +61,54 @@
         nodes:
         - name: node-0
           addr: :8000
-		  # node level interface
-		  interface: eth0
+          # node level interface
+          interface: eth0
           connector:
             type: http
           dialer:
             type: tcp
         - name: node-1
           addr: :8001
-		  # node level interface
-		  interface: eth1
+          # node level interface
+          interface: eth1
           connector:
             type: http
           dialer:
             type: tcp
-	```
+    ```
 
-## 直接模式
+## 直连模式
 
-如果不使用上级代理，则可以通过[直连节点](/concepts/chain/)让服务使用多网口进行负载均衡。
+如果不使用上级代理，则可以通过[虚拟节点](/concepts/chain/)让服务使用多网口进行负载均衡。
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8080"
-	  handler:
-		type: auto
-		chain: chain-0
-	  listener:
-		type: tcp
-	chains:
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
     - name: chain-0
       hops:
       - name: hop-0
         nodes:
         - name: node-0
           addr: :0
-		  interface: eth0
+          interface: eth0
           connector:
-            type: direct
+            type: virtual
           dialer:
-            type: direct
+            type: virtual
         - name: node-1
           addr: :0
-		  interface: eth1
+          interface: eth1
           connector:
-            type: direct
+            type: virtual
           dialer:
-            type: direct
+            type: virtual
 	```
-
-

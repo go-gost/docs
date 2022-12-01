@@ -282,11 +282,11 @@ Listener or handler of a service can also use the `chainGroup` parameter to spec
 
 The service service-0 uses two chains chain-0 and chain-1 in a round-robin manner.
 
-## Direct Connection Node
+## Virtual Node
 
-If the service does not need to use an upper-stream proxy, a special direct connection node (`connector.type` and `dialer.type` are both `direct`) can be used to directly connect to the target address, and the node does not require a corresponding server, so the `addr` parameter of the node is ignored.
+If the service does not need to use an upper-stream proxy, a special virtual node (`connector.type` and `dialer.type` are both `virtual`) can be used to directly connect to the target address, and the node does not require a corresponding server, so the `addr` parameter of the node is ignored.
 
-=== "命令行"
+=== "CLI"
 
     ```
     gost -L :8080 -F direct://:0?interface=eth0
@@ -312,19 +312,19 @@ If the service does not need to use an upper-stream proxy, a special direct conn
             addr: :0
             interface: eth0
             connector:
-              type: direct
+              type: virtual
             dialer:
-              type: direct
+              type: virtual
           - name: node-1
             addr: :0
             interface: eth1
             connector:
-              type: direct
+              type: virtual
             dialer:
-              type: direct
+              type: virtual
 	```
 
-Here node-0 and node-1 are direct connection nodes. When the host is [multi-homed] (/en/tutorials/multi-homed/), you can specify different interfaces for each node through the `interface` parameter, so that achieve load balancing at the network egress level.
+Here node-0 and node-1 are virtual nodes. When the host is [multi-homed] (/en/tutorials/multi-homed/), you can specify different interfaces for each node through the `interface` parameter, so that achieve load balancing at the network egress level.
 
 !!! caution "Limitation"
 	If the data channel of the node uses the UDP protocol, such as QUIC, KCP, etc., this node can only be used for the first level of the forwarding chain.

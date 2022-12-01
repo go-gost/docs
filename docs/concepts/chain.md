@@ -279,14 +279,14 @@ chains:
 
 服务service-0采用轮询的方式使用两条转发链chain-0和chain-1。
 
-## 直连节点
+## 虚拟节点
 
-如果服务不需要使用上级代理，可以使用一种特殊的直连节点(`connector.type`和`dialer.type`均为`direct`)来直接连接目标地址，直连节点不需要对应的服务端，因此节点的`addr`参数无效。
+如果服务不需要使用上级代理，可以使用一种特殊的虚拟节点(`connector.type`和`dialer.type`均为`virtual`)来直接连接目标地址，虚拟节点不需要对应的服务端，因此节点的`addr`参数无效。
 
 === "命令行"
 
     ```
-    gost -L :8080 -F direct://:0?interface=eth0
+    gost -L :8080 -F virtual://:0?interface=eth0
     ```
 
 === "配置文件"
@@ -309,16 +309,16 @@ chains:
             addr: :0
             interface: eth0
             connector:
-              type: direct
+              type: virtual
             dialer:
-              type: direct
+              type: virtual
           - name: node-1
             addr: :0
             interface: eth1
             connector:
-              type: direct
+              type: virtual
             dialer:
-              type: direct
+              type: virtual
 	```
 
 这里node-0和node-1为直连节点，当主机具有[多个网络出口](/tutorials/multi-homed/)时，可以通过`interface`参数为每个节点指定不同的网络出口，从而达到网络出口级别的负载均衡。

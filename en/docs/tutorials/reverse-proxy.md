@@ -1,12 +1,12 @@
-# 反向代理
+# Reverse Proxy
 
-[反向代理](https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86)是代理服务的一种。服务器根据客户端的请求，从其关系的一组或多组后端服务器（如Web服务器）上获取资源，然后再将这些资源返回给客户端，客户端只会得知反向代理的IP地址，而不知道在代理服务器后面的服务器集群的存在。
+[Reverse Proxy](https://en.wikipedia.org/wiki/Reverse_proxy) is a type of proxy service. According to the client's request, the server obtains resources from one or more groups of backend servers (such as web servers) related to it, and then returns these resources to the client. The client only knows the IP address of the reverse proxy, without knowing the existence of server clusters behind proxy servers.
 
-GOST中的端口转发服务也可以被当作是一种功能受限的反向代理，因其只能转发到固定的一个或一组后端服务。
+The port forwarding service in GOST can also be regarded as a reverse proxy with limited functions, because it can only forward to a fixed one or a set of backend services.
 
-反向代理是端口转发服务的一个扩展，其依托于端口转发功能，并通过嗅探转发的数据来获取特定协议(目前支持HTTP/HTTPS)中的目标主机信息。
+Reverse proxy is an extension of the port forwarding service, which relies on the port forwarding function, and obtains the target host information in a specific protocol (currently supports HTTP/HTTPS) by sniffing the forwarded data.
 
-## 本地端口转发
+## Local Port Forwarding
 
 ```yaml hl_lines="7 14 17"
 services:
@@ -45,13 +45,13 @@ services:
       host: example.org
 ```
 
-通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`host`选项可以对每一个节点设置(虚拟)主机名。
+Use the `sniffing` option to enable traffic sniffing, and pass the `host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
 
-当开启流量嗅探后，转发服务会通过客户端的请求数据获取访问的目标主机，再通过转发器(forwarder)中的节点设置的虚拟主机名(node.host)找到最终转发的目标地址(node.addr)。
+When traffic sniffing is enabled, the forwarding service will obtain the target host through the client’s request data, and then find the final forwarding target address (node.addr) via `node.host`.
 
-`node.host`也支持通配符，*.example.com或.example.com匹配example.com及其子域名：abc.example.com，def.abc.example.com等。
+`node.host` also supports wildcards, *.example.com or .example.com matches example.com and its subdomains: abc.example.com, def.abc.example.com, etc.
 
-此时可以将对应的域名解析到本地通过反向代理来访问：
+At this time, the corresponding domain name can be resolved to the local and then accessed through the reverse proxy:
 
 ```bash
 curl --resolve www.google.com:443:127.0.0.1 https://www.google.com
@@ -61,9 +61,7 @@ curl --resolve www.google.com:443:127.0.0.1 https://www.google.com
 curl --resolve example.com:80:127.0.0.1 http://example.com
 ```
 
-## 远程端口转发
-
-远程端口转发服务同样也可以对流量进行嗅探。
+## Remote Port Forwarding
 
 ```yaml hl_lines="7 15 18"
 services:
@@ -116,9 +114,9 @@ chains:
         type: wss
 ```
 
-通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`host`选项可以对每一个节点设置(虚拟)主机名。
+Use the `sniffing` option to enable traffic sniffing, and pass the `host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
 
-此时可以将对应的域名解析到服务器地址通过反向代理来访问内网服务：
+At this time, the corresponding domain name can be resolved to the server address to access the internal service through the reverse proxy:
 
 ```bash
 curl --resolve srv-0.local:443:SERVER_IP https://srv-0.local
@@ -128,24 +126,23 @@ curl --resolve srv-0.local:443:SERVER_IP https://srv-0.local
 curl --resolve srv-1.local:80:SERVER_IP http://srv-1.local
 ```
 
-如果访问的目标主机没有与转发器中的节点设定的主机名匹配上，当存在没有设置主机名的节点，则会在这些节点中选择一个使用。
-
+If the accessed target host does not match the hostname set by the node in the forwarder, when there are nodes without a hostname set, one of these nodes will be selected for use.
 
 ```bash
 curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 ```
 
-由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.443)。
+Since srv-2.local does not match the node, it will be forwarded to the fallback node (192.168.2.443).
 
-## 特定应用转发
+## Application-Specific Forwarding
 
-本地和远程端口转发服务也支持对特定的应用流量嗅探。目前支持的应用协议有：SSH。
+Local and remote port forwarding services also support sniffing of specific application traffic. Currently supported application protocols are: SSH.
 
 ### SSH
 
-在forwarder.nodes中通过`protocol`选项指定节点协议类型为`ssh`，当嗅探到SSH协议流量则会转发到此节点。
+In forwarder.nodes, specify the node protocol type as `ssh` through the `protocol` option, and when the SSH protocol traffic is sniffed, it will be forwarded to this node.
 
-=== "本地端口转发"
+=== "Local Port Forwarding"
 
     ```yaml hl_lines="14"
     services:
@@ -164,7 +161,7 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
           protocol: ssh
     ```
 
-=== "远程端口转发"
+=== "Remote Port Forwarding"
 
     ```yaml hl_lines="15"
     services:
@@ -195,18 +192,18 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
             type: wss
     ```
 
-!!! note "优先级"
-    当同时设置了`host`和`protocol`选项，仅会按`host`进行匹配。
+!!! note "Priority"
+    When the `host` and `protocol` options are set at the same time, only `host` will be matched.
 
-## 转发通道
+## Forwarding Tunnel
 
-除了原始TCP数据通道可以用来作为端口转发，其他数据通道也可以作为端口转发服务。
+In addition to the original TCP data tunnel can be used as port forwarding, other tunnels can also be used as port forwarding services.
 
-### TLS转发通道
+### TLS
 
-HTTPS-to-HTTP反向代理。
+HTTPS-to-HTTP
 
-TLS转发通道可以动态的给后端HTTP服务添加TLS支持。
+The TLS forwarding tunnel can dynamically add TLS support to the backend HTTP service.
 
 ```yaml
 services:
@@ -232,11 +229,11 @@ services:
 curl -k --resolve example.com:443:127.0.0.1 https://example.com
 ```
 
-### HTTP3转发通道
+### HTTP3
 
-HTTP3-to-HTTP反向代理。
+HTTP3-to-HTTP.
 
-HTTP3转发通道可以动态的给后端HTTP服务添加HTTP/3支持。
+The HTTP3 forwarding tunnel can dynamically add HTTP/3 support to the backend HTTP service.
 
 ```yaml
 services:
