@@ -94,7 +94,7 @@ services:
       sniffing: true
   listener:
     type: rtcp
-	chain: chain-0
+	  chain: chain-0
   forwarder:
     nodes:
     - name: local-0
@@ -136,6 +136,64 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 ```
 
 由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.443)。
+
+## 特定应用转发
+
+本地和远程端口转发服务也支持对特定的应用流量嗅探。目前支持的应用协议有：SSH。
+
+### SSH
+
+在forwarder.nodes中通过`protocol`选项指定节点协议类型为`ssh`，嗅探到SSH协议流量则会转发到此节点。
+
+=== "本地端口转发"
+
+    ```yaml hl_lines="14"
+    services:
+    - name: https
+      addr: :443
+      handler:
+        type: tcp
+        metadata:
+          sniffing: true
+      listener:
+        type: tcp
+      forwarder:
+        nodes:
+        - name: ssh-server
+          addr: example.com:22
+          protocol: ssh
+    ```
+
+=== "远程端口转发"
+
+    ```yaml hl_lines="15"
+    services:
+    - name: https
+      addr: :443
+      handler:
+        type: rtcp
+        metadata:
+          sniffing: true
+      listener:
+        type: rtcp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: local-ssh
+          addr: 192.168.2.1:22
+          protocol: ssh
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: SERVER_IP:8443 
+          connector:
+            type: relay
+          dialer:
+            type: wss
+    ```
 
 ## 转发通道
 
