@@ -6,9 +6,9 @@ read_time: 15min
 publish_date: 2022-12-20 22:00
 ---
 
-# 利用Traefik和Docker部署GOST服务
-
 [Traefik](https://traefik.io/traefik/)是类似于Nginx的反向代理工具，其云原生的特性使其在Docker和Kubernetes环境下使用起来非常方便。
+
+这里假设你的域名为`gost.run`，每个服务使用单独的子域名来路由，也可以使用URI路径来路由。
 
 ## Docker
 
@@ -89,8 +89,6 @@ publish_date: 2022-12-20 22:00
 		command: --interval 300
 	```
 
-这里假设你的域名为`gost.run`，每个服务使用单独的子域名来区分，使用URI路径来区分也是可以的。
-
 执行以下命令就可以一键部署完成：
 
 ```bash
@@ -103,7 +101,7 @@ docker-compose -f docker-compose.yml -p web up -d
 
 `traefik`服务暴露80和443端口作为访问入口，并且将80端口重定向到443端口。
 
-Traefik自带的有Dashboard，可以通过`--api.insecure=true`和`--api.dashboard=true`选项开启，并通过相应的labels配置路由，这里通过`traefik.gost.run`来访问。
+Traefik自带的有dashboard，可以通过`--api.insecure=true`和`--api.dashboard=true`选项开启，并通过相应的labels配置路由，这里通过`traefik.gost.run`来访问。
 
 ### GOST Websocket
 
@@ -357,11 +355,11 @@ gost -L :8080 -F relay+grpc://grpc.gost.run:443
 * 直接连接
 
 ```
-gost -L :8080 relay+phts://pht.gost.run:443
+gost -L :8080 -F relay+phts://pht.gost.run:443
 ```
 
 * 通过HTTP/3加速
 
 ```
-gost -L :8080 relay+h3://pht.gost.run:443
+gost -L :8080 -F relay+h3://pht.gost.run:443
 ```
