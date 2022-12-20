@@ -12,24 +12,24 @@ CONNECT方法并不是所有HTTP服务都支持，为了更加通用，GOST利�
 === "命令行"
 
     ```bash
-	gost -L "http+pht://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
-	```
+	  gost -L "http+pht://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
+	  ```
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: http
-	  listener:
-		type: pht
-		metadata:
-		  authorizePath: /authorize
-		  pushPath: /push
-		  pullPath: /pull
-	```
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: http
+      listener:
+        type: pht
+        metadata:
+          authorizePath: /authorize
+          pushPath: /push
+          pullPath: /pull
+	  ```
 
 ## 使用TLS 
 
@@ -38,24 +38,24 @@ PHT over LTS。
 === "命令行"
 
     ```
-	gost -L "http+phts://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
-	```
+    gost -L "http+phts://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
+    ```
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: http
-	  listener:
-		type: phts
-		metadata:
-		  authorizePath: /authorize
-		  pushPath: /push
-		  pullPath: /pull
-	```
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: http
+      listener:
+        type: phts
+        metadata:
+          authorizePath: /authorize
+          pushPath: /push
+          pullPath: /pull
+	  ```
 
 ## 自定义请求路径
 
@@ -65,7 +65,7 @@ PHT通道由三部分组成：
 * 接收数据 - 客户端从服务端获取数据，通过`pullPath`选项设置请求的URI，默认值为`/pull`。
 * 发送数据 - 客户端发送数据到服务端，通过`pushPath`选项设置请求的URI，默认值为`/push`。
 
-!!! note "路径匹配验证“
+!!! note "路径匹配验证"
     仅当客户端和服务端设定的path参数相同时，连接才能成功建立。
 
 ## 代理协议

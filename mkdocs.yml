@@ -226,6 +226,7 @@ nav:
   - 博客: 
     - 2022:
       # - '负载均衡-选择器': blog/2022/selector.md
+      - '利用Traefik和Docker部署GOST服务': blog/2022/deploy.md
       - '基于TUN设备的VPN组网': blog/2022/tun.md
       - '流量控制-分流器': blog/2022/bypass.md
       - 'GOST v3动态分流功能的一种实现方式': blog/2022/dynamic-bypass.md
