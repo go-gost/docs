@@ -113,7 +113,7 @@ nav:
       - 概述: tutorials/protocols/overview.md
       - HTTP: tutorials/protocols/http.md
       - HTTP2: tutorials/protocols/http2.md
-      - SOCKS: tutorials/protocols/socks.md
+      - SOCKSv4/v5: tutorials/protocols/socks.md
       - Shadowsocks: tutorials/protocols/ss.md
       - SNI: tutorials/protocols/sni.md
       - Relay: tutorials/protocols/relay.md

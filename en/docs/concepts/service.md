@@ -1,5 +1,8 @@
 # Service
 
+!!! tip "Dynamic configuration"
+    Service supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+
 !!! tip "Everything as a Service"
     In GOST, the client and the server are relative, and the client itself is also a service. If a forwarding chain or forwarder is used, the node in it is regarded as the server.
 
@@ -7,8 +10,23 @@ Service is the fundamental module of GOST and the entrance to the GOST program. 
 
 A service consists of a listener as a data channel, a handler for data processing and an optional forwarder for port forwarding.
 
-!!! tip "Dynamic configuration"
-    Service supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+=== "CLI"
+
+    ```sh
+    gost -L http://:8080
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+    addr: ":8080"
+      handler:
+        type: http
+      listener:
+        type: tcp
+    ```
 
 ## Workflow
 
@@ -17,6 +35,45 @@ When a service is running, the listener will listen on the specified port accord
 !!! info "Router"
     Router is an abstract module inside the handler, which contains the forwarding chain, resolver, host mapper, etc., for request routing between the service and the target host.
 
-## Service Mesh
+## Ignore Chain
 
-Services and services are independent, and a link between services can be established through forwarding chains or forwarders to form a service mesh. Data can hop and transfer arbitrarily between services. Some additional functions can be realized by using the service network, such as load balancing, bypass, etc.
+In command line mode, if there is a forwarding chain, all services will use this forwarding chain by default. The `ignoreChain` option allows specific services not to use the forwarding chain.
+
+```
+gost -L http://:8080?ignoreChain=true -L socks://:1080 -F http://:8000
+```
+
+The HTTP service on port 8080 does not use the forwarding chain, and the SOCKS5 service on port 1080 uses the forwarding chain.
+
+## Multiple Processes
+
+In the command line mode, all services run in the same process by default, use the `--` separator to make the service run in a separate process.
+
+```
+gost -L http://:8080 -- -L http://:8000 -- -L socks://:1080 -F http://:8000
+```
+
+The above command will start three processes corresponding to three services, and the forwarding chain is only used by the service on port 1080.
+
+## Execute Commands (Linux Only)
+
+the `preUp`, `postUp`, `preDown`, `postDown` options can be used to execute additional commands before and after the service starts or stops.
+
+```yaml
+services:
+- name: service-0
+  addr: :8080
+  metadata:
+    preUp:
+    - echo pre-up
+    postUp:
+    - echo post-up
+    preDown:
+    - echo pre-down
+    postDown:
+    - echo post-down
+  handler:
+    type: http
+  listener:
+    type: tcp
+```

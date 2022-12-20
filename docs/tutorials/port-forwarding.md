@@ -387,7 +387,7 @@ TCP端口转发可以借助于标准SSH协议的端口转发功能进行间接�
 	```
 	* Relay服务并开启了BIND功能，采用UDP-over-TCP方式。
 	```
-	gost -L socks5://:8421?bind=true
+	gost -L relay://:8421?bind=true
 	```
 
 ### SSH

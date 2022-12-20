@@ -11,8 +11,10 @@
 - [x] TCP/UDP transparent proxy
 - [x] DNS resolver and proxy
 - [x] TUN/TAP device
+- [x] Reverse Proxy
 - [x] Load balancing
 - [x] Routing control
+- [x] Rate Limiting
 - [x] Admission control
 - [x] Dynamic configuration
 - [x] Prometheus metrics

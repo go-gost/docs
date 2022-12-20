@@ -5,6 +5,9 @@
 
     可以随时在命令行模式下使用`-O`输出当前配置。
 	
+!!! note "默认配置文件"
+    如果`-C`和`-L`参数都未指定，GOST会在以下位置寻找`gost.yml`或`gost.json`文件：当前工作目录，`/etc/gost/`，`$HOME/gost/`。如果存在则使用此文件作为配置文件。
+
 GOST运行方式有两种：命令行直接运行，和通过配置文件运行。命令行方式可以满足大多数使用需求，例如简单的启动一个代理或转发服务。如果需要更加详细的配置，可以采用配置文件方式，配置文件支持yaml或json格式。
 
 详细的配置说明请参考：
@@ -131,6 +134,3 @@ gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.16
     * 地址`192.168.1.1:8080`部分对应node的`addr`属性。
     * 认证信息`gost:gost`部分被转换为`connector.auth`属性。
 	* 参数选项部分`foo=bar`被转换为`connector.metadata`和`dialer.metadata`
-
-!!! note "默认配置文件"
-    如果`-C`和`-L`参数都未指定，GOST会在以下位置寻找`gost.yml`或`gost.json`文件：当前工作目录，`/etc/gost/`，`$HOME/gost/`。如果存在则使用此文件作为配置文件。

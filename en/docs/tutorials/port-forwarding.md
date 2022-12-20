@@ -388,7 +388,7 @@ According to the address specified by the rudp service, listen on port 10053 on 
 	```
 	* Relay service and enable BIND function, using UDP-over-TCP method.
 	```
-	gost -L socks5://:8421?bind=true
+	gost -L relay://:8421?bind=true
 	```
 
 ### SSH

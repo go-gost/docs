@@ -5,6 +5,9 @@
 
     You can use `-O` in command line mode to output the current configuration at any time.
 	
+!!! note "Default Configuration File"
+    If neither `-C` nor `-L` parameters are specified, GOST will look for `gost.yml` or `gost.json` file in the following locations: current working directory, `/etc/gost/`, `$HOME/gost/`, and use it as the configuration file if it exists.
+
 There are two ways to run GOST: run directly in the command line, and run through a configuration file. The command-line mode is sufficient for most use cases, such as simply starting a proxy or forwarding service. If you need more elaborate configuration, you can use the configuration file. The configuration file supports `YAML` and `JSON` formats.
 
 For detailed configuration specification, please refer to:
@@ -131,6 +134,3 @@ The corresponding configuration file:
     * The `192.168.1.1:8080` corresponds to the node field `addr`.
     * The authentication `gost:gost` is converted to `connector.auth`.
 	* The option `foo=bar` is converted to `connector.metadata` and `dialer.metadata`
-
-!!! note "Default Configuration File"
-    If neither `-C` nor `-L` parameters are specified, GOST will look for `gost.yml` or `gost.json` file in the following locations: current working directory, `/etc/gost/`, `$HOME/gost/`, and use it as the configuration file if it exists.
