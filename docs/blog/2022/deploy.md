@@ -16,78 +16,78 @@ publish_date: 2022-12-20 22:00
 
 ??? example "docker-compose.yaml"
 
-	```yaml
-	version: '3'
+    ```yaml
+    version: '3'
 
-	services:
-	traefik:
-		# The official v2 Traefik docker image
-		image: traefik:v2.9.6
-		restart: always
-		# Enables the web UI and tells Traefik to listen to docker
-		command: 
-		- "--providers.docker"
-		- "--entrypoints.web.address=:80"
-		- "--entrypoints.websecure.address=:443"
-		- "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-		- "--entrypoints.web.http.redirections.entryPoint.scheme=https"
-		# - "--api.insecure=true"
-		# - "--api.dashboard=true"
-		# - "--log.level=INFO"
-		# - "--log.format=json"
-		# - "--accesslog"
-		# - "--accesslog.format=json"
-		# - "--accesslog.filters.statuscodes=400-600"
-		ports:
-		# The HTTP port
-		- "80:80"
-		# The HTTPS port
-		- "443:443"
-		# The Web UI (enabled by --api.insecure=true)
-		# - "8080:8080"
-		volumes:
-		# So that Traefik can listen to the Docker events
-		- "/var/run/docker.sock:/var/run/docker.sock:ro"
-		labels:
-		- "traefik.http.routers.dashboard.tls=true"
-		- "traefik.http.routers.dashboard.rule=Host(`traefik.gost.run`)"
-		- "traefik.http.services.dashboard.loadbalancer.server.port=8080"
+    services:
+      traefik:
+        # The official v2 Traefik docker image
+        image: traefik:v2.9.6
+        restart: always
+        # Enables the web UI and tells Traefik to listen to docker
+        command: 
+        - "--providers.docker"
+        - "--entrypoints.web.address=:80"
+        - "--entrypoints.websecure.address=:443"
+        - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+        - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+        # - "--api.insecure=true"
+        # - "--api.dashboard=true"
+        # - "--log.level=INFO"
+        # - "--log.format=json"
+        # - "--accesslog"
+        # - "--accesslog.format=json"
+        # - "--accesslog.filters.statuscodes=400-600"
+        ports:
+        # The HTTP port
+        - "80:80"
+        # The HTTPS port
+        - "443:443"
+        # The Web UI (enabled by --api.insecure=true)
+        # - "8080:8080"
+        volumes:
+        # So that Traefik can listen to the Docker events
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        labels:
+        - "traefik.http.routers.dashboard.tls=true"
+        - "traefik.http.routers.dashboard.rule=Host(`traefik.gost.run`)"
+        - "traefik.http.services.dashboard.loadbalancer.server.port=8080"
 
-	gost-ws: 
-		image: gogost/gost
-		restart: always
-		command: "-L relay+ws://:8080"
-		labels:
-		- "traefik.http.routers.gost-ws.tls=true"
-		- "traefik.http.routers.gost-ws.rule=Host(`ws.gost.run`)"
-		- "traefik.http.services.gost-ws.loadbalancer.server.port=8080"
+      gost-ws: 
+        image: gogost/gost
+        restart: always
+        command: "-L relay+ws://:8080"
+        labels:
+        - "traefik.http.routers.gost-ws.tls=true"
+        - "traefik.http.routers.gost-ws.rule=Host(`ws.gost.run`)"
+        - "traefik.http.services.gost-ws.loadbalancer.server.port=8080"
 
-	gost-grpc: 
-		image: gogost/gost
-		restart: always
-		command: "-L relay+grpc://:8080?grpcInsecure=true"
-		labels:
-		- "traefik.http.routers.gost-grpc.tls=true"
-		- "traefik.http.routers.gost-grpc.rule=Host(`grpc.gost.run`)"
-		- "traefik.http.services.gost-grpc.loadbalancer.server.port=8080"
-		- "traefik.http.services.gost-grpc.loadbalancer.server.scheme=h2c"
-		
-	gost-pht:
-		image: gogost/gost
-		restart: always
-		command: "-L relay+pht://:8080"
-		labels:
-		- "traefik.http.routers.gost-pht.tls=true"
-		- "traefik.http.routers.gost-pht.rule=Host(`pht.gost.run`)"
-		- "traefik.http.services.gost-pht.loadbalancer.server.port=8080"
+      gost-grpc: 
+        image: gogost/gost
+        restart: always
+        command: "-L relay+grpc://:8080?grpcInsecure=true"
+        labels:
+        - "traefik.http.routers.gost-grpc.tls=true"
+        - "traefik.http.routers.gost-grpc.rule=Host(`grpc.gost.run`)"
+        - "traefik.http.services.gost-grpc.loadbalancer.server.port=8080"
+        - "traefik.http.services.gost-grpc.loadbalancer.server.scheme=h2c"
+    	
+      gost-pht:
+        image: gogost/gost
+        restart: always
+        command: "-L relay+pht://:8080"
+        labels:
+        - "traefik.http.routers.gost-pht.tls=true"
+        - "traefik.http.routers.gost-pht.rule=Host(`pht.gost.run`)"
+        - "traefik.http.services.gost-pht.loadbalancer.server.port=8080"
 
-	watchtower:
-		image: containrrr/watchtower:1.5.1
-		restart: always
-		volumes:
-		- "/var/run/docker.sock:/var/run/docker.sock:ro"
-		command: --interval 300
-	```
+      watchtower:
+        image: containrrr/watchtower:1.5.1
+        restart: always
+        volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        command: --interval 300
+    ```
 
 执行以下命令就可以一键部署完成：
 
