@@ -363,3 +363,9 @@ gost -L :8080 -F relay+phts://pht.gost.run:443
 ```
 gost -L :8080 -F relay+h3://pht.gost.run:443
 ```
+
+如果你没有自己的域名，也是可以通过[域名IP映射](https://gost.run/concepts/hosts/)来访问服务，假设你的服务器IP为192.168.1.2：
+
+```
+gost -L :8080 -F relay+wss://ws.gost.run:443?hosts=ws.gost.run:192.168.1.2
+```

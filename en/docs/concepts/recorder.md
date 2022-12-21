@@ -73,7 +73,7 @@ recorders:
 :    redis key
 
 `type` (string, default=set)
-:    data type: `set`, `list`.
+:    data type: Set(`set`), Sorted Set(`sset`), List(`list`).
 
 ## Recorder Usage
 

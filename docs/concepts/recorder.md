@@ -72,7 +72,7 @@ recorders:
 :    redis key
 
 `type` (string, default=set)
-:    数据类型，支持的类型有集合(`set`), 列表(`list`)。
+:    数据类型，支持的类型有集合(`set`)，有序集合(`sset`)，列表(`list`)。
 
 ## 使用记录器
 
