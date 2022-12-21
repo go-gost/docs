@@ -91,7 +91,7 @@ gRPC通道默认采用TLS加密。
 
 可以通过`path`选项自定义请求路径，默认值为`/GostTunel/Tunnel`。
 
-!!! note "路径匹配验证“
+!!! note "路径匹配验证"
     仅当客户端和服务端设定的path参数相同时，连接才能成功建立。
 
 ### 服务端
@@ -236,7 +236,7 @@ gRPC通道默认采用TLS加密。
 `keepalive.maxConnectionIdle` (duration, default=5m)
 :    当连接空闲超过此设定时长后，连接将被关闭。**仅服务端有效**。
 
-!!! warn "谨慎使用"
+!!! caution "谨慎使用"
     gRPC的心跳机制需要客户端和服务端相互配合，如果参数设置有误可能会导致连接异常，建议在使用心跳之前先阅读[官方文档](https://github.com/grpc/grpc/blob/master/doc/keepalive.md)。
 
 ## 代理协议
@@ -346,5 +346,5 @@ gRPC通道也可以用作端口转发。
 此时8443端口等同于：
 
 ```bash
-gost -L socks5+gRPC://:8443
+gost -L socks5+grpc://:8443
 ```
