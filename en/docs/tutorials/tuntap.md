@@ -20,7 +20,7 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 :    Remote UDP server address, IP packets received by the local TUN device will be forwarded to the remote server via UDP tunnel.
 
 `net` (string, required)
-:    CIDR IP address of the TUN device, such as: 192.168.123.1/24.
+:    CIDR IP address of the TUN device (net=192.168.123.1/24), Or comma-separated address list (net=192.168.123.1/24,fd::1/64).
 
 `name` (string)
 :    TUN device name.
@@ -222,6 +222,9 @@ The client specifies the authentication code via the `passphrase` option.
 
 !!! note "Passphrase Length Limitation"
     The passphrase supports up to 16 characters. When the client exceeds this length limit, only the first 16 characters are used.
+
+!!! note "Multiple IPs"
+    If the client specifies multiple networks through the `net` parameter, such as `net=192.168.123.2/24,fd::2/64`, when the server enables authentication, all IPs of the client pass the authentication (using the same passphrase) is considered to pass the authentication.
 
 !!! caution "Secure Transmission"
     The data of the TUN tunnel is transmitted in clear text, including authentication information. Data transmission can be made more secure by utilizing encrypted tunnels using forwarding chains.

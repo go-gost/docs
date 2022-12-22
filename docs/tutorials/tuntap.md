@@ -22,7 +22,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 :    目标UDP地址。本地TUN设备收到的IP包会通过UDP转发到此地址。
 
 `net` (string, required)
-:    指定TUN设备的地址。
+:    指定TUN设备的地址(net=192.168.123.1/24)，也可以是逗号(,)分割的多地址(net=192.168.123.1/24,fd::1/64)。
 
 `name` (string)
 :    指定TUN设备的名字，默认值为系统预设。
@@ -87,7 +87,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 === "命令行(Linux/Windows)"
 
     ```
-    gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
+    gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24/64
     ```
 
 === "命令行(MacOS)"
@@ -242,8 +242,12 @@ authers:
 !!! note "认证码长度限制"
     认证码最长支持16个字符，当客户端超过此长度限制时只会使用前16个字符。
 
+!!! note "多IP与认证"
+    如果客户端通过`net`参数指定了多个网络，例如`net=192.168.123.2/24,fd::2/64`，当服务端开启认证后，客户端的所有IP均通过认证(使用相同的passphrase)才认为是认证通过。
+
 !!! caution "安全传输"
     TUN隧道的数据均为明文传输，包括认证信息。可以使用转发链利用加密隧道来使数据传输更安全。
+
 
 ### 构建基于TUN设备的VPN (Linux)
 
