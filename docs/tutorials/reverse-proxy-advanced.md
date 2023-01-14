@@ -1,10 +1,10 @@
 # 反向代理(高级)
 
-在上一篇[反向代理](reverse-proxy/)教程中，利用端口转发功能实现了简单的反向代理功能，在本篇教程中将利用Relay协议的Tunnel功能实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
+在上一篇[反向代理](reverse-proxy/)教程中，利用端口转发功能实现了简单的反向代理功能，在本篇中将利用Relay协议的Tunnel功能实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
 
 ## Relay协议的Tunnel功能
 
-Tunnel是一条服务端和客户端之间的反向隧道，服务端由入口点(EntryPoint)进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
+Tunnel是一条服务端和客户端之间的反向隧道，服务端会同时监听在入口点(EntryPoint)上，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
 
 ### 服务端
 
@@ -63,11 +63,12 @@ chains:
 
 当Relay客户端设置了`tunnelID`选项后便开启了Tunnel模式，此时rtcp服务中指定的`addr`参数无效。
 
-本例中当流量进入入口点(EntryPoint)后会嗅探流量信息获取所要访问的主机名，再通过主机名在Ingress中找到匹配的规则，获取对应的服务端点(endpoint即Tunnel ID)，最后在Tunnel的连接池中获取一个连接(采用轮询机制，最多3次失败重试)将流量通过此Tunnel发送到客户端。
+本例中当流量进入入口点(服务端的8000端口)后会嗅探流量信息获取所要访问的主机名，再通过主机名在Ingress中找到匹配的规则，获取对应的服务端点(endpoint即Tunnel ID)，最后在Tunnel的连接池中获取一个有效连接(采用轮询机制，最多3次失败重试)将流量通过此Tunnel发送到客户端。
 
-当主机名为`example.com`时，根据Ingress中的规则匹配到Tunnel 4d21094e-b74c-4916-86c1-d9fa36ea677b。当流量到达客户端后再由rtcp服务转发给192.168.1.1:80服务。
+当主机名为`example.com`时，根据Ingress中的规则匹配到ID为4d21094e-b74c-4916-86c1-d9fa36ea677b的Tunnel。当流量到达客户端后再由rtcp服务转发给192.168.1.1:80服务。
 
-为了提高Tunnel的可用性，可以运行多个客户端，这些客户端使用相同的Tunnel ID。
+!!! tip "高可用性"
+    为了提高单个Tunnel的可用性，可以运行多个客户端，这些客户端使用相同的Tunnel ID。
 
 ## 客户端路由
 

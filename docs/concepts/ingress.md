@@ -3,7 +3,8 @@
 !!! tip "动态配置"
     Ingress支持通过[Web API](/tutorials/api/overview/)进行动态配置。
 
-Ingress目前仅在反向代理中使用。
+!!! note "使用限制"
+    Ingress目前仅在[反向代理](/tutorials/reverse-proxy-advanced/)中使用。
 
 Ingress由一组规则组成，每个规则为主机名(Hostname)到服务端点(Endpoint)的映射，在反向代理中通过Ingress对入口点(EntryPoint)流量进行路由和负载均衡。
 
