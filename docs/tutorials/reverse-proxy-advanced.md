@@ -1,10 +1,10 @@
 # 反向代理(高级)
 
-在上一篇[反向代理](reverse-proxy/)教程中，利用端口转发功能实现了简单的反向代理功能，在本篇中将利用Relay协议的Tunnel功能实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
+在上一篇[反向代理](/tutorials/reverse-proxy/)教程中，利用端口转发功能实现了简单的反向代理功能，在本篇中将利用Relay协议的Tunnel功能实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
 
 ## Relay协议的Tunnel功能
 
-Tunnel是一条服务端和客户端之间的反向隧道，服务端会同时监听在入口点(EntryPoint)上，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
+Tunnel是一条服务端和客户端之间的反向隧道，服务端会同时监听在入口点(EntryPoint)上，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
 
 ### 服务端
 
