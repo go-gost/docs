@@ -134,7 +134,7 @@ admissions:
 
 ### Redis
 
-指定redis服务作为数据源，redis数据类型必须为[集合(Set)类型](https://redis.io/docs/manual/data-types/#sets)。
+指定redis服务作为数据源，redis数据类型必须为[集合(Set)](https://redis.io/docs/data-types/sets/)类型。
 
 ```yaml
 admissions:
@@ -199,4 +199,7 @@ admissions:
     db: 1
     password: 123456
     key: gost:admissions:admission-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
 ```

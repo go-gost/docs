@@ -84,8 +84,8 @@ services:
     - name: local-1
       addr: 192.168.1.2:443
       host: srv-1.local
-	- name: fallback
-	  addr: 192.168.2.1:443
+    - name: fallback
+      addr: 192.168.2.1:443
 - name: http
   addr: :80
   handler:

@@ -240,7 +240,7 @@
 
 ### Redis
 
-指定redis服务作为数据源，redis数据类型必须为集合(Set)或列表(List)类型，每项配置格式同内联配置。
+指定redis服务作为数据源，redis数据类型必须为[集合(Set)](https://redis.io/docs/data-types/sets/)或[列表(List)](https://redis.io/docs/data-types/lists/)类型，每项配置格式同内联配置。
 
 === "流量速率"
 
@@ -386,4 +386,7 @@ limiters:
     db: 1
     password: 123456
     key: gost:limiters:limiter-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
 ```

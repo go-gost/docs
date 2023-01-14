@@ -193,7 +193,7 @@ test.user@002   12345678
 
 ### Redis
 
-指定redis服务作为数据源，redis数据类型必须为[哈希(Hash)类型](https://redis.io/docs/manual/data-types/#hashes)。
+指定redis服务作为数据源，redis数据类型必须为[哈希(Hash)](https://redis.io/docs/data-types/hashes/)类型。
 
 ```yaml
 authers:
@@ -264,6 +264,9 @@ authers:
 	db: 1
 	password: 123456
 	key: gost:authers:auther-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
 ```
 
 !!! note "注意"

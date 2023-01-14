@@ -348,7 +348,7 @@ localhost
 
 ### Redis
 
-指定redis服务作为数据源，redis数据类型必须为集合(Set)类型。
+指定redis服务作为数据源，redis数据类型必须为[集合(Set)](https://redis.io/docs/data-types/sets/)类型。
 
 ```yaml
 bypasses:
@@ -416,4 +416,7 @@ bypasses:
     db: 1
     password: 123456
     key: gost:bypasses:bypass-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
 ```

@@ -106,7 +106,7 @@ gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 
 映射器中的域名也支持以`.`开头的特殊通配符格式。
 
-例如：`.example.org`匹配example.org， abc.example.org，def.abc.example.org等子域名。
+例如：`.example.org`匹配example.org，abc.example.org，def.abc.example.org等子域名。
 
 在查询一个域名映射时，会先查找完全匹配项，如果没有找到再查找通配符项，如果没有找到再依次查找上级域名通配符。
 
@@ -163,7 +163,7 @@ hosts:
 
 ### Redis
 
-指定redis服务作为数据源，redis数据类型为[集合(Set)](https://redis.io/docs/manual/data-types/#sets)或[列表(List)](https://redis.io/docs/manual/data-types/#lists)类型。
+指定redis服务作为数据源，redis数据类型为[集合(Set)](https://redis.io/docs/data-types/sets/)或[列表(List)](https://redis.io/docs/data-types/lists/)类型。
 
 ```yaml
 hosts:
@@ -236,4 +236,7 @@ hosts:
 	db: 1
 	password: 123456
 	key: gost:hosts:hosts-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
 ```
