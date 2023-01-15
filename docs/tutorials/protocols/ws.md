@@ -203,8 +203,8 @@ chains:
         type: wss
         metadata:
           header:
+            User-Agent: "gost/3.0"
             foo: bar
-            baz: 123
 ```
 
 ### 心跳

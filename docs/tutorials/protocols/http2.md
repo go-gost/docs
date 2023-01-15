@@ -176,6 +176,6 @@ chains:
         type: h2
         metadata:
           header:
+            User-Agent: "gost/3.0"
             foo: bar
-            baz: 123
 ```

@@ -49,6 +49,41 @@ HTTP代理是利用HTTP协议的[CONNECT方法](https://developer.mozilla.org/zh
         type: tcp
     ```
 
+## 参数选项
+
+### 自定义HTTP头
+
+通过`header`选项可以自定义请求和响应头部信息。
+
+```yaml hl_lines="7 8 9 22 23 24"
+services:
+- name: service-0
+  addr: :8080
+  handler:
+    type: http
+    chain: chain-0
+    header:
+      Proxy-Agent: "gost/3.0"
+      foo: bar
+  listener:
+    type: tcp
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    nodes:
+    - name: node-0
+      addr: :8443
+      connector:
+        type: http
+        metadata:
+          header:
+            User-Agent: "gost/3.0"
+            foo: bar
+      dialer:
+        type: tcp
+```
+
 ## 数据通道
 
 HTTP代理可以与各种数据通道组合使用。
@@ -62,10 +97,10 @@ HTTP代理可以与各种数据通道组合使用。
     ```bash
     gost -L https://:8443
     ```
-	等同于
-	```
-	gost -L http+tls://:8443
-	```
+    等同于
+    ```
+    gost -L http+tls://:8443
+    ```
 
 === "配置文件"
 

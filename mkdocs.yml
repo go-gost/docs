@@ -245,4 +245,5 @@ nav:
       - 'GOST的起源以及应用场景': blog/2015/origin.md
       - '利用PPTP, redsocks, iptables, https/socks5 proxy实现全局代理上网': blog/2015/redirect.md
       - 'GOST - GO Simple Tunnel': blog/2015/gost.md
+  - 捐助: donation.md
 
