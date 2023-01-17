@@ -94,6 +94,8 @@ curl --resolve srv-1.local:80:SERVER_IP http://srv-1.local
 
 以上的内容已经基本上实现了一个简单的反向代理服务，但是针对需要内网穿透的Web服务反向代理还有不足之处。一般的Web反向代理(例如Nginx，Traefik)对外只会暴露固定的几个预定义的端口作为入口(例如80，443)，并且入口点流量的路由控制权应当是在服务端。而以上的远程端口转发，入口和路由的定义都是在客户端，这样对于整个服务来说不可控。
 
+![Reverse Proxy - Remote TCP Port Forwarding](../../images/reverse-proxy-rtcp2.png) 
+
 GOST在v3.0.0-rc.3版本中通过对[Relay协议](https://gost.run/tutorials/protocols/relay/)的扩展，增强了内网穿透的功能，使其能够更好的适配反向代理。
 
 ### 服务端
@@ -171,7 +173,6 @@ chains:
 
 隧道的ID应当由服务端提前分配并记录在Ingress中，如果客户端使用了一个未在Ingress中注册的隧道ID，则流量无法路由到此客户端。
 
-![Reverse Proxy - Remote TCP Port Forwarding](../../images/reverse-proxy-rtcp2.png) 
 
 ### 加密
 
