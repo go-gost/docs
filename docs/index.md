@@ -49,6 +49,6 @@ go build
 docker run --rm gogost/gost -V
 ```
 
-### Shadowsocks Android插件
+## Shadowsocks Android插件
 
 [xausky/ShadowsocksGostPlugin](https://github.com/xausky/ShadowsocksGostPlugin)

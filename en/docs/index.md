@@ -49,6 +49,6 @@ go build
 docker run --rm gogost/gost -V
 ```
 
-### Shadowsocks Android Plugin
+## Shadowsocks Android Plugin
 
 [xausky/ShadowsocksGostPlugin](https://github.com/xausky/ShadowsocksGostPlugin)

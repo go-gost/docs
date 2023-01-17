@@ -107,6 +107,7 @@ nav:
     - HTTP Tunnel: tutorials/http-tunnel.md
     - Port Forwarding: tutorials/port-forwarding.md
     - Reverse Proxy: tutorials/reverse-proxy.md
+    - Reverse Proxy (Advanced): tutorials/reverse-proxy-advanced.md
     - Relay Protocol: tutorials/relay.md
     - Probe Resistance: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md

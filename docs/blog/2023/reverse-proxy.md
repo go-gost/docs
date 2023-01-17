@@ -107,7 +107,7 @@ services:
   handler:
     type: relay
     metadata:
-      entryPoint: ":8000"
+      entryPoint: ":80"
       ingress: ingress-0
   listener:
     type: tcp
