@@ -1,10 +1,12 @@
 # Reverse Proxy (Advanced)
 
-In the previous [Reverse Proxy](/tutorials/reverse-proxy/) tutorial, port forwarding was used to implement a simple reverse proxy function. In this article, the Tunnel function of the Relay protocol will be used to implement an enhanced reverse proxy similar to [Cloudflare Tunnel ](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
+In the previous [Reverse Proxy](/en/tutorials/reverse-proxy/) tutorial, port forwarding was used to implement a simple reverse proxy function. In this article, the Tunnel function of the Relay protocol will be used to implement an enhanced reverse proxy similar to [Cloudflare Tunnel ](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
 
 ## Tunnel
 
 Tunnel is a (logical) channel between the server and the client. The server will listen on the entry point at the same time, and the traffic entering from the entry point will be sent to the client through the tunnel. Each tunnel has a unique ID (legal UUID), and a tunnel can have multiple connections (connection pools) to achieve high availability.
+
+![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
 
 ### Server
 
@@ -29,7 +31,7 @@ ingresses:
     endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
 ```
 
-When the Relay service sets the `entryPoint` option, the tunnel mode will be enabled, and the entryPoint specifies the entry point of the traffic. At the same time, specify [Ingress](/concepts/ingress/) through the `ingress` option to define traffic routing rules.
+When the Relay service sets the `entryPoint` option, the tunnel mode will be enabled, and the entryPoint specifies the entry point of the traffic. At the same time, specify [Ingress](/en/concepts/ingress/) through the `ingress` option to define traffic routing rules.
 
 ### Client
 

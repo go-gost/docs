@@ -8,6 +8,8 @@ Reverse proxy is an extension of the port forwarding service, which relies on th
 
 ## Local Port Forwarding
 
+![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
+
 ```yaml hl_lines="7 14 17"
 services:
 - name: https
@@ -62,6 +64,10 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 ```
 
 ## Remote Port Forwarding
+
+Remote port forwarding services can also sniff traffic.
+
+![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
 ```yaml hl_lines="7 15 18"
 services:

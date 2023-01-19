@@ -10,6 +10,8 @@ GOST中的端口转发服务也可以被当作是一种功能受限的反向代�
 
 ## 本地端口转发
 
+![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
+
 ```yaml hl_lines="7 14 17"
 services:
 - name: https
@@ -66,6 +68,8 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 ## 远程端口转发
 
 远程端口转发服务同样也可以对流量进行嗅探。
+
+![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
 ```yaml hl_lines="7 15 18"
 services:
@@ -138,6 +142,7 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 ```
 
 由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.443)。
+
 
 ## 特定应用转发
 

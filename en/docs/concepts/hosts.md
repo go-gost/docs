@@ -118,7 +118,7 @@ Mapper can configure multiple data sources, currently supported data sources are
 
 #### Inline
 
-An inline data source means setting the data directly in the configuration file via the `mappings` property.
+An inline data source means setting the data directly in the configuration file via the `mappings` option.
 
 ```yaml
 hosts:
@@ -164,7 +164,7 @@ The file format is mapping items separated by lines, each line is an IP-host pai
 
 ### Redis
 
-Specify the redis service as the data source, and the redis data type can be [Set](https://redis.io/docs/manual/data-types/#sets) or [List](https://redis.io/docs/manual/data-types/#lists).
+Specify the redis service as the data source, and the redis data type can be [Set](https://redis.io/docs/data-types/sets/) or [List](https://redis.io/docs/data-types/lists/).
 
 ```yaml
 hosts:

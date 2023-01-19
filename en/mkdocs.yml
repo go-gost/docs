@@ -101,6 +101,7 @@ nav:
     - Admission Control: concepts/admission.md
     - DNS Resolver: concepts/resolver.md
     - Host-IP Mapping: concepts/hosts.md
+    - Ingress: concepts/ingress.md
     - Data Recording: concepts/recorder.md
   - Tutorials:
     - TLS: tutorials/tls.md

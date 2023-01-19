@@ -6,6 +6,8 @@
 
 Tunnel是一条服务端和客户端之间的反向隧道，服务端会同时监听在入口点(EntryPoint)上，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
 
+![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
+
 ### 服务端
 
 ```yaml hl_lines="7 8"
