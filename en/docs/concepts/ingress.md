@@ -1,10 +1,10 @@
 # Ingress
 
 !!! tip "Dynamic configuration"
-    Ingress supports dynamic configuration via[Web API](/tutorials/api/overview/).
+    Ingress supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
 
 !!! note "Limitation"
-    Ingress currently can only be used in [reverse proxy](/tutorials/reverse-proxy-advanced/).
+    Ingress currently can only be used in [reverse proxy](/en/tutorials/reverse-proxy-advanced/).
 
 Ingress consists of a set of rules, each rule is a mapping from a hostname to a service endpoint, and the entry point traffic is routed and load-balanced through Ingress in the reverse proxy.
 
