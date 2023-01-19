@@ -8,8 +8,6 @@ Reverse proxy is an extension of the port forwarding service, which relies on th
 
 ## Local Port Forwarding
 
-![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
-
 ```yaml hl_lines="7 14 17"
 services:
 - name: https
@@ -51,6 +49,8 @@ Use the `sniffing` option to enable traffic sniffing, and pass the `host` option
 
 When traffic sniffing is enabled, the forwarding service will obtain the target host through the client’s request data, and then find the final forwarding target address (node.addr) via `node.host`.
 
+![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
+
 `node.host` also supports wildcards, *.example.com or .example.com matches example.com and its subdomains: abc.example.com, def.abc.example.com, etc.
 
 At this time, the corresponding domain name can be resolved to the local and then accessed through the reverse proxy:
@@ -66,8 +66,6 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 ## Remote Port Forwarding
 
 Remote port forwarding services can also sniff traffic.
-
-![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
 ```yaml hl_lines="7 15 18"
 services:
@@ -121,6 +119,8 @@ chains:
 ```
 
 Use the `sniffing` option to enable traffic sniffing, and pass the `host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
+
+![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
 At this time, the corresponding domain name can be resolved to the server address to access the internal service through the reverse proxy:
 

@@ -130,7 +130,7 @@ nav:
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
     - 反向代理: tutorials/reverse-proxy.md
-    - 反向代理(高级): tutorials/reverse-proxy-advanced.md
+    - 反向代理Tunnel: tutorials/reverse-proxy-advanced.md
     - 探测防御: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS代理: tutorials/dns.md

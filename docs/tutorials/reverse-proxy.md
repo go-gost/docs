@@ -10,8 +10,6 @@ GOST中的端口转发服务也可以被当作是一种功能受限的反向代�
 
 ## 本地端口转发
 
-![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
-
 ```yaml hl_lines="7 14 17"
 services:
 - name: https
@@ -53,6 +51,8 @@ services:
 
 当开启流量嗅探后，转发服务会通过客户端的请求数据获取访问的目标主机，再通过转发器(forwarder)中的节点设置的虚拟主机名(node.host)找到最终转发的目标地址(node.addr)。
 
+![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
+
 `node.host`也支持通配符，*.example.com或.example.com匹配example.com及其子域名：abc.example.com，def.abc.example.com等。
 
 此时可以将对应的域名解析到本地通过反向代理来访问：
@@ -68,8 +68,6 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 ## 远程端口转发
 
 远程端口转发服务同样也可以对流量进行嗅探。
-
-![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
 ```yaml hl_lines="7 15 18"
 services:
@@ -123,6 +121,8 @@ chains:
 ```
 
 通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`host`选项可以对每一个节点设置(虚拟)主机名。
+
+![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
 此时可以将对应的域名解析到服务器地址通过反向代理来访问内网服务：
 
