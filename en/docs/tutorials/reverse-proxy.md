@@ -138,7 +138,83 @@ If the accessed target host does not match the hostname set by the node in the f
 curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 ```
 
-Since srv-2.local does not match the node, it will be forwarded to the fallback node (192.168.2.443).
+Since srv-2.local does not match the node, it will be forwarded to the fallback node (192.168.2.1:443).
+
+## HTTP Request Header Settings
+
+When sniffing HTTP traffic, you can set the HTTP request header information on the target node through the `forwarder.nodes.http` option, including Host header rewriting and custom header information.
+
+### Rewrite Host Header
+
+The Host in the original request header can be overridden by setting the `http.host` option.
+
+```yaml hl_lines="15 16"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: example.com
+      http:
+        host: test.example.com
+    - name: example-org
+      addr: example.org:80
+      host: example.org
+      http:
+        host: test.example.org:80
+```
+
+```bash
+curl --resolve example.com:80:127.0.0.1 http://example.com
+```
+
+When requesting http://example.com, the Host in the HTTP request header sent to example.com:80 is test.example.com.
+
+### Custom Header
+
+The header information can be customized by setting the `http.header` option, if the header field already exists, it will be overwritten.
+
+```yaml hl_lines="15 16"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: example.com
+      http:
+        header:
+          User-Agent: gost/3.0
+          foo: bar
+          bar: 123
+        # host: test.example.com
+    - name: example-org
+      addr: example.org:80
+      host: example.org
+      http:
+        header:
+          User-Agent: curl/7.81.0
+          foo: bar
+          bar: baz
+        # host: test.example.org:80
+```
+
+When requesting http://example.com, three fields `User-Agent`, `Foo` and `Bar` will be added to the HTTP request header sent to example.com:80.
 
 ## Application-Specific Forwarding
 

@@ -136,13 +136,87 @@ curl --resolve srv-1.local:80:SERVER_IP http://srv-1.local
 
 如果访问的目标主机没有与转发器中的节点设定的主机名匹配上，当存在没有设置主机名的节点，则会在这些节点中选择一个使用。
 
-
 ```bash
 curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 ```
 
-由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.443)。
+由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.1:443)。
 
+## HTTP请求头设置
+
+当嗅探到HTTP流量时，可以在目标节点上通过`forwarder.nodes.http`选项对HTTP的请求头部信息进行设置，包括Host头重写和自定义头部信息，对本地和远程端口转发均适用。
+
+### 重写Host头
+
+通过设置`http.host`选项可以重写原始请求头中的Host。
+
+```yaml hl_lines="15 16"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: example.com
+      http:
+        host: test.example.com
+    - name: example-org
+      addr: example.org:80
+      host: example.org
+      http:
+        host: test.example.org:80
+```
+
+```bash
+curl --resolve example.com:80:127.0.0.1 http://example.com
+```
+
+当请求http://example.com时，最终发送给example.com:80的HTTP请求头中Host为test.example.com。
+
+### 自定义头
+
+通过设置`http.header`选项可以自定义头部信息，如果所设置的头部字段已存在则会被覆盖。
+
+```yaml hl_lines="15 16"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: example.com
+      http:
+        header:
+          User-Agent: gost/3.0
+          foo: bar
+          bar: 123
+        # host: test.example.com
+    - name: example-org
+      addr: example.org:80
+      host: example.org
+      http:
+        header:
+          User-Agent: curl/7.81.0
+          foo: bar
+          bar: baz
+        # host: test.example.org:80
+```
+
+当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
 
 ## 特定应用转发
 
