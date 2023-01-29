@@ -125,3 +125,210 @@ When the hostname is `example.com`, the tunnel 4d21094e-b74c-4916-86c1-d9fa36ea6
 When the hostname is `sub.example.com`, it matches the tunnel 4d21094e-b74c-4916-86c1-d9fa36ea677b according to the rules in the Ingress. When the traffic reaches the client, it is forwarded by the rtcp service to the 192.168.1.2:80 service.
 
 When the hostname is `abc.example.com`, according to the rules in the Ingress, the tunnel 4d21094e-b74c-4916-86c1-d9fa36ea677b is matched. When the traffic reaches the client, it is forwarded by the rtcp service to the 192.168.2.1:80 service.
+
+## Private Tunnel
+
+In Ingress, access to the tunnel can be restricted by marking the tunnel as private, and the traffic entering from the public entry point cannot be routed to the private tunnel.
+
+To use a private tunnel, the user (visitor side) needs to start a service as the private entry point. This service specifies the tunnel to be accessed by setting the tunnel ID (not limited to the private tunnel).
+
+![Reverse Proxy - Web Private Tunnel](/images/private-tunnel-web.png) 
+
+### Server
+
+```yaml hl_lines="19"
+services:
+- name: service-0
+  addr: :8443
+  handler:
+    type: relay
+    metadata:
+      entryPoint: ":80"
+      ingress: ingress-0
+  listener:
+    type: tcp
+ingresses:
+- name: ingress-0
+  rules:
+  - hostname: "srv-0.local"
+    endpoint: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+  - hostname: "srv-1.local"
+    endpoint: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+  - hostname: "srv-2.local"
+    endpoint: $ac74d9dd-3125-442a-a7c1-f9e49e05faca
+  - hostname: "srv-3.local"
+    endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+  - hostname: "ssh.srv-2.local"
+    endpoint: $aede1f6a-762b-45da-b937-b6632356555a
+```
+
+In the Ingress rule, mark the tunnel corresponding to this rule as private by adding `$` before the tunnel ID value represented by the endpoint, for example, the tunnel ac74d9dd-3125-442a-a7c1-f9e49e05faca corresponding to the above srv-2.local host  is a private tunnel, so traffic entering through port 80 of the public entry point cannot use this tunnel.
+
+!!! note "Scope Of Privacy"
+    The scope of privacy is Ingress rules, not the tunnel itself. The same tunnel can have different privacy in different rules. For example, in the above example, srv-2.local and srv-3.local use the same tunnel, but the tunnel in the corresponding rule of srv-3.local is not private, so traffic to srv-3.local can be routed to this tunnel.
+
+### Client
+
+=== "CLI"
+
+    ```bash
+    gost -L rtcp://:0/192.168.2.1:80 -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :0
+      handler:
+        type: rtcp
+      listener:
+        type: rtcp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: srv-2.local
+          addr: 192.168.2.1:80
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8443
+          connector:
+            type: relay
+            metadata:
+              tunnelID: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+          dialer:
+            type: tcp
+    ```
+
+The configuration of the client is the same as above.
+
+### Visitor
+
+=== "CLI"
+
+    ```bash
+    gost -L tcp://:8000?sniffing=true -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    ```
+
+=== "File (YAML)"
+   
+    ```yaml hl_lines="8 21"
+      services:
+      - name: service-0
+        addr: :8000
+        handler:
+          type: tcp
+          chain: chain-0
+          metadata:
+            sniffing: true
+        listener:
+          type: tcp
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :8443
+            connector:
+              type: relay
+              metadata:
+                tunnelID: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+              dialer:
+                type: tcp
+    ```
+
+The visitor start a service to listen on port 8000, and specifies the tunnel to be used by setting the `tunnelID` option.
+
+### TCP Service
+
+Private tunnel can also be applied to TCP services (such as SSH) for non-web traffic. In the above example, the tunnel corresponding to the `ssh.srv-2.local` host in the Ingress of the server can be regarded as a dedicated tunnel for SSH traffic.
+
+![Reverse Proxy - TCP Private Tunnel](/images/private-tunnel-tcp.png) 
+
+#### Client
+
+=== "CLI"
+
+    ```bash
+    gost -L rtcp://:0/192.168.2.1:22 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :0
+      handler:
+        type: rtcp
+      listener:
+        type: rtcp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: ssh.srv-2.local
+          addr: 192.168.2.1:80
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8443
+          connector:
+            type: relay
+            metadata:
+              tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+          dialer:
+            type: tcp
+    ```
+
+The client is similar to the previous example, forwarding the tunnel traffic to the SSH service 192.168.2.1:22.
+
+#### Visitor
+
+=== "CLI"
+
+    ```bash
+    gost -L tcp://:2222/ssh.srv-2.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    ```
+
+=== "File (YAML)"
+   
+    ```yaml hl_lines="12"
+      services:
+      - name: service-0
+        addr: :2222
+        handler:
+          type: tcp
+          chain: chain-0
+        listener:
+          type: tcp
+        forwarder:
+          nodes:
+          - name: ssh-srv
+            addr: ssh.srv-2.local:0
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :8443
+            connector:
+              type: relay
+              metadata:
+                tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+              dialer:
+                type: tcp
+    ```
+
+The visitor needs to specify the target node address in the forwarder. This address is a virtual host name, which is only applied to the rule matching in the Ingress. This name should be the same as the host name specified by the rule to be matched in the Ingress on the server side (the port number will be ignored).
+
+Therefore, for TCP traffic, the host name and tunnel ID must match the rule definition in the Ingress at the same time to route correctly.
