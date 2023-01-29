@@ -17,7 +17,7 @@ services:
   handler:
     type: relay
     metadata:
-      entryPoint: ":8000"
+      entryPoint: ":80"
       ingress: ingress-0
   listener:
     type: tcp
@@ -35,37 +35,45 @@ When the Relay service sets the `entryPoint` option, the tunnel mode will be ena
 
 ### Client
 
-```yaml
-services:
-- name: service-0
-  addr: :0
-  handler:
-    type: rtcp
-  listener:
-    type: rtcp
-    chain: chain-0
-  forwarder:
-    nodes:
-    - name: target-0
-      addr: 192.168.1.1:80
-chains:
-- name: chain-0
-  hops:
-  - name: hop-0
-    nodes:
-    - name: node-0
-      addr: :8443
-      connector:
-        type: relay
-        metadata:
-          tunnelID: 4d21094e-b74c-4916-86c1-d9fa36ea677b
-      dialer:
-        type: tcp
-```
+=== "CLI"
+
+    ```bash
+    gost -L rtcp://:0/192.168.1.1:80 -F relay://:8443?tunnelID=4d21094e-b74c-4916-86c1-d9fa36ea677b
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :0
+      handler:
+        type: rtcp
+      listener:
+        type: rtcp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 192.168.1.1:80
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8443
+          connector:
+            type: relay
+            metadata:
+              tunnelID: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+          dialer:
+            type: tcp
+    ```
 
 When the Relay client sets the `tunnelID` option, the tunnel mode is enabled, and the `addr` parameter specified in the rtcp service is invalid at this time.
 
-In this example, when the traffic enters the entry point (port 8000 of the server), it will sniff the traffic to obtain the hostname, and then find the matching rule in the Ingress through the hostname to obtain the corresponding service endpoint (tunnel) , and finally obtain a valid connection in the connection pool of the tunnel (round robin strategy, up to 3 failed retries) and send the traffic to the client through this connection.
+In this example, when the traffic enters the entry point (port 80 of the server), it will sniff the traffic to obtain the hostname, and then find the matching rule in the Ingress through the hostname to obtain the corresponding service endpoint (tunnel) , and finally obtain a valid connection in the connection pool of the tunnel (round robin strategy, up to 3 failed retries) and send the traffic to the client through this connection.
 
 When the hostname is `example.com`, the tunnel with the ID 4d21094e-b74c-4916-86c1-d9fa36ea677b is matched according to the rules in the Ingress. When the traffic reaches the client, it is forwarded by the rtcp service to the 192.168.1.1:80 service.
 
