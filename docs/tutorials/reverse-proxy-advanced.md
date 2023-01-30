@@ -157,11 +157,13 @@ ingresses:
   - hostname: "srv-1.local"
     endpoint: 4d21094e-b74c-4916-86c1-d9fa36ea677b
   - hostname: "srv-2.local"
-    endpoint: $ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    endpoint: $ac74d9dd-3125-442a-a7c1-f9e49e05faca # private tunnel
   - hostname: "srv-3.local"
     endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
-  - hostname: "ssh.srv-2.local"
-    endpoint: $aede1f6a-762b-45da-b937-b6632356555a
+  - hostname: "ssh.srv-2.local" 
+    endpoint: $aede1f6a-762b-45da-b937-b6632356555a # private tunnel for ssh traffic
+  - hostname: "redis.srv-3.local" 
+    endpoint: $aede1f6a-762b-45da-b937-b6632356555a # private tunnel for redis traffic
 ```
 
 在Ingress的规则中，通过在endpoint所代表的隧道ID值前添加`$`便将此规则对应的隧道标记为私有，例如上面的srv-2.local主机对应的隧道ac74d9dd-3125-442a-a7c1-f9e49e05faca即为私有隧道，因此通过公共入口点80端口进入的流量无法使用此隧道。
@@ -249,61 +251,63 @@ ingresses:
 
 ### TCP服务
 
-私有隧道也可以应用于非Web流量的TCP服务(例如SSH)。上例中服务端的Ingress中`ssh.srv-2.local`主机对应的隧道可以看作SSH流量专用隧道。
+私有隧道也可以应用于非HTTP流量的TCP服务(例如SSH)。上例中服务端的Ingress中`ssh.srv-2.local`和`redis.srv-3.local`主机对应的隧道。
 
 ![Reverse Proxy - TCP Private Tunnel](/images/private-tunnel-tcp.png) 
 
 #### 客户端
 
-=== "命令行"
+```yaml hl_lines="13 16"
+services:
+- name: service-0
+  addr: :0
+  handler:
+    type: rtcp
+  listener:
+    type: rtcp
+    chain: chain-0
+  forwarder:
+    nodes:
+    - name: ssh
+      addr: 192.168.2.1:22
+      host: ssh.srv-2.local
+    - name: redis
+      addr: 192.168.2.2:6379
+      host: redis.srv-3.local
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    nodes:
+    - name: node-0
+      addr: :8443
+      connector:
+        type: relay
+        metadata:
+          tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+      dialer:
+        type: tcp
+```
 
-    ```bash
-    gost -L rtcp://:0/192.168.2.1:22 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
-    ```
-
-=== "配置文件"
-
-    ```yaml
-    services:
-    - name: service-0
-      addr: :0
-      handler:
-        type: rtcp
-      listener:
-        type: rtcp
-        chain: chain-0
-      forwarder:
-        nodes:
-        - name: ssh.srv-2.local
-          addr: 192.168.2.1:80
-    chains:
-    - name: chain-0
-      hops:
-      - name: hop-0
-        nodes:
-        - name: node-0
-          addr: :8443
-          connector:
-            type: relay
-            metadata:
-              tunnelID: aede1f6a-762b-45da-b937-b6632356555a
-          dialer:
-            type: tcp
-    ```
-
-客户端与前例类似，将隧道流量转发给SSH服务192.168.2.1:22。
+客户端的转发器设置了两个目标节点：192.168.2.1:22的ssh服务和192.168.2.2:6379的redis服务。
+注意每个节点上的`host`参数需要与服务端Ingress对应规则中的`hostname`相匹配。
 
 #### 访问端
 
 === "命令行"
 
+    SSH服务
     ```bash
     gost -L tcp://:2222/ssh.srv-2.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    ```
+    或redis服务
+    ```bash
+    gost -L tcp://:6379/redis.srv-3.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
 === "配置文件"
    
-    ```yaml hl_lines="12"
+    ```yaml hl_lines="11 12"
       services:
       - name: service-0
         addr: :2222
@@ -314,8 +318,10 @@ ingresses:
           type: tcp
         forwarder:
           nodes:
-          - name: ssh-srv
+          - name: ssh
             addr: ssh.srv-2.local:0
+          # - name: redis
+          #   addr: redis.srv-3.local:0
       chains:
       - name: chain-0
         hops:
@@ -331,6 +337,4 @@ ingresses:
                 type: tcp
     ```
 
-访问端需要在转发器中指定目标节点地址，此地址为虚拟主机名，仅应用于Ingress中的规则匹配。此名称应当与服务端Ingress中所要匹配的规则所指定的主机名一致(端口号会被忽略)。
-
-因此对于TCP流量必须是主机名和隧道ID与Ingress中的规则定义同时匹配上才能正确路由。
+访问端需要在转发器中指定目标节点地址，需要与服务端Ingress对应规则中的`hostname`相匹配。

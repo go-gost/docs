@@ -182,7 +182,7 @@ When requesting http://example.com, the Host in the HTTP request header sent to 
 
 The header information can be customized by setting the `http.header` option, if the header field already exists, it will be overwritten.
 
-```yaml hl_lines="15 16"
+```yaml hl_lines="15 16 17 18 19"
 services:
 - name: http
   addr: :80
@@ -215,6 +215,36 @@ services:
 ```
 
 When requesting http://example.com, three fields `User-Agent`, `Foo` and `Bar` will be added to the HTTP request header sent to example.com:80.
+
+## TLS Settings
+
+If the forwarding target node has TLS enabled, you can establish a TLS connection by setting `forwarder.nodes.tls`.
+
+```yaml hl_lines="15 16 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:443
+      host: example.com
+      tls:
+        secure: true
+        serverName: example.com
+```
+
+`tls.secure` (bool, default=false)
+:    Whether to enable server certificate and domain name verification.
+
+`tls.serverName` (string)
+:    If `secure` is set to true, you need to specify the server domain name for domain name verification through this parameter.
 
 ## Application-Specific Forwarding
 

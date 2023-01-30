@@ -184,7 +184,7 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 通过设置`http.header`选项可以自定义头部信息，如果所设置的头部字段已存在则会被覆盖。
 
-```yaml hl_lines="15 16"
+```yaml hl_lines="15 16 17 18 19"
 services:
 - name: http
   addr: :80
@@ -217,6 +217,36 @@ services:
 ```
 
 当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
+
+## TLS请求设置
+
+如果转发的目标节点启用了TLS，可以通过设置`forwarder.nodes.tls`来建立TLS连接。
+
+```yaml hl_lines="15 16 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:443
+      host: example.com
+      tls:
+        secure: true
+        serverName: example.com
+```
+
+`tls.secure` (bool, default=false)
+:    是否开启服务器证书和域名校验。
+
+`tls.serverName` (string)
+:    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。
 
 ## 特定应用转发
 
