@@ -246,6 +246,30 @@ services:
 `tls.serverName` (string)
 :    If `secure` is set to true, you need to specify the server domain name for domain name verification through this parameter.
 
+## HTTP Basic Authentication
+
+You can enable [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) for target node by setting the `forwarder.nodes.auth` option.
+
+```yaml hl_lines="15 16 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:443
+      host: example.com
+      auth:
+        username: user
+        password: pass
+```
+
 ## Application-Specific Forwarding
 
 Local and remote port forwarding services also support sniffing of specific application traffic. Currently supported application protocols are: SSH.

@@ -35,6 +35,9 @@ ingresses:
 
 公共入口点不是必须的，如果不设置则所有隧道只能通过私有入口点(参见后面的私有隧道部分)进行访问。
 
+!!! note "隧道ID分配"
+    隧道的ID应当由服务端提前分配并记录在Ingress中，如果客户端使用了一个未在Ingress中注册的隧道ID，则流量无法路由到此客户端。
+
 ### 客户端
 
 === "命令行"
@@ -251,7 +254,7 @@ ingresses:
 
 ### TCP服务
 
-私有隧道也可以应用于非HTTP流量的TCP服务(例如SSH)。上例中服务端的Ingress中`ssh.srv-2.local`和`redis.srv-3.local`主机对应的隧道。
+私有隧道也可以应用于非HTTP流量的TCP服务(例如SSH)。例如上面服务端的Ingress中`ssh.srv-2.local`和`redis.srv-3.local`主机对应的隧道。
 
 ![Reverse Proxy - TCP Private Tunnel](/images/private-tunnel-tcp.png) 
 

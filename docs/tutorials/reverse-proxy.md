@@ -248,6 +248,30 @@ services:
 `tls.serverName` (string)
 :    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。
 
+## HTTP Basic Authentication
+
+可以通过设置`forwarder.nodes.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
+
+```yaml hl_lines="15 16 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:443
+      host: example.com
+      auth:
+        username: user
+        password: pass
+```
+
 ## 特定应用转发
 
 本地和远程端口转发服务也支持对特定的应用流量嗅探。目前支持的应用协议有：SSH。
