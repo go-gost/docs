@@ -222,11 +222,11 @@ ingresses:
 
 === "命令行"
 
-    Automatically sniff the host name
+    自动嗅探主机名
     ```bash
     gost -L tcp://:8000?sniffing=true -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
-    or specify host name manually
+    或指定主机名
     ```bash
     gost -L tcp://:8000/srv-2.local:0 -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
