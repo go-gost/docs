@@ -164,9 +164,13 @@ ingresses:
   - hostname: "srv-3.local"
     endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
   - hostname: "ssh.srv-2.local" 
-    endpoint: $aede1f6a-762b-45da-b937-b6632356555a # private tunnel for ssh traffic
+    endpoint: aede1f6a-762b-45da-b937-b6632356555a # tunnel for ssh TCP traffic
   - hostname: "redis.srv-3.local" 
-    endpoint: $aede1f6a-762b-45da-b937-b6632356555a # private tunnel for redis traffic
+    endpoint: aede1f6a-762b-45da-b937-b6632356555a # tunnel for redis TCP traffic
+  - hostname: "dns.srv-2.local" 
+    endpoint: aede1f6a-762b-45da-b937-b6632356555a # tunnel for DNS UDP traffic
+  - hostname: "dns.srv-3.local" 
+    endpoint: aede1f6a-762b-45da-b937-b6632356555a # tunnel for DNS UDP traffic
 ```
 
 在Ingress的规则中，通过在endpoint所代表的隧道ID值前添加`$`便将此规则对应的隧道标记为私有，例如上面的srv-2.local主机对应的隧道ac74d9dd-3125-442a-a7c1-f9e49e05faca即为私有隧道，因此通过公共入口点80端口进入的流量无法使用此隧道。
@@ -218,8 +222,13 @@ ingresses:
 
 === "命令行"
 
+    自动嗅探主机名
     ```bash
     gost -L tcp://:8000?sniffing=true -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    ```
+    或指定主机名
+    ```bash
+    gost -L tcp://:8000/srv-2.local:0 -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
 === "配置文件"
@@ -252,13 +261,13 @@ ingresses:
 
 访问端开启私有入口服务监听在8000端口，通过设置`tunnelID`选项指定所要使用的隧道。
 
-### TCP服务
+## TCP服务
 
-私有隧道也可以应用于非HTTP流量的TCP服务(例如SSH)。例如上面服务端的Ingress中`ssh.srv-2.local`和`redis.srv-3.local`主机对应的隧道。
+隧道并不限于Web流量，也可以应用于任何TCP服务(例如SSH)。例如上面服务端的Ingress中`ssh.srv-2.local`和`redis.srv-3.local`主机对应的隧道。
 
-![Reverse Proxy - TCP Private Tunnel](/images/private-tunnel-tcp.png) 
+![Reverse Proxy - TCP Tunnel](/images/private-tunnel-tcp.png) 
 
-#### 客户端
+### 客户端
 
 ```yaml hl_lines="13 16"
 services:
@@ -295,7 +304,7 @@ chains:
 客户端的转发器设置了两个目标节点：192.168.2.1:22的ssh服务和192.168.2.2:6379的redis服务。
 注意每个节点上的`host`参数需要与服务端Ingress对应规则中的`hostname`相匹配。
 
-#### 访问端
+### 访问端
 
 === "命令行"
 
@@ -341,3 +350,256 @@ chains:
     ```
 
 访问端需要在转发器中指定目标节点地址，需要与服务端Ingress对应规则中的`hostname`相匹配。
+
+## UDP服务
+
+隧道也可以应用于任何UDP服务(例如DNS)。例如上面服务端的Ingress中`dns.srv-2.local`和`dns.srv-3.local`主机对应的隧道。
+
+![Reverse Proxy - UDP Tunnel](/images/tunnel-udp.png) 
+
+### 客户端
+
+```yaml hl_lines="5 7 13 16"
+services:
+- name: service-0
+  addr: :0
+  handler:
+    type: rudp
+  listener:
+    type: rudp
+    chain: chain-0
+  forwarder:
+    nodes:
+    - name: dns-1
+      addr: 192.168.2.1:53
+      host: dns.srv-2.local
+    - name: dns-2
+      addr: 192.168.2.2:53
+      host: dns.srv-3.local
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    nodes:
+    - name: node-0
+      addr: :8443
+      connector:
+        type: relay
+        metadata:
+          tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+      dialer:
+        type: tcp
+```
+
+客户端的转发器设置了两个目标节点：192.168.2.1:53的DNS服务和192.168.2.2:53的DNS服务。
+注意每个节点上的`host`参数需要与服务端Ingress对应规则中的`hostname`相匹配。
+
+### 访问端
+
+=== "命令行"
+
+    DNS-1服务
+    ```bash
+    gost -L tcp://:1053/dns.srv-2.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    ```
+    或DNS-2服务
+    ```bash
+    gost -L tcp://:2053/dns.srv-3.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    ```
+
+=== "配置文件"
+   
+    ```yaml hl_lines="5 8 11 12"
+      services:
+      - name: service-0
+        addr: :1053
+        handler:
+          type: udp
+          chain: chain-0
+        listener:
+          type: udp
+        forwarder:
+          nodes:
+          - name: dns-1
+            addr: dns.srv-2.local:0
+          # - name: dns-2
+          #   addr: dns.srv-3.local:0
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :8443
+            connector:
+              type: relay
+              metadata:
+                tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+              dialer:
+                type: tcp
+    ```
+
+访问端需要在转发器中指定目标节点地址，需要与服务端Ingress对应规则中的`hostname`相匹配。
+
+## 多路复用
+
+隧道本身支持多路复用，单个隧道不仅限于某一种类型的流量使用，也支持同时传输不同类型的流量(Web，TCP，UDP)。接下来通过一个具体的示例来说明。
+
+## 通过隧道进行iperf测试
+
+![Reverse Proxy - iperf3](/images/tunnel-iperf.png) 
+
+### 服务端
+
+服务端分配了一个隧道对应的虚拟主机名为`iperf.local`，这个隧道将同时承载iperf的TCP和UDP流量。
+
+```yaml hl_lines="19"
+services:
+- name: service-0
+  addr: :8443
+  handler:
+    type: relay
+    metadata:
+      ingress: ingress-0
+  listener:
+    type: tcp
+ingresses:
+- name: ingress-0
+  rules:
+  - hostname: "iperf.local"
+    endpoint: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+```
+
+
+### 客户端
+
+由于转发的目标只有一个，因此可以使用命令行直接转发，如果要转发多个服务需要通过配置文件在转发器中为每个目标节点定义主机名(`forwarder.nodes.host`)，通过主机名来匹配不同的服务。
+
+=== "命令行"
+
+    ```bash
+    gost -L rtcp://:0/:5201 -L rudp://:0/:5201 -F relay://:8443?tunnelID=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: iperf-tcp
+      addr: :0
+      handler:
+        type: rtcp
+      listener:
+        type: rtcp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: iperf
+          addr: :5201
+          host: iperf.local
+    - name: iperf-udp
+      addr: :0
+      handler:
+        type: rudp
+      listener:
+        type: rudp
+        chain: chain-0
+      forwarder:
+        nodes:
+        - name: iperf
+          addr: :5201
+          host: iperf.local
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8443
+          connector:
+            type: relay
+            metadata:
+              tunnelID: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+          dialer:
+            type: tcp
+    ```
+
+### 访问端
+
+转发的目标地址需要与服务端的Ingress中规则对应的主机名匹配，如果要转发多个服务需要通过配置文件在转发器中为每个目标节点定义主机名(`forwarder.nodes.host`)，通过主机名来匹配不同的服务。
+
+!!! note "UDP连接保持"
+    UDP端口转发服务默认在进行完一次数据交互后连接状态便失效，这对于像DNS这种服务会很有效。但是对于需要多次数据交互的UDP服务，需要通过`keepalive`选项开启连接保持功能，另外可以通过`ttl`选项来控制超时时长，默认超过5秒无数据交互连接状态将会失效。
+
+=== "命令行"
+
+    ```bash
+    gost -L tcp://:15201/iperf.local:0 -L udp://:15201/iperf.local:0?keepalive=true -F relay://:8443?tunnelID=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+=== "配置文件"
+   
+    ```yaml hl_lines="5 8 11 12"
+      services:
+      - name: iperf-tcp
+        addr: :15201
+        handler:
+          type: tcp
+          chain: chain-0
+        listener:
+          type: tcp
+        forwarder:
+          nodes:
+          - name: iperf
+            addr: iperf.local:0
+      services:
+      - name: iperf-udp
+        addr: :15201
+        handler:
+          type: udp
+          chain: chain-0
+        listener:
+          type: udp
+          metadata:
+            keepalive: true
+            # ttl: 5s
+        forwarder:
+          nodes:
+          - name: iperf
+            addr: iperf.local:0
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :8443
+            connector:
+              type: relay
+              metadata:
+                tunnelID: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+              dialer:
+                type: tcp
+    ```
+
+### iperf3服务
+
+启动iperf3服务。
+
+```
+iperf3 -s
+```
+
+### 执行iperf3测试
+
+TCP测试
+
+```
+iperf3 -c 127.0.0.1 -p 15201
+```
+
+UDP测试
+
+```
+iperf3 -c 127.0.0.1 -p 15201 -u
+```
