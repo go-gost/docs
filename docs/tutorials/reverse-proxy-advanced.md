@@ -451,25 +451,36 @@ chains:
 
 ### 服务端
 
-服务端分配了一个隧道对应的虚拟主机名为`iperf.local`，这个隧道将同时承载iperf的TCP和UDP流量。
+服务端分配了一个隧道，对应的虚拟主机名为`iperf.local`，这个隧道将同时承载iperf的TCP和UDP流量。
 
-```yaml hl_lines="19"
-services:
-- name: service-0
-  addr: :8443
-  handler:
-    type: relay
-    metadata:
-      ingress: ingress-0
-  listener:
-    type: tcp
-ingresses:
-- name: ingress-0
-  rules:
-  - hostname: "iperf.local"
-    endpoint: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
-```
+如果Ingress只有一条规则，而又不想创建配置文件来定义Ingress，则可以通过命令行中使用`tunnel`选项定义规则来快速启动服务端。
+`tunnel`选项的值为`:`分割的主机名和隧道ID。
 
+=== "命令行"
+
+    ```bash
+    gost -L relay://:8443?tunnel=iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+=== "配置文件"
+
+    ```yaml 
+    services:
+    - name: service-0
+      addr: :8443
+      handler:
+        type: relay
+        metadata:
+          ingress: ingress-0
+          # tunnel: "iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3"
+      listener:
+        type: tcp
+    ingresses:
+    - name: ingress-0
+      rules:
+      - hostname: "iperf.local"
+        endpoint: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
 
 ### 客户端
 
@@ -483,7 +494,7 @@ ingresses:
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="5 7 12 13 17 19 24 25" 
     services:
     - name: iperf-tcp
       addr: :0

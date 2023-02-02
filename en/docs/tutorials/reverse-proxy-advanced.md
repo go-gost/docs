@@ -450,23 +450,33 @@ The tunnel itself supports multiplexing. A single tunnel is not limited to a cer
 
 The server assigns a virtual host named `iperf.local` corresponding to a tunnel, and this tunnel will carry both TCP and UDP traffic of iperf.
 
-```yaml hl_lines="19"
-services:
-- name: service-0
-  addr: :8443
-  handler:
-    type: relay
-    metadata:
-      ingress: ingress-0
-  listener:
-    type: tcp
-ingresses:
-- name: ingress-0
-  rules:
-  - hostname: "iperf.local"
-    endpoint: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
-```
+If the Ingress has only one rule and you don't want to create a configuration file to define the Ingress, you can quickly start the server by defining the rule with the `tunnel` option on the command line. The value of the `tunnel` option is a `:` separated hostname and tunnel ID.
 
+=== "CLI"
+
+    ```bash
+    gost -L relay://:8443?tunnel=iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+=== "File (YAML)"
+
+    ```yaml 
+    services:
+    - name: service-0
+      addr: :8443
+      handler:
+        type: relay
+        metadata:
+          ingress: ingress-0
+          # tunnel: "iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3"
+      listener:
+        type: tcp
+    ingresses:
+    - name: ingress-0
+      rules:
+      - hostname: "iperf.local"
+        endpoint: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
 
 ### Client
 
@@ -480,7 +490,7 @@ Since there is only one forwarding target, you can use the command line to forwa
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml hl_lines="5 7 12 13 17 19 24 25" 
     services:
     - name: iperf-tcp
       addr: :0
