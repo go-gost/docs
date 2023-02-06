@@ -4,46 +4,56 @@
 
 ## Relay协议的Tunnel功能
 
-Tunnel是一条服务端和客户端之间的反向隧道，服务端会同时监听在入口点(EntryPoint)上，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
+Tunnel是一条服务端和客户端之间的(逻辑上的)隧道，服务端可以开启一个额外的公共入口点(EntryPoint)，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
 
 ![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
 
 ### 服务端
 
-```yaml hl_lines="7 8"
-services:
-- name: service-0
-  addr: :8443
-  handler:
-    type: relay
-    metadata:
-      entryPoint: ":80"
-      ingress: ingress-0
-  listener:
-    type: tcp
+=== "命令行"
 
-ingresses:
-- name: ingress-0
-  rules:
-  - hostname: ".example.com"
-    endpoint: 4d21094e-b74c-4916-86c1-d9fa36ea677b
-  - hostname: "example.org"
-    endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
-```
+    ```bash
+    gost -L "relay://:8443?entryPoint=:80&tunnel=.example.com:4d21094e-b74c-4916-86c1-d9fa36ea677b,example.org:ac74d9dd-3125-442a-a7c1-f9e49e05faca"
+    ```
+
+    通过命令行中使用`tunnel`选项定义Ingress规则。`tunnel`选项的值为`,`分割的规则列表，每个规则为`:`分割的主机名和隧道ID。
+
+=== "配置文件"
+
+    ```yaml hl_lines="7 8"
+    services:
+    - name: service-0
+      addr: :8443
+      handler:
+        type: relay
+        metadata:
+          entryPoint: ":80"
+          ingress: ingress-0
+      listener:
+        type: tcp
+
+    ingresses:
+    - name: ingress-0
+      rules:
+      - hostname: ".example.com"
+        endpoint: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+      - hostname: "example.org"
+        endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    ```
 
 `entryPoint`指定流量的(公共)入口点，同时通过`ingress`选项指定[Ingress](/concepts/ingress/)对象来定义流量路由规则。
 
 公共入口点不是必须的，如果不设置则所有隧道只能通过私有入口点(参见后面的私有隧道部分)进行访问。
 
 !!! note "隧道ID分配"
-    隧道的ID应当由服务端提前分配并记录在Ingress中，如果客户端使用了一个未在Ingress中注册的隧道ID，则流量无法路由到此客户端。
+    如果使用了Ingress，隧道将通过(虚拟)主机名进行路由，隧道的ID应当由服务端提前分配并记录在Ingress中。如果客户端使用了一个未在Ingress中注册的隧道ID，则流量无法路由到此客户端。
 
 ### 客户端
 
 === "命令行"
 
     ```bash
-    gost -L rtcp://:0/192.168.1.1:80 -F relay://:8443?tunnelID=4d21094e-b74c-4916-86c1-d9fa36ea677b
+    gost -L rtcp://:0/192.168.1.1:80 -F relay://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b
     ```
 
 === "配置文件"
@@ -71,19 +81,19 @@ ingresses:
           connector:
             type: relay
             metadata:
-              tunnelID: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+              tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
           dialer:
             type: tcp
     ```
 
-当Relay客户端设置了`tunnelID`选项后便开启了Tunnel模式，此时rtcp服务中指定的`addr`参数无效。
+当Relay客户端设置了`tunnel.id`选项后便开启了Tunnel模式，此时rtcp服务中指定的`addr`参数无效。
 
-本例中当流量进入入口点(服务端的80端口)后会嗅探流量信息获取所要访问的主机名，再通过主机名在Ingress中找到匹配的规则，获取对应的服务端点(endpoint即Tunnel ID)，最后在Tunnel的连接池中获取一个有效连接(采用轮询机制，最多3次失败重试)将流量通过此连接发送到客户端。
+本例中当流量进入入口点(服务端的80端口)后会嗅探流量信息获取所要访问的主机名，再通过主机名在Ingress中找到匹配的规则，获取对应的服务端点(endpoint即Tunnel ID)，最后在Tunnel的连接池中获取一个有效连接将流量通过此连接发送到客户端。
 
 当主机名为`example.com`时，根据Ingress中的规则匹配到ID为4d21094e-b74c-4916-86c1-d9fa36ea677b的Tunnel。当流量到达客户端后再由rtcp服务转发给192.168.1.1:80服务。
 
 !!! tip "高可用性"
-    为了提高单个Tunnel的可用性，可以运行多个客户端，这些客户端使用相同的Tunnel ID。
+    为了提高单个Tunnel的可用性，可以运行多个客户端，这些客户端使用相同的Tunnel ID。当需要从隧道获取连接时，将采用轮询机制，最多3次失败重试。
 
 ## 客户端路由
 
@@ -120,7 +130,7 @@ chains:
       connector:
         type: relay
         metadata:
-          tunnelID: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+          tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
       dialer:
         type: tcp
 ```
@@ -183,7 +193,7 @@ ingresses:
 === "命令行"
 
     ```bash
-    gost -L rtcp://:0/192.168.2.1:80 -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L rtcp://:0/192.168.2.1:80 -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
 === "配置文件"
@@ -211,7 +221,7 @@ ingresses:
           connector:
             type: relay
             metadata:
-              tunnelID: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+              tunnel.id: ac74d9dd-3125-442a-a7c1-f9e49e05faca
           dialer:
             type: tcp
     ```
@@ -223,12 +233,15 @@ ingresses:
 === "命令行"
 
     自动嗅探主机名
+
     ```bash
-    gost -L tcp://:8000?sniffing=true -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L tcp://:8000?sniffing=true -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
+
     或指定主机名
+
     ```bash
-    gost -L tcp://:8000/srv-2.local:0 -F relay://:8443?tunnelID=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L tcp://:8000/srv-2.local -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
 === "配置文件"
@@ -254,12 +267,12 @@ ingresses:
             connector:
               type: relay
               metadata:
-                tunnelID: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+                tunnel.id: ac74d9dd-3125-442a-a7c1-f9e49e05faca
               dialer:
                 type: tcp
     ```
 
-访问端开启私有入口服务监听在8000端口，通过设置`tunnelID`选项指定所要使用的隧道。
+访问端开启私有入口服务监听在8000端口，通过设置`tunnel.id`选项指定所要使用的隧道。
 
 ## TCP服务
 
@@ -309,12 +322,15 @@ chains:
 === "命令行"
 
     SSH服务
+
     ```bash
-    gost -L tcp://:2222/ssh.srv-2.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L tcp://:2222/ssh.srv-2.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
+
     或redis服务
+
     ```bash
-    gost -L tcp://:6379/redis.srv-3.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L tcp://:6379/redis.srv-3.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
 === "配置文件"
@@ -331,9 +347,9 @@ chains:
         forwarder:
           nodes:
           - name: ssh
-            addr: ssh.srv-2.local:0
+            addr: ssh.srv-2.local
           # - name: redis
-          #   addr: redis.srv-3.local:0
+          #   addr: redis.srv-3.local
       chains:
       - name: chain-0
         hops:
@@ -344,12 +360,12 @@ chains:
             connector:
               type: relay
               metadata:
-                tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+                tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
               dialer:
                 type: tcp
     ```
 
-访问端需要在转发器中指定目标节点地址，需要与服务端Ingress对应规则中的`hostname`相匹配。
+访问端需要在转发器中指定目标节点主机名，需要与服务端Ingress对应规则中的`hostname`相匹配。
 
 ## UDP服务
 
@@ -386,7 +402,7 @@ chains:
       connector:
         type: relay
         metadata:
-          tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+          tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
       dialer:
         type: tcp
 ```
@@ -399,12 +415,15 @@ chains:
 === "命令行"
 
     DNS-1服务
+
     ```bash
-    gost -L tcp://:1053/dns.srv-2.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L tcp://:1053/dns.srv-2.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
+
     或DNS-2服务
+
     ```bash
-    gost -L tcp://:2053/dns.srv-3.local:0 -F relay://:8443?tunnelID=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L tcp://:2053/dns.srv-3.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
 === "配置文件"
@@ -421,9 +440,9 @@ chains:
         forwarder:
           nodes:
           - name: dns-1
-            addr: dns.srv-2.local:0
+            addr: dns.srv-2.local
           # - name: dns-2
-          #   addr: dns.srv-3.local:0
+          #   addr: dns.srv-3.local
       chains:
       - name: chain-0
         hops:
@@ -434,32 +453,72 @@ chains:
             connector:
               type: relay
               metadata:
-                tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+                tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
               dialer:
                 type: tcp
     ```
 
-访问端需要在转发器中指定目标节点地址，需要与服务端Ingress对应规则中的`hostname`相匹配。
+访问端需要在转发器中指定目标节点主机名，需要与服务端Ingress对应规则中的`hostname`相匹配。
+
+## 直接路由
+
+上面的隧道都是通过定义Ingress，根据Ingress规则中虚拟主机名来路由，这种方式可以看作是间接路由模式，Ingress在这里即是路由表，又可以看作是白名单。
+
+也可以开启直接路由模式，访问端与客户端直接通过隧道ID进行匹配，当访问端未匹配上Ingress中的规则后会采用隧道ID直接匹配方式来查找客户端。Ingress是可选的。
+
+!!! caution "提高安全性"
+    当开启直接路由模式后，隧道的分配及使用完全由客户端控制，请确保服务端仅能够被受信任的用户访问，可以通过增加用户认证功能提高服务的安全性，以防止被滥用。
+
+
+服务端通过`tunnel.direct`选项开启直接路由模式。
+
+=== "命令行"
+
+    ```bash
+    gost -L relay://:8443?tunnel.direct=true
+    ```
+
+=== "配置文件"
+
+    ```yaml 
+    services:
+    - name: service-0
+      addr: :8443
+      handler:
+        type: relay
+        metadata:
+          tunnel.direct: true
+      listener:
+        type: tcp
+    ```
 
 ## 多路复用
 
-隧道本身支持多路复用，单个隧道不仅限于某一种类型的流量使用，也支持同时传输不同类型的流量(Web，TCP，UDP)。接下来通过一个具体的示例来说明。
+隧道本身支持多路复用，单个隧道不仅限于某一种类型的流量使用，也支持同时传输不同类型的流量(Web，TCP，UDP)。
 
-## 通过隧道进行iperf测试
+TCP和UDP服务可以共用同一个隧道，隧道会对TCP和UDP的客户端连接作区分，对于TCP的访问端仅会匹配TCP客户端，对于UDP的访问端仅会区配UDP客户端。
+
+下面将通过一个具体的示例来说明。
+
+## 示例 - 通过隧道进行iperf测试
 
 ![Reverse Proxy - iperf3](/images/tunnel-iperf.png) 
 
 ### 服务端
 
-服务端分配了一个隧道，对应的虚拟主机名为`iperf.local`，这个隧道将同时承载iperf的TCP和UDP流量。
-
-如果Ingress只有一条规则，而又不想创建配置文件来定义Ingress，则可以通过命令行中使用`tunnel`选项定义规则来快速启动服务端。
-`tunnel`选项的值为`:`分割的主机名和隧道ID。
 
 === "命令行"
 
+    Ingress模式
+
     ```bash
     gost -L relay://:8443?tunnel=iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+    或直接路由模式
+
+    ```bash
+    gost -L relay://:8443?tunnel.direct=true
     ```
 
 === "配置文件"
@@ -472,7 +531,8 @@ chains:
         type: relay
         metadata:
           ingress: ingress-0
-          # tunnel: "iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3"
+          # direct routing mode
+          # tunnel.direct: true 
       listener:
         type: tcp
     ingresses:
@@ -489,7 +549,7 @@ chains:
 === "命令行"
 
     ```bash
-    gost -L rtcp://:0/:5201 -L rudp://:0/:5201 -F relay://:8443?tunnelID=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    gost -L rtcp://:0/:5201 -L rudp://:0/:5201 -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
 === "配置文件"
@@ -530,7 +590,7 @@ chains:
           connector:
             type: relay
             metadata:
-              tunnelID: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+              tunnel.id: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
           dialer:
             type: tcp
     ```
@@ -545,7 +605,7 @@ chains:
 === "命令行"
 
     ```bash
-    gost -L tcp://:15201/iperf.local:0 -L udp://:15201/iperf.local:0?keepalive=true -F relay://:8443?tunnelID=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    gost -L tcp://:15201/iperf.local -L udp://:15201/iperf.local?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
 === "配置文件"
@@ -562,7 +622,7 @@ chains:
         forwarder:
           nodes:
           - name: iperf
-            addr: iperf.local:0
+            addr: iperf.local
       services:
       - name: iperf-udp
         addr: :15201
@@ -577,7 +637,7 @@ chains:
         forwarder:
           nodes:
           - name: iperf
-            addr: iperf.local:0
+            addr: iperf.local
       chains:
       - name: chain-0
         hops:
@@ -588,7 +648,7 @@ chains:
             connector:
               type: relay
               metadata:
-                tunnelID: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
+                tunnel.id: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
               dialer:
                 type: tcp
     ```
