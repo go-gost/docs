@@ -309,7 +309,7 @@ chains:
       connector:
         type: relay
         metadata:
-          tunnelID: aede1f6a-762b-45da-b937-b6632356555a
+          tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
       dialer:
         type: tcp
 ```
@@ -605,8 +605,16 @@ TCP和UDP服务可以共用同一个隧道，隧道会对TCP和UDP的客户端�
 
 === "命令行"
 
+    Ingress模式
+
     ```bash
     gost -L tcp://:15201/iperf.local -L udp://:15201/iperf.local?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+    直接路由模式
+
+    ```bash
+    gost -L tcp://:15201 -L udp://:15201?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
 === "配置文件"

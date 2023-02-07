@@ -128,7 +128,7 @@ chains:
       connector:
         type: relay
         metadata:
-          tunnelID: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+          tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
       dialer:
         type: tcp
 ```
@@ -238,7 +238,7 @@ The configuration of the client is the same as above.
     or specify host name manually
 
     ```bash
-    gost -L tcp://:8000/srv-2.local:0 -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L tcp://:8000/srv-2.local -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
 === "File (YAML)"
@@ -603,8 +603,16 @@ The forwarded target address needs to match the host name corresponding to the r
 
 === "CLI"
 
+    Ingress mode
+
     ```bash
     gost -L tcp://:15201/iperf.local -L udp://:15201/iperf.local?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    ```
+
+    Direct routing mode
+
+    ```bash
+    gost -L tcp://:15201 -L udp://:15201?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
 === "File (YAML)"
