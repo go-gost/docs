@@ -4,7 +4,7 @@
 
 ## Relay协议的Tunnel功能
 
-Tunnel是一条服务端和客户端之间的(逻辑上的)隧道，服务端可以开启一个额外的公共入口点(EntryPoint)，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
+Tunnel是一条服务端和客户端之间的(逻辑上的)通道，服务端可以开启一个额外的公共入口点(EntryPoint)，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
 
 ![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
 
@@ -16,7 +16,7 @@ Tunnel是一条服务端和客户端之间的(逻辑上的)隧道，服务端可
     gost -L "relay://:8443?entryPoint=:80&tunnel=.example.com:4d21094e-b74c-4916-86c1-d9fa36ea677b,example.org:ac74d9dd-3125-442a-a7c1-f9e49e05faca"
     ```
 
-    通过命令行中使用`tunnel`选项定义Ingress规则。`tunnel`选项的值为`,`分割的规则列表，每个规则为`:`分割的主机名和隧道ID。
+    命令行中使用`tunnel`选项定义Ingress规则。`tunnel`选项的值为`,`分割的规则列表，每个规则为`:`分割的主机名和隧道ID。
 
 === "配置文件"
 
@@ -414,16 +414,8 @@ chains:
 
 === "命令行"
 
-    DNS-1服务
-
     ```bash
-    gost -L tcp://:1053/dns.srv-2.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
-    ```
-
-    或DNS-2服务
-
-    ```bash
-    gost -L tcp://:2053/dns.srv-3.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L udp://:1053/dns.srv-2.local -L udp://:2053/dns.srv-3.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
 === "配置文件"
@@ -441,8 +433,17 @@ chains:
           nodes:
           - name: dns-1
             addr: dns.srv-2.local
-          # - name: dns-2
-          #   addr: dns.srv-3.local
+      - name: service-1
+        addr: :2053
+        handler:
+          type: udp
+          chain: chain-0
+        listener:
+          type: udp
+        forwarder:
+          nodes:
+          - name: dns-2
+            addr: dns.srv-3.local
       chains:
       - name: chain-0
         hops:
@@ -480,7 +481,7 @@ chains:
 
 === "配置文件"
 
-    ```yaml 
+    ```yaml hl_lines="7"
     services:
     - name: service-0
       addr: :8443
