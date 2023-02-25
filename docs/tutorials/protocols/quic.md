@@ -1,4 +1,4 @@
-# gRPC
+# QUIC
 
 QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[lucas-clemente/quic-go](https://pkg.go.dev/github.com/lucas-clemente/quic-go)库。
 
