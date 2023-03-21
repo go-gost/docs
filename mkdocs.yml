@@ -126,6 +126,7 @@ nav:
       - PHT: tutorials/protocols/pht.md
       - HTTP3: tutorials/protocols/http3.md
       - KCP: tutorials/protocols/kcp.md
+      - SSH: tutorials/protocols/ssh.md
     - TLS设置: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md

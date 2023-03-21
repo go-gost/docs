@@ -209,12 +209,12 @@ chains:
 
 ### 心跳
 
-客户端可以通过`keepAlive`选项开启心跳，并通过`ttl`选项设置心跳包发送的间隔时长。
+客户端可以通过`keepalive`选项开启心跳，并通过`ttl`选项设置心跳包发送的间隔时长。
 
 === "命令行"
 
     ```bash
-    gost -L http://:8080 -F "wss://:8443?keepAlive=true&ttl=15s"
+    gost -L http://:8080 -F "wss://:8443?keepalive=true&ttl=15s"
     ```
 
 === "配置文件"
@@ -240,11 +240,11 @@ chains:
           dialer:
             type: wss
             metadata:
-              keepAlive: true
+              keepalive: true
               ttl: 15s
     ```
 
-## 代理协议
+## 组合使用
 
 Websocket数据通道可以与各种代理协议组合使用。
 
