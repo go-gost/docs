@@ -246,11 +246,11 @@ When querying `example.com`, it passes the bypass bypass-0 on the target node ta
 
 ## Cache
 
-The cache duration can be set through the `ttl` parameter. By default, the TTL in the result returned by the DNS query is used. When it is set to a negative value, the cache is not used.
+The cache duration can be set through the `ttl` option. By default, the TTL in the result returned by the DNS query is used. When it is set to a negative value, the cache is not used.
 
 === "CLI"
     ```
-	gost -L dns://:10053?dns=1.1.1.1&ttl=60s
+    gost -L dns://:10053/1.1.1.1?ttl=60s
     ```
 
 === "File (YAML)"
@@ -262,20 +262,49 @@ The cache duration can be set through the `ttl` parameter. By default, the TTL i
       handler:
         type: dns
         metadata:
-          dns:
-          - 1.1.1.1
-		  ttl: 60s
+          ttl: 60s
       listener:
         type: dns
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 1.1.1.1
+    ```
+
+## Asynchronous Query
+
+Use the `async` option to set the query request to the upper-level DNS service to be asynchronous. At this time, when the cache is expired, the result in the client cache will still be returned, and at the same time, the query request will be sent to the upper-level DNS proxy service asynchronously and the cache will be updated.
+
+=== "CLI"
+    ```
+    gost -L dns://:10053/1.1.1.1?async=true
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :10053
+      handler:
+        type: dns
+        metadata:
+          async: true
+      listener:
+        type: dns
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 1.1.1.1
     ```
 
 ## ECS
 
-Set the client IP through the `clientIP` parameter, and enable the ECS (EDNS Client Subnet) extension function.
+Set the client IP through the `clientIP` option, and enable the ECS (EDNS Client Subnet) extension function.
 
 === "CLI"
     ```
-	gost -L dns://:10053?dns=1.1.1.1&clientIP=1.2.3.4
+    gost -L dns://:10053/1.1.1.1?clientIP=1.2.3.4
     ```
 
 === "File (YAML)"
@@ -287,9 +316,11 @@ Set the client IP through the `clientIP` parameter, and enable the ECS (EDNS Cli
       handler:
         type: dns
         metadata:
-          dns:
-          - 1.1.1.1
-		  clientIP: 1.2.3.4
+          clientIP: 1.2.3.4
       listener:
         type: dns
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 1.1.1.1
     ```

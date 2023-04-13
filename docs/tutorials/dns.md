@@ -250,11 +250,11 @@
 
 ## 缓存
 
-通过`ttl`参数可以设置缓存时长，默认使用DNS查询返回结果中的TTL，当设置为负值，则不使用缓存。
+通过`ttl`选项可以设置缓存时长，默认使用DNS查询返回结果中的TTL，当设置为负值则不使用缓存。
 
 === "命令行"
     ```
-	gost -L dns://:10053?dns=1.1.1.1&ttl=60s
+    gost -L dns://:10053/1.1.1.1?ttl=60s
     ```
 
 === "配置文件"
@@ -266,20 +266,49 @@
       handler:
         type: dns
         metadata:
-          dns:
-          - 1.1.1.1
-		  ttl: 60s
+          ttl: 60s
       listener:
         type: dns
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 1.1.1.1
+    ```
+
+## 异步查询
+
+通过`async`选项设置对上级DNS服务的查询请求为异步，此时当缓存失效后仍旧返回客户端缓存中的结果，同时再向上级DNS代理服务异步发送查询请求并更新缓存。
+
+=== "命令行"
+    ```
+    gost -L dns://:10053/1.1.1.1?async=true
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :10053
+      handler:
+        type: dns
+        metadata:
+          async: true
+      listener:
+        type: dns
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 1.1.1.1
     ```
 
 ## ECS
 
-通过`clientIP`参数设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
+通过`clientIP`选项设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
 
 === "命令行"
     ```
-	gost -L dns://:10053?dns=1.1.1.1&clientIP=1.2.3.4
+    gost -L dns://:10053/1.1.1.1?clientIP=1.2.3.4
     ```
 
 === "配置文件"
@@ -291,9 +320,11 @@
       handler:
         type: dns
         metadata:
-          dns:
-          - 1.1.1.1
-		  clientIP: 1.2.3.4
+          clientIP: 1.2.3.4
       listener:
         type: dns
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 1.1.1.1
     ```

@@ -12,8 +12,8 @@ CONNECT方法并不是所有HTTP服务都支持，为了更加通用，GOST利�
 === "命令行"
 
     ```bash
-	  gost -L "http+pht://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
-	  ```
+    gost -L "http+pht://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
+    ```
 
 === "配置文件"
 
@@ -29,7 +29,7 @@ CONNECT方法并不是所有HTTP服务都支持，为了更加通用，GOST利�
           authorizePath: /authorize
           pushPath: /push
           pullPath: /pull
-	  ```
+    ```
 
 ## 使用TLS 
 
@@ -37,7 +37,7 @@ PHT over LTS。
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L "http+phts://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
     ```
 
@@ -55,7 +55,7 @@ PHT over LTS。
           authorizePath: /authorize
           pushPath: /push
           pullPath: /pull
-	  ```
+    ```
 
 ## 自定义请求路径
 

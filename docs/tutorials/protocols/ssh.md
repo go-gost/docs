@@ -129,7 +129,7 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 
 !!! caution "认证信息作用对象"
     在命令行模式下，认证信息(user:pass)设置的是SSH通道的认证(Listener和Dialer)，而非Handler和Connector。
-	此行为仅在使用ssh和sshd通道是有效。
+	此行为仅在使用ssh和sshd通道时有效。
 
 #### 服务端
 
