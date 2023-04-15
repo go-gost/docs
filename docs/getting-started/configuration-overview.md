@@ -134,3 +134,48 @@ gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.16
     * 地址`192.168.1.1:8080`部分对应node的`addr`属性。
     * 认证信息`gost:gost`部分被转换为`connector.auth`属性。
 	* 参数选项部分`foo=bar`被转换为`connector.metadata`和`dialer.metadata`
+
+## 系统服务
+
+GOST支持以系统服务的方式运行
+
+### Windows
+
+通过Windows的`sc`命令可以创建一个Windows服务：
+
+```bash
+sc create gost binpath= "C:\gost.exe -L :8080" start= auto
+```
+
+### Linux
+
+通过Systemd来管理GOST进程
+
+新建`/etc/systemd/system/gost.service`脚本：
+
+```
+[Unit]
+Description=GO Simple Tunnel
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/gost -L=:8080
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+设置为开机启动
+
+```bash
+systemctl enable gost
+```
+
+启动服务
+
+```bash
+systemctl start gost
+```

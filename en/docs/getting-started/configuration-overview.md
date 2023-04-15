@@ -134,3 +134,46 @@ The corresponding configuration file:
     * The `192.168.1.1:8080` corresponds to the node field `addr`.
     * The authentication `gost:gost` is converted to `connector.auth`.
 	* The option `foo=bar` is converted to `connector.metadata` and `dialer.metadata`
+
+## System Service
+
+GOST supports running as a system service
+
+### Windows
+
+Create a Windows service through the `sc` command:
+
+```bash
+sc create gost binpath= "C:\gost.exe -L :8080" start= auto
+```
+
+### Linux
+
+Create `/etc/systemd/system/gost.service` file:
+
+```
+[Unit]
+Description=GO Simple Tunnel
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/gost -L=:8080
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable service:
+
+```bash
+systemctl enable gost
+```
+
+Start service:
+
+```bash
+systemctl start gost
+```
