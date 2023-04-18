@@ -111,3 +111,23 @@ services:
 
 `recorder.service.router.dial.address.error`
 :   建立连接失败的目标地址
+
+## 插件
+
+记录器可以配置为使用外部插件服务，记录器会将数据转发给插件服务处理。当使用插件时其他参数无效。
+
+```yaml
+recorders:
+- name: recorder-0
+  plugin:
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    插件服务地址
+
+`tls` (duration, default=null)
+:    设置后将使用TLS加密传输，默认不使用TLS加密。

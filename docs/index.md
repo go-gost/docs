@@ -17,6 +17,7 @@
 - [x] 限速限流
 - [x] 准入控制
 - [x] 动态配置
+- [x] 插件系统
 - [x] Prometheus监控指标
 - [x] Web API
 - [ ] Web UI

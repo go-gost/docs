@@ -102,15 +102,15 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
       addr: ":8080"
       handler:
         type: http
-		auther: auther-0
+        auther: auther-0
       listener:
         type: tcp
-	authers:
-	- name: auther-0
-	  auths:
-	  - username: user1
-	    password: pass1
-	  - username: user2
+    authers:
+    - name: auther-0
+      auths:
+      - username: user1
+        password: pass1
+      - username: user2
         password: pass2
 	```
 
@@ -273,3 +273,23 @@ authers:
 	通过命令行设置的认证信息仅会应用到处理器或连接器上，对于ssh和sshd服务则会应用到监听器和拨号器上。
 
 	如果通过命令行自动生成配置文件，在metadata中不会出现此参数项。
+
+## 插件
+
+认证器可以配置为使用外部插件服务，认证器会将认证请求转发给插件服务处理。当使用插件时其他参数无效。
+
+```yaml
+authers:
+- name: auther-0
+  plugin:
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    插件服务地址
+
+`tls` (duration, default=null)
+:    设置后将使用TLS加密传输，默认不使用TLS加密。

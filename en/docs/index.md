@@ -17,6 +17,7 @@
 - [x] Rate Limiting
 - [x] Admission control
 - [x] Dynamic configuration
+- [x] Plugin system
 - [x] Prometheus metrics
 - [x] Web API
 - [ ] Web UI

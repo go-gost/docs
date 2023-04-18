@@ -240,3 +240,23 @@ hosts:
     url: http://127.0.0.1:8000
     timeout: 10s
 ```
+
+## 插件
+
+映射器可以配置为使用外部插件服务，映射器会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
+
+```yaml
+hosts:
+- name: hosts-0
+  plugin:
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    插件服务地址
+
+`tls` (duration, default=null)
+:    设置后将使用TLS加密传输，默认不使用TLS加密。

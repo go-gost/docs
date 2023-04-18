@@ -103,6 +103,7 @@ nav:
     - Host-IP Mapping: concepts/hosts.md
     - Ingress: concepts/ingress.md
     - Data Recording: concepts/recorder.md
+    - Plugin System: concepts/plugin.md
   - Tutorials:
     - TLS: tutorials/tls.md
     - HTTP Tunnel: tutorials/http-tunnel.md

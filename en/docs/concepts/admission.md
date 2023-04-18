@@ -171,3 +171,24 @@ admissions:
 	password: 123456
 	key: gost:admissions:admission-0
 ```
+
+## Plugin
+
+The admission controller can be configured to use an external plugin service, and the controller will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+
+```yaml
+admissions:
+- name: admission-0
+  plugin:
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    plugin server address.
+
+`tls` (duration, default=null)
+:    TLS encryption will be used for transmission, TLS encryption is not used by default.
+
