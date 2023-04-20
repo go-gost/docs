@@ -194,3 +194,24 @@ resolvers:
   - addr: 1.1.1.1
     clientIP: 1.2.3.4
 ```
+
+## Plugin
+
+Resolver can be configured to use an external [plugin](/en/concepts/plugin/) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+
+```yaml
+resolvers:
+- name: resolver-0
+  plugin:
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    plugin server address.
+
+`tls` (duration, default=null)
+:    TLS encryption will be used for transmission, TLS encryption is not used by default.
+

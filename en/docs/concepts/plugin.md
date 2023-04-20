@@ -16,20 +16,30 @@ The modules that currently support plugin are: [Admission](/en/concepts/admissio
 Taking the authenticator as an example, after configuring the authenticator to use the plugin service, all authentication requests will be forwarded to the plugin server for processing.
 
 ```yaml
-    services:
-    - name: service-0
-      addr: ":8080"
-      handler:
-        type: http
-        auther: auther-0
-      listener:
-        type: tcp
-    authers:
-    - name: auther-0
-      plugin:
-        addr: 127.0.0.1:8000
-        tls: {}
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    auther: auther-0
+  listener:
+    type: tcp
+authers:
+- name: auther-0
+  plugin:
+    addr: 127.0.0.1:8000
+	token: gost
+    tls: {}
 ```
+
+`addr` (string, required)
+:    plugin server address.
+
+`token` (string)
+:    credentials, plugin server can choose to validate this information.
+
+`tls` (duration, default=null)
+:    After the configuration, TLS will be used to encrypt transmission. By default, TLS is not used.
 
 ## Plugin Service
 
@@ -47,6 +57,9 @@ import (
 
 	"github.com/go-gost/plugin/auth/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -58,12 +71,26 @@ type server struct {
 }
 
 func (s *server) Authenticate(ctx context.Context, in *proto.AuthenticateRequest) (*proto.AuthenticateReply, error) {
+	// optional client authentication
+	token := s.getCredentials(ctx)
+	if token != "gost" {
+		return nil, status.Error(codes.Unauthenticated, codes.Unauthenticated.String())
+	}
 	reply := &proto.AuthenticateReply{}
 	if in.GetUsername() == "gost" && in.GetPassword() == "gost" {
 		reply.Ok = true
 	}
 	return reply, nil
 }
+
+func (s *server) getCredentials(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok && len(md["token"]) > 0 {
+		return md["token"][0]
+	}
+	return ""
+}
+
 
 func main() {
 	flag.Parse()

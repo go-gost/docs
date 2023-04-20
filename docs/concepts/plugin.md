@@ -17,20 +17,30 @@ GOST的插件系统建立在gRPC通讯基础之上，通过插件可以将处理
 以认证器为例，当配置认证器使用插件服务后，所有的认证请求将转发给插件服务处理。
 
 ```yaml
-    services:
-    - name: service-0
-      addr: ":8080"
-      handler:
-        type: http
-        auther: auther-0
-      listener:
-        type: tcp
-    authers:
-    - name: auther-0
-      plugin:
-        addr: 127.0.0.1:8000
-        tls: {}
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    auther: auther-0
+  listener:
+    type: tcp
+authers:
+- name: auther-0
+  plugin:
+    addr: 127.0.0.1:8000
+	token: gost
+    tls: {}
 ```
+
+`addr` (string, required)
+:    插件服务地址
+
+`token` (string)
+:    认证信息，作为服务认证机制，插件服务可以选择对此信息进行验证。
+
+`tls` (duration, default=null)
+:    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ## 编写插件
 
@@ -48,6 +58,9 @@ import (
 
 	"github.com/go-gost/plugin/auth/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 var (
@@ -59,11 +72,25 @@ type server struct {
 }
 
 func (s *server) Authenticate(ctx context.Context, in *proto.AuthenticateRequest) (*proto.AuthenticateReply, error) {
+	// optional client authentication
+	token := s.getCredentials(ctx)
+	if token != "gost" {
+		return nil, status.Error(codes.Unauthenticated, codes.Unauthenticated.String())
+	}
+
 	reply := &proto.AuthenticateReply{}
 	if in.GetUsername() == "gost" && in.GetPassword() == "gost" {
 		reply.Ok = true
 	}
 	return reply, nil
+}
+
+func (s *server) getCredentials(ctx context.Context) string {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if ok && len(md["token"]) > 0 {
+		return md["token"][0]
+	}
+	return ""
 }
 
 func main() {

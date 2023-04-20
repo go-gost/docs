@@ -142,7 +142,7 @@ ingresses:
 
 ## 插件
 
-Ingress可以配置为使用外部插件服务，Ingress会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
+Ingress可以配置为使用外部[插件](/concepts/plugin/)服务，Ingress会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 ingresses:

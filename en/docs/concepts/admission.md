@@ -174,7 +174,7 @@ admissions:
 
 ## Plugin
 
-The admission controller can be configured to use an external plugin service, and the controller will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+The admission controller can be configured to use an external [plugin](/en/concepts/plugin/) service, and the controller will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 admissions:
