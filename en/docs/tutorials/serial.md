@@ -29,7 +29,6 @@ Serial port redirector can redirect the local serial port device to a TCP servic
 
 ## Redirect to TCP service
 
-将本地串口设备`COM1`重定向到192.168.1.1:80服务。
 Redirect the local serial port `COM1` to TCP service `192.168.1.1:80`.
 
 === "CLI"
@@ -56,7 +55,6 @@ Redirect the local serial port `COM1` to TCP service `192.168.1.1:80`.
 
 ## Redirect To Another Local UDS Service
 
-将本地串口设备`COM1`重定向到本地的另外一个串口设备`COM2`。
 Redirect local serial port `COM1` to another local serial port `COM2`
 
 === "CLI"
@@ -83,7 +81,6 @@ Redirect local serial port `COM1` to another local serial port `COM2`
 
 ## Redirect To Remote Serial Port
 
-将本地串口设备`COM1`通过转发链重定向到远程主机`192.168.1.1`上的串口设备`COM1`。
 Redirect local serial port `COM1` to the serial port `COM1` on the remote host `192.168.1.1` through forwarding chain. 
 
 === "CLI"
