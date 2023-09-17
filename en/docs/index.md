@@ -11,6 +11,8 @@
 - [x] TCP/UDP transparent proxy
 - [x] DNS resolver and proxy
 - [x] TUN/TAP device
+- [x] Unix Domain Socket Redirector
+- [x] Serial Port Redirector
 - [x] Reverse Proxy
 - [x] Load balancing
 - [x] Routing control
