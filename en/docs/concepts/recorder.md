@@ -25,7 +25,7 @@ recorders:
 
 ## Recorder Types
 
-Currently supported recorder types are: file, redis.
+Currently supported recorder types are: file, TCP servie, HTTP service, redis.
 
 ### File
 
@@ -44,6 +44,42 @@ recorders:
 
 `sep` (string)
 :    Record separator. If set, this separator will be inserted between two records
+
+### TCP Service
+
+TCP recorder sends data to the specified TCP service.
+
+```yaml
+recorders:
+- name: recorder-0
+  tcp:
+    addr: 192.168.1.1:1234
+    timeout: 10s
+```
+
+`tcp.addr` (string)
+:    TCP service address
+
+`timeout` (duration)
+:    Timeout for establishing a connection
+
+### HTTP Service
+
+HTTP recorder sends data to the specified HTTP service using the HTTP `POST` method. If HTTP returns status code `200`, the recording is considered successful.
+
+```yaml
+recorders:
+- name: recorder-0
+  http:
+    url: http://192.168.1.1:80
+    timeout: 10s
+```
+
+`http.url` (string)
+:    HTTP URL address
+
+`timeout` (duration)
+:    Timeout for establishing a connection
 
 ### Redis
 

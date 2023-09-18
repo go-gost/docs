@@ -24,7 +24,7 @@ recorders:
 
 ## 记录器类型
 
-目前支持的记录器类型有：文件，redis。
+目前支持的记录器类型有：文件，TCP服务，HTTP服务，redis。
 
 ### 文件
 
@@ -43,6 +43,43 @@ recorders:
 
 `sep` (string)
 :    记录分割符，如果设置则会在两条记录中间插入此分割符
+
+### TCP服务
+
+TCP服务记录器将数据发送到指定的TCP服务。
+
+```yaml
+recorders:
+- name: recorder-0
+  tcp:
+    addr: 192.168.1.1:1234
+    timeout: 10s
+```
+
+`tcp.addr` (string)
+:    TCP服务地址
+
+`timeout` (duration)
+:    TCP服务建立连接超时时长
+
+
+### HTTP服务
+
+记录器将数据以HTTP `POST`方法送到指定的HTTP服务。HTTP返回状态码`200`则认为记录成功。
+
+```yaml
+recorders:
+- name: recorder-0
+  http:
+    url: http://192.168.1.1:80
+    timeout: 10s
+```
+
+`http.url` (string)
+:    HTTP URL地址
+
+`timeout` (duration)
+:    请求超时时长
 
 ### Redis
 
@@ -111,6 +148,9 @@ services:
 
 `recorder.service.router.dial.address.error`
 :   建立连接失败的目标地址
+
+`recorder.service.handler.serial`
+:    串口设备通讯数据
 
 ## 插件
 
