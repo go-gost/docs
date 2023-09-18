@@ -7,12 +7,12 @@ UDS(Unix Domain Socket) redirector can redirect the local UDS service to a TCP s
 
 ## Redirect to TCP service
 
-Redirect the local UDS service `gost.sock` to TCP service `192.168.1.1:80`.
+Redirect the local UDS service `gost.sock` to TCP service `192.168.1.1:8080`.
 
 === "CLI"
 
 	```bash
-	gost -L unix://gost.sock/192.168.1.1:80
+	gost -L unix://gost.sock -F tcp://192.168.1.1:8080
 	```
 
 === "File (YAML)"
@@ -23,12 +23,54 @@ Redirect the local UDS service `gost.sock` to TCP service `192.168.1.1:80`.
 	  addr: gost.sock
 	  handler:
 		type: unix
+		chain: chain-0
 	  listener:
 		type: unix
-	  forwarder:
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
 	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:80
+		- name: node-0
+		  addr: 192.168.1.1:8080
+		  connector:
+		    type: tcp
+		  dialer:
+		    type: tcp
+	```
+
+### Redirect TCP Service To Local UDS Service
+
+Redirect local TCP service `localhost:8080` to local UDS service `gost.sock`.
+
+=== "CLI"
+
+	```bash
+	gost -L tcp://localhost:8080 -F unix://gost.sock 
+	```
+
+=== "File (YAML)"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: localhost:8080
+	  handler:
+		type: tcp
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+	    nodes:
+		- name: node-0
+		  addr: gost.sock
+		  connector:
+		    type: unix
+		  dialer:
+		    type: unix
 	```
 
 ## Redirect To Another Local UDS Service
@@ -75,6 +117,7 @@ Redirect local UDS service `gost.sock` to the UDS service `gost.sock` on the rem
 	  addr: gost.sock
 	  handler:
 		type: unix
+		chain: chain-0
 	  listener:
 		type: unix
 	  forwarder:

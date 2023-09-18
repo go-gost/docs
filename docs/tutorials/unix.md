@@ -9,12 +9,12 @@ UDS(Unix Domain Socket)重定向可以将本地的UDS服务重定向到一个TCP
 
 ### 重定向到TCP服务
 
-本地启动UDS服务`gost.sock`，并重定向到192.168.1.1:80服务。
+本地启动UDS服务`gost.sock`，并重定向到`192.168.1.1:8080`TCP服务。
 
 === "命令行"
 
 	```bash
-	gost -L unix://gost.sock/192.168.1.1:80
+	gost -L unix://gost.sock -F tcp://192.168.1.1:8080
 	```
 
 === "配置文件"
@@ -25,12 +25,54 @@ UDS(Unix Domain Socket)重定向可以将本地的UDS服务重定向到一个TCP
 	  addr: gost.sock
 	  handler:
 		type: unix
+		chain: chain-0
 	  listener:
 		type: unix
-	  forwarder:
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
 	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:80
+		- name: node-0
+		  addr: 192.168.1.1:8080
+		  connector:
+		    type: tcp
+		  dialer:
+		    type: tcp
+	```
+
+### TCP服务重定向到本地UDS服务
+
+本地启动TCP服务`localhost:8080`并重定向到本地UDS服务`gost.sock`。
+
+=== "命令行"
+
+	```bash
+	gost -L tcp://localhost:8080 -F unix://gost.sock 
+	```
+
+=== "配置文件"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: localhost:8080
+	  handler:
+		type: tcp
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+	    nodes:
+		- name: node-0
+		  addr: gost.sock
+		  connector:
+		    type: unix
+		  dialer:
+		    type: unix
 	```
 
 ### 重定向到本地另外一个UDS服务
@@ -77,6 +119,7 @@ UDS(Unix Domain Socket)重定向可以将本地的UDS服务重定向到一个TCP
 	  addr: gost.sock
 	  handler:
 		type: unix
+		chain: chain-0
 	  listener:
 		type: unix
 	  forwarder:

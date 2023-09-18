@@ -149,6 +149,9 @@ Currently supported record objects are:
 `recorder.service.router.dial.address.error`
 :   All destination addresses that failed to establish a connection
 
+`recorder.service.handler.serial`
+:    Serial port device communication data
+
 ## Plugin
 
 Recorder can be configured to use an external [plugin](/en/concepts/plugin/) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.

@@ -31,12 +31,12 @@
 
 ### 重定向到TCP服务
 
-将本地串口设备`COM1`重定向到192.168.1.1:80服务。
+将本地串口设备`COM1`重定向到`192.168.1.1:8080`TCP服务。
 
 === "命令行"
 
 	```bash
-	gost -L serial://COM1/192.168.1.1:80
+	gost -L serial://COM1 -F tcp://192.168.1.1:8080
 	```
 
 === "配置文件"
@@ -47,12 +47,54 @@
 	  addr: COM1
 	  handler:
 		type: serial
+		chain: chain-0
 	  listener:
 		type: serial
-	  forwarder:
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
 	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:80
+		- name: node-0
+		  addr: 192.168.1.1:8080
+		  connector:
+		    type: tcp
+		  dialer:
+		    type: tcp
+	```
+
+### TCP服务重定向到本地串口设备
+
+本地启动TCP服务`localhost:8080`并重定向到本地串口设备`COM1`。
+
+=== "命令行"
+
+	```bash
+	gost -L tcp://localhost:8080 -F serial://COM1
+	```
+
+=== "配置文件"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: localhost:8080
+	  handler:
+		type: tcp
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+	    nodes:
+		- name: node-0
+		  addr: COM1
+		  connector:
+		    type: serial
+		  dialer:
+		    type: serial
 	```
 
 ### 重定向到本地另外串口设备
@@ -99,6 +141,7 @@
 	  addr: COM1
 	  handler:
 		type: serial
+		chain: chain-0
 	  listener:
 		type: serial
 	  forwarder:

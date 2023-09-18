@@ -31,12 +31,12 @@ Serial port redirector can redirect the local serial port device to a TCP servic
 
 ### Redirect to TCP service
 
-Redirect the local serial port `COM1` to TCP service `192.168.1.1:80`.
+Redirect the local serial port `COM1` to TCP service `192.168.1.1:8080`.
 
 === "CLI"
 
 	```bash
-	gost -L serial://COM1/192.168.1.1:80
+	gost -L serial://COM1 -F tcp://192.168.1.1:8080
 	```
 
 === "File (YAML)"
@@ -47,12 +47,54 @@ Redirect the local serial port `COM1` to TCP service `192.168.1.1:80`.
 	  addr: COM1
 	  handler:
 		type: serial
+		chain: chain-0
 	  listener:
 		type: serial
-	  forwarder:
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
 	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:80
+		- name: node-0
+		  addr: 192.168.1.1:8080
+		  connector:
+		    type: tcp
+		  dialer:
+		    type: tcp
+	```
+
+### Redirect TCP Service To Local Serial Port Device
+
+Redirect local TCP service `localhost:8080` to local serial port `COM1`.
+
+=== "CLI"
+
+	```bash
+	gost -L tcp://localhost:8080 -F serial://COM1
+	```
+
+=== "File (YAML)"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: localhost:8080
+	  handler:
+		type: tcp
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+	    nodes:
+		- name: node-0
+		  addr: COM1
+		  connector:
+		    type: serial
+		  dialer:
+		    type: serial
 	```
 
 ### Redirect To Another Local UDS Service
@@ -99,6 +141,7 @@ Redirect local serial port `COM1` to the serial port `COM1` on the remote host `
 	  addr: COM1
 	  handler:
 		type: serial
+		chain: chain-0
 	  listener:
 		type: serial
 	  forwarder:
