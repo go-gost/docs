@@ -260,3 +260,35 @@ hosts:
 
 `tls` (duration, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
+
+### HTTP插件
+
+```yaml
+hosts:
+- name: hosts-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/hosts
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/hosts -d '{"network": "ip4", "host":"example.com", "client": "gost"}'
+```
+
+```json
+{"ips": ["1.2.3.4","2.3.4.5"], "ok": true}
+```
+
+`network` (string, default=ip4)
+:    网络地址类型：`ip4` - 解析为IPv4地址。`ip6` - 解析为IPv6地址。
+
+`host` (string)
+:    主机名。
+
+`client` (string)
+:    用户身份标识，此信息由认证器插件服务生成。
+
+`ips` ([]string)
+:    IP地址列表

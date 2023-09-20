@@ -1,10 +1,10 @@
 # 插件系统
 
-GOST的插件系统建立在gRPC通讯基础之上，通过插件可以将处理逻辑转发给插件服务处理，从而可以对功能进行更灵活的扩展。
+GOST的插件系统建立在gRPC或HTTP通讯基础之上，通过插件可以将处理逻辑转发给插件服务处理，从而可以对功能进行更灵活的扩展。
 
-使用gRPC通讯方式而不是动态链接库有以下几个优点：
+使用gRPC或HTTP通讯方式而不是动态链接库有以下几个优点：
 
-* 支持多种语言，一个插件就是一个gRPC服务，可以使用任何语言实现。
+* 支持多种语言，一个插件就是一个gRPC或HTTP服务，可以使用任何语言实现。
 * 部署灵活，可以选择分开独立部署。
 * 插件服务的生命周期不会影响到GOST本身。
 * 安全，采用网络通讯方式，可以更有效的限制应用之间的数据共享。
@@ -28,10 +28,15 @@ services:
 authers:
 - name: auther-0
   plugin:
+    type: grpc
+	# type: http
     addr: 127.0.0.1:8000
 	token: gost
     tls: {}
 ```
+
+`type` (string, default=grpc)
+:    插件类型，`grpc`或`http`
 
 `addr` (string, required)
 :    插件服务地址
@@ -45,6 +50,11 @@ authers:
 ## 编写插件
 
 使用Go语言编写一个认证器插件服务。
+
+### gRPC插件服务
+
+[https://github.com/go-gost/plugin/blob/master/auth/example/grpc/main.go](https://github.com/go-gost/plugin/blob/master/auth/example/grpc/main.go)
+
 
 ```go
 package main
@@ -108,4 +118,65 @@ func main() {
 }
 ```
 
-[https://github.com/go-gost/plugin/blob/master/auth/example/main.go](https://github.com/go-gost/plugin/blob/master/auth/example/main.go)
+### HTTP插件服务
+
+[https://github.com/go-gost/plugin/blob/master/auth/example/http/main.go](https://github.com/go-gost/plugin/blob/master/auth/example/http/main.go)
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"flag"
+	"fmt"
+	"log"
+	"net"
+	"net/http"
+)
+
+var (
+	port = flag.Int("port", 8000, "The server port")
+)
+
+type autherRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type autherResponse struct {
+	OK bool   `json:"ok"`
+	ID string `json:"id"`
+}
+
+func main() {
+	flag.Parse()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	log.Printf("server listening at %v", lis.Addr())
+
+	http.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
+		rb := autherRequest{}
+		if err := json.NewDecoder(r.Body).Decode(&rb); err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		resp := autherResponse{}
+		if rb.Username == "gost" && rb.Password == "gost" {
+			resp.OK = true
+			resp.ID = "gost"
+		}
+
+		log.Printf("auth: %s, %s, %v", rb.Username, rb.Password, resp.OK)
+
+		json.NewEncoder(w).Encode(resp)
+	})
+
+	if err := http.Serve(lis, nil); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+```

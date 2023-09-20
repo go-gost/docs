@@ -224,3 +224,22 @@ admissions:
 `tls` (duration, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
+### HTTP插件
+
+```yaml
+admissions:
+- name: admission-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/admission
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/admission -d '{"addr": "example.com"}'
+```
+
+```json
+{"ok": true}
+```

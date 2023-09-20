@@ -159,3 +159,23 @@ ingresses:
 
 `tls` (duration, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
+
+### HTTP插件
+
+```yaml
+ingresses:
+- name: ingress-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/ingress
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/ingress -d '{"host":"example.com"}'
+```
+
+```json
+{"endpoint":"4d21094e-b74c-4916-86c1-d9fa36ea677b"}
+```

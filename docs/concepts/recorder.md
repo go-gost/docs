@@ -171,3 +171,23 @@ recorders:
 
 `tls` (duration, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
+
+### HTTP插件
+
+```yaml
+recorders:
+- name: recorder-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/recorder
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/recorder -d '{"data":"aGVsbG8gd29ybGQ="}'
+```
+
+```json
+{"ok":true}
+```

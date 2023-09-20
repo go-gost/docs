@@ -1,10 +1,10 @@
 # Plugin System
 
-Plugin system is based on gRPC communication. Through the plugin, the requests can be forwarded to the plugin server for processing, so that the function can be expanded more flexibly.
+Plugin system is based on gRPC or HTTP communication. Through the plugin, the requests can be forwarded to the plugin server for processing, so that the function can be expanded more flexibly.
 
-Using gRPC communication instead of dynamic link library has the following advantages:
+Using gRPC/HTTP communication instead of dynamic link library has the following advantages:
 
-* Support multiple languages. A plugin is a gRPC service, which can be implemented in any language.
+* Support multiple languages. A plugin is a gRPC/HTTP service, which can be implemented in any language.
 * Deployment is flexible, and you can choose to deploy independently.
 * The life cycle of the plugin will not affect the GOST itself.
 * Security. Using network communication, can more effectively limit data sharing between applications.
@@ -27,10 +27,15 @@ services:
 authers:
 - name: auther-0
   plugin:
+    type: grpc
+	# type: http
     addr: 127.0.0.1:8000
 	token: gost
     tls: {}
 ```
+
+`type` (string, default=grpc)
+:    plugin type, `grpc` or `http`.
 
 `addr` (string, required)
 :    plugin server address.
@@ -44,6 +49,10 @@ authers:
 ## Plugin Service
 
 Write an authenticator plugin service in Go language.
+
+### gRPC Plugin Service
+
+[https://github.com/go-gost/plugin/blob/master/auth/example/grpc/main.go](https://github.com/go-gost/plugin/blob/master/auth/example/grpc/main.go)
 
 ```go
 package main
@@ -107,4 +116,65 @@ func main() {
 }
 ```
 
-[https://github.com/go-gost/plugin/blob/master/auth/example/main.go](https://github.com/go-gost/plugin/blob/master/auth/example/main.go)
+### HTTP Plugin Service
+
+[https://github.com/go-gost/plugin/blob/master/auth/example/http/main.go](https://github.com/go-gost/plugin/blob/master/auth/example/http/main.go)
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"flag"
+	"fmt"
+	"log"
+	"net"
+	"net/http"
+)
+
+var (
+	port = flag.Int("port", 8000, "The server port")
+)
+
+type autherRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+type autherResponse struct {
+	OK bool   `json:"ok"`
+	ID string `json:"id"`
+}
+
+func main() {
+	flag.Parse()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+	log.Printf("server listening at %v", lis.Addr())
+
+	http.HandleFunc("/auth", func(w http.ResponseWriter, r *http.Request) {
+		rb := autherRequest{}
+		if err := json.NewDecoder(r.Body).Decode(&rb); err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		resp := autherResponse{}
+		if rb.Username == "gost" && rb.Password == "gost" {
+			resp.OK = true
+			resp.ID = "gost"
+		}
+
+		log.Printf("auth: %s, %s, %v", rb.Username, rb.Password, resp.OK)
+
+		json.NewEncoder(w).Encode(resp)
+	})
+
+	if err := http.Serve(lis, nil); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+```

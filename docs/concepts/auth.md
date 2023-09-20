@@ -293,3 +293,26 @@ authers:
 
 `tls` (duration, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
+
+### HTTP插件
+
+```yaml
+authers:
+- name: auther-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/auth
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/auth -d '{"username": "gost", "password": "gost"}'
+```
+
+```json
+{"ok": true, "id":"gost"}
+```
+
+`id` (string)
+:    插件服务可选择性返回的用户ID标识，此信息会传递给后续的其他插件服务(分流器，主机IP映射器，域名解析器)用于用户身份标识。
