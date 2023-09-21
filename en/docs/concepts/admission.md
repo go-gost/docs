@@ -192,3 +192,22 @@ admissions:
 `tls` (duration, default=null)
 :    TLS encryption will be used for transmission, TLS encryption is not used by default.
 
+### HTTP Plugin
+
+```yaml
+admissions:
+- name: admission-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/admission
+```
+
+#### Example
+
+```bash
+curl -XPOST http://127.0.0.1:8000/admission -d '{"addr": "example.com"}'
+```
+
+```json
+{"ok": true}
+```

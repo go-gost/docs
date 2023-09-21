@@ -307,12 +307,15 @@ authers:
 #### 请求示例
 
 ```bash
-curl -XPOST http://127.0.0.1:8000/auth -d '{"username": "gost", "password": "gost"}'
+curl -XPOST http://127.0.0.1:8000/auth -d '{"username":"gost", "password":"gost", "client":"127.0.0.1:12345"}'
 ```
 
 ```json
 {"ok": true, "id":"gost"}
 ```
+
+`client` (string)
+:    客户端地址
 
 `id` (string)
 :    插件服务可选择性返回的用户ID标识，此信息会传递给后续的其他插件服务(分流器，主机IP映射器，域名解析器)用于用户身份标识。

@@ -267,3 +267,28 @@ authers:
 `tls` (duration, default=null)
 :    TLS encryption will be used for transmission, TLS encryption is not used by default.
 
+### HTTP Plugin
+
+```yaml
+authers:
+- name: auther-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/auth
+```
+
+#### Example
+
+```bash
+curl -XPOST http://127.0.0.1:8000/auth -d '{"username":"gost", "password":"gost", "client":"127.0.0.1:12345"}'
+```
+
+```json
+{"ok": true, "id":"gost"}
+```
+
+`client` (string)
+:    client address
+
+`id` (string)
+:    plugin service can optionally return the user ID, and this information will be passed to other subsequent plugin services (Bypass, HostMapper, Resolver) for user identification.
