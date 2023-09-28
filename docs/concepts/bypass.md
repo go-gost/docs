@@ -337,7 +337,7 @@ bypasses:
 
 文件格式为按行分割的地址列表，以`#`开始的部分为注释信息。
 
-```yaml
+```txt
 # ip, cidr, domain or wildcard
 127.0.0.1
 172.10.0.0/16
@@ -355,9 +355,9 @@ bypasses:
 - name: bypass-0
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:bypasses:bypass-0
+    db: 1
+    password: 123456
+    key: gost:bypasses:bypass-0
 ```
 
 `addr` (string, required)

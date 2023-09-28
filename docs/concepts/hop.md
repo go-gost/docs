@@ -116,6 +116,209 @@ hops:
     addr: 192.168.1.2:8080
 ```
 
-## 优先级
+!!! note "模式切换"
 
-当使用内联模式时，如果跳跃点中未定义节点则会自动切换到引用模式。
+    当使用内联模式时，如果跳跃点中未定义节点或未使用插件则会自动切换到引用模式。
+
+## 数据源
+
+跳跃点可以配置多个数据源，目前支持的数据源有：内联，文件，redis，HTTP。
+
+### 内联
+
+内联数据源直接在配置文件中通过`nodes`参数指定节点列表。
+
+```yaml
+hops:
+- name: hop-0
+  nodes:
+  - name: node-0
+    addr: :8888
+    connector:
+      type: http
+    dialer:
+      type: tcp
+  - name: node-1
+    addr: :9999
+    connector:
+      type: socks5
+    dialer:
+      type: tcp
+```
+
+### 文件
+
+指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+
+```yaml
+hops:
+- name: hop-0
+  nodes: []
+  file:
+    path: /path/to/file
+```
+
+文件格式为JSON数组，数组每一项为节点配置信息。
+
+```json
+[
+    {
+        "name": "http",
+        "addr": ":8888",
+        "connector": {
+            "type": "http",
+            "auth": {
+                "username": "user",
+                "password": "pass"
+            }
+        },
+        "dialer": {
+            "type": "tcp"
+        }
+    },
+    {
+        "name": "socks5",
+        "addr": ":9999",
+        "connector": {
+            "type": "socks5",
+            "auth": {
+                "username": "user",
+                "password": "pass"
+            }
+        },
+        "dialer": {
+            "type": "tcp"
+        }
+    }
+]
+```
+
+### Redis
+
+指定redis服务作为数据源，redis数据类型必须为[字符串(Strings)](https://redis.io/docs/data-types/strings/)类型。
+
+```yaml
+hops:
+- name: hop-0
+  nodes: []
+  redis:
+    addr: 127.0.0.1:6379
+    db: 1
+    password: 123456
+    key: gost:hops:hop-0:nodes
+```
+
+`addr` (string, required)
+:    redis服务地址
+
+`db` (int, default=0)
+:    数据库名
+
+`password` (string)
+:    密码
+
+`key` (string, default=gost)
+:    redis key
+
+数据内容与文件数据源的格式相同：
+
+```redis
+> GET gost:hops:hop-0:nodes
+"[{\"name\":\"http\",...},{\"name\":\"socks5\",...}]"
+```
+
+### HTTP
+
+指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式与文件数据源相同。
+
+```yaml
+hops:
+- name: hop-0
+  nodes: []
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    请求的URL
+
+`timeout` (duration, default=0)
+:    请求超时时长
+
+## 热加载
+
+文件，redis，HTTP数据源支持热加载。通过设置`reload`参数开启热加载，`reload`参数指定同步数据源数据的周期。
+
+```yaml hl_lines="3"
+hops:
+- name: hop-0
+  reload: 10s
+  file:
+    path: /path/to/file
+  redis:
+    addr: 127.0.0.1:6379
+    db: 1
+    password: 123456
+    key: gost:hops:hop-0:nodes
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+  nodes: []
+```
+
+## 插件
+
+跳跃点可以配置为使用外部[插件](/concepts/plugin/)服务，跳跃点会将节点选择请求转发给插件服务处理。当使用插件时其他参数无效。
+
+```yaml
+hops:
+- name: hop-0
+  plugin:
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    插件服务地址
+
+`tls` (duration, default=null)
+:    设置后将使用TLS加密传输，默认不使用TLS加密。
+
+### HTTP插件
+
+```yaml
+hops:
+- name: hop-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/hop
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/hop -d '{"addr": "example.com:80", "client": "gost"}'
+```
+
+```json
+{
+    "name": "http",
+    "addr": ":8888",
+    "connector": {
+        "type": "http",
+        "auth": {
+            "username": "user",
+            "password": "pass"
+        }
+    },
+    "dialer": {
+        "type": "tcp"
+    }
+}
+```
+
+`client` (string)
+:    用户身份标识，此信息由认证器插件服务生成。

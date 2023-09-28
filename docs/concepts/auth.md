@@ -200,9 +200,9 @@ authers:
 - name: auther-0
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:authers:auther-0
+    db: 1
+    password: 123456
+    key: gost:authers:auther-0
 ```
 
 `addr` (string, required)
