@@ -10,7 +10,7 @@ GOST的插件系统建立在gRPC或HTTP通讯基础之上，通过插件可以�
 * 安全，采用网络通讯方式，可以更有效的限制应用之间的数据共享。
 
 
-目前支持插件的模块有：[准入控制器](/concepts/admission/)，[认证器](/concepts/auth/)，[分流器](/concepts/bypass/)，[主机IP映射器](/concepts/hosts/)，[域名解析器](/concepts/resolver/)，[Ingress](/concepts/ingress/)，[数据记录器](/concepts/recorder/)。
+目前支持插件的模块有：[跳跃点](/concepts/hop/) [准入控制器](/concepts/admission/)，[认证器](/concepts/auth/)，[分流器](/concepts/bypass/)，[主机IP映射器](/concepts/hosts/)，[域名解析器](/concepts/resolver/)，[Ingress](/concepts/ingress/)，[数据记录器](/concepts/recorder/)。
 
 ## 使用插件
 
