@@ -61,9 +61,16 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 
 ## 身份认证
 
-通过`auth`或`auther`参数可以设置身份认证信息。如果设置了`auther`参数，`auth`参数则会被忽略。
+通过`auth`或`auther`参数可以设置身份认证信息。如果设置了`auther`参数，`auth`参数则会被忽略。身份认证采用[HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication)方式。
 
-身份认证采用[HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication)方式。
+```yaml
+api:
+  addr: :18080
+  auth:
+    username: user
+    password: pass
+  auther: auther-0
+```
 
 ## 在线测试
 

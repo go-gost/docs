@@ -4,11 +4,16 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 
 ## 开启监控
 
+通过`metrics`参数来开启监控指标记录，默认不开启。
+
 === "命令行"
+
 	```
 	gost -L :8080 -metrics=:9000
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -21,6 +26,10 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 	metrics:
 	  addr: :9000
 	  path: /metrics
+	  auth:
+	    username: user
+		password: pass
+	  auther: auther-0
 	```
 
 	`metrics.addr` (string)
@@ -29,8 +38,18 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 	`metrics.path` (string, default=/metrics)
 	:    API路径
 
+### 身份认证
 
-通过`metrics`参数来开启监控指标记录，默认不开启。
+通过`auth`或`auther`参数可以设置身份认证信息。如果设置了`auther`参数，`auth`参数则会被忽略。身份认证采用[HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication)方式。
+
+```yaml
+metrics:
+  addr: :9000
+  auth:
+    username: user
+    password: pass
+  auther: auther-0
+```
 
 开启之后可以通过`http://localhost:9000/metrics`地址查看到指标数据。
 

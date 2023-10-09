@@ -4,7 +4,10 @@ GOST internally provides monitoring data through the [Prometheus](https://promet
 
 ## Enable Metrics
 
+Use the `metrics` option to enable metrics, which is disabled by default.
+
 === "CLI"
+
 	```
 	gost -L :8080 -metrics=:9000
 	```
@@ -23,6 +26,10 @@ GOST internally provides monitoring data through the [Prometheus](https://promet
 	metrics:
 	  addr: :9000
 	  path: /metrics
+	  auth:
+	    username: user
+		password: pass
+	  auther: auther-0
 	```
 
 	`metrics.addr` (string)
@@ -31,8 +38,18 @@ GOST internally provides monitoring data through the [Prometheus](https://promet
 	`metrics.path` (string, default=/metrics)
 	:    API path
 
+### Authentication
 
-Use the `metrics` option to enable metrics, which is disabled by default.
+Authentication information can be set through the `auth` or `auther` property. If the `auther` property is set, the `auth` property is ignored. Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
+
+```yaml
+metrics:
+  addr: :9000
+  auth:
+    username: user
+    password: pass
+  auther: auther-0
+```
 
 After enabling, you can view the metrics data through the `http://localhost:9000/metrics` endpoint.
 

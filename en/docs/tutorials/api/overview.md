@@ -3,6 +3,7 @@
 GOST can use the RESTful API to interact with the GOST process by starting the Web API service.
 
 === "CLI"
+
     ```sh
 	gost -L http://:8080 -api :18080
 	```
@@ -22,7 +23,7 @@ GOST can use the RESTful API to interact with the GOST process by starting the W
 	  pathPrefix: /api
 	  accesslog: true
 	  auth:
-	    username: user
+		username: user
 		password: pass
 	  auther: auther-0
 	```
@@ -58,9 +59,16 @@ Use the `accesslog` property to enable the API access log. By default, no access
 
 ## Authentication
 
-Authentication information can be set through the `auth` or `auther` property. If the `auther` property is set, the `auth` property is ignored.
+Authentication information can be set through the `auth` or `auther` property. If the `auther` property is set, the `auth` property is ignored. Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
 
-Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
+```yaml
+api:
+  addr: :18080
+  auth:
+    username: user
+    password: pass
+  auther: auther-0
+```
 
 ## Online Test
 
