@@ -21,7 +21,7 @@ A service consists of a listener as a data channel, a handler for data processin
     ```yaml
     services:
     - name: service-0
-    addr: ":8080"
+      addr: ":8080"
       handler:
         type: http
       listener:

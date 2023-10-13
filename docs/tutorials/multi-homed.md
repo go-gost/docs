@@ -5,30 +5,37 @@
 !!! note "系统限制"
     多网络接口配置仅支持Linux系统。
 
-## `interface`参数
+## `interface`选项
 
-通过`interface`参数来指定所使用的网络出口。`interface`参数的值可以是网络接口名(例如`eth0`)，也可以是网络接口的IP地址(IPv4或IPv6)。
+通过`interface`选项来指定所使用的网络出口。`interface`选项的值可以是网络接口名(例如`eth0`)，也可以是网络接口的IP地址(IPv4或IPv6)，或`,`分割的IP地址列表。
 
 === "命令行"
 
     ```
-	gost -L :8080?interface=eth0
-	```
+    gost -L :8080?interface=eth0
+    ```
 
 === "配置文件"
 
     ```yaml hl_lines="4 6"
-	services:
-	- name: service-0
-	  addr: ":8080"
-	  interface: eth0
-	  # or use IP address
-	  # interface: 192.168.0.123
-	  handler:
-		type: auto
-	  listener:
-		type: tcp
-	```
+    services:
+    - name: service-0
+      addr: ":8080"
+      metadata:
+        interface: eth0
+        # or use IP address
+        # interface: 192.168.0.123
+        # or IP address list
+        # interface: fd::1,192.168.0.123
+      handler:
+        type: auto
+      listener:
+        type: tcp
+    ```
+
+!!! note "严格模式"
+    当指定接口列表时，可以在每一项后面添加`!`来标记为严格模式，
+    例如`interface=192.168.0.100,192.168.0.101!,192.168.0.102`，如果通过192.168.0.101建立连接失败则不会继续尝试192.168.0.102。
 
 ## 转发链
 

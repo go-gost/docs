@@ -9,12 +9,13 @@ When a host is multi-homed host, different network exits can be specified for ro
 
 ## `interface` Option
 
-Use the `interface` option to specify the network exit to use. The value of the `interface` option can be either a network interface name (such as `eth0`) or the IP address (IPv4 or IPv6) of a network interface.
+Use the `interface` option to specify the network exit to use. The value of the `interface` option can be the name of a network interface (`eth0`), the IP address (IPv4 or IPv6) of a network interface, or the IP address list separated by `,`.
 
 === "CLI"
+
     ```
-	gost -L :8080?interface=eth0
-	```
+    gost -L :8080?interface=eth0
+    ```
 
 === "File (YAML)"
 
@@ -22,14 +23,21 @@ Use the `interface` option to specify the network exit to use. The value of the 
     services:
     - name: service-0
       addr: ":8080"
-      interface: eth0
-      # or use IP address
-      # interface: 192.168.0.123
+      metadata:
+        interface: eth0
+        # or use IP address
+        # interface: 192.168.0.123
+        # or IP address list
+        # interface: fd::1,192.168.0.123
       handler:
         type: auto
       listener:
         type: tcp
     ```
+
+!!! note "Strict Mode"
+    When specifying a list of interfaces, you can append `!`to each entry to mark as strict mode: `interface=192.168.0.100,192.168.0.101!,192.168.0.102`,
+    If the connection fails to be established through 192.168.0.101, it will not continue to try 192.168.0.102.
 
 ## Forwarding Chain
 

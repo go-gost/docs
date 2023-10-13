@@ -20,7 +20,7 @@
     ```yaml
     services:
     - name: service-0
-    addr: ":8080"
+      addr: ":8080"
       handler:
         type: http
       listener:
