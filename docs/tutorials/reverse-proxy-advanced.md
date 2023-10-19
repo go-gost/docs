@@ -1,10 +1,10 @@
-# 反向代理Tunnel
+# 反向代理隧道
 
-在上一篇[反向代理](/tutorials/reverse-proxy/)教程中，利用端口转发实现了简单的反向代理功能，在本篇中将利用Relay协议的Tunnel功能实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
+在上一篇[反向代理](/tutorials/reverse-proxy/)教程中，利用端口转发实现了简单的反向代理功能，在本篇中将利用隧道功能实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
 
-## Relay协议的Tunnel功能
+## 隧道(Tunnel)
 
-Tunnel是一条服务端和客户端之间的(逻辑上的)通道，服务端可以开启一个额外的公共入口点(EntryPoint)，由入口点进入的流量会通过Tunnel发送给客户端。每个Tunnel有一个唯一的ID(合法的UUID)，一个Tunnel可以有多个连接(连接池)来实现Tunnel的高可用性。
+隧道是一条服务端和客户端之间的(逻辑上的)通道，服务端可以开启一个额外的公共入口点(EntryPoint)，由入口点进入的流量会通过隧道发送给客户端。每个隧道有一个唯一的ID(合法的UUID)，一个隧道可以有多个连接(连接池)来实现隧道的高可用性。
 
 ![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
 
@@ -683,3 +683,21 @@ UDP测试
 ```
 iperf3 -c 127.0.0.1 -p 15201 -u
 ```
+
+## Public Reverse Proxy Service
+
+If you need to temporarily reverse proxy local service to provide public network access, you can use the public reverse proxy service provided by `GOST.PLUS` to anonymously expose your local service to the public network for access.
+
+```sh
+gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
+```
+
+When connected to the `gost.plus` server normally, there will be log information similar to the following:
+
+```json
+{"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",
+"msg":"create tunnel on 134c714b65d54a4f:0/tcp OK, tunnel=893787fd-fcd2-46a0-8dd4-f9103ae84df4, connector=3464af8b-49c5-424c-89ea-b4e9af075a7d",
+"node":"node-0","time":"2023-10-19T23:17:27.403+08:00"}
+```
+
+日志的`msg`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。通过`https://134c714b65d54a4f.gost.plus`便能立即访问到`192.168.1.1:80`服务。

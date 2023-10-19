@@ -30,6 +30,7 @@
 数据通道用于承载代理或转发协议数据，目前支持的数据通道协议有：
 
 * `tcp` - 原始TCP协议
+* `mtcp` - Multiplex TCP 多路复用功能的TCP
 * `udp` - 原始UDP协议
 * `tls` - TLS协议
 * `dtls` - DTLS协议
@@ -53,6 +54,9 @@
 
 
 ## 一些特殊的协议
+
+`file`
+:    开启一个HTTP文件服务
 
 `https`
 :    等同于HTTP代理与TLS通道组合（http+tls）

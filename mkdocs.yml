@@ -128,11 +128,13 @@ nav:
       - HTTP3: tutorials/protocols/http3.md
       - KCP: tutorials/protocols/kcp.md
       - SSH: tutorials/protocols/ssh.md
+      - MTCP: tutorials/protocols/mtcp.md
     - TLS设置: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
     - 反向代理: tutorials/reverse-proxy.md
-    - 反向代理Tunnel: tutorials/reverse-proxy-advanced.md
+    - 反向代理隧道: tutorials/reverse-proxy-advanced.md
+    - HTTP文件服务: tutorials/file.md
     - 探测防御: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS代理: tutorials/dns.md
