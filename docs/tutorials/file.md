@@ -120,7 +120,7 @@ gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443?tun
 "node":"node-0","time":"2023-10-19T22:41:05.759+08:00"}
 ```
 
-日志的`msg`信息中`006478add9ed096a`是为此服务生成的临时公共访问点，有效期为1小时。通过`https://006478add9ed096a.gost.plus`便能立即访问到此文件服务。
+日志的`msg`信息中`006478add9ed096a`是为此服务生成的临时公共访问点，有效期为1小时。通过[https://006478add9ed096a.gost.plus](https://006478add9ed096a.gost.plus)便能立即访问到此文件服务。
 
 !!! note "tunnel.id"
     `tunnel.id`参数指定隧道ID，参数值为合法的UUID。为了避免隧道ID冲突，推荐使用UUID生成工具生成随机UUID。

@@ -684,15 +684,15 @@ UDP测试
 iperf3 -c 127.0.0.1 -p 15201 -u
 ```
 
-## Public Reverse Proxy Service
+## 公共反向代理服务
 
-If you need to temporarily reverse proxy local service to provide public network access, you can use the public reverse proxy service provided by `GOST.PLUS` to anonymously expose your local service to the public network for access.
+如果需要临时来反向代理内网服务提供公网访问，可以通过`GOST.PLUS`提供的公共反向代理服务将本地文件服务匿名暴露到公网来访问。
 
 ```sh
 gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
 ```
 
-When connected to the `gost.plus` server normally, there will be log information similar to the following:
+当正常连接到`gost.plus`服务后，会有类似如下日志信息：
 
 ```json
 {"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",
@@ -700,4 +700,4 @@ When connected to the `gost.plus` server normally, there will be log information
 "node":"node-0","time":"2023-10-19T23:17:27.403+08:00"}
 ```
 
-日志的`msg`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。通过`https://134c714b65d54a4f.gost.plus`便能立即访问到`192.168.1.1:80`服务。
+日志的`msg`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。通过[https://134c714b65d54a4f.gost.plus](https://134c714b65d54a4f.gost.plus)便能立即访问到`192.168.1.1:80`服务。
