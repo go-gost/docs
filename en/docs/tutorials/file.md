@@ -111,7 +111,7 @@ If you need to temporarily access the file service through the public network, y
 gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=50ce9728-5d92-4d45-871d-4f275d5179cb
 ```
 
-When connected to the `gost.plus` server normally, there will be log information similar to the following:
+When connected to the `GOST.PLUS` server normally, there will be log information similar to the following:
 
 ```json
 {"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",

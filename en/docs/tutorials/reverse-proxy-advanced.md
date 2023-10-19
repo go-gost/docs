@@ -682,14 +682,15 @@ UDP Test
 iperf3 -c 127.0.0.1 -p 15201 -u
 ```
 
-## 
-If you need to temporarily access the file service through the public network, you can use the public reverse proxy service provided by `GOST.PLUS` to anonymously expose the local file service to the public network for access.
+## Public Reverse Proxy Service
+
+If you need to temporarily reverse proxy local service to provide public network access, you can use the public reverse proxy service provided by `GOST.PLUS` to anonymously expose your local service to the public network for access.
 
 ```sh
 gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=50ce9728-5d92-4d45-871d-4f275d5179cb
 ```
 
-When connected to the `gost.plus` server, there will be log information similar to the following:
+When connected to the `GOST.PLUS` server, there will be log information similar to the following:
 
 ```json
 {"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",

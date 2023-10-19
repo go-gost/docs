@@ -686,13 +686,13 @@ iperf3 -c 127.0.0.1 -p 15201 -u
 
 ## 公共反向代理服务
 
-如果需要临时来反向代理内网服务提供公网访问，可以通过`GOST.PLUS`提供的公共反向代理服务将本地文件服务匿名暴露到公网来访问。
+如果需要临时来反向代理内网服务提供公网访问，可以通过`GOST.PLUS`提供的公共反向代理服务将内网服务匿名暴露到公网来访问。
 
 ```sh
 gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
 ```
 
-当正常连接到`gost.plus`服务后，会有类似如下日志信息：
+当正常连接到`GOST.PLUS`服务后，会有类似如下日志信息：
 
 ```json
 {"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",

@@ -112,7 +112,7 @@ HTTP文件服务，将本地的文件系统目录转成HTTP服务。
 gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=50ce9728-5d92-4d45-871d-4f275d5179cb
 ```
 
-当正常连接到`gost.plus`服务后，会有类似如下日志信息：
+当正常连接到`GOST.PLUS`服务后，会有类似如下日志信息：
 
 ```json
 {"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",
