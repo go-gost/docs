@@ -14,10 +14,16 @@ publish_date: 2023-10-15 22:00
 
 ## 使用方法
 
-假如本地有一个Web服务`192.168.1.1:80`需要临时暴露到公网，只需在本地机器上运行以下命令：
+假如本地有一个HTTP服务`192.168.1.1:80`需要临时暴露到公网，只需在本地机器上运行以下命令：
 
 ```bash
 gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+或者使用随机生成的隧道ID(不设置`tunnel.id`选项):
+
+```bash
+gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443
 ```
 
 !!! tip "隧道ID"
@@ -48,3 +54,47 @@ gost -L rtcp://hello/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.
     每个访问点在第一次使用时会注册并绑定到对应的隧道ID，绑定时长为1小时，在此期间其他隧道无法再次绑定并使用此访问点。当超时后绑定将失效，访问点可以再次绑定到不同的隧道。
 
 更多的设置和使用方法请参考[反向代理](https://gost.run/tutorials/reverse-proxy/)。
+
+## TCP服务
+
+对于TCP服务同样可以以私有隧道的方式来访问。这里假设192.168.1.1:22是一个SSH服务。
+
+```bash
+gost -L rtcp://:0/192.168.1.1:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+要访问此服务需要在访问端开启一个私有入口点:
+
+```bash
+gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+注意两端的隧道ID必须匹配才能访问到隧道对应的服务。
+
+此时在访问端执行以下命令便可以访问到192.168.1.1:22。
+
+```
+ssh -p 2222 user@localhost
+```
+
+## UDP服务
+
+同样也可以以私有隧道的方式暴露共享UDP服务。这里假设192.168.1.1:53是一个DNS服务。
+
+```bash
+gost -L rudp://:0/192.168.1.1:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+要访问此服务需要在访问端开启一个私有入口点:
+
+```bash
+gost -L udp://:1053/f1bbbb4aa9d9868a.gost.plus:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+注意两端的隧道ID必须匹配才能访问到隧道对应的服务。
+
+此时在访问端执行以下命令便可以访问到192.168.1.1:53。
+
+```bash
+dig -p 1053 @127.0.0.1
+```
