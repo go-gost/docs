@@ -763,6 +763,12 @@ iperf3 -c 127.0.0.1 -p 15201 -u
 如果需要临时来反向代理内网服务提供公网访问，可以通过`GOST.PLUS`提供的公共反向代理服务将内网服务匿名暴露到公网来访问。
 
 ```sh
+gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443
+```
+
+或者手动指定隧道ID:
+
+```sh
 gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
 ```
 

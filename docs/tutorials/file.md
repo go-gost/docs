@@ -109,7 +109,7 @@ HTTP文件服务，将本地的文件系统目录转成HTTP服务。
 如果需要临时通过公网来访问文件服务，可以通过`GOST.PLUS`提供的公共反向代理服务将本地文件服务匿名暴露到公网来访问。
 
 ```sh
-gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=50ce9728-5d92-4d45-871d-4f275d5179cb
+gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443
 ```
 
 当正常连接到`GOST.PLUS`服务后，会有类似如下日志信息：

@@ -108,7 +108,7 @@ Add a TLS encrypted transport layer (HTTPS) to the service.
 If you need to temporarily access the file service through the public network, you can use the public reverse proxy service provided by `GOST.PLUS` to anonymously expose the local file service to the public network for access.
 
 ```sh
-gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=50ce9728-5d92-4d45-871d-4f275d5179cb
+gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443
 ```
 
 When connected to the `GOST.PLUS` server normally, there will be log information similar to the following:
