@@ -130,7 +130,7 @@ Redirect local serial port `COM1` to the serial port `COM1` on the remote host `
 === "CLI"
 
 	```bash
-	gost -L serial://COM1/COM2 -F relay://192.168.1.1:8420
+	gost -L serial://COM1/COM1 -F relay://192.168.1.1:8420
 	```
 
 === "File (YAML)"

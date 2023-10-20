@@ -1,6 +1,6 @@
 # Reverse Proxy Tunnel
 
-In the previous [Reverse Proxy](/en/tutorials/reverse-proxy/) tutorial, port forwarding was used to implement a simple reverse proxy function. In this article, the Tunnel function of the Relay protocol will be used to implement an enhanced reverse proxy similar to [Cloudflare Tunnel ](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
+In the previous [Reverse Proxy](/en/tutorials/reverse-proxy/) tutorial, port forwarding was used to implement a simple reverse proxy function. In this article, we will implement an enhanced reverse proxy similar to [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
 
 ## Tunnel
 
@@ -13,7 +13,7 @@ Tunnel is a (logical) channel between the server and the client. The server will
 === "CLI"
 
     ```bash
-    gost -L "relay://:8443?entryPoint=:80&tunnel=.example.com:4d21094e-b74c-4916-86c1-d9fa36ea677b,example.org:ac74d9dd-3125-442a-a7c1-f9e49e05faca"
+    gost -L "tunnel://:8443?entrypoint=:80&tunnel=.example.com:4d21094e-b74c-4916-86c1-d9fa36ea677b,example.org:ac74d9dd-3125-442a-a7c1-f9e49e05faca"
     ```
 
     Ingress rules are defined on the command line using the `tunnel` option. The value of the `tunnel` option is a list of rules separated by `,`, and each rule is a mapping from host name to tunnel ID separated by `:`.
@@ -25,9 +25,9 @@ Tunnel is a (logical) channel between the server and the client. The server will
     - name: service-0
       addr: :8443
       handler:
-        type: relay
+        type: tunnel
         metadata:
-          entryPoint: ":80"
+          entrypoint: ":80"
           ingress: ingress-0
       listener:
         type: tcp
@@ -41,7 +41,7 @@ Tunnel is a (logical) channel between the server and the client. The server will
         endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
-When the Relay service sets the `entryPoint` option, the tunnel mode will be enabled, and the entryPoint specifies the entry point of the traffic. At the same time, specify [Ingress](/en/concepts/ingress/) through the `ingress` option to define traffic routing rules.
+The `entrypoint` option specifies the public entry point for traffic, the `ingress` option specifies [Ingress](/en/concepts/ingress/) to define traffic routing rules.
 
 !!! note "Tunnel ID Allocation"
     If Ingress is used, the tunnel ID should be allocated by the server in advance and recorded in the Ingress. If the client uses a tunnel ID that is not registered in the Ingress, traffic cannot be routed to the client.
@@ -51,7 +51,7 @@ When the Relay service sets the `entryPoint` option, the tunnel mode will be ena
 === "CLI"
 
     ```bash
-    gost -L rtcp://:0/192.168.1.1:80 -F relay://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b
+    gost -L rtcp://:0/192.168.1.1:80 -F tunnel://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b
     ```
 
 === "File (YAML)"
@@ -77,14 +77,14 @@ When the Relay service sets the `entryPoint` option, the tunnel mode will be ena
         - name: node-0
           addr: :8443
           connector:
-            type: relay
+            type: tunnel
             metadata:
               tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
           dialer:
             type: tcp
     ```
 
-When the Relay client sets the `tunnel.id` option, the tunnel mode is enabled, and the `addr` parameter specified in the rtcp service is invalid at this time.
+Specify tunnel ID via `tunnel.id` option, and the `addr` parameter specified in the rtcp service is invalid at this time.
 
 In this example, when the traffic enters the entry point (port 80 of the server), it will sniff the traffic to obtain the hostname, and then find the matching rule in the Ingress through the hostname to obtain the corresponding service endpoint (tunnel) , and finally obtain a valid connection in the connection pool of the tunnel and send the traffic to the client through this connection.
 
@@ -92,6 +92,82 @@ When the hostname is `example.com`, the tunnel with the ID 4d21094e-b74c-4916-86
 
 !!! tip "High Availability"
     In order to improve the availability of a single tunnel, multiple clients can be run, and these clients use the same tunnel ID. When obtaining a connection from the tunnel, a round-robin mechanism will be used, with up to 3 failed retries.
+
+## External Public Entry Point
+
+The entry point set through the `entrypoint` option can be regarded as a public entry point provided internally by the tunnel service. You can also run multiple external public entry points to forward traffic to the tunnel service.
+
+### Server
+
+The server specifies the entry point ID through `entrypoint.id`. The client must use the same ID to be considered a public entry point. Otherwise, it will be treated as a private entry point and can only access the specified tunnel.
+
+=== "CLI"
+
+    ```bash
+    gost -L "tunnel://:8443?entrypoint.id=9fd6c586-86f9-49c1-a03a-d4876851695a
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="7"
+    services:
+    - name: service-0
+      addr: :8443
+      handler:
+        type: tunnel
+        metadata:
+          entrypoint.id: 9fd6c586-86f9-49c1-a03a-d4876851695a
+          ingress: ingress-0
+      listener:
+        type: tcp
+
+    ingresses:
+    - name: ingress-0
+      rules:
+      - hostname: ".example.com"
+        endpoint: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+      - hostname: "example.org"
+        endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    ```
+
+
+### Client
+
+The client specifies the tunnel ID through `tunnel.id`. When the tunnel ID is the same as the server's `entrypoint.id`, the client will be regarded as a public entry point.
+
+=== "CLI"
+
+    ```bash
+    gost -L tcp://:8000?sniffing=true -F tunnel://:8443?tunnel.id=9fd6c586-86f9-49c1-a03a-d4876851695a
+    ```
+
+=== "File (YAML)"
+   
+    ```yaml hl_lines="8 21"
+      services:
+      - name: service-0
+        addr: :8000
+        handler:
+          type: tcp
+          chain: chain-0
+          metadata:
+            sniffing: true
+        listener:
+          type: tcp
+      chains:
+      - name: chain-0
+        hops:
+        - name: hop-0
+          nodes:
+          - name: node-0
+            addr: :8443
+            connector:
+              type: tunnel
+              metadata:
+                tunnel.id: 9fd6c586-86f9-49c1-a03a-d4876851695a
+              dialer:
+                type: tcp
+    ```
 
 ## Client Routing
 
@@ -126,7 +202,7 @@ chains:
     - name: node-0
       addr: :8443
       connector:
-        type: relay
+        type: tunnel
         metadata:
           tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
       dialer:
@@ -154,7 +230,7 @@ services:
 - name: service-0
   addr: :8443
   handler:
-    type: relay
+    type: tunnel
     metadata:
       entryPoint: ":80"
       ingress: ingress-0
@@ -191,7 +267,7 @@ In the Ingress rule, mark the tunnel corresponding to this rule as private by ad
 === "CLI"
 
     ```bash
-    gost -L rtcp://:0/192.168.2.1:80 -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L rtcp://:0/192.168.2.1:80 -F tunnel://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
 === "File (YAML)"
@@ -217,7 +293,7 @@ In the Ingress rule, mark the tunnel corresponding to this rule as private by ad
         - name: node-0
           addr: :8443
           connector:
-            type: relay
+            type: tunnel
             metadata:
               tunnel.id: ac74d9dd-3125-442a-a7c1-f9e49e05faca
           dialer:
@@ -232,13 +308,13 @@ The configuration of the client is the same as above.
     Automatically sniff the host name
 
     ```bash
-    gost -L tcp://:8000?sniffing=true -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L tcp://:8000?sniffing=true -F tunnel://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
     or specify host name manually
 
     ```bash
-    gost -L tcp://:8000/srv-2.local -F relay://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
+    gost -L tcp://:8000/srv-2.local -F tunnel://:8443?tunnel.id=ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
 === "File (YAML)"
@@ -262,7 +338,7 @@ The configuration of the client is the same as above.
           - name: node-0
             addr: :8443
             connector:
-              type: relay
+              type: tunnel
               metadata:
                 tunnel.id: ac74d9dd-3125-442a-a7c1-f9e49e05faca
               dialer:
@@ -304,7 +380,7 @@ chains:
     - name: node-0
       addr: :8443
       connector:
-        type: relay
+        type: tunnel
         metadata:
           tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
       dialer:
@@ -321,13 +397,13 @@ Note that the `host` parameter on each node needs to match the `hostname` in the
     ssh service:
 
     ```bash
-    gost -L tcp://:2222/ssh.srv-2.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L tcp://:2222/ssh.srv-2.local -F tunnel://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
     or redis service:
 
     ```bash
-    gost -L tcp://:6379/redis.srv-3.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L tcp://:6379/redis.srv-3.local -F tunnel://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
 === "File (YAML)"
@@ -355,7 +431,7 @@ Note that the `host` parameter on each node needs to match the `hostname` in the
       - name: node-0
         addr: :8443
         connector:
-          type: relay
+          type: tunnel
           metadata:
             tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
           dialer:
@@ -397,7 +473,7 @@ chains:
     - name: node-0
       addr: :8443
       connector:
-        type: relay
+        type: tunnel
         metadata:
           tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
       dialer:
@@ -412,7 +488,7 @@ Note that the `host` parameter on each node needs to match the `hostname` in the
 === "CLI"
 
     ```bash
-    gost -L udp://:1053/dns.srv-2.local -L udp://:2053/dns.srv-3.local -F relay://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
+    gost -L udp://:1053/dns.srv-2.local -L udp://:2053/dns.srv-3.local -F tunnel://:8443?tunnel.id=aede1f6a-762b-45da-b937-b6632356555a
     ```
 
 === "File (YAML)"
@@ -449,7 +525,7 @@ Note that the `host` parameter on each node needs to match the `hostname` in the
           - name: node-0
             addr: :8443
             connector:
-              type: relay
+              type: tunnel
               metadata:
                 tunnel.id: aede1f6a-762b-45da-b937-b6632356555a
               dialer:
@@ -473,7 +549,7 @@ The server enables the direct routing mode through the `tunnel.direct` option.
 === "CLI"
 
     ```bash
-    gost -L relay://:8443?tunnel.direct=true
+    gost -L tunnel://:8443?tunnel.direct=true
     ```
 
 === "File (YAML)"
@@ -483,7 +559,7 @@ The server enables the direct routing mode through the `tunnel.direct` option.
     - name: service-0
       addr: :8443
       handler:
-        type: relay
+        type: tunnel
         metadata:
           tunnel.direct: true
       listener:
@@ -511,13 +587,13 @@ If the Ingress has only one rule and you don't want to create a configuration fi
     Ingress mode
 
     ```bash
-    gost -L relay://:8443?tunnel=iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    gost -L tunnel://:8443?tunnel=iperf.local:22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
     or direct routing mode
 
     ```bash
-    gost -L relay://:8443?tunnel.direct=true
+    gost -L tunnel://:8443?tunnel.direct=true
     ```
 
 === "File (YAML)"
@@ -527,7 +603,7 @@ If the Ingress has only one rule and you don't want to create a configuration fi
     - name: service-0
       addr: :8443
       handler:
-        type: relay
+        type: tunnel
         metadata:
           ingress: ingress-0
           # direct routing mode
@@ -548,7 +624,7 @@ Since there is only one forwarding target, you can use the command line to forwa
 === "CLI"
 
     ```bash
-    gost -L rtcp://:0/:5201 -L rudp://:0/:5201 -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    gost -L rtcp://:0/:5201 -L rudp://:0/:5201 -F tunnel://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
 === "File (YAML)"
@@ -587,7 +663,7 @@ Since there is only one forwarding target, you can use the command line to forwa
         - name: node-0
           addr: :8443
           connector:
-            type: relay
+            type: tunnel
             metadata:
               tunnel.id: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
           dialer:
@@ -606,13 +682,13 @@ The forwarded target address needs to match the host name corresponding to the r
     Ingress mode
 
     ```bash
-    gost -L tcp://:15201/iperf.local -L udp://:15201/iperf.local?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    gost -L tcp://:15201/iperf.local -L udp://:15201/iperf.local?keepalive=true -F tunnel://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
     Direct routing mode
 
     ```bash
-    gost -L tcp://:15201 -L udp://:15201?keepalive=true -F relay://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
+    gost -L tcp://:15201 -L udp://:15201?keepalive=true -F tunnel://:8443?tunnel.id=22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
 === "File (YAML)"
@@ -653,7 +729,7 @@ The forwarded target address needs to match the host name corresponding to the r
           - name: node-0
             addr: :8443
             connector:
-              type: relay
+              type: tunnel
               metadata:
                 tunnel.id: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
               dialer:
