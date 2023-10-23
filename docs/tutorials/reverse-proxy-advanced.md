@@ -780,4 +780,51 @@ gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 "node":"node-0","time":"2023-10-19T23:17:27.403+08:00"}
 ```
 
-日志的`msg`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。通过[https://134c714b65d54a4f.gost.plus](https://134c714b65d54a4f.gost.plus)便能立即访问到`192.168.1.1:80`服务。
+日志的`msg`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。
+
+如果`192.168.1.1:80`是一个HTTP服务，通过[https://134c714b65d54a4f.gost.plus](https://134c714b65d54a4f.gost.plus)便能立即访问。
+
+
+### TCP服务
+
+对于TCP服务同样可以以私有隧道的方式来访问。这里假设192.168.1.1:22是一个SSH服务。
+
+```bash
+gost -L rtcp://:0/192.168.1.1:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+内网服务不会在服务端暴露公开端口，需要在访问端开启一个私有入口点:
+
+```bash
+gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+注意两端的隧道ID必须匹配才能访问到隧道对应的服务。
+
+此时在访问端执行以下命令便可以访问到192.168.1.1:22。
+
+```bash
+ssh -p 2222 user@localhost
+```
+
+## UDP服务
+
+同样也可以以私有隧道的方式暴露UDP服务。这里假设192.168.1.1:53是一个DNS服务。
+
+```bash
+gost -L rudp://:0/192.168.1.1:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+要访问此服务需要在访问端开启一个私有入口点:
+
+```bash
+gost -L udp://:1053/f1bbbb4aa9d9868a.gost.plus:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+```
+
+注意两端的隧道ID必须匹配才能访问到隧道对应的服务。
+
+此时在访问端执行以下命令便可以访问到192.168.1.1:53。
+
+```bash
+dig -p 1053 @127.0.0.1
+```

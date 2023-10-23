@@ -75,7 +75,7 @@ gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus:22 -F tunnel+wss://tunnel.gost.pl
 
 此时在访问端执行以下命令便可以访问到192.168.1.1:22。
 
-```
+```bash
 ssh -p 2222 user@localhost
 ```
 
