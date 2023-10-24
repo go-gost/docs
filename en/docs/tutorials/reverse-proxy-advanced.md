@@ -809,7 +809,7 @@ Then you can access 192.168.1.1:22 by executing the following command.
 ssh -p 2222 user@localhost
 ```
 
-## UDP Service
+### UDP Service
 
 UDP services can also be exposed as private tunnels. It is assumed here that 192.168.1.1:53 is a DNS service.
 

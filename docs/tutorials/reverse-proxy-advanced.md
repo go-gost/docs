@@ -807,7 +807,7 @@ gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus:22 -F tunnel+wss://tunnel.gost.pl
 ssh -p 2222 user@localhost
 ```
 
-## UDP服务
+### UDP服务
 
 同样也可以以私有隧道的方式暴露UDP服务。这里假设192.168.1.1:53是一个DNS服务。
 

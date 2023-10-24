@@ -32,7 +32,7 @@
 
 * 参数说明
 
-`mux.version` (int, default=2)
+`mux.version` (int, default=1)
 :    SMUX协议版本
 
 `mux.keepaliveDisabled` (bool, default=false)

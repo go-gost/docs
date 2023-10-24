@@ -9,7 +9,7 @@ TLS是GOST中的一种数据通道类型。
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L tls://:8443
     ```
 
@@ -31,7 +31,7 @@ GOST在TLS基础之上扩展出具有多路复用(Multiplex)特性的TLS传输�
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L mtls://:8443
     ```
 
@@ -45,7 +45,32 @@ GOST在TLS基础之上扩展出具有多路复用(Multiplex)特性的TLS传输�
         type: auto
       listener:
         type: mtls
+        metadata:
+          mux.version: 1
     ```
+
+* 参数说明
+
+`mux.version` (int, default=1)
+:    SMUX协议版本
+
+`mux.keepaliveDisabled` (bool, default=false)
+:    是否禁用心跳
+
+`mux.keepaliveInterval` (duration, default=10s)
+:    心跳间隔时长
+
+`mux.keepaliveTimeout` (duration, default=30s)
+:    心跳超时时长
+
+`mux.maxFrameSize` (int, default=32768)
+:    帧最大长度
+
+`mux.maxReceiveBuffer` (int, default=4194304)
+:    接收缓冲区大小
+
+`mux.maxStreamBuffer` (int, default=65536)
+:    Steam缓冲区大小
 
 ## 代理协议
 

@@ -74,9 +74,35 @@ GOST在Websocket基础之上扩展出具有多路复用(Multiplex)特性的传�
       listener:
         type: mws
         # type: mwss
+        metadata:
+          mux.version: 1
     ```
 
 ## 参数选项
+
+### 多路复用
+
+`mux.version` (int, default=1)
+:    SMUX协议版本
+
+`mux.keepaliveDisabled` (bool, default=false)
+:    是否禁用心跳
+
+`mux.keepaliveInterval` (duration, default=10s)
+:    心跳间隔时长
+
+`mux.keepaliveTimeout` (duration, default=30s)
+:    心跳超时时长
+
+`mux.maxFrameSize` (int, default=32768)
+:    帧最大长度
+
+`mux.maxReceiveBuffer` (int, default=4194304)
+:    接收缓冲区大小
+
+`mux.maxStreamBuffer` (int, default=65536)
+:    Steam缓冲区大小
+
 
 ### 自定义请求路径
 
