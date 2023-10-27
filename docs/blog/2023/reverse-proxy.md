@@ -81,7 +81,7 @@ chains:
     - name: node-0
       addr: SERVER_IP:8443 
       connector:
-        type: relay
+        type: tunnel
       dialer:
         type: tcp
 ```
@@ -105,9 +105,9 @@ services:
 - name: service-0
   addr: :8443
   handler:
-    type: relay
+    type: tunnel
     metadata:
-      entryPoint: ":80"
+      entrypoint: ":80"
       ingress: ingress-0
   listener:
     type: tcp
@@ -152,16 +152,16 @@ chains:
     - name: node-0
       addr: SERVER_IP:8443 
       connector:
-        type: relay
+        type: tunnel
         metadata:
-          tunnelID: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+          tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
       dialer:
         type: tcp
 ```
 
 ### 入口点(EntryPoint)
 
-入口点指定了流量的入口，所有用户的流量统一由入口点进入。当设定了入口点后Relay处理器内部会创建一个监听在入口点的服务，用户的流量到达入口点后，此服务内部会对流量进行嗅探，获取请求的目标主机，再对流量做相应的路由。
+入口点指定了流量的入口，所有用户的流量统一由入口点进入。当设定了入口点后处理器内部会创建一个监听在入口点的服务，用户的流量到达入口点后，此服务内部会对流量进行嗅探，获取请求的目标主机，再对流量做相应的路由。
 
 ### 隧道(Tunnel)
 
