@@ -6,7 +6,7 @@ read_time: 10min
 publish_date: 2023-10-15 22:00
 ---
 
-[反向代理隧道](https://gost.run/tutorials/reverse-proxy-advanced/)是GOST中新增的一个较大功能，同时也是一个很重要的功能，借助于反向代理和内网穿透，可以很方便的将内网Web服务暴露到公网，随时随地都能访问。
+[反向代理隧道](https://gost.run/tutorials/reverse-proxy-tunnel/)是GOST中新增的一个较大功能，同时也是一个很重要的功能，借助于反向代理和内网穿透，可以很方便的将内网Web服务暴露到公网，随时随地都能访问。
 
 为了能够对此功能进行更全面的测试，同时也为了能够给需要临时暴露内网服务的用户提供一种快捷的方式，特公开推出`GOST.PLUS`公共反向代理测试服务。此服务面向所有用户开放，无需注册。
 
