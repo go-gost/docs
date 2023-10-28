@@ -4,6 +4,12 @@
 
 如果您还想请开发者喝杯咖啡可以通过以下渠道:
 
+**微信赞赏码**
+
+![WeChat](../images/wechat.png)
+
+**虚拟货币**
+
 ![BTC](../images/btc.png) 
 ![ETH](../images/eth.png)
 ![USDT](../images/usdt.png)

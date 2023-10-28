@@ -233,7 +233,7 @@ nav:
       - SSHD: reference/connectors/sshd.md
   - 博客: 
     - 2023:
-      - 'GOST.PLUS-公共反向代理测试服务': blog/2023/gost-plus.md
+      - 'GOST.PLUS-公共反向代理服务': blog/2023/gost-plus.md
       - '串口重定向': blog/2023/serial.md
       - '反向代理隧道实战': blog/2023/relay-tunnel.md
       - '反向代理与内网穿透': blog/2023/reverse-proxy.md
