@@ -133,12 +133,12 @@ services:
   listener:
     type: tls
     tls:
-	  options:
-	    minVersion: VersionTLS12
-		maxVersion: VersionTLS13
-		cipherSuites:
-		- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	```
+      options:
+        minVersion: VersionTLS12
+        maxVersion: VersionTLS13
+        cipherSuites:
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+```
 
 `minVersion` (string)
 :    TLS最小版本，可选值`VersionTLS10`，`VersionTLS11`，`VersionTLS12`，`VersionTLS13`。
