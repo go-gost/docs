@@ -122,6 +122,33 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 `serverName` (string)
 :    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。默认使用设置中`IP_OR_DOMAIN`作为serverName。
 
+## TLS选项
+
+```yaml
+services:
+- name: service-0
+  addr: :8443
+  handler:
+    type: http
+  listener:
+    type: tls
+    tls:
+	  options:
+	    minVersion: VersionTLS12
+		maxVersion: VersionTLS13
+		cipherSuites:
+		- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	```
+
+`minVersion` (string)
+:    TLS最小版本，可选值`VersionTLS10`，`VersionTLS11`，`VersionTLS12`，`VersionTLS13`。
+
+`maxVersion` (string)
+:    TLS最大版本，可选值`VersionTLS10`，`VersionTLS11`，`VersionTLS12`，`VersionTLS13`。
+
+`cipherSuites` (list)
+:    加密套件，可选值参考[Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants)。
+
 ## 双向证书校验
 
 如果服务端设置了CA证书，则会对客户端证书进行强制校验，此时客户端须提供证书。

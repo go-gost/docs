@@ -122,6 +122,33 @@ Clients can set certificates separately for dialers and connectors for each node
 `serverName` (string)
 :    If `secure` is set to true, you need to specify the server domain name through this option for domain name verification. By default, `IP_OR_DOMAIN` in the setting is used as the serverName.
 
+## TLS Options
+
+```yaml
+services:
+- name: service-0
+  addr: :8443
+  handler:
+    type: http
+  listener:
+    type: tls
+    tls:
+	  options:
+	    minVersion: VersionTLS12
+		maxVersion: VersionTLS13
+		cipherSuites:
+		- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	```
+
+`minVersion` (string)
+:    Minimum TLS Version, `VersionTLS10`, `VersionTLS11`, `VersionTLS12` or `VersionTLS13`.
+
+`maxVersion` (string)
+:    Maximum TLS Version, `VersionTLS10`, `VersionTLS11`, `VersionTLS12` or `VersionTLS13`.
+
+`cipherSuites` (list)
+:    Cipher Suites, See [Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants) for more information.
+
 ## Mutual TLS authentication
 
 If a CA certificate is set on the server, the client certificate will be verified, and the client must provide the certificate.
