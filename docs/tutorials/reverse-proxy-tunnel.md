@@ -775,12 +775,13 @@ gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 当正常连接到`GOST.PLUS`服务后，会有类似如下日志信息：
 
 ```json
-{"connector":"tunnel","dialer":"wss","hop":"hop-0","kind":"connector","level":"info",
+{"connector":"tunnel","dialer":"wss","endpoint":"134c714b65d54a4f","hop":"hop-0","kind":"connector","level":"info",
 "msg":"create tunnel on 134c714b65d54a4f:0/tcp OK, tunnel=893787fd-fcd2-46a0-8dd4-f9103ae84df4, connector=3464af8b-49c5-424c-89ea-b4e9af075a7d",
-"node":"node-0","time":"2023-10-19T23:17:27.403+08:00"}
+"node":"node-0","time":"2023-10-19T23:17:27.403+08:00",
+"tunnel":"893787fd-fcd2-46a0-8dd4-f9103ae84df4"}
 ```
 
-日志的`msg`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。
+日志的`endpoint`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。
 
 如果`192.168.1.1:80`是一个HTTP服务，通过[https://134c714b65d54a4f.gost.plus](https://134c714b65d54a4f.gost.plus)便能立即访问。
 
@@ -796,7 +797,7 @@ gost -L rtcp://:0/192.168.1.1:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 内网服务不会在服务端暴露公开端口，需要在访问端开启一个私有入口点:
 
 ```bash
-gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
 ```
 
 注意两端的隧道ID必须匹配才能访问到隧道对应的服务。
@@ -818,7 +819,7 @@ gost -L rudp://:0/192.168.1.1:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 要访问此服务需要在访问端开启一个私有入口点:
 
 ```bash
-gost -L udp://:1053/f1bbbb4aa9d9868a.gost.plus:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+gost -L udp://:1053/f1bbbb4aa9d9868a.gost.plus -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
 ```
 
 注意两端的隧道ID必须匹配才能访问到隧道对应的服务。

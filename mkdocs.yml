@@ -134,6 +134,7 @@ nav:
     - 端口转发: tutorials/port-forwarding.md
     - 反向代理: tutorials/reverse-proxy.md
     - 反向代理隧道: tutorials/reverse-proxy-tunnel.md
+    - 反向代理隧道-高可用: tutorials/reverse-proxy-tunnel-ha.md
     - HTTP文件服务: tutorials/file.md
     - 探测防御: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md
