@@ -1,7 +1,7 @@
 # 服务发现
 
 !!! note "使用限制"
-    服务发现目前仅在[反向代理隧道](/tutorials/reverse-proxy-ha/)中使用。
+    服务发现目前仅在[反向代理隧道](/tutorials/reverse-proxy-tunnel-ha/)中使用。
 
 服务发现为反向代理隧道提供了一种服务的注册和发现机制，服务发现目前仅能以插件的方式来使用。
 
