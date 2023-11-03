@@ -101,3 +101,100 @@ gost -L udp://:1053/f1bbbb4aa9d9868a.gost.plus -F tunnel+wss://tunnel.gost.plus:
 ```bash
 dig -p 1053 @127.0.0.1
 ```
+
+## 自建公共反向代理
+
+你也可以通过以下配置来搭建自己的反向代理服务。
+
+`gost.yml`
+
+```yaml
+services:
+- name: service-0
+  addr: :8080
+  handler:
+    type: tunnel
+    metadata:
+      entrypoint: :8000
+      ingress: ingress-0
+  listener:
+    type: ws
+
+ingresses:
+- name: ingress-0
+  plugin:
+    type: grpc
+    addr: gost-plugins:8000
+
+log:
+  level: info
+```
+
+
+`docker-compose.yml`
+
+```yaml
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.9.6
+    restart: always
+    command: 
+      # - "--api.insecure=true"
+      # - "--api.dashboard=true"
+      - "--providers.docker"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--log.level=INFO"
+      - "--log.format=json"
+      # - "--accesslog"
+      # - "--accesslog.format=json"
+      # - "--accesslog.filters.statuscodes=400-600"
+      # - "--serversTransport.maxIdleConnsPerHost=0"
+      # - "--serversTransport.forwardingTimeouts.idleConnTimeout=1s"
+    ports:
+      # The HTTP port
+      - "80:80"
+      # The HTTPS port
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      # - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  gost-tunnel: 
+    image: gogost/gost
+    restart: always
+    labels:
+      - "traefik.http.routers.gost-tunnel.tls=true"
+      - "traefik.http.routers.gost-tunnel.rule=Host(`tunnel.gost.local`)"
+      - "traefik.http.routers.gost-tunnel.service=gost-tunnel"
+      - "traefik.http.services.gost-tunnel.loadbalancer.server.port=8080"
+      - "traefik.http.routers.gost-ingress.tls=true"
+      - "traefik.http.routers.gost-ingress.service=gost-ingress"
+      - "traefik.http.routers.gost-ingress.rule=HostRegexp(`{subdomain:[a-z0-9]+}.gost.local`)"
+      - "traefik.http.routers.gost-ingress.priority=10"
+      - "traefik.http.services.gost-ingress.loadbalancer.server.port=8000"
+    volumes:
+      - ./gost.yaml:/etc/gost/gost.yaml
+
+  gost-plugins: 
+    image: ginuerzh/gost-plugins
+    restart: always
+    command: "ingress --addr=:8000 --redis.addr=redis:6379 --redis.db=2 --redis.expiration=1h --domain=gost.local --log.level=debug"
+
+  redis: 
+    image: redis:7.2.1-alpine
+    restart: always
+    command: "redis-server --save 60 1 --loglevel warning"
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
+    driver: local
+```
