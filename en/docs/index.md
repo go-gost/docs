@@ -24,13 +24,27 @@
 - [x] Web API
 - [ ] Web UI
 
-Telegram: [https://t.me/gogost](https://t.me/gogost)
+## Overview
 
-Google group: [https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
+There are three main ways to use GOST as a tunnel.
 
-Git issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+### Proxy
 
-Legacy version: [v2.gost.run](https://v2.gost.run)
+As a proxy service to access the network, multiple protocols can be used in combination to form a forwarding chain for traffic forwarding.
+
+![Proxy](/images/proxy.png)
+
+### Port Forwarding
+
+Mapping the port of one service to the port of another service, you can also use a combination of multiple protocols to form a forwarding chain for traffic forwarding.
+
+![Forward](/images/forward.png)
+
+### Reverse Proxy
+
+Use tunnel and intranet penetration to expose local services behind NAT or firewall to public network for access.
+
+![Reverse Proxy](/images/reverse-proxy.png)
 
 ## Installation
 
@@ -52,6 +66,16 @@ go build
 docker run --rm gogost/gost -V
 ```
 
-## Shadowsocks Android Plugin
+### Shadowsocks Android Plugin
 
 [xausky/ShadowsocksGostPlugin](https://github.com/xausky/ShadowsocksGostPlugin)
+
+## Support
+
+Telegram: [https://t.me/gogost](https://t.me/gogost)
+
+Google group: [https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
+
+Github issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+
+Legacy version: [v2.gost.run](https://v2.gost.run)

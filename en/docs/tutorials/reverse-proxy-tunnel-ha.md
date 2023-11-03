@@ -30,7 +30,7 @@ As shown in the figure above, two server instances are running, and the client i
 
 ## Service Registry and Discovery
 
-The reason why the server cannot achieve horizontal scaling is that the server instances are independent of each other and cannot perceive the tunnel information in other instances. Therefore we need a way for the server to share all client tunnel and connection information. The reverse proxy tunnel server achieves this goal through [service registry and discovery](/concepts/sd/) mechanisms, but it does not integrate specific service registry and discovery functional modules. Instead, the functions are opened through plugins, and the user chooses the implementation method.
+The reason why the server cannot achieve horizontal scaling is that the server instances are independent of each other and cannot perceive the tunnel information in other instances. Therefore we need a way for the server to share all client tunnel and connection information. The reverse proxy tunnel server achieves this goal through [service registry and discovery](/en/concepts/sd/) mechanisms, but it does not integrate specific service registry and discovery functional modules. Instead, the functions are opened through plugins, and the user chooses the implementation method.
 
 ![Tunnel SD](/images/tunnel-sd.png)
 

@@ -24,13 +24,27 @@
 - [x] Web API
 - [ ] Web UI
 
-Telegram讨论群：[https://t.me/gogost](https://t.me/gogost)
+## 概览
 
-Google讨论组：[https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
+GOST作为隧道有三种主要使用方式。
 
-提交Issue：[https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+### 正向代理
 
-旧版入口：[v2.gost.run](https://v2.gost.run)
+作为代理服务访问网络，可以组合使用多种协议组成转发链进行转发。
+
+![Proxy](/images/proxy.png)
+
+### 端口转发
+
+将一个服务的端口映射到另外一个服务的端口，同样可以组合使用多种协议组成转发链进行转发。
+
+![Forward](/images/forward.png)
+
+### 反向代理
+
+利用隧道和内网穿透将内网服务暴露到公网访问。
+
+![Reverse Proxy](/images/reverse-proxy.png)
 
 ## 下载安装
 
@@ -52,6 +66,17 @@ go build
 docker run --rm gogost/gost -V
 ```
 
-## Shadowsocks Android插件
+### Shadowsocks Android插件
 
 [xausky/ShadowsocksGostPlugin](https://github.com/xausky/ShadowsocksGostPlugin)
+
+
+## 帮助与支持
+
+Telegram讨论群：[https://t.me/gogost](https://t.me/gogost)
+
+Google讨论组：[https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
+
+提交Issue：[https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+
+旧版入口：[v2.gost.run](https://v2.gost.run)
