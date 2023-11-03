@@ -171,7 +171,7 @@ ingresses:
 #### Example
 
 ```bash
-curl -XPOST http://127.0.0.1:8000/ingress -d '{"host":"example.com"}'
+curl -XGET http://127.0.0.1:8000/ingress?host=example.com
 ```
 
 ```json

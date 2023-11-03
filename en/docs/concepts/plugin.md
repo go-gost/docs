@@ -9,7 +9,7 @@ Using gRPC/HTTP communication instead of dynamic link library has the following 
 * The life cycle of the plugin will not affect the GOST itself.
 * Security. Using network communication, can more effectively limit data sharing between applications.
 
-The modules that currently support plugin are: [Hop](/en/concepts/hop/), [Admission](/en/concepts/admission/), [Authenticator](/en/concepts/auth/), [Bypass](/en/concepts/bypass/), [Host Mapper](/en/concepts/hosts/), [Resolver](/en/concepts/resolver/), [Ingress](/en/concepts/ingress/), [Recorder](/en/concepts/recorder/).
+The modules that currently support plugin are: [Hop](/en/concepts/hop/), [Admission](/en/concepts/admission/), [Authenticator](/en/concepts/auth/), [Bypass](/en/concepts/bypass/), [Host Mapper](/en/concepts/hosts/), [Resolver](/en/concepts/resolver/), [Ingress](/en/concepts/ingress/), [Service Discovery](/en/concepts/sd/), [Recorder](/en/concepts/recorder/).
 
 ## Plugin Usage
 
