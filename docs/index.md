@@ -12,8 +12,6 @@
 - [x] TCP/UDP透明代理
 - [x] DNS解析和代理
 - [x] TUN/TAP设备
-- [x] Unix域套接字重定向
-- [x] 串口重定向
 - [x] 负载均衡
 - [x] 路由控制
 - [x] 限速限流
@@ -25,6 +23,8 @@
 - [ ] Web UI
 
 ## 概览
+
+![Overview](/images/overview.png)
 
 GOST作为隧道有三种主要使用方式。
 

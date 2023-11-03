@@ -8,12 +8,10 @@
 - [x] Multi-level forwarding chain.
 - [x] Rich protocol
 - [x] TCP/UDP port forwarding
+- [x] Reverse Proxy and Tunnel
 - [x] TCP/UDP transparent proxy
 - [x] DNS resolver and proxy
 - [x] TUN/TAP device
-- [x] Unix Domain Socket Redirector
-- [x] Serial Port Redirector
-- [x] Reverse Proxy
 - [x] Load balancing
 - [x] Routing control
 - [x] Rate Limiting
@@ -25,6 +23,8 @@
 - [ ] Web UI
 
 ## Overview
+
+![Overview](/images/overview.png)
 
 There are three main ways to use GOST as a tunnel.
 
