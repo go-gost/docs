@@ -171,9 +171,9 @@ resolvers:
     ttl: 30s
 ```
 
-## IPv6
+## Prefer IPv6
 
-Resolver returns IPv4 addresses by default and can be switched to IPv6 addresses by setting the `prefer` property.
+Resolver returns IPv4 addresses by default and can be switched to IPv6 addresses by setting the `prefer` option.
 
 ```yaml
 resolvers:
@@ -181,6 +181,30 @@ resolvers:
   nameservers:
   - addr: 1.1.1.1
     prefer: ipv6 # default is ipv4
+```
+
+## IPv4/IPv6 Only
+
+Only IPv4 or IPv6 addresses can be used via the `only` option. When the `only` option is set, the `prefer` option will be ignored.
+
+```yaml hl_lines="5"
+resolvers:
+- name: resolver-0
+  nameservers:
+  - addr: 1.1.1.1
+    only: ipv6 # or ipv4
+```
+
+## Asynchronous Query
+
+Use the `async` option to set the query request to the DNS service to be asynchronous. At this time, when the cache is expired, the result in the cache will still be returned, and at the same time, the query request will be sent to the  DNS service asynchronously and the cache will be updated.
+
+```yaml hl_lines="5"
+resolvers:
+- name: resolver-0
+  nameservers:
+  - addr: 1.1.1.1
+    async: true
 ```
 
 ## ECS

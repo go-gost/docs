@@ -173,9 +173,9 @@ resolvers:
     ttl: 30s
 ```
 
-## IPv6
+## IPv6优先
 
-解析器默认返回IPv4地址，可以通过`prefer`参数设置切换到IPv6地址。
+解析器默认返回IPv4地址，可以通过`prefer`选项设置切换到IPv6地址优先。
 
 ```yaml hl_lines="5"
 resolvers:
@@ -183,6 +183,30 @@ resolvers:
   nameservers:
   - addr: 1.1.1.1
     prefer: ipv6 # default is ipv4
+```
+
+## IPv4/IPv6 Only
+
+可以通过`only`选项设置仅使用IPv4或IPv6地址，当设置了`only`选项后，`prefer`选项将被忽略。
+
+```yaml hl_lines="5"
+resolvers:
+- name: resolver-0
+  nameservers:
+  - addr: 1.1.1.1
+    only: ipv6 # or ipv4
+```
+
+## 异步查询
+
+通过`async`选项设置对DNS服务的查询请求为异步，此时当缓存失效后仍旧返回缓存中的结果，同时再向DNS服务异步发送查询请求并更新缓存。
+
+```yaml hl_lines="5"
+resolvers:
+- name: resolver-0
+  nameservers:
+  - addr: 1.1.1.1
+    async: true
 ```
 
 ## ECS

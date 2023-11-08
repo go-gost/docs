@@ -17,13 +17,14 @@ GOST运行方式有两种：命令行直接运行，和通过配置文件运行�
 
 命令行模式与配置文件之间存在一个转换关系，例如：
 
-```
+```bash
 gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.168.1.1:8080?bar=baz
 ```
 
 对应的配置文件：
 
 === "yaml格式"
+
 	```yaml
 	services:
 	- name: service-0
@@ -60,6 +61,7 @@ gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.16
 			  bar: baz
 	```
 === "json格式"
+
 	```json
 	{
 	  "services": [

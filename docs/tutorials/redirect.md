@@ -17,10 +17,13 @@
 ### 不使用Mark
 
 === "命令行"
-    ```
+
+    ```bash
     gost -L red://:12345?sniffing=true -F 192.168.1.1:1080
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -45,9 +48,9 @@
             type: tcp
     ```
 
-
 !!! example "iptables-本地全局TCP代理"
-    ```
+
+    ```bash
     iptables -t nat -A OUTPUT -p tcp --match multiport ! --dports 12345,1080 -j DNAT --to-destination 127.0.0.1:12345
     ```
 
@@ -56,10 +59,13 @@
 使用Mark可以避免出口流量被二次拦截造成死循环。
 
 === "命令行"
-    ```
+
+    ```bash
     gost -L "red://:12345?sniffing=true&so_mark=100"
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -77,10 +83,13 @@
 #### 使用转发链
 
 === "命令行"
+
     ```
     gost -L red://:12345?sniffing=true -F "http://192.168.1.1:1080?so_mark=100"
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -113,7 +122,8 @@
 通过`so_mark`(命令行)或`sockopts`(配置文件)参数来设置mark值。
 
 !!! example "iptables规则"
-    ```
+
+    ```bash
     iptables -t nat -N GOST
     # 忽略局域网流量，请根据实际网络环境进行调整
     iptables -t nat -A GOST -d 192.168.0.0/16 -j RETURN
@@ -132,10 +142,13 @@
 ### TCP
 
 === "命令行"
+
     ```
     gost -L "red://:12345?sniffing=true&tproxy=true&so_mark=100"
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -156,10 +169,13 @@
 #### 使用转发链
 
 === "命令行"
+
     ```
     gost -L "red://:12345?sniffing=true&tproxy=true" -F http://192.168.1.1:8080?so_mark=100
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -190,7 +206,8 @@
     ```
 
 !!! example "routing和iptables规则"
-    ```
+
+    ```bash
     ip rule add fwmark 1 lookup 100
     ip route add local 0.0.0.0/0 dev lo table 100
 
@@ -218,10 +235,13 @@
 ### UDP
 
 === "命令行"
-    ```
+
+    ```bash
     gost -L "redu://:12345?ttl=30s&so_mark=100"
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -239,10 +259,13 @@
 #### 使用转发链
 
 === "命令行"
+
     ```
     gost -L redu://:12345?ttl=30s -F relay://192.168.1.1:8421?so_mark=100
     ```
+
 === "配置文件"
+
     ```yaml
     services:
     - name: service-0
@@ -273,7 +296,8 @@
 :    传输通道超时时长。
 
 !!! example "routing和iptables规则"
-    ```
+
+    ```bash
     ip rule add fwmark 1 lookup 100
     ip route add local 0.0.0.0/0 dev lo table 100
 
