@@ -8,7 +8,7 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 
 === "命令行"
 
-	```
+	```bash
 	gost -L :8080 -metrics=:9000
 	```
 
@@ -113,6 +113,22 @@ metrics:
 
 `gost_chain_errors_total` (type=counter)
 :    转发链本身建立连接失败数
+
+## Prometheus
+
+Prometheus配置文件`prometheus.yaml`需要在`scrape_configs`中增加一个Job。
+
+```yaml hl_lines="6 7 8 9"
+global:
+  scrape_interval: 15s # By default, scrape targets every 15 seconds.
+# A list of scrape configurations.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'gost'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['127.0.0.1:9000']
+```
 
 ## Grafana Dashboard
 
