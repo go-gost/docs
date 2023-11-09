@@ -13,8 +13,7 @@ Bypass can be set on the service, the hop and the nodes of the forwarding chain 
     gost -L http://:8080?bypass=10.0.0.0/8 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
-    Specify a list of client address matching rules (comma-separated IP or CIDR) via the `bypass` option.
-
+    Use the `bypass` parameter to specify the requested target address matching rule list. The rules are IP, CIDR, domain name or domain name wildcard separated by commas.
 
 === "File (YAML)"
 
@@ -56,7 +55,7 @@ Bypass can be set on the service, the hop and the nodes of the forwarding chain 
       - .example.org
     ```
 
-    Use the `bypass` property in node to use the specified bypass by referencing the bypass name.
+    Use the `bypass` option in node to use the specified bypass by referencing the bypass name.
 
 !!! tip "Hop Level Bypass"
     Bypass can be set on hop or node, if not set on node, the bypass specified on hop will be used.
@@ -160,6 +159,36 @@ Multiple bypasses are used by specifying a list of bypasses using the `bypasses`
       - .example.org
     ```
 
+## Port Matching
+
+For IP, domain name and domain name wildcard rules can also contain ports or port ranges, CIDR rules do not support port matching.
+
+=== "CLI"
+
+    ```bash
+    gost -L http://:8080?bypass=192.168.1.1:80,192.168.1.2:0-65535,example.com:80,.example.com:443
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="4"
+    services:
+    - name: service-0
+      addr: ":8080"
+      bypass: bypass-0
+      handler:
+        type: http
+      listener:
+        type: tcp
+    bypasses:
+    - name: bypass-0
+      matchers:
+      - 192.168.1.1:80
+      - 192.168.1.1:0-65535
+      - '*.example.com:80'
+      - .example.com:443
+    ```
+
 ## Bypass Type
 
 ### Service Level Bypass
@@ -168,7 +197,7 @@ When a bypass is set on the service, if the requested target address fails the r
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L http://:8080?bypass=example.com
     ```
 
@@ -197,7 +226,7 @@ When a bypass is set on a hop, if the requested destination address fails the ru
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L http://:8080 -F http://:8081?bypass=~example.com,.example.org -F http://:8082?bypass=example.com
     ```
 
@@ -368,9 +397,36 @@ bypasses:
 `key` (string, default=gost)
 :    redis key
 
+```redis
+> SMEMBERS gost:bypasses:bypass-0
+1) "127.0.0.1"
+2) "172.10.0.0/16"
+3) "localhost"
+4) "*.example.com"
+5) ".example.org"
+```
+
+### HTTP
+
+Specify the HTTP service as the data source. For the requested URL, if HTTP returns a 200 status code, it is considered valid, and the returned data format is the same as the file data source.
+
+```yaml
+bypasses:
+- name: bypass-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    request URL
+
+`timeout` (duration, default=0)
+:    request timeout
+
 ## Hot Reload
 
-File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
+File, redis and HTTP data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
 ```yaml
 bypasses:

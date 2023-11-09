@@ -15,14 +15,14 @@
 
 服务端
 
-```
-gost -L icmp://:0
+```bash
+gost -L relay+icmp://:0
 ```
 
 客户端
 
-```
-gost -L :8080 -F "relay+icmp://server_ip:12345?keepAlive=true&ttl=10s"
+```bash
+gost -L :8080 -F "relay+icmp://server_ip:12345?keepalive=true&ttl=10s"
 ```
 
 !!! note 权限

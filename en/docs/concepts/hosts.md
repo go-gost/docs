@@ -199,13 +199,32 @@ Similar to the format of file data sources, each item is a space-separated IP-ho
 1) "127.0.0.1 example.com"
 2) "2001:db8::1 example.com"
 ```
+
+### HTTP
+
+Specify the HTTP service as the data source. For the requested URL, if HTTP returns a 200 status code, it is considered valid, and the returned data format is the same as the file data source.
+
+```yaml
+hosts:
+- name: hosts-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    request URL
+
+`timeout` (duration, default=0)
+:    request timeout
+
 ## Priority
 
-When configuring multiple data sources at the same time, the priority from high to low is: redis, file, inline.
+When configuring multiple data sources at the same time, the priority from high to low is: HTTP, redis, file, inline.
 
 ## Hot Reload
 
-File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
+File, redis and HTTP data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
 ```yaml
 hosts:

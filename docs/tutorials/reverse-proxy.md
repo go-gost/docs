@@ -2,7 +2,7 @@
 
 [反向代理](https://zh.wikipedia.org/wiki/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86)是代理服务的一种。服务器根据客户端的请求，从其关系的一组或多组后端服务器（如Web服务器）上获取资源，然后再将这些资源返回给客户端，客户端只会得知反向代理的IP地址，而不知道在代理服务器后面的服务器集群的存在。
 
-GOST中的端口转发服务也可以被当作是一种功能受限的反向代理，因其只能转发到固定的一个或一组后端服务。
+GOST中的[端口转发](/tutorials/port-forwarding/)服务也可以被当作是一种功能受限的反向代理，因其只能转发到固定的一个或一组后端服务。
 
 反向代理是端口转发服务的一个扩展，其依托于端口转发功能，并通过嗅探转发的数据来获取特定协议(目前支持HTTP/HTTPS)中的目标主机信息。
 
@@ -142,6 +142,30 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 由于srv-2.local没有匹配到节点，因此会被转发到fallback节点(192.168.2.1:443)。
 
+## URL路径路由
+
+通过`path`选项为节点指定路径前缀。当嗅探到HTTP流量后，会使用URL路径通过最长前缀匹配模式来选择节点。
+
+```yaml hl_lines="14 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: target-0
+      addr: 192.168.1.1:80
+      path: /
+    - name: target-1
+      addr: 192.168.1.2:80
+      path: /test
+```
+
 ## HTTP请求头设置
 
 当嗅探到HTTP流量时，可以在目标节点上通过`forwarder.nodes.http`选项对HTTP的请求头部信息进行设置，包括Host头重写和自定义头部信息，对本地和远程端口转发均适用。
@@ -201,7 +225,7 @@ services:
       host: example.com
       http:
         header:
-          User-Agent: gost/3.0
+          User-Agent: gost/3.0.0
           foo: bar
           bar: 123
         # host: test.example.com
@@ -240,6 +264,11 @@ services:
       tls:
         secure: true
         serverName: example.com
+        options:
+          minVersion: VersionTLS12
+          maxVersion: VersionTLS13
+          cipherSuites:
+          - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 ```
 
 `tls.secure` (bool, default=false)
@@ -247,6 +276,15 @@ services:
 
 `tls.serverName` (string)
 :    若`secure`设置为true，则需要通过此参数指定服务器域名用于域名校验。
+
+`tls.options.minVersion` (string)
+:    TLS最小版本，可选值`VersionTLS10`，`VersionTLS11`，`VersionTLS12`，`VersionTLS13`。
+
+`tls.options.maxVersion` (string)
+:    TLS最大版本，可选值`VersionTLS10`，`VersionTLS11`，`VersionTLS12`，`VersionTLS13`。
+
+`tls.options.cipherSuites` (list)
+:    加密套件，可选值参考[Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants)。
 
 ## HTTP Basic Authentication
 

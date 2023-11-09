@@ -140,6 +140,30 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 Since srv-2.local does not match the node, it will be forwarded to the fallback node (192.168.2.1:443).
 
+## URL Path Routing
+
+Specify the path prefix for the node via the `path` option. When HTTP traffic is sniffed, the URL path is used to select nodes using the longest prefix matching pattern.
+
+```yaml hl_lines="14 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: target-0
+      addr: 192.168.1.1:80
+      path: /
+    - name: target-1
+      addr: 192.168.1.2:80
+      path: /test
+```
+
 ## HTTP Request Header Settings
 
 When sniffing HTTP traffic, you can set the HTTP request header information on the target node through the `forwarder.nodes.http` option, including Host header rewriting and custom header information.
@@ -199,7 +223,7 @@ services:
       host: example.com
       http:
         header:
-          User-Agent: gost/3.0
+          User-Agent: gost/3.0.0
           foo: bar
           bar: 123
         # host: test.example.com
@@ -238,6 +262,11 @@ services:
       tls:
         secure: true
         serverName: example.com
+        options:
+          minVersion: VersionTLS12
+          maxVersion: VersionTLS13
+          cipherSuites:
+          - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 ```
 
 `tls.secure` (bool, default=false)
@@ -245,6 +274,15 @@ services:
 
 `tls.serverName` (string)
 :    If `secure` is set to true, you need to specify the server domain name for domain name verification through this parameter.
+
+`tls.options.minVersion` (string)
+:    Minimum TLS Version, `VersionTLS10`, `VersionTLS11`, `VersionTLS12` or `VersionTLS13`.
+
+`tls.options.maxVersion` (string)
+:    Maximum TLS Version, `VersionTLS10`, `VersionTLS11`, `VersionTLS12` or `VersionTLS13`.
+
+`tls.options.cipherSuites` (list)
+:    Cipher Suites, See [Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants) for more information.
 
 ## HTTP Basic Authentication
 

@@ -9,11 +9,11 @@
 
 === "命令行"
 
-    ```
-    gost -L http://:8080?admission=127.0.0.1,192.168.0.0/16
+    ```bash
+    gost -L http://:8080?admission=127.0.0.1,192.168.0.0/16,example.com
     ```
 
-	  通过`admission`参数来指定客户端地址匹配规则列表(以逗号分割的IP或CIDR)。
+	  通过`admission`参数来指定客户端地址匹配规则列表，规则以逗号分割的IP，CIDR或域名，域名会被解析为IP。
 
 === "配置文件"
 
@@ -31,6 +31,7 @@
       matchers:
       - 127.0.0.1
       - 192.168.0.0/16
+      - example.com
     ```
 
     服务中使用`admission`属性通过引用准入控制器名称(name)来使用指定的准入控制器。
@@ -41,7 +42,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L http://:8080?admission=~127.0.0.1,192.168.0.0/16
     ```
 
@@ -110,6 +111,7 @@ admissions:
   matchers:
   - 127.0.0.1
   - 192.168.0.0/16
+  - example.com
 ```
 
 ### 文件
@@ -130,6 +132,7 @@ admissions:
 
 127.0.0.1
 192.168.0.0/16
+example.com
 ```
 
 ### Redis
@@ -164,6 +167,7 @@ admissions:
 > SMEMBERS gost:admissions:admission-0
 1) "127.0.0.1"
 2) "192.168.0.0/16"
+3) "example.com"
 ```
 
 ### HTTP

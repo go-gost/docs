@@ -187,7 +187,7 @@ authers:
 
 The file format is the authentication information separated by lines, each line of authentication information is a user-pass pair separated by spaces, and the lines starting with `#` are commented out.
 
-```yaml
+```text
 # username password
 
 admin           #123456
@@ -221,13 +221,39 @@ authers:
 `key` (string, default=gost)
 :    redis key
 
+```redis
+> HGETALL gost:authers:auther-0
+1) "admin"
+2) "#123456"
+3) "test\user001"
+4) "123456"
+```
+
+### HTTP
+
+Specify the HTTP service as the data source. For the requested URL, if HTTP returns a 200 status code, it is considered valid, and the returned data format is the same as the file data source.
+
+```yaml
+authers:
+- name: auther-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    request URL
+
+`timeout` (duration, default=0)
+:    request timeout
+
 ## Priority
 
-When configuring multiple data sources at the same time, the priority from high to low is: redis, file, inline. If the same username exists in different data sources, the data with higher priority will overwrite the data with lower priority.
+When configuring multiple data sources at the same time, the priority from high to low is: HTTP, redis, file, inline. If the same username exists in different data sources, the data with higher priority will overwrite the data with lower priority.
 
 ## Hot Reload
 
-File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
+File, redis and HTTP data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
 ```yaml linenums="1" hl_lines="3"
 authers:

@@ -15,14 +15,14 @@ The [ICMP](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol) tunn
 
 ### Server
 
-```
-gost -L icmp://:0
+```bash
+gost -L relay+icmp://:0
 ```
 
 ### Client
 
-```
-gost -L :8080 -F "relay+icmp://server_ip:12345?keepAlive=true&ttl=10s"
+```bash
+gost -L :8080 -F "relay+icmp://server_ip:12345?keepalive=true&ttl=10s"
 ```
 
 !!! note "root"

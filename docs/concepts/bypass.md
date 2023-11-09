@@ -11,11 +11,12 @@
 在服务，跳跃点和转发链的节点上可以分别设置分流器，在数据转发过程中根据分流器中的规则对目标地址进行匹配测试来决定是否继续转发。
 
 === "命令行"
-    ```
+
+    ```bash
     gost -L http://:8080?bypass=10.0.0.0/8 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
-    通过`bypass`参数来指定请求的目标地址匹配规则列表(以逗号分割的IP,CIDR,域名或域名通配符)。
+    通过`bypass`参数来指定请求的目标地址匹配规则列表，规则是以逗号分割的IP,CIDR,域名或域名通配符。
 
 === "配置文件"
 
@@ -72,7 +73,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L http://:8080 -F http://:8081?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
@@ -164,6 +165,36 @@
       - .example.org
     ```
 
+## 端口匹配
+
+对于IP，域名和域名通配符规则也可以包含端口或端口范围，CIDR规则不支持端口匹配。
+
+=== "命令行"
+
+    ```bash
+    gost -L http://:8080?bypass=192.168.1.1:80,192.168.1.2:0-65535,example.com:80,.example.com:443
+    ```
+
+=== "配置文件"
+
+    ```yaml hl_lines="4"
+    services:
+    - name: service-0
+      addr: ":8080"
+      bypass: bypass-0
+      handler:
+        type: http
+      listener:
+        type: tcp
+    bypasses:
+    - name: bypass-0
+      matchers:
+      - 192.168.1.1:80
+      - 192.168.1.1:0-65535
+      - example.com:80
+      - .example.com:443
+    ```
+
 ## 分流器类型
 
 ### 服务上的分流器
@@ -172,7 +203,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L http://:8080?bypass=example.com
     ```
 
@@ -201,7 +232,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L http://:8080 -F http://:8081?bypass=~example.com,.example.org -F http://:8082?bypass=example.com
     ```
 

@@ -9,9 +9,9 @@ An admission controller can be set on each service to control client access.
 
 === "CLI"
     ```
-    gost -L http://:8080?admission=127.0.0.1,192.168.0.0/16
+    gost -L http://:8080?admission=127.0.0.1,192.168.0.0/16,example.com
     ```
-    Specify a list of client address matching rules (comma-separated IP or CIDR) via the `admission` option.
+    Specify a list of client address matching rules via the `admission` option, each rule is a comma-separated IP, CIDR, or domain, domain will be resolved to IP.
 
 === "File (YAML)"
 
@@ -29,6 +29,7 @@ An admission controller can be set on each service to control client access.
       matchers:
       - 127.0.0.1
       - 192.168.0.0/16
+      - example.com
     ```
 
     Use the `admission` property in the service to use the specified admission controller by referencing the admission controller name.
@@ -107,6 +108,7 @@ admissions:
   matchers:
   - 127.0.0.1
   - 192.168.0.0/16
+  - example.com
 ```
 
 ### File
@@ -127,6 +129,7 @@ The file format is a list of addresses separated by lines, and the part starting
 
 127.0.0.1
 192.168.0.0/16
+example.com
 ```
 
 ### Redis
@@ -155,9 +158,34 @@ admissions:
 `key` (string, default=gost)
 :    redis key
 
+```redis
+> SMEMBERS gost:admissions:admission-0
+1) "127.0.0.1"
+2) "192.168.0.0/16"
+3) "example.com"
+```
+
+### HTTP
+
+Specify the HTTP service as the data source. For the requested URL, if HTTP returns a 200 status code, it is considered valid, and the returned data format is the same as the file data source.
+
+```yaml
+admissions:
+- name: admission-0
+  http:
+    url: http://127.0.0.1:8000
+    timeout: 10s
+```
+
+`url` (string, required)
+:    request URL
+
+`timeout` (duration, default=0)
+:    request timeout
+
 ## Hot Reload
 
-File and redis data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
+File, redis and HTTP data sources support hot reloading. Enable hot loading by setting the `reload` property, which specifies the period for synchronizing the data source data.
 
 ```yaml
 admissions:
