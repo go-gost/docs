@@ -9,7 +9,7 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 
 ## HTTP CONNECT方法
 
-### 服务端
+**服务端**
 
 === "命令行"
     ```
@@ -32,7 +32,7 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 
 以上是一个最简单的带有认证功能的HTTP代理服务。
 
-### 客户端
+**客户端**
 
 === "命令行"
     ```
@@ -71,7 +71,7 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 
 CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用原始HTTP协议中的GET和POST方法来实现数据通道，包括加密的phts和明文的pht两种模式。
 
-### 服务端
+**服务端**
 
 === "命令行"
     ```
@@ -98,18 +98,21 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
           pushPath: /push
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 	或
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+phts://:8080
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -142,16 +145,18 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
 
 ## Websocket
 
-Websocket是HTTP/1中为了建立长连接而增加的扩展协议。
+Websocket是HTTP/1中为了双向数据传输而增加的扩展协议。
 
-### 服务端
+**服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L socks5+ws://user:pass@:1080
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -165,14 +170,16 @@ Websocket是HTTP/1中为了建立长连接而增加的扩展协议。
 		type: ws
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F socks5+ws://user:pass@:1080
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -209,14 +216,16 @@ GOST中HTTP/2有两种使用方式，代理模式和标准数据通道模式。
 
 HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
 
-### 服务端
+**服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http2://user:pass@:8443
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -230,14 +239,16 @@ HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
 		type: http2
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F http2://user:pass@:8443
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -267,10 +278,11 @@ HTTP/2使用与HTTP相同的CONNECT方法实现代理模式。
 
 HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 
-### 服务端
+**服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L socks5+h2://user:pass@:8443
 	```
 	或
@@ -279,6 +291,7 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -293,7 +306,7 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 		# type: h2c
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
     ```
@@ -338,13 +351,15 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 
 gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然的支持双向流传输，因此很适合作为数据通道。
 
-### 服务端
+**服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L relay+grpc://user:pass@:8443
 	```
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -358,13 +373,15 @@ gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然
 		type: grpc
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+grpc://user:pass@:8443
 	```
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -392,13 +409,16 @@ gRPC是基于HTTP/2，因此具有HTTP/2本身固有的优点，另外gRPC天然
 
 gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文进行通讯。
 
-### 服务端
+**服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L relay+grpc://user:pass@:8443?grpcInsecure=true
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -414,13 +434,16 @@ gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文�
 		  grpcInsecure: true
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+grpc://user:pass@:8443?grpcInsecure=true
 	```
+
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -450,14 +473,13 @@ gRPC默认使用TLS加密，可以通过设置`grpcInsecure`参数使用明文�
 
 ## HTTP/3
 
-HTTP/3协议规范中支持CONNECT方法和WebTransport两种方式建立数据通道。
+GOST的HTTP/3数据通道有两种模式：PHT和WebTransport。
 
-GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来建立数据通道。
+### PHT
 
-!!! note "WebTransport"
-    [WebTransport](https://web.dev/webtransport/)目前处在早期草案阶段，待时机成熟后GOST会添加对其的支持。
+由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](/tutorials/protocols/pht/)来实现数据通道功能。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
@@ -481,10 +503,11 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
           pushPath: /push
 	```
 
-### 客户端
+**客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 
@@ -514,4 +537,60 @@ GOST目前不支持以上两种方式，而是通过在HTTP/3之上利用pht来�
               authorizePath: /authorize
               pullPath: /pull
               pushPath: /push
+	```
+
+### WebTransport
+
+与HTTP协议中的Websocket类似，HTTP3中也定义了一个用于双向数据传输的扩展协议[WebTransport](https://web.dev/webtransport/)。
+
+**服务端**
+
+=== "命令行"
+
+    ```bash
+	gost -L "wt://:8443"
+	```
+
+=== "配置文件"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8443"
+	  handler:
+		type: auto
+	  listener:
+		type: wt
+	```
+
+**客户端**
+
+=== "命令行"
+
+    ```bash
+	gost -L http://:8000 -F wt://:8443
+	```
+
+=== "配置文件"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8000"
+	  handler:
+		type: http
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :8443
+		  connector:
+			type: http
+		  dialer:
+			type: wt
 	```

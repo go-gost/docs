@@ -149,7 +149,7 @@ GOST支持标准SOCKS5协议的0x00(NO AUTHENTICATION REQUIRED)和0x02(USERNAME/
 
 GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2)，多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。此扩展主要用于TCP远程端口转发。
 
-##### 服务端
+**服务端**
 
 === "命令行"
 
@@ -171,7 +171,7 @@ GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2
         type: tcp
     ```
 
-##### 客户端
+**客户端**
 
 === "命令行"
 
@@ -211,7 +211,7 @@ GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2
 
 GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此扩展主要用于UDP端口转发。
 
-##### 服务端
+**服务端**
 
 === "命令行"
 
@@ -233,7 +233,7 @@ GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此�
         type: tcp
     ```
 
-##### 客户端
+**客户端**
 
 === "命令行"
 

@@ -146,7 +146,8 @@ PHT通道也可以用作端口转发。
     ```bash
     gost -L pht://:8443/:1080 -L socks5://:1080
     ```
-	等同于
+	  等同于
+
     ```bash
     gost -L forward+pht://:8443/:1080 -L socks5://:1080
     ```

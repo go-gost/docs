@@ -9,30 +9,30 @@ QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[lucas-clement
 
 === "命令行"
 
+    ```bash
+    gost -L http+quic://:8443
     ```
-	gost -L http+quic://:8443
-	```
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: http
-	  listener:
-		type: quic
-	```
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: http
+      listener:
+        type: quic
+    ```
 
 ### 心跳
 
-客户端或服务端可以通过`keepAlive`选项开启心跳，并通过`ttl`选项设置心跳包发送的间隔时长。
+客户端或服务端可以通过`keepalive`选项开启心跳，并通过`ttl`选项设置心跳包发送的间隔时长。
 
 === "命令行"
 
     ```bash
-    gost -L http://:8080 -F "quic://:8443?keepAlive=true&ttl=10s"
+    gost -L http://:8080 -F "quic://:8443?keepalive=true&ttl=10s"
     ```
 
 === "配置文件"
@@ -58,7 +58,7 @@ QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[lucas-clement
           dialer:
             type: quic
             metadata:
-              keepAlive: true
+              keepalive: true
               ttl: 10s
     ```
 

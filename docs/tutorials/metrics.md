@@ -118,12 +118,11 @@ metrics:
 
 Prometheus配置文件`prometheus.yaml`需要在`scrape_configs`中增加一个Job。
 
-```yaml hl_lines="6 7 8 9"
+```yaml hl_lines="5 6 7 8"
 global:
-  scrape_interval: 15s # By default, scrape targets every 15 seconds.
+  scrape_interval: 15s 
 # A list of scrape configurations.
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'gost'
     scrape_interval: 5s
     static_configs:

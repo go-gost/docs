@@ -6,7 +6,7 @@ SSH有两种模式：隧道模式和转发模式。
 
 ## 隧道模式
 
-### 服务端
+**服务端**
 
 === "命令行"
 
@@ -26,7 +26,7 @@ SSH有两种模式：隧道模式和转发模式。
         type: ssh
     ```
 
-### 客户端
+**客户端**
 
 === "命令行"
 
@@ -62,7 +62,7 @@ SSH有两种模式：隧道模式和转发模式。
 
 采用标准SSH协议的端口转发功能，仅支持TCP。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
@@ -82,7 +82,7 @@ SSH有两种模式：隧道模式和转发模式。
         type: sshd
     ```
 
-### 客户端
+**客户端**
 
 === "命令行"
 
@@ -131,14 +131,14 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
     在命令行模式下，认证信息(user:pass)设置的是SSH通道的认证(Listener和Dialer)，而非Handler和Connector。
 	此行为仅在使用ssh和sshd通道时有效。
 
-#### 服务端
+**服务端**
 
 === "命令行"
 
     ```bash
     gost -L relay+ssh://user:pass@:2222
     ```
-	或
+	  或
 
     ```bash
     gost -L sshd://user:pass@:2222
@@ -159,14 +159,14 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
           password: pass
     ```
 
-#### 客户端
+**客户端**
 
 === "命令行"
 
     ```bash
     gost -L :8080 -F relay+ssh://user:pass@:2222
     ```
-	或
+	  或
 
     ```bash
     gost -L tcp://:8080/:80 -F sshd://user:pass@:2222
@@ -201,7 +201,7 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 
 ### PubKey认证
 
-#### 服务端
+**服务端**
 
 服务端通过`authorizedKeys`选项设置已授权客户端公钥列表。
 
@@ -230,7 +230,7 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
           authorizedKeys: /path/to/authorizedKeys
     ```
 
-#### 客户端
+**客户端**
 
 客户端通过`privateKeyFile`和`passphrase`选项设置证书私钥和私钥密码。
 
@@ -239,7 +239,7 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
     ```bash
     gost -L :8080 -F "relay+ssh://:2222?privateKeyFile=/path/to/privateKeyFile&passphrase=123456"
     ```
-	或
+	  或
 
     ```bash
     gost -L tcp://:8080/:80 -F "sshd://:2222?privateKeyFile=/path/to/privateKeyFile&passphrase=123456"
@@ -283,7 +283,7 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
     ```bash
     gost -L :8080 -F "relay+ssh://:2222?keepalive=true&ttl=30s"
     ```
-	或
+	  或
 
     ```bash
     gost -L tcp://:8080/:80 -F "sshd://:2222?keepalive=true&ttl=30s"
@@ -386,14 +386,14 @@ SSH数据通道的隧道模式可以与各种代理协议组合使用。
 
 SSH通道的隧道模式也可以用作端口转发。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
     ```bash
     gost -L ssh://:2222/:1080 -L socks5://:1080
     ```
-	等同于
+	  等同于
 
     ```bash
     gost -L forward+ssh://:2222/:1080 -L socks5://:1080

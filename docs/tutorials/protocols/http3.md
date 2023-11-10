@@ -4,32 +4,55 @@ HTTP3有两种模式：通道模式和反向代理模式。
 
 ## 数据通道
 
-由于HTTP3协议本身是一个Web服务，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用PHT来实现数据通道功能。
+HTTP3的数据通道有两种模式：PHT和WebTransport。
 
-!!! note "WebTransport"
-    [WebTransport](https://web.dev/webtransport/)目前处在早期草案阶段，待时机成熟后GOST会添加对其的支持。
+### PHT
+
+由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](/tutorials/protocols/pht/)来实现数据通道功能。
 
 === "命令行"
 
-    ```bash
+  ```bash
 	gost -L "h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
 	```
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: auto
-	  listener:
-		type: h3
-		metadata:
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: auto
+      listener:
+        type: h3
+        metadata:
           authorizePath: /authorize
           pullPath: /pull
           pushPath: /push
-	```
+    ```
+
+### WebTransport
+
+与HTTP协议中的Websocket类似，HTTP3中也定义了一个用于双向数据传输的扩展协议[WebTransport](https://web.dev/webtransport/)。
+
+=== "命令行"
+
+    ```bash
+    gost -L "wt://:8443"
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: auto
+      listener:
+        type: wt
+    ```
 
 ## 反向代理
 

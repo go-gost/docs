@@ -8,7 +8,7 @@ Tunnel is a (logical) channel between the server and the client. The server will
 
 ![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
 
-### Server
+**Server**
 
 === "CLI"
 
@@ -46,7 +46,7 @@ The `entrypoint` option specifies the public entry point for traffic, the `ingre
 !!! note "Tunnel ID Allocation"
     If Ingress is used, the tunnel ID should be allocated by the server in advance and recorded in the Ingress. If the client uses a tunnel ID that is not registered in the Ingress, traffic cannot be routed to the client.
 
-### Client
+**Client**
 
 === "CLI"
 
@@ -97,7 +97,7 @@ When the hostname is `example.com`, the tunnel with the ID 4d21094e-b74c-4916-86
 
 The entry point set through the `entrypoint` option can be regarded as a public entry point provided internally by the tunnel service. You can also run multiple external public entry points to forward traffic to the tunnel service.
 
-### Server
+**Server**
 
 The server specifies the entry point ID through `entrypoint.id`. The client must use the same ID to be considered a public entry point. Otherwise, it will be treated as a private entry point and can only access the specified tunnel.
 
@@ -131,7 +131,7 @@ The server specifies the entry point ID through `entrypoint.id`. The client must
     ```
 
 
-### Client
+**Client**
 
 The client specifies the tunnel ID through `tunnel.id`. When the tunnel ID is the same as the server's `entrypoint.id`, the client will be regarded as a public entry point.
 
@@ -223,7 +223,7 @@ To use a private tunnel, the user (visitor side) needs to start a service as the
 
 ![Reverse Proxy - Web Private Tunnel](/images/private-tunnel-web.png) 
 
-### Server
+**Server**
 
 ```yaml hl_lines="19"
 services:
@@ -262,7 +262,7 @@ In the Ingress rule, mark the tunnel corresponding to this rule as private by ad
 !!! note "Scope Of Privacy"
     The scope of privacy is Ingress rules, not the tunnel itself. The same tunnel can have different privacy in different rules. For example, in the above example, srv-2.local and srv-3.local use the same tunnel, but the tunnel in the corresponding rule of srv-3.local is not private, so traffic to srv-3.local can be routed to this tunnel.
 
-### Client
+**Client**
 
 === "CLI"
 
@@ -302,7 +302,7 @@ In the Ingress rule, mark the tunnel corresponding to this rule as private by ad
 
 The configuration of the client is the same as above.
 
-### Visitor
+**Visitor**
 
 === "CLI"
     Automatically sniff the host name
@@ -353,7 +353,7 @@ Tunnel can also be applied to any TCP service (such as SSH). In the above exampl
 
 ![Reverse Proxy - TCP Private Tunnel](/images/private-tunnel-tcp.png) 
 
-### Client
+**Client**
 
 ```yaml hl_lines="13 16"
 services:
@@ -390,7 +390,7 @@ chains:
 The client's forwarder sets up two target nodes: the ssh service at 192.168.2.1:22 and the redis service at 192.168.2.2:6379.
 Note that the `host` parameter on each node needs to match the `hostname` in the server-side Ingress corresponding rule.
 
-### Visitor
+**Visitor**
 
 === "CLI"
 
@@ -446,7 +446,7 @@ Tunnel can also be applied to any UDP service (eg DNS). For example, the tunnel 
 
 ![Reverse Proxy - UDP Tunnel](/images/tunnel-udp.png) 
 
-### Client
+**Client**
 
 ```yaml hl_lines="5 7 13 16"
 services:
@@ -483,7 +483,7 @@ chains:
 The client's forwarder sets up two target nodes: the dns service at 192.168.2.1:53 and the dns service at 192.168.2.2:53.
 Note that the `host` parameter on each node needs to match the `hostname` in the server-side Ingress corresponding rule.
 
-### Visitor
+**Visitor**
 
 === "CLI"
 
@@ -576,7 +576,7 @@ TCP and UDP services can share the same tunnel. The tunnel will distinguish betw
 
 ![Reverse Proxy - iperf3](/images/tunnel-iperf.png) 
 
-### Server
+**Server**
 
 The server assigns a virtual host named `iperf.local` corresponding to a tunnel, and this tunnel will carry both TCP and UDP traffic of iperf.
 
@@ -617,7 +617,7 @@ If the Ingress has only one rule and you don't want to create a configuration fi
         endpoint: 22f43305-42f7-4232-bbbc-aa6c042e3bc3
     ```
 
-### Client
+**Client**
 
 Since there is only one forwarding target, you can use the command line to forward directly. If you want to forward multiple services, you need to define the host name (`forwarder.nodes.host`) for each target node in the forwarder through the configuration file. Through the host name to match different services.
 
@@ -670,7 +670,7 @@ Since there is only one forwarding target, you can use the command line to forwa
             type: tcp
     ```
 
-### Visitor
+**Visitor**
 
 The forwarded target address needs to match the host name corresponding to the rule in the Ingress of the server. If you want to forward multiple services, you need to define the host name (`forwarder.nodes.host`) for each target node in the forwarder through the configuration file, through host name to match different services.
 

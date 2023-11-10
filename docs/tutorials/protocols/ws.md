@@ -11,7 +11,7 @@ Websocket是GOST中的一种数据通道类型。
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L ws://:8080
     ```
 
@@ -33,7 +33,7 @@ Websocket是GOST中的一种数据通道类型。
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L wss://:8080
     ```
 
@@ -55,11 +55,12 @@ GOST在Websocket基础之上扩展出具有多路复用(Multiplex)特性的传�
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L mws://:8443
     ```
+    或
 
-    ```
+    ```bash
     gost -L mwss://:8443
     ```
 
@@ -111,7 +112,7 @@ GOST在Websocket基础之上扩展出具有多路复用(Multiplex)特性的传�
 !!! note "路径匹配验证"
     仅当客户端和服务端设定的path参数相同时，连接才能成功建立。
 
-#### 服务端
+**服务端**
 
 === "命令行"
 
@@ -133,7 +134,7 @@ GOST在Websocket基础之上扩展出具有多路复用(Multiplex)特性的传�
 		  path: /ws
     ```
 
-#### 客户端
+**客户端**
 
 === "命令行"
 
@@ -341,14 +342,15 @@ Websocket数据通道可以与各种代理协议组合使用。
 
 Websocket通道也可以用作端口转发。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
     ```bash
     gost -L wss://:8443/:1080 -L socks5://:1080
     ```
-	等同于
+	  等同于
+
     ```bash
     gost -L forward+wss://:8443/:1080 -L socks5://:1080
     ```

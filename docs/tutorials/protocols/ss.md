@@ -38,7 +38,7 @@ GOST中shadowsocks的TCP和UDP服务是相互独立的两个服务。
     ```bash
     gost -L ssu://chacha20-ietf-poly1305:pass@:8338
     ```
-	等同于
+	  等同于
     ```bash
     gost -L ssu+udp://chacha20-ietf-poly1305:pass@:8338
     ```

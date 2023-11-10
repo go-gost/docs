@@ -117,6 +117,7 @@ nav:
       - 概述: tutorials/protocols/overview.md
       - HTTP: tutorials/protocols/http.md
       - HTTP2: tutorials/protocols/http2.md
+      - HTTP3: tutorials/protocols/http3.md
       - SOCKSv4/v5: tutorials/protocols/socks.md
       - Shadowsocks: tutorials/protocols/ss.md
       - SNI: tutorials/protocols/sni.md
@@ -127,7 +128,6 @@ nav:
       - gRPC: tutorials/protocols/grpc.md
       - QUIC: tutorials/protocols/quic.md
       - PHT: tutorials/protocols/pht.md
-      - HTTP3: tutorials/protocols/http3.md
       - KCP: tutorials/protocols/kcp.md
       - SSH: tutorials/protocols/ssh.md
       - MTCP: tutorials/protocols/mtcp.md

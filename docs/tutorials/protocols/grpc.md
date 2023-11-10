@@ -11,13 +11,13 @@ gRPC通道默认采用TLS加密。
 
 === "命令行"
 
-    ```
+  ```bash
 	gost -L http+grpc://:8443
 	```
 
 === "配置文件"
 
-    ```yaml
+  ```yaml
 	services:
 	- name: service-0
 	  addr: ":8443"
@@ -29,27 +29,27 @@ gRPC通道默认采用TLS加密。
 
 ## 不使用TLS
 
-通过`grpcInsecure`选项开启明文gRPC传输，不是TLS。
+通过`grpc.insecure`选项开启明文gRPC传输，不是TLS。
 
 === "命令行"
 
     ```bash
-	gost -L http+grpc://:8443?grpcInsecure=true
-	```
+    gost -L http+grpc://:8443?grpc.insecure=true
+    ```
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: http
-	  listener:
-		type: grpc
-		metadata:
-		  grpcInsecure: true
-	```
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: http
+      listener:
+        type: grpc
+        metadata:
+          grpc.insecure: true
+    ```
 
 ## 自定义请求主机名
 
@@ -94,7 +94,7 @@ gRPC通道默认采用TLS加密。
 !!! note "路径匹配验证"
     仅当客户端和服务端设定的path参数相同时，连接才能成功建立。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
@@ -116,7 +116,7 @@ gRPC通道默认采用TLS加密。
 		  path: /GostTunel/Tunnel
     ```
 
-### 客户端
+**客户端**
 
 === "命令行"
 
@@ -154,7 +154,7 @@ gRPC通道默认采用TLS加密。
 
 客户端和服务端可以分别通过若干选项来控制心跳的发送。
 
-### 客户端
+**客户端**
 
 === "命令行"
 
@@ -191,7 +191,7 @@ gRPC通道默认采用TLS加密。
               keepalive.permitWithoutStream: true
     ```
 
-### 服务端
+**服务端**
 
 === "命令行"
 
@@ -307,14 +307,15 @@ gRPC数据通道可以与各种代理协议组合使用。
 
 gRPC通道也可以用作端口转发。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
     ```bash
     gost -L grpc://:8443/:1080 -L socks5://:1080
     ```
-	等同于
+	  等同于
+
     ```bash
     gost -L forward+grpc://:8443/:1080 -L socks5://:1080
     ```

@@ -6,23 +6,23 @@ KCP是GOST中的一种数据通道类型。KCP的实现依赖于[xtaci/kcp-go](h
 
 === "命令行"
 
+    ```bash
+    gost -L kcp://:8443?c=/path/to/config/file
     ```
-	gost -L kcp://:8443?c=/path/to/config/file
-	```
 
 === "配置文件"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8443"
-	  handler:
-		type: auto
-	  listener:
-		type: kcp
-		metadata:
-		  c: /path/to/config/file
-	```
+    services:
+    - name: service-0
+      addr: ":8443"
+      handler:
+        type: auto
+      listener:
+        type: kcp
+        metadata:
+          c: /path/to/config/file
+    ```
 
 ## 配置
 
@@ -130,7 +130,7 @@ KCP通道也可以用作端口转发，相当于在UDP端口转发服务基础�
     ```bash
     gost -L kcp://:8443/:8080 -L ss://:8080
     ```
-	等同于
+	  等同于
     ```bash
     gost -L forward+kcp://:8443/:8080 -L ss://:8080
     ```
