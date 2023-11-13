@@ -10,7 +10,7 @@ publish_date: 2023-10-15 22:00
 
 为了能够对此功能进行更全面的测试，同时也为了能够给需要临时暴露内网服务的用户提供一种快捷的方式，特公开推出`GOST.PLUS`公共反向代理测试服务。此服务面向所有用户开放，无需注册。
 
-本服务以测试为主要目的，所有公共访问点均为临时访问点，有效期为1小时。
+本服务以测试为主要目的，所有公共访问点均为临时访问点，有效期为24小时。
 
 ## 使用方法
 
@@ -185,7 +185,7 @@ services:
   gost-plugins: 
     image: ginuerzh/gost-plugins
     restart: always
-    command: "ingress --addr=:8000 --redis.addr=redis:6379 --redis.db=2 --redis.expiration=1h --domain=gost.local --log.level=debug"
+    command: "ingress --addr=:8000 --redis.addr=redis:6379 --redis.db=2 --redis.expiration=24h --domain=gost.local --log.level=debug"
 
   redis: 
     image: redis:7.2.1-alpine

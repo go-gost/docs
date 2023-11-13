@@ -781,7 +781,7 @@ gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 "tunnel":"893787fd-fcd2-46a0-8dd4-f9103ae84df4"}
 ```
 
-日志的`endpoint`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为1小时。
+日志的`endpoint`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为24小时。
 
 如果`192.168.1.1:80`是一个HTTP服务，通过[https://134c714b65d54a4f.gost.plus](https://134c714b65d54a4f.gost.plus)便能立即访问。
 

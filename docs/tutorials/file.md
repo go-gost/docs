@@ -121,4 +121,4 @@ gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443
 "tunnel":"50ce9728-5d92-4d45-871d-4f275d5179cb"}
 ```
 
-日志的`endpoint`信息中`006478add9ed096a`是为此服务生成的临时公共访问点，有效期为1小时。通过[https://006478add9ed096a.gost.plus](https://006478add9ed096a.gost.plus)便能立即访问到此文件服务。
+日志的`endpoint`信息中`006478add9ed096a`是为此服务生成的临时公共访问点，有效期为24小时。通过[https://006478add9ed096a.gost.plus](https://006478add9ed096a.gost.plus)便能立即访问到此文件服务。
