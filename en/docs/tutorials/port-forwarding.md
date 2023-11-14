@@ -432,6 +432,54 @@ TCP remote port forwarding can be indirectly forwarded by means of the remote po
 
 The 192.168.1.2:22 service here can be the standard SSH service of the system itself, or the sshd type service of GOST.
 
+## Port Range
+
+The target node addresses in forwarder are supported using the port range format.
+
+=== "CLI"
+
+	```bash
+	gost -L tcp://:8080/192.168.1.1:8000-8003
+	```
+
+=== "File (YAML)"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: :8080
+	  handler:
+		type: tcp
+	  listener:
+		type: tcp
+	  forwarder:
+	    nodes:
+		- name: target-0
+		  addr: 192.168.1.1:8000-8003
+	```
+
+It is equivalent to:
+
+```yaml
+services:
+- name: service-0
+    addr: :8080
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+      - name: target-0
+    	addr: 192.168.1.1:8000
+      - name: target-1
+    	addr: 192.168.1.1:8001
+      - name: target-2
+    	addr: 192.168.1.1:8002
+      - name: target-3
+    	addr: 192.168.1.1:8003
+```
+
 ## Server-side Forwarding
 
 The above forwarding method can be regarded as client forwarding, and the client controls the forwarding target address. The target address can also be specified by the server.

@@ -9,10 +9,11 @@ The original HTTP protocol is a request-response interaction method. The client 
 
 ## HTTP CONNECT MEthod
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://user:pass@:8080
 	```
 
@@ -33,10 +34,11 @@ The original HTTP protocol is a request-response interaction method. The client 
 
 The above is a simplest HTTP proxy service with authentication function.
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F http://user:pass@:8080
 	```
 
@@ -73,14 +75,16 @@ The client itself is also an HTTP proxy service and forwards the request to the 
 
 The CONNECT method is not supported by all services. In order to be as general as possible, GOST uses the GET and POST methods in the original HTTP protocol to implement data tunnel, including encrypted phts and plaintext pht modes.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 	or
-    ```
+
+    ```bash
 	gost -L relay+phts://:8080
 	```
 
@@ -101,14 +105,16 @@ The CONNECT method is not supported by all services. In order to be as general a
           pushPath: /push
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 	or
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+phts://:8080
 	```
 
@@ -145,10 +151,11 @@ The CONNECT method is not supported by all services. In order to be as general a
 
 Websocket is an extension protocol added in HTTP/1 for establishing long connections.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L socks5+ws://user:pass@:1080
 	```
 
@@ -167,10 +174,11 @@ Websocket is an extension protocol added in HTTP/1 for establishing long connect
 		type: ws
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F socks5+ws://user:pass@:1080
 	```
 
@@ -212,10 +220,11 @@ There are two ways to use HTTP/2 in GOST, proxy mode and tunnel mode.
 
 HTTP/2 implements proxy mode using the same CONNECT method as HTTP.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http2://user:pass@:8443
 	```
 
@@ -234,10 +243,11 @@ HTTP/2 implements proxy mode using the same CONNECT method as HTTP.
 		type: http2
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F http2://user:pass@:8443
 	```
 
@@ -272,14 +282,16 @@ HTTP/2 implements proxy mode using the same CONNECT method as HTTP.
 
 HTTP/2 can use encrypted (h2) and plaintext (h2c) modes as a tunnel.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L socks5+h2://user:pass@:8443
 	```
 	or
-    ```
+
+    ```bash
 	gost -L socks5+h2c://user:pass@:8443
 	```
 
@@ -299,14 +311,16 @@ HTTP/2 can use encrypted (h2) and plaintext (h2c) modes as a tunnel.
 		# type: h2c
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F socks5+h2://user:pass@:8443
 	```
 	or
-    ```
+
+    ```bash
 	gost -L http://:8000 -F socks5+h2c://user:pass@:8443
 	```
 
@@ -345,12 +359,14 @@ HTTP/2 can use encrypted (h2) and plaintext (h2c) modes as a tunnel.
 
 gRPC is based on HTTP/2, so it has the inherent advantages of HTTP/2 itself. In addition, gRPC naturally supports bidirectional streaming, so it is very suitable as a tunnel.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L relay+grpc://user:pass@:8443
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -366,12 +382,14 @@ gRPC is based on HTTP/2, so it has the inherent advantages of HTTP/2 itself. In 
 		type: grpc
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+grpc://user:pass@:8443
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -401,10 +419,11 @@ gRPC is based on HTTP/2, so it has the inherent advantages of HTTP/2 itself. In 
 
 gRPC uses TLS encryption by default and can communicate in clear text by setting the `grpcInsecure` parameter.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L relay+grpc://user:pass@:8443?grpcInsecure=true
 	```
 
@@ -425,10 +444,11 @@ gRPC uses TLS encryption by default and can communicate in clear text by setting
 		  grpcInsecure: true
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F relay+grpc://user:pass@:8443?grpcInsecure=true
 	```
 
@@ -470,12 +490,14 @@ GOST currently does not support the above two methods, but establishes a tunnel 
 !!! note "WebTransport"
     [WebTransport](https://web.dev/webtransport/) is currently in the early draft stage, and GOST will add support for it when the time is right.
 
-### Server
+**Server**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -492,10 +514,11 @@ GOST currently does not support the above two methods, but establishes a tunnel 
           pushPath: /push
 	```
 
-### Client
+**Client**
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
 
