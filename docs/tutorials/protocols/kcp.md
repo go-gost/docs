@@ -7,7 +7,7 @@ KCP是GOST中的一种数据通道类型。KCP的实现依赖于[xtaci/kcp-go](h
 === "命令行"
 
     ```bash
-    gost -L kcp://:8443?c=/path/to/config/file
+    gost -L kcp://:8443?kcp.configFile=/path/to/config/file
     ```
 
 === "配置文件"
@@ -21,12 +21,28 @@ KCP是GOST中的一种数据通道类型。KCP的实现依赖于[xtaci/kcp-go](h
       listener:
         type: kcp
         metadata:
-          c: /path/to/config/file
+          # config file
+          kcp.configFile: /path/to/config/file
+          # config map
+          kcp.config:
+            key: "it's a secrect"
+            crypt: aes
+            mode: fast
+            mtu: 1350
+            tcp: false
+            # ...
+          # single config option
+          kcp.crypt: aes
+          kcp.mode: fast
+            
+
     ```
 
 ## 配置
 
-GOST中内置了一套默认的KCP配置项，默认值与xtaci/kcptun中的一致。可以通过参数`c`指定外部配置文件，配置文件为JSON格式：
+GOST中内置了一套默认的KCP配置项，默认值与[xtaci/kcptun](https://github.com/xtaci/kcptun)一致。
+
+可以通过`kcp.config`选项直接指定配置。也可以通过选项`kcp.configFile`指定外部配置文件，配置文件为JSON格式：
 
 ```json
 {
@@ -45,6 +61,7 @@ GOST中内置了一套默认的KCP配置项，默认值与xtaci/kcptun中的一�
     "interval": 40,
     "resend": 0,
     "nc": 0,
+    "smuxver": 1,
     "sockbuf": 4194304,
     "keepalive": 10,
     "snmplog": "",
@@ -52,6 +69,33 @@ GOST中内置了一套默认的KCP配置项，默认值与xtaci/kcptun中的一�
     "tcp": false
 }
 ```
+
+部分参数也可以直接通过选项指定:
+
+`kcp.tcp`:
+    config.tcp   
+
+`kcp.key`:
+    config.key
+
+`kcp.crypt`:
+    config.crypt
+  
+`kcp.mode`:
+    config.mode
+
+`kcp.keepalive`:
+    config.keepalive
+
+`kcp.interval`:
+    config.interval
+    
+`kcp.mtu`:
+    config.mtu
+
+`kcp.smuxver`:
+    config.smuxver
+
 
 配置文件中的参数说明请参考[kcptun](https://github.com/xtaci/kcptun#usage)。
 
