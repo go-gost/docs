@@ -376,7 +376,7 @@ limiters:
 ### HTTP Plugin
 
 ```yaml
-ingresses:
+limiters:
 - name: limiter-0
   plugin:
     type: http
@@ -432,5 +432,7 @@ limiters:
 ```
 
 !!! tip "Limiter Based On Client ID"
-    The GOST internal Limiter does not handle the logic for specific clients. If you need to implement this function, you can use an Authenticator plugin and a Handler Limiter plugin in combination. The Authenticator plugin returns the client ID after successful authentication. GOST will pass this client ID information to the Limiter plugin server again, and the Limiter plugin server can implement different strategies based on the client ID.
+    The GOST internal Limiter does not handle the logic for specific clients. If you need to implement this function, you can use an Authenticator plugin and a Handler Limiter plugin in combination. 
+    
+    The Authenticator plugin returns the client ID after successful authentication. GOST will pass this client ID information to the Limiter plugin server again, and the Limiter plugin server can implement different strategies based on the client ID.
     
