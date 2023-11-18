@@ -352,7 +352,6 @@ limiters:
 
 ## Plugin
 
-对于流量速率限制器可以配置为使用外部[插件](/concepts/plugin/)服务，限制器会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
 Traffic limiter can be configured to use an external [plugin](/en/concepts/plugin/) service, and it will forward the request to the plugin server for processing. Other parameters are ignored when using plugin.
 
 ```yaml
