@@ -9,7 +9,7 @@ TUN is based on [wireguard-go](https://git.zx2c4.com/wireguard-go).
 
 ### Usage
 
-```
+```bash
 gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
@@ -40,10 +40,10 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `peer` (string)
 :    Peer IP address，MacOS only
 
-`bufferSize` (int, default=1500)
+`buffersize` (int, default=1500)
 :    read buffer size in byte.
 
-`keepAlive` (bool, default=false)
+`keepalive` (bool, default=false)
 :    enable keepalive, valid for client.
 
 `ttl` (duration, default=10s)
@@ -55,11 +55,11 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 
 ### Example
 
-#### Server
+**Server**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tun://:8421?net=192.168.123.1/24
     ```
 
@@ -80,17 +80,17 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
           net: 192.168.123.1/24
           mtu: 1350
     ```
-#### Client
+**Client**
 
 === "CLI (Linux/Windows)"
 
-    ```
+    ```bash
     gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
     ```
 
 === "CLI (MacOS)"
 
-    ```
+    ```bash
     gost -L="tun://:0/SERVER_IP:8421?net=192.168.123.2/24&peer=192.168.123.1"
     ```
 
@@ -124,7 +124,7 @@ The server can access the client network by setting up routing table and gateway
 
 The server can set the default gateway through the `gw` option to specify the gateway of the routes in route parameter.
 
-```
+```bash
 gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,10.138.0.0/16"
 ```
 
@@ -158,7 +158,7 @@ Packets send to network 10.138.0.0/16 will be forwarded to the client with the I
 
 The server can use [Auther](/en/concepts/auth/) to authenticate the client.
 
-#### Server
+**Server**
 
 ```yaml hl_lines="6"
 services:
@@ -184,11 +184,11 @@ authers:
 The username of the auther is the IP assigned to the client.
 
 
-#### Client
+**Client**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L "tun://:0/SERVER_IP:8421?net=192.168.123.2/24&passphrase=userpass1"
     ```
 
@@ -236,11 +236,11 @@ The client specifies the authentication code via the `passphrase` option.
 
 #### Create a TUN Device and Establish a UDP Tunnel
 
-##### Server
+**Server**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tun://:8421?net=192.168.123.1/24
     ```
 
@@ -257,11 +257,11 @@ The client specifies the authentication code via the `passphrase` option.
         metadata:
           net: 192.168.123.1/24
     ```
-##### Client
+**Client**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
     ```
 
@@ -307,45 +307,45 @@ $ ping 192.168.123.1
 
 #### iperf3 Testing
 
-##### Server
+**Server**
 
-```
-$ iperf3 -s
+```bash
+iperf3 -s
 ```
 
-##### Client
+**Client**
 
-```
-$ iperf3 -c 192.168.123.1
+```bash
+iperf3 -c 192.168.123.1
 ```
 
 #### IP Routing and Firewall Rules
 
 If you want the client to access the server network, you need to set the corresponding routing table and firewall rules according to your needs. For example, all the client external network traffic can be forwarded to the server.
 
-##### Server
+**Server**
 
 Enable IP forwarding and set up firewall rules
 
-```
-$ sysctl -w net.ipv4.ip_forward=1
+```bash
+sysctl -w net.ipv4.ip_forward=1
 
-$ iptables -t nat -A POSTROUTING -s 192.168.123.0/24 ! -o tun0 -j MASQUERADE
-$ iptables -A FORWARD -i tun0 ! -o tun0 -j ACCEPT
-$ iptables -A FORWARD -o tun0 -j ACCEPT
+iptables -t nat -A POSTROUTING -s 192.168.123.0/24 ! -o tun0 -j MASQUERADE
+iptables -A FORWARD -i tun0 ! -o tun0 -j ACCEPT
+iptables -A FORWARD -o tun0 -j ACCEPT
 ```
 
-##### Client
+**Client**
 
 Set up firewall rules
 
 !!! caution
     The following operations will change the client's network environment, unless you know what you are doing, please be careful!
 
-```
-$ ip route add SERVER_IP/32 dev eth0   # replace the SERVER_IP and eth0
-$ ip route del default   # delete the default route
-$ ip route add default via 192.168.123.2  # add new default route
+```bash
+ip route add SERVER_IP/32 dev eth0   # replace the SERVER_IP and eth0
+ip route del default   # delete the default route
+ip route add default via 192.168.123.2  # add new default route
 ```
 
 ## TAP
@@ -361,7 +361,7 @@ TAP is based on [songgao/water](https://github.com/songgao/water).
 
 ### Usage
 
-```
+```bash
 gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
@@ -389,16 +389,16 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
 `routes` (list)
 :    Gateway-specific routing, Each entry in the list is a space-separated CIDR address and gateway, such as `10.100.0.0/16 192.168.123.2`
 
-`bufferSize` (int, default=1500)
+`buffersize` (int, default=1500)
 :    read buffer size in byte.
 
 ### Example
 
-#### Server
+**Server**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tap://:8421?net=192.168.123.1/24
     ```
 
@@ -419,11 +419,12 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
           net: 192.168.123.1/24
           mtu: 1350
     ```
-#### Client
+
+**Client**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tap://:0/SERVER_IP:8421?net=192.168.123.2/24
     ```
 
@@ -459,11 +460,11 @@ You can use chain to forward UDP data, analogous to UDP port forwarding.
 
 This method is more flexible and general, and is recommended.
 
-#### Server
+**Server**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tun://:8421?net=192.168.123.1/24 -L relay+wss://:8443?bind=true
     ```
 
@@ -488,11 +489,12 @@ This method is more flexible and general, and is recommended.
       listener:
         type: wss
     ```
-#### Client
+
+**Client**
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=tun://:0/:8421?net=192.168.123.2/24 -F relay+wss://SERVER_IP:8443
     ```
 

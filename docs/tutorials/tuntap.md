@@ -11,7 +11,7 @@ TUN的实现依赖于[wireguard-go](https://git.zx2c4.com/wireguard-go)。
 
 ### 使用说明
 
-```
+```bash
 gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
@@ -42,10 +42,10 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `peer` (string)
 :    对端IP地址，仅MacOS系统有效
 
-`bufferSize` (int)
+`buffersize` (int)
 :    数据读缓存区大小，默认1500字节
 
-`keepAlive` (bool)
+`keepalive` (bool)
 :    开启心跳，仅客户端有效
 
 `ttl` (duration)
@@ -56,11 +56,11 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 ### 使用示例
 
-#### 服务端
+**服务端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tun://:8421?net=192.168.123.1/24
     ```
 
@@ -82,17 +82,17 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
           mtu: 1350
     ```
 
-#### 客户端
+**客户端**
 
 === "命令行(Linux/Windows)"
 
-    ```
+    ```bash
     gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24/64
     ```
 
 === "命令行(MacOS)"
 
-    ```
+    ```bash
     gost -L="tun://:0/SERVER_IP:8421?net=192.168.123.2/24&peer=192.168.123.1"
     ```
 
@@ -129,9 +129,10 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L="tun://:8421?net=192.168.123.1/24&gw=192.168.123.2&route=172.10.0.0/16,10.138.0.0/16"
     ```
+
 === "配置文件"
 
     ```yaml
@@ -167,7 +168,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
         metadata:
           net: 192.168.123.1/24
           routes:
-          - 72.10.0.0/16 192.168.123.2
+          - 172.10.0.0/16 192.168.123.2
           - 10.138.0.0/16 192.168.123.3
     ```
 
@@ -178,7 +179,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 服务端可以使用[认证器](/concepts/auth/)来对客户端进行认证。
 
-#### 服务端
+**服务端**
 
 ```yaml hl_lines="6"
 services:
@@ -203,11 +204,11 @@ authers:
 
 认证器的用户名为给客户端分配的IP。
 
-#### 客户端
+**客户端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L "tun://:0/SERVER_IP:8421?net=192.168.123.2/24&passphrase=userpass1"
     ```
 
@@ -256,11 +257,11 @@ authers:
 
 #### 创建TUN设备并建立UDP隧道
 
-##### 服务端
+**服务端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tun://:8421?net=192.168.123.1/24
     ```
 
@@ -278,11 +279,11 @@ authers:
           net: 192.168.123.1/24
     ```
 
-##### 客户端
+**客户端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tun://:0/SERVER_IP:8421?net=192.168.123.2/24
     ```
 
@@ -330,45 +331,45 @@ $ ping 192.168.123.1
 
 #### iperf3测试
 
-##### 服务端
+**服务端**
 
-```
-$ iperf3 -s
+```bash
+iperf3 -s
 ```
 
-##### 客户端
+**客户端**
 
-```
-$ iperf3 -c 192.168.123.1
+```bash
+iperf3 -c 192.168.123.1
 ```
 
 #### 路由规则和防火墙设置
 
 如果想让客户端访问到服务端的网络，还需要根据需求设置相应的路由和防火墙规则。例如可以将客户端的所有外网流量转发给服务端处理
 
-##### 服务端
+**服务端**
 
 开启IP转发并设置防火墙规则
 
-```
-$ sysctl -w net.ipv4.ip_forward=1
+```bash
+sysctl -w net.ipv4.ip_forward=1
 
-$ iptables -t nat -A POSTROUTING -s 192.168.123.0/24 ! -o tun0 -j MASQUERADE
-$ iptables -A FORWARD -i tun0 ! -o tun0 -j ACCEPT
-$ iptables -A FORWARD -o tun0 -j ACCEPT
+iptables -t nat -A POSTROUTING -s 192.168.123.0/24 ! -o tun0 -j MASQUERADE
+iptables -A FORWARD -i tun0 ! -o tun0 -j ACCEPT
+iptables -A FORWARD -o tun0 -j ACCEPT
 ```
 
-##### 客户端
+**客户端**
 
 设置路由规则
 
 !!! caution "谨慎操作"
     以下操作会更改客户端的网络环境，除非你知道自己在做什么，请谨慎操作！
 
-```
-$ ip route add SERVER_IP/32 dev eth0   # 请根据实际情况替换SERVER_IP和eth0
-$ ip route del default   # 删除默认的路由
-$ ip route add default via 192.168.123.2  # 使用新的默认路由
+```bash
+ip route add SERVER_IP/32 dev eth0   # 请根据实际情况替换SERVER_IP和eth0
+ip route del default   # 删除默认的路由
+ip route add default via 192.168.123.2  # 使用新的默认路由
 ```
 
 ## TAP
@@ -383,7 +384,7 @@ TAP的实现依赖于[songgao/water](https://github.com/songgao/water)库。
 
 ### 使用说明
 
-```
+```bash
 gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
@@ -411,17 +412,17 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
 `routes` (list)
 :    特定网关路由列表，列表每一项为空格分割的CIDR地址和网关，例如：`10.100.0.0/16 192.168.123.2`
 
-`bufferSize` (int)
+`buffersize` (int)
 :    数据读缓存区大小，默认1500字节
 
 
 ### 使用示例
 
-#### 服务端
+**服务端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tap://:8421?net=192.168.123.1/24
     ```
 
@@ -443,11 +444,11 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
           mtu: 1350
     ```
 
-#### 客户端
+**客户端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tap://:0/SERVER_IP:8421?net=192.168.123.2/24
     ```
 
@@ -483,11 +484,11 @@ GOST中的TUN/TAP隧道默认是基于UDP协议进行数据传输。
 
 此方式比较灵活通用，推荐使用。
 
-#### 服务端
+**服务端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tun://:8421?net=192.168.123.1/24 -L relay+wss://:8443?bind=true
     ```
 
@@ -513,11 +514,11 @@ GOST中的TUN/TAP隧道默认是基于UDP协议进行数据传输。
         type: wss
     ```
 
-#### 客户端
+**客户端**
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=tun://:0/:8421?net=192.168.123.2/24 -F relay+wss://SERVER_IP:8443
     ```
 

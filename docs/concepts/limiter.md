@@ -13,7 +13,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L ":8080?limiter.in=100MB&limiter.out=100MB&limiter.conn.in=10MB&limiter.conn.out=10MB"
     ```
 
@@ -55,7 +55,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L ":8080?rlimiter=10"
     ```
 
@@ -95,7 +95,7 @@
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L ":8080?climiter=1000"
     ```
 
@@ -390,3 +390,86 @@ limiters:
     url: http://127.0.0.1:8000
     timeout: 10s
 ```
+
+## 插件
+
+对于流量速率限制器可以配置为使用外部[插件](/concepts/plugin/)服务，限制器会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
+
+```yaml
+limiters:
+- name: limiter-0
+  plugin:
+    type: grpc
+    # type: http
+    addr: 127.0.0.1:8000
+    tls: 
+      secure: false
+      serverName: example.com
+```
+
+`addr` (string, required)
+:    插件服务地址
+
+`tls` (duration, default=null)
+:    设置后将使用TLS加密传输，默认不使用TLS加密。
+
+### HTTP插件
+
+```yaml
+ingresses:
+- name: limiter-0
+  plugin:
+    type: http
+    addr: http://127.0.0.1:8000/limiter
+```
+
+#### 请求示例
+
+```bash
+curl -XPOST http://127.0.0.1:8000/limiter \
+-d'{"network":"tcp","addr":"example.com:443","client":"gost","src":"192.168.1.1:12345"}'
+```
+
+```json
+{"in":1048576, "out":524288}
+```
+
+`network` (string, default=ip4)
+:    网络地址类型：`tcp`,`udp`.
+
+`addr` (string)
+:    请求目标地址
+
+`client` (string)
+:    用户身份标识，此信息由认证器插件服务生成。
+
+`src` (string)
+:    客户端地址
+
+`in` (int64)
+:    入站速率(bytes/s)
+
+`out` (int64)
+:    出站速率(bytes/s)
+
+## 处理器(Handler)上的限制器
+
+对于代理服务(HTTP，HTTP2，SOCKS4，SOCKS5，Relay)，流量速率限制器也可以用处理器上。
+
+```yaml hl_lines="6"
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    limiter: limiter-0
+  listener:
+    type: tcp
+limiters:
+- name: limiter-0
+  plugin:
+    addr: 127.0.0.1:8000
+```
+
+!!! tip "基于用户标识的限流"
+    GOST内部的限制器逻辑未处理针对特定用户的流量限制，如果需要实现此功能需要组合使用认证器插件和处理器上的限制器插件。认证器插件在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给限制器插件服务，限制器插件服务就可以根据用户标识来做不同的限流配置。
