@@ -1,5 +1,7 @@
 # 日志
 
+全局默认日志记录通过`log`选项配置。
+
 ```yaml
 log:
   level: info
@@ -7,15 +9,15 @@ log:
   output: stderr
   rotation:
     maxSize: 100
-	maxAge: 10
-	maxBackups: 3
-	localTime: false
-	compress: false
+    maxAge: 10
+    maxBackups: 3
+    localTime: false
+    compress: false
 ```
 
 ## 级别
 
-支持的级别有:
+日志支持的级别有:
 
 * `fatal` - 致命错误，当输出此级别的日志后程序将退出。
 * `error` - 一般性错误，程序正常运行。
@@ -63,3 +65,63 @@ log:
 `compress` (bool, default=false)
 :    备份文件是否(使用gzip)压缩。
 
+# 日志记录器
+
+日志记录器是一个日志记录实例的配置定义，除了默认的全局日志记录外，可以额外再定义任意多个不同的日志记录实例。
+
+```yaml
+loggers:
+- name: logger-0
+  log:
+    level: info
+    format: text
+    output: stderr
+- name: logger-1
+  log:
+    level: debug
+    format: json
+    output: /path/to/file
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
+```
+
+日志记录器可以用在服务级别，为每个服务单独配置日志记录策略。
+
+```yaml hl_lines="4 11"
+services:
+  - name: service-0
+    addr: :8000
+    logger: logger-0
+    handler:
+      type: auto
+    listener:
+      type: tcp
+  - name: service-1
+    addr: :8001
+    logger: logger-1
+    handler:
+      type: auto
+    listener:
+      type: tcp
+loggers:
+- name: logger-0
+  log:
+    level: info
+    format: text
+    output: stderr
+- name: logger-1
+  log:
+    level: debug
+    format: json
+    output: /path/to/file
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
+```

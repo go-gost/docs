@@ -1,5 +1,7 @@
 # Log
 
+Global default logging is configured via the `log` option.
+
 ```yaml
 log:
   level: info
@@ -63,3 +65,63 @@ Logs can be split, backed up and compressed by configuring the `rotation` option
 `compress` (bool, default=false)
 :    Determines if the rotated log files should be compressed using gzip. The default is not to perform compression.
 
+# Logger
+
+A logger is a configuration definition of a logging instance. In addition to the default global logging, any number of different logging instances can be defined.
+
+```yaml
+loggers:
+- name: logger-0
+  log:
+    level: info
+    format: text
+    output: stderr
+- name: logger-1
+  log:
+    level: debug
+    format: json
+    output: /path/to/file
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
+```
+
+Loggers can be used at the service level to configure logging policies individually for each service.
+
+```yaml hl_lines="4 11"
+services:
+- name: service-0
+  addr: :8000
+  logger: logger-0
+  handler:
+    type: auto
+  listener:
+    type: tcp
+- name: service-1
+  addr: :8001
+  logger: logger-1
+  handler:
+    type: auto
+  listener:
+    type: tcp
+loggers:
+- name: logger-0
+  log:
+    level: info
+    format: text
+    output: stderr
+- name: logger-1
+  log:
+    level: debug
+    format: json
+    output: /path/to/file
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
+```
