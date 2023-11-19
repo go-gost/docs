@@ -109,6 +109,7 @@ nav:
     - 域名解析: concepts/resolver.md
     - 主机IP映射: concepts/hosts.md
     - Ingress: concepts/ingress.md
+    - 路由器: concepts/router.md
     - 服务发现: concepts/sd.md
     - 数据记录: concepts/recorder.md
     - 插件系统: concepts/plugin.md

@@ -67,10 +67,10 @@ ingresses:
 - name: ingress-0
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:ingresses:ingress-0
-	type: hash
+    db: 1
+    password: 123456
+    key: gost:ingresses:ingress-0
+    type: hash
 ```
 
 `addr` (string, required)
@@ -132,9 +132,9 @@ ingresses:
     path: /path/to/file
   redis:
     addr: 127.0.0.1:6379
-	db: 1
-	password: 123456
-	key: gost:ingresses:ingress-0
+    db: 1
+    password: 123456
+    key: gost:ingresses:ingress-0
   http:
     url: http://127.0.0.1:8000
     timeout: 10s

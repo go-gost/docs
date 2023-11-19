@@ -103,6 +103,7 @@ nav:
     - DNS Resolver: concepts/resolver.md
     - Host-IP Mapping: concepts/hosts.md
     - Ingress: concepts/ingress.md
+    - Router: concepts/router.md
     - Service Discovery: concepts/sd.md
     - Recorder: concepts/recorder.md
     - Plugin System: concepts/plugin.md

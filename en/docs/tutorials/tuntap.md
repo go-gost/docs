@@ -136,7 +136,7 @@ If you want to set a specific gateway for each route, you can specify it via `ro
 
 === "File (YAML)"
 
-    ```yaml
+    ```yaml hl_lines="10 11 12"
     services:
     - name: service-0
       addr: :8421
@@ -153,6 +153,30 @@ If you want to set a specific gateway for each route, you can specify it via `ro
 Packets send to network 172.10.0.0/16 will be forwarded to the client with the IP 192.168.123.2 through the TUN tunnel.
 
 Packets send to network 10.138.0.0/16 will be forwarded to the client with the IP 192.168.123.3 through the TUN tunnel.
+
+#### Router
+
+Server can also use a [Router](/en/concepts/router/) to route.
+
+```yaml hl_lines="10"
+services:
+- name: service-0
+  addr: :8421
+  handler:
+    type: tun
+  listener:
+    type: tun
+    metadata:
+      net: 192.168.123.1/24
+      router: router-0
+routers:
+- name: router-0
+  routes:
+  - net: 172.10.0.0/16
+    gateway: 192.168.123.2
+  - net: 192.168.1.0/24
+    gateway: 192.168.123.3
+```
 
 ### Authentication
 

@@ -157,7 +157,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 === "配置文件"
 
-    ```yaml
+    ```yaml hl_lines="10 11 12"
     services:
     - name: service-0
       addr: :8421
@@ -174,6 +174,29 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 发往172.10.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.2的客户端。发往10.138.0.0/16网络的数据会通过TUN隧道转发给IP为192.168.123.3的客户端。
 
+#### 路由器
+
+服务端也可以使用[路由器](/concepts/router/)模块来路由。
+
+```yaml hl_lines="10"
+services:
+- name: service-0
+  addr: :8421
+  handler:
+    type: tun
+  listener:
+    type: tun
+    metadata:
+      net: 192.168.123.1/24
+      router: router-0
+routers:
+- name: router-0
+  routes:
+  - net: 172.10.0.0/16
+    gateway: 192.168.123.2
+  - net: 192.168.1.0/24
+    gateway: 192.168.123.3
+```
 
 ### 认证
 
