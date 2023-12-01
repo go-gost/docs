@@ -30,6 +30,9 @@ theme:
         name: Dark mode
 
 extra:
+  analytics:
+    provider: google
+    property: G-V295TSM2WT
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/go-gost/gost
