@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Multi-homed Hosts
 
 Hosts that have more than one network interface usually have one Internet Protocol (IP) address for each interface. Such hosts are called multi-homed hosts.

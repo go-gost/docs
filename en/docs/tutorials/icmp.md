@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # ICMP Tunnel
 
 The [ICMP](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol) tunnel uses the Echo type message of the ICMP protocol (used by the ping command) for data transmission. Since ICMP is similar to UDP, it is an unreliable protocol with packet loss and disorder, so it cannot be directly used for streaming data transmission. GOST uses the QUIC protocol on top of ICMP to achieve secure and reliable data transmission, so the ICMP tunnel can be regarded as a QUIC-over-ICMP data tunnel.

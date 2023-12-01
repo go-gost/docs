@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP Tunnel
 
 HTTP is the most widely used data exchange protocol on the Internet. With the development of the Internet, the protocol has undergone several major version upgrades, from the original HTTP/1 to HTTP/2, and then to the current QUIC-based protocol HTTP/3.

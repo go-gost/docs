@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # TLS
 
 GOST有三种类型TLS证书：自生成证书，全局证书，服务层级证书。

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # 反向代理隧道
 
 在上一篇[反向代理](/tutorials/reverse-proxy/)教程中，利用端口转发实现了简单的反向代理功能，在本篇中将利用隧道服务实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。

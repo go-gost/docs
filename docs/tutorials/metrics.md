@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # 监控指标
 
 GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供监控数据。

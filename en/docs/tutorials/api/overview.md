@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Web API
 
 GOST can use the RESTful API to interact with the GOST process by starting the Web API service.

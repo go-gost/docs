@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # ICMP通道
 
 [ICMP](https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol)通道是利用ICMP协议的Echo类型报文(ping命令所采用)进行数据传输。由于ICMP类似于UDP，是一种不可靠的协议，存在丢包和乱序情况，因此不能直接用于流式数据传输。GOST在ICMP之上利用QUIC协议来实现安全可靠的数据传输，因此ICMP通道可以看作是QUIC-over-ICMP数据通道。

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # 透明代理
 
 透明代理支持REDIRECT和TPROXY两种方式，REDIRECT方式仅支持TCP。

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # TLS
 
 GOST has three types of TLS certificates: self-generated certificate, global certificate, and service-level certificate.

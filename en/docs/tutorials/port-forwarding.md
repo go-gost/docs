@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Port Forwarding
 
 Port forwarding is divided into TCP and UDP port forwarding according to the protocol type, and local forwarding and remote forwarding according to the forwarding type. There are four combinations in total.
@@ -9,9 +13,11 @@ Port forwarding is divided into TCP and UDP port forwarding according to the pro
 You can set a single forwarding destination address for one-to-one port forwarding:
 
 === "CLI"
+
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
+
 === "File (YAML)"
 
     ```yaml

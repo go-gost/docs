@@ -83,7 +83,7 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
-copyright: Copyright &copy; 2015 - 2022 GOST
+copyright: Copyright &copy; 2015 - 2024 GOST
 
 nav:
   - Welcome: index.md

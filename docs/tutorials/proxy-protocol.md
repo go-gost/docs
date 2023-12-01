@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # PROXY Protocol
 
 GOST服务支持接收代理协议头(PROXY protocol v1/v2)，当服务处于其他代理服务(例如Nginx)后面时，通过代理协议用于获取客户端真实IP。

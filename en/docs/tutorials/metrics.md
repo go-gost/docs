@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Prometheus Metrics
 
 GOST internally provides monitoring data through the [Prometheus](https://prometheus.io/) metrics.

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Unix Domain Socket Redirector
 
 UDS(Unix Domain Socket) redirector can redirect the local UDS service to a TCP service or another UDS service. The forwarding chain is still valid in this scenario.

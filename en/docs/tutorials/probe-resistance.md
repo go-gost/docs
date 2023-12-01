@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Probing Resistance
 
 GOST provides probing resistance for the HTTP/HTTPS/HTTP2 proxies. When the proxy server receives an invalid request, it will return the corresponding response according to the probing resistance policy.
@@ -6,9 +10,11 @@ GOST provides probing resistance for the HTTP/HTTPS/HTTP2 proxies. When the prox
     The probing resistance feature is only valid when the proxy server has user authentication enabled.
 
 === "CLI"
-    ```
+
+    ```bash
     gost -L=http://gost:gost@:8080?probeResistance=code:400&knock=www.example.com
     ```
+    
 === "File (YAML)"
 
     ```yaml

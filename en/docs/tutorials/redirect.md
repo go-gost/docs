@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Transparent Proxy
 
 Transparent proxy supports two modes: REDIRECT and TPROXY. The REDIRECT mode only supports TCP.
@@ -17,9 +21,11 @@ Transparent proxy using REDIRECT can choose to mark packets. Using Mark requires
 ### Without Mark
 
 === "CLI"
-    ```
+
+    ```bash
     gost -L red://:12345?sniffing=true -F 192.168.1.1:1080
     ```
+
 === "File (YAML)"
 
     ```yaml

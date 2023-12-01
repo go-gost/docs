@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Log
 
 Global default logging is configured via the `log` option.

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Dynamic configuration
 
 GOST can be dynamically configured through Web API. The objects that support dynamic configuration are: service, chain, auther, bypass, admission controller, resolver, hosts. Configuration changes take effect immediately.

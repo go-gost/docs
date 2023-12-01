@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # 动态配置
 
 GOST可以通过Web API来进行动态配置，支持动态配置的对象有：服务(Service)，转发链(Chain)，认证器(Auther)，分流器(Bypass)，准入控制器(Admission)，域名解析器(Resolver)，域名IP映射器(Hosts)，限速器(Limiter)。配置变更会立即生效。

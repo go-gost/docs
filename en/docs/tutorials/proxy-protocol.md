@@ -1,10 +1,14 @@
+---
+comments: true
+---
+
 # PROXY Protocol
 
 The GOST service supports the receiving PROXY protocol(v1/v2). When the service is behind other proxy service (such as Nginx), the PROXY protocol is used to obtain the real IP of the client.
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L=:8080?proxyProtocol=1
     ```
 

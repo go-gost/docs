@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Unix Domain Socket重定向
 
 UDS(Unix Domain Socket)重定向可以将本地的UDS服务重定向到一个TCP服务或另外一个UDS服务，转发链在这种场景下依然有效。

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Reverse Proxy Tunnel - High Availability
 
 In the previous [Reverse Proxy Tunnel](/en/tutorials/reverse-proxy-tunnel/) tutorial, the functions and usage of reverse proxy tunnels were described in detail. In this tutorial, we will focus on the deployment and the high availability of the system.

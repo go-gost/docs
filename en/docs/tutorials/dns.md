@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # DNS Proxy
 
 Similar to the domain name resolver, the DNS proxy service supports multiple protocol types, supports custom domain name resolution (host mapper), has a caching function, and supports forwarding chains.

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Web API
 
 GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。

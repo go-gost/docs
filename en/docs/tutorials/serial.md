@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Serial Port Redirector
 
 Serial port redirector can redirect the local serial port device to a TCP service or another serial port device. The forwarding chain is still valid in this scenario.

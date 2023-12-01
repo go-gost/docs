@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP File Server
 
 HTTP file server converts the local file system directory into an HTTP server.

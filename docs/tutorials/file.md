@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP文件服务
 
 HTTP文件服务，将本地的文件系统目录转成HTTP服务。
