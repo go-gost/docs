@@ -4,6 +4,7 @@ author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 15min
 publish_date: 2023-10-13 23:00
+comments: true
 ---
 
 [串口](https://zh.wikipedia.org/zh-hans/%E4%B8%B2%E8%A1%8C%E7%AB%AF%E5%8F%A3)目前在个人电脑主机上基本不存在了，但在一些小型设备特别是工业设备和工控机上还是能够看到这些接口。由于串口通信的方式和我们平时所使用的TCP/IP有很大差异，因此在调试和分析基于串口的通讯协议时所用的方法也会有所不同。

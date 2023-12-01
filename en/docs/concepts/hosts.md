@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Host-IP Mapping
 
 Domain name resolution can be customized by setting a Host mapper in the service or forwarding chain.

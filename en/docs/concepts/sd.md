@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Service Discovery
 
 !!! note "Limitation"

@@ -4,6 +4,7 @@ author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 15min
 publish_date: 2023-02-12 23:00
+comments: true
 ---
 
 上一篇[博文](https://gost.run/blog/2023/reverse-proxy/)中，对反向代理和内网穿透做了基本的介绍。本篇将通过具体应用案例更加直观的展示[反向代理隧道](https://gost.run/tutorials/reverse-proxy-tunnel/)的使用。

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Domain Name Resolution
 
 !!! tip "Dynamic configuration"

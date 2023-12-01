@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Plugin System
 
 Plugin system is based on gRPC or HTTP communication. Through the plugin, the requests can be forwarded to the plugin server for processing, so that the function can be expanded more flexibly.

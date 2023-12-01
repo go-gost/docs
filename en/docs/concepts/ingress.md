@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Ingress
 
 !!! tip "Dynamic configuration"

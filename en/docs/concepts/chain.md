@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Forwarding Chain
 
 !!! tip "Dynamic configuration"

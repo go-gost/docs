@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Bypass
 
 !!! tip "Dynamic configuration"

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Authentication
 
 Authentication can be performed by setting single authentication information or authenticator.

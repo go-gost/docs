@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Limiting
 
 !!! tip "Dynamic configuration"

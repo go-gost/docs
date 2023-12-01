@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Router
 
 !!! tip "Dynamic configuration"

@@ -4,6 +4,7 @@ author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 15min
 publish_date: 2022-12-20 22:00
+comments: true
 ---
 
 [Traefik](https://traefik.io/traefik/)是类似于Nginx的反向代理工具，其云原生的特性使其在Docker和Kubernetes环境下使用起来非常方便。

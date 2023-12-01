@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Hop
 
 !!! tip "Dynamic configuration"

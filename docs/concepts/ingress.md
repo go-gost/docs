@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Ingress
 
 !!! tip "动态配置"

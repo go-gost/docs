@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Proxy, Forwarding and Tunnel
 
 The two most commonly used functions in GOST are proxy and forwarding, and both functions require a carrier, which is a tunnel, or a data channel. These three concepts are different from each other, and there are similarities, and even the three can be converted into each other.

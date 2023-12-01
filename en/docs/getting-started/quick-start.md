@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Quick Start
 
 !!!tip "Zero Configuration"

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Admission Control
 
 !!! tip "Dynamic configuration"

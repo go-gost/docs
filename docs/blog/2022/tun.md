@@ -4,6 +4,7 @@ author: ginuerzh
 author_gh_user: ginuerzh
 read_time: 30min
 publish_date: 2022-10-21 22:00
+comments: true
 ---
 
 GOST最初是在v2.9版本中引入对TUN(和TAP)设备的支持，在v3版本(beta.4)中又将实现方式由[songgao/water](https://github.com/songgao/water)库(TAP未变化)改为了[wireguard-go](https://git.zx2c4.com/wireguard-go)，并且增加了心跳和认证机制。

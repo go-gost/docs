@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Service
 
 !!! tip "Dynamic configuration"

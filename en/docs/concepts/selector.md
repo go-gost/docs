@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Selector
 
 In GOST, the selection of nodes in a node group is done through node selector. The selector is responsible for selecting zero or one nodes in a node group using the node selection strategy. Selector can be applied to forwarding chains, hops, and forwarders. Node selectors are used in GOST for load balancing.
