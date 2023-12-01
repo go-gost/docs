@@ -1,4 +1,4 @@
-FROM squidfunk/mkdocs-material:8.4.1 AS builder
+FROM squidfunk/mkdocs-material:9.4.14 AS builder
 
 ADD . /src
 
