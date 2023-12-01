@@ -1,15 +1,22 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 15min
-publish_date: 2022-12-20 22:00
+authors:
+  - ginuerzh
+categories:
+  - Deploy
+  - Docker
+  - K8S
+readtime: 15
+date: 2022-12-20
 comments: true
 ---
+
+# 利用Traefik和Docker部署GOST服务
 
 [Traefik](https://traefik.io/traefik/)是类似于Nginx的反向代理工具，其云原生的特性使其在Docker和Kubernetes环境下使用起来非常方便。
 
 这里假设你的域名为`gost.run`，每个服务使用单独的子域名来路由，也可以使用URI路径来路由。
+
+<!-- more -->
 
 ## Docker
 

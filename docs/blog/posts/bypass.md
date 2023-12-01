@@ -1,12 +1,14 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 30min
-publish_date: 2022-08-27 12:00
+authors:
+  - ginuerzh
+categories:
+  - Bypass
+readtime: 30
+date: 2022-08-27
 comments: true
 ---
 
+# 流量控制-分流器
 
 所谓的分流是指按照一定的规则对流量进行划分，再对划分后的流量执行相应的操作，以达到某种程度的流量控制。
 
@@ -15,6 +17,8 @@ comments: true
 * 非法流量 - 不被允许的流量，例如被公司禁止访问的服务，直接访问会被拒绝。
 * 内网流量 - 例如访问公司内部服务器，这种流量只能在公司内网才有效，不能被转发到外网。
 * 外网流量 - 例如访问外网服务，可能需要通过公司的代理服务器才能访问。
+
+<!-- more -->
 
 ## GOST中的分流
 

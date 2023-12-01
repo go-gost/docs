@@ -1,15 +1,21 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 5min
-publish_date: 2015-12-23 22:28
+authors:
+  - ginuerzh
+categories:
+  - General
+readtime: 5
+date: 2015-12-23
+comments: true
 ---
+
+# 利用国内vps作为中间代理转发请求到国外vps
 
 原文地址：[https://groups.google.com/g/go-gost/c/aLj9ruoSp4U](https://groups.google.com/g/go-gost/c/aLj9ruoSp4U)。
 
 国外的vps可以帮助我们科学上网，但使用时间长了，很可能会出现限流或不稳定的情况。
 这时如果通过国内的vps作为中转，情况可能会有所改善。
+
+<!-- more -->
 
 这里假设国内vps地址是aliyun.com，国外vps地址是linode.com，有两种方法。
 

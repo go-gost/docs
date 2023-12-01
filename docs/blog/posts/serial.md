@@ -1,15 +1,20 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 15min
-publish_date: 2023-10-13 23:00
+authors:
+  - ginuerzh
+categories:
+  - Serial
+readtime: 15
+date: 2023-10-13
 comments: true
 ---
+
+# 串口重定向
 
 [串口](https://zh.wikipedia.org/zh-hans/%E4%B8%B2%E8%A1%8C%E7%AB%AF%E5%8F%A3)目前在个人电脑主机上基本不存在了，但在一些小型设备特别是工业设备和工控机上还是能够看到这些接口。由于串口通信的方式和我们平时所使用的TCP/IP有很大差异，因此在调试和分析基于串口的通讯协议时所用的方法也会有所不同。
 
 GOST在3.0.0-rc8之后的版本中增加了[串口重定向](https://gost.run/tutorials/serial/)或者也可以称做串口端口转发功能，可以将本地串口数据转发给TCP服务，或者将TCP服务的数据转发给本地串口，也可以将本地串口转发到远程主机的串口。利用串口转发可以实现两个功能：串口远程通讯和串口通讯数据监控。
+
+<!-- more -->
 
 !!! tip "虚拟串口"
 

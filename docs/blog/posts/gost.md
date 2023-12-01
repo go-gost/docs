@@ -1,12 +1,18 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 1min
-publish_date: 2015-05-21 15:08
+authors:
+  - ginuerzh
+categories:
+  - General
+readtime: 1
+date: 2015-05-21
+comments: true
 ---
 
+# GOST - GO Simple Tunnel
+
 原文地址：[https://groups.google.com/g/go-gost/c/vKbJh1IPK7o](https://groups.google.com/g/go-gost/c/vKbJh1IPK7o)。
+
+<!-- more -->
 
 ## GO语言实现的安全隧道
 

@@ -1,10 +1,14 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 10min
-publish_date: 2016-10-09 13:18
+authors:
+  - ginuerzh
+categories:
+  - Port Forwarding
+readtime: 10
+date: 2016-10-09
+comments: true
 ---
+
+# 利用gost访问内网HTTP服务
 
 原文地址：[https://groups.google.com/g/go-gost/c/ouzBXF0Fqk8](https://groups.google.com/g/go-gost/c/ouzBXF0Fqk8)。
 
@@ -13,6 +17,8 @@ gost在2.1中增加了远程端口转发功能，可以将内网的端口直接�
 这样就使得此功能的使用受限，只能用来转发类似于SSH这种使用单连接的服务，而像HTTP这种需要建立很多连接的服务就不可用了。
 
 gost 2.2中增加了对HTTP2的支持，由于HTTP2可以多路复用，特别是针对HTTP，可以用单一连接来传输多组请求。那么我们就可以利用HTTP2来实现在外网也能访问到内网的HTTP服务。
+
+<!-- more -->
 
 假设有一台公网的机器A，IP是 1.2.3.4。
 

@@ -1,10 +1,14 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 10min
-publish_date: 2016-08-31 14:37
+authors:
+  - ginuerzh
+categories:
+  - Port Forwarding
+readtime: 10
+date: 2016-08-31
+comments: true
 ---
+
+# gost 2.1本地端口转发功能的使用说明
 
 原文地址：[https://groups.google.com/g/go-gost/c/_Bn0oDKants](https://groups.google.com/g/go-gost/c/_Bn0oDKants)。
 
@@ -14,6 +18,8 @@ gost的本地端口转发功能类似于ssh中 -L参数的功能(ssh端口转发
 
 1. gost支持UDP端口的转发。
 2. gost支持通过转发链进行端口转发。
+
+<!-- more -->
 
 假设有三台机器：local_host, proxy_host, remote_host
 

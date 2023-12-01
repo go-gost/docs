@@ -1,15 +1,20 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 5min
-publish_date: 2015-12-18 18:05
+authors:
+  - ginuerzh
+categories:
+  - General
+readtime: 5
+date: 2015-12-18
+comments: true
 ---
+
+# 利用letsencrypt和gost搭建https代理
 
 原文地址：[https://groups.google.com/g/go-gost/c/32jXBP3pAxc](https://groups.google.com/g/go-gost/c/32jXBP3pAxc)。
 
-
 [letsencrypt](https://letsencrypt.org/)在12月3号正式进行公测了，也就是说现在所有人都可以免费拥有自己的tls证书了，前提是服务器要绑定域名。
+
+<!-- more -->
 
 首先当然是要生成证书：
 

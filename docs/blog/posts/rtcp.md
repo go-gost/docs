@@ -1,16 +1,22 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 10min
-publish_date: 2016-09-06 21:31
+authors:
+  - ginuerzh
+categories:
+  - Port Forwarding
+readtime: 10
+date: 2016-09-06
+comments: true
 ---
+
+# gost 2.1远程端口转发功能的使用说明
 
 原文地址：[https://groups.google.com/g/go-gost/c/_-akAbTe3ho](https://groups.google.com/g/go-gost/c/_-akAbTe3ho)。
 
 前一个[帖子](../2016/tcp/)介绍了本地端口转发的使用，这里就再说说远程端口转发的使用。
 
 gost远程端口转发的功能类似于ssh中-R参数的功能，与本地端口转发一样，也支持UDP和转发链。
+
+<!-- more -->
 
 还是用之前的场景：
 

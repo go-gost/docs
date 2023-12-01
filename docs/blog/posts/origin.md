@@ -1,14 +1,20 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 5min
-publish_date: 2015-10-26 09:39
+authors:
+  - ginuerzh
+categories:
+  - General
+readtime: 5
+date: 2015-10-26
+comments: true
 ---
+
+# GOST的起源以及应用场景
 
 原文地址：[https://groups.google.com/g/go-gost/c/Cnh_4aeRVcg](https://groups.google.com/g/go-gost/c/Cnh_4aeRVcg)。
 
 gost的想法是在2013年产生的，那一年也是我来到当前这家公司的第一年，进入公司后发现公司对网络的限制已经到了极限：只能通过公司的代理访问网络，并且在未申请更高权限的情况下只能访问baidu搜索，其他网站一律被封，然而我们的小组又是搞移动互联网的，所以平时开发和查资料很不方面。
+
+<!-- more -->
 
 当时我们有一个Linode VPS用于开发，公司也放行了此VPS个别端口的HTTP访问权限，于是就开始寻思着能不能利用这个Linode中转一下。
 其实需求很简单：通过公司的代理，在本地与linode之间建立一个tunnel。

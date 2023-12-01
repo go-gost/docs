@@ -1,14 +1,19 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 15min
-publish_date: 2022-09-09 22:00
+authors:
+  - ginuerzh
+categories:
+  - Selector
+readtime: 15
+date: 2022-09-09
+comments: true
+draft: true
 ---
 
 [选择器](/concepts/selector/)，顾名思义是用来做选择的，通过在一组对象中进行筛选，最终选出一个我们想要的结果，这就是选择器的工作。
 
 当[转发链](/concepts/chain/)的一个层级(或跳跃点)中使用多个节点时，由于每一次请求只能使用其中的一个，这时就需要我们做选择了。
+
+<!-- more -->
 
 !!! tip "内部实现"
  

@@ -1,16 +1,22 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 30min
-publish_date: 2015-07-23 18:27
+authors:
+  - ginuerzh
+categories:
+  - VPN
+readtime: 30
+date: 2015-07-23
+comments: true
 ---
+
+# 利用PPTP, redsocks, iptables, https/socks5 proxy实现全局代理上网
 
 原文地址：
 
 [https://groups.google.com/g/go-gost/c/dzDQeTfNCjY](https://groups.google.com/g/go-gost/c/dzDQeTfNCjY)。
 
 [https://docs.google.com/document/d/1OGIrebKWq__Lt0ADxprxapevC1BEzPaR6ry9XY_WDdA/edit#heading=h.qh7wl45v71jq](https://docs.google.com/document/d/1OGIrebKWq__Lt0ADxprxapevC1BEzPaR6ry9XY_WDdA/edit#heading=h.qh7wl45v71jq)
+
+<!-- more -->
 
 ## 使用场景
 

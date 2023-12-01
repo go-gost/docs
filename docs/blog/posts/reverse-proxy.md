@@ -1,15 +1,20 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 30min
-publish_date: 2023-01-16 22:00
+authors:
+  - ginuerzh
+categories:
+  - Reverse Proxy
+readtime: 30
+date: 2023-01-16
 comments: true
 ---
+
+# 反向代理与内网穿透
 
 反向代理也是代理服务的一种，我们通常使用的代理服务，例如HTTP/SOCKS5代理，其代理的目标是客户端，代理服务代替客户端与所访问的服务器建立连接，而反向代理服务代理的目标是服务器，因此像HTTP/SOCKS5这种代理服务也被称作正向代理。二者的主要却别在于正向代理中客户端是知道代理服务的存在，而反向代理中客户端(甚至是服务端)是不知道代理服务的存在，在客户端看来代理服务就是我真正要访问的服务。
 
 从某种角度来看，反向代理与端口转发是一样的，二者都是在两个端口之间建立映射关系，将数据从一个端口转发到另外一个端口，只不过反向代理会利用转发的数据进行更精确的控制，而端口转发一般不会依赖于数据的内容，仅仅是纯粹的端到端的转发行为。GOST中的反向代理就是基于端口转发来实现的。
+
+<!-- more -->
 
 GOST从v2.1版本开始就已经实现了[端口转发](https://v2.gost.run/port-forwarding/)的功能，其间这个功能一直没有多大的变化，直到v3.0.0-rc.1版本，为了实现[反向代理](https://gost.run/tutorials/reverse-proxy/)的功能而对端口转发进行了扩展。
 

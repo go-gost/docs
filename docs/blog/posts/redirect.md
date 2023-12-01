@@ -1,14 +1,20 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 10min
-publish_date: 2017-01-16 18:23
+authors:
+  - ginuerzh
+categories:
+  - VPN
+readtime: 10
+date: 2017-01-16
+comments: true
 ---
+
+# Linux下基于L2TP/IPSec + iptables + gost实现全局网络访问
 
 原文地址：[https://groups.google.com/g/go-gost/c/bx0fYx2jmG4](https://groups.google.com/g/go-gost/c/bx0fYx2jmG4)。
 
 之前写过一篇[类似的文章](../2015/redirect.md)，是利用PPTP + iptables + redsocks，但由于新版IOS上已经不支持PPTP了，所以这里面就换用IPSec来实现。
+
+<!-- more -->
 
 新版的gost也已经支持透明代理，redsocks也可以省去了，所以理论上这种方法要比之前的简单许多。
 

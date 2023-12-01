@@ -1,5 +1,7 @@
 FROM squidfunk/mkdocs-material:9.4.14 AS builder
 
+RUN pip install jieba
+
 ADD . /src
 
 WORKDIR /src

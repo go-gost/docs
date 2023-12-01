@@ -1,15 +1,20 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 15min
-publish_date: 2023-02-12 23:00
+authors:
+  - ginuerzh
+categories:
+  - Reverse Proxy
+readtime: 15
+date: 2023-02-12
 comments: true
 ---
+
+# 反向代理隧道实战
 
 上一篇[博文](https://gost.run/blog/2023/reverse-proxy/)中，对反向代理和内网穿透做了基本的介绍。本篇将通过具体应用案例更加直观的展示[反向代理隧道](https://gost.run/tutorials/reverse-proxy-tunnel/)的使用。
 
 反向代理隧道是将反向代理和内网穿透两个功能相结合一种技术手段，这两个概念之间其实没有必然的联系，反向代理可以不使用内网穿透，内网穿透也并不一定是为了实现反向代理，只不过很多情况下我们需要这两个功能组合在一起使用。例如一般的家庭网络或公司网络可能没有公网IP，因此无法通过公网直接访问，这个时候就需要用到内网穿透，通过一台具有公网IP的机器来间接的访问内网的服务。
+
+<!-- more -->
 
 假设有一台公网服务器并且绑定了域名my.domain。我们想要通过域名router.my.domain来访问到家庭网络中的路由器(192.168.1.1:80)，并想要通过域名work.my.domain来访问公司中的项目管理平台(172.10.1.1:80)。
 

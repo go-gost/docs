@@ -1,17 +1,23 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 10min
-publish_date: 2015-11-19 21:25
+authors:
+  - ginuerzh
+categories:
+  - General
+readtime: 10
+date: 2015-11-19
+comments: true
 ---
+
+# linux下利用redsocks+iptables实现全局socks5代理上网
 
 原文地址：[https://groups.google.com/g/go-gost/c/c7QCorgZiLU](https://groups.google.com/g/go-gost/c/c7QCorgZiLU)。
 
-之前写过一个[类似的文档](../2015/redirect.md)，不过因为参杂了vpn配置，所以略微复杂，下面是简化版。
+之前写过一个[类似的文档](redsocks.md)，不过因为参杂了vpn配置，所以略微复杂，下面是简化版。
 
 在linux下的应用若要使用socks5代理，一般都需要在应用内手动设置，而且有些应用不支持设置代理功能。
 其实可以通过redsocks+iptables来实现类似于vpn功能，将所有tcp流量重定向到socks5代理(也支持https代理)。
+
+<!-- more -->
 
 步骤如下：
 

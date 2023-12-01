@@ -1,17 +1,23 @@
 ---
-template: blog.html
-author: ginuerzh
-author_gh_user: ginuerzh
-read_time: 30min
-publish_date: 2022-10-21 22:00
+authors:
+  - ginuerzh
+categories:
+  - TUN
+  - VPN
+readtime: 30
+date: 2022-10-21
 comments: true
 ---
+
+# 基于TUN设备的VPN组网
 
 GOST最初是在v2.9版本中引入对TUN(和TAP)设备的支持，在v3版本(beta.4)中又将实现方式由[songgao/water](https://github.com/songgao/water)库(TAP未变化)改为了[wireguard-go](https://git.zx2c4.com/wireguard-go)，并且增加了心跳和认证机制。
 
 GOST中TUN设备的设计思想是简单轻量，因此没有添加过于复杂的配置，对数据也没有做过多的处理。只要能够满足一些特定的使用场景就达到目的了，如果需要更加复杂的应用完全可以通过wireguard来实现。
 
 TUN设备可以有很多的用处，比较多的可能是用来构建VPN，这里就以讲一下基于GOST的TUN设备VPN组网方案。
+
+<!-- more -->
 
 ## VPN组网
 
