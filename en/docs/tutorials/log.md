@@ -69,7 +69,7 @@ Logs can be split, backed up and compressed by configuring the `rotation` option
 `compress` (bool, default=false)
 :    Determines if the rotated log files should be compressed using gzip. The default is not to perform compression.
 
-# Logger
+## Logger
 
 A logger is a configuration definition of a logging instance. In addition to the default global logging, any number of different logging instances can be defined.
 
@@ -130,7 +130,7 @@ loggers:
       compress: false
 ```
 
-## Logger Group
+### Logger Group
 
 Multiple loggers can also be combined through logger group.
 
