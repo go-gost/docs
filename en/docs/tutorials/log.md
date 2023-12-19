@@ -129,3 +129,37 @@ loggers:
       localTime: false
       compress: false
 ```
+
+## Logger Group
+
+Multiple loggers can also be combined through logger group.
+
+```yaml hl_lines="4-6"
+services:
+- name: service-0
+  addr: :8000
+  loggers:
+  - logger-0
+  - logger-1
+  handler:
+    type: auto
+  listener:
+    type: tcp
+loggers:
+- name: logger-0
+  log:
+    level: info
+    format: text
+    output: stderr
+- name: logger-1
+  log:
+    level: debug
+    format: json
+    output: /path/to/file
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
+```

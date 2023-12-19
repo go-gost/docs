@@ -97,20 +97,54 @@ loggers:
 
 ```yaml hl_lines="4 11"
 services:
-  - name: service-0
-    addr: :8000
-    logger: logger-0
-    handler:
-      type: auto
-    listener:
-      type: tcp
-  - name: service-1
-    addr: :8001
-    logger: logger-1
-    handler:
-      type: auto
-    listener:
-      type: tcp
+- name: service-0
+  addr: :8000
+  logger: logger-0
+  handler:
+    type: auto
+  listener:
+    type: tcp
+- name: service-1
+  addr: :8001
+  logger: logger-1
+  handler:
+    type: auto
+  listener:
+    type: tcp
+loggers:
+- name: logger-0
+  log:
+    level: info
+    format: text
+    output: stderr
+- name: logger-1
+  log:
+    level: debug
+    format: json
+    output: /path/to/file
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
+```
+
+## 日志记录器组
+
+也可以通过日志记录器组来组合使用多个日志记录器。
+
+```yaml hl_lines="4-6"
+services:
+- name: service-0
+  addr: :8000
+  loggers:
+  - logger-0
+  - logger-1
+  handler:
+    type: auto
+  listener:
+    type: tcp
 loggers:
 - name: logger-0
   log:
