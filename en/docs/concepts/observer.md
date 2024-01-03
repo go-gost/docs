@@ -19,9 +19,9 @@ Observer can be configured to use external [plugin](/en/concepts/plugin/) servic
 observers:
 - name: observer-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
-      type: grpc
       secure: false
       serverName: example.com
 ```
@@ -51,9 +51,9 @@ services:
 observers:
 - name: observer-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
-      type: grpc
       secure: false
       serverName: example.com
 ```
@@ -74,9 +74,9 @@ observers:
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
--d '{"events":[ \
-{"kind":"service","service":"service-0","type":"status", \
-"status":{"state":"running","msg":"service service-0 is running"}} \
+-d '{"events":[
+{"kind":"service","service":"service-0","type":"status", 
+"status":{"state":"running","msg":"service service-0 is running"}} 
 ]}'
 ```
 
@@ -101,9 +101,9 @@ A single service will report statistics through the observer periodically (5 sec
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
--d '{"events":[ \
-{"kind":"service","service":"service-0","type":"stats", \
-"stats":{"totalConns":1,"currentConns":0,"inputBytes":235,"outputBytes":632,"totalErrs":0}} \
+-d '{"events":[ 
+{"kind":"service","service":"service-0","type":"stats", 
+"stats":{"totalConns":1,"currentConns":0,"inputBytes":235,"outputBytes":632,"totalErrs":0}} 
 ]}'
 ```
 
@@ -145,17 +145,17 @@ observers:
 
 ### Observer Based On Client ID
 
-Service-level observer can only be used to observe the statistics of the overall service and cannot be divided into more detailed categories for specific users. If you need to implement this function, you need to use a combination of the authenticator plugin and the observer plugin on the handler.
+Service-level observer can only be used to observe the statistics of the overall service and cannot be divided into more detailed categories for users. If you need to implement this function, you need to use a combination of the authenticator plugin and the observer plugin on the handler.
     
 The Authenticator plugin returns the client ID after successful authentication. GOST will pass this client ID information to the Observer plugin server again.
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
--d '{"events":[ \
-{"kind":"handler","service":"service-0","client":"user1","type":"stats", \
-"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}}, \
-{"kind":"handler","service":"service-0","client":"user2","type":"stats", \
-"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}} \
+-d '{"events":[ 
+{"kind":"handler","service":"service-0","client":"user1","type":"stats", 
+"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}}, 
+{"kind":"handler","service":"service-0","client":"user2","type":"stats", 
+"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}} 
 ]}'
 ```
 

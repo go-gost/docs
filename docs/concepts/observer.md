@@ -18,9 +18,9 @@ comments: true
 observers:
 - name: observer-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
-      type: grpc
       secure: false
       serverName: example.com
 ```
@@ -50,9 +50,9 @@ services:
 observers:
 - name: observer-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
-      type: grpc
       secure: false
       serverName: example.com
 ```
@@ -73,9 +73,9 @@ observers:
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
--d '{"events":[ \
-{"kind":"service","service":"service-0","type":"status", \
-"status":{"state":"running","msg":"service service-0 is running"}} \
+-d '{"events":[
+{"kind":"service","service":"service-0","type":"status", 
+"status":{"state":"running","msg":"service service-0 is running"}} 
 ]}'
 ```
 
@@ -100,9 +100,9 @@ curl -XPOST http://127.0.0.1:8000/observer \
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
--d '{"events":[ \
-{"kind":"service","service":"service-0","type":"stats", \
-"stats":{"totalConns":1,"currentConns":0,"inputBytes":235,"outputBytes":632,"totalErrs":0}} \
+-d '{"events":[
+{"kind":"service","service":"service-0","type":"stats", 
+"stats":{"totalConns":1,"currentConns":0,"inputBytes":235,"outputBytes":632,"totalErrs":0}}
 ]}'
 ```
 
@@ -144,17 +144,17 @@ observers:
 
 ### 基于用户标识的流量统计
 
-服务级别的观测器只能用来观测服务整体的统计信息，无法针对特定用户进行更细的划分。如果需要实现此功能需要组合使用认证器插件和处理器上的观测器插件。
+服务级别的观测器只能用来观测服务整体的统计信息，无法针对用户进行更细的划分。如果需要实现此功能需要组合使用认证器插件和处理器上的观测器插件。
     
 认证器插件在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给观测器插件服务。
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
--d '{"events":[ \
-{"kind":"handler","service":"service-0","client":"user1","type":"stats", \
-"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}}, \
-{"kind":"handler","service":"service-0","client":"user2","type":"stats", \
-"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}} \
+-d '{"events":[
+{"kind":"handler","service":"service-0","client":"user1","type":"stats",
+"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}},
+{"kind":"handler","service":"service-0","client":"user2","type":"stats",
+"stats":{"totalConns":1,"currentConns":0,"inputBytes":78,"outputBytes":574,"totalErrs":0}}
 ]}'
 ```
 

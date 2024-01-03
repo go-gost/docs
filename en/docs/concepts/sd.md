@@ -60,9 +60,9 @@ sds:
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/sd \
--d '{"id":"c23d4f42-c892-42b3-8b74-88ab6455d33a", \
-"name":"c9ef8f8c-d687-4dca-be7a-1467b6565404", \
-"node":"db670b91-61a5-4f7c-8014-3bbe994446ea", \
+-d '{"id":"c23d4f42-c892-42b3-8b74-88ab6455d33a", 
+"name":"c9ef8f8c-d687-4dca-be7a-1467b6565404", 
+"node":"db670b91-61a5-4f7c-8014-3bbe994446ea", 
 "network":"tcp", \
 "address":"10.42.0.100:80"}'
 ```
@@ -71,8 +71,8 @@ curl -XPOST http://127.0.0.1:8000/sd \
 
 ```bash
 curl -XDELETE http://127.0.0.1:8000/sd \
--d '{"id":"c23d4f42-c892-42b3-8b74-88ab6455d33a", \
-"name":"c9ef8f8c-d687-4dca-be7a-1467b6565404", \
+-d '{"id":"c23d4f42-c892-42b3-8b74-88ab6455d33a", 
+"name":"c9ef8f8c-d687-4dca-be7a-1467b6565404", 
 "node":"db670b91-61a5-4f7c-8014-3bbe994446ea"}'
 ```
 
@@ -80,8 +80,8 @@ curl -XDELETE http://127.0.0.1:8000/sd \
 
 ```bash
 curl -XPUT http://127.0.0.1:8000/sd \
--d '{"id":"c23d4f42-c892-42b3-8b74-88ab6455d33a", \
-"name":"c9ef8f8c-d687-4dca-be7a-1467b6565404", \
+-d '{"id":"c23d4f42-c892-42b3-8b74-88ab6455d33a", 
+"name":"c9ef8f8c-d687-4dca-be7a-1467b6565404", 
 "node":"db670b91-61a5-4f7c-8014-3bbe994446ea"}'
 ```
 
