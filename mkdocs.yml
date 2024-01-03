@@ -136,6 +136,7 @@ nav:
     - 路由器: concepts/router.md
     - 服务发现: concepts/sd.md
     - 数据记录: concepts/recorder.md
+    - 服务观测: concepts/observer.md
     - 插件系统: concepts/plugin.md
   - 教程:
     - 协议:
