@@ -314,11 +314,13 @@ services:
 
 ## Application-Specific Forwarding
 
-Local and remote port forwarding services also support sniffing of specific application traffic. Currently supported application protocols are: SSH.
+Local and remote port forwarding services also support sniffing of specific application traffic. Currently supported application protocols are: 
 
-### SSH
+* `http` - HTTP traffic.
+* `tls` - TLS traffic.
+* `ssh` - SSH traffic.
 
-In forwarder.nodes, specify the node protocol type as `ssh` through the `protocol` option, and when the SSH protocol traffic is sniffed, it will be forwarded to this node.
+In forwarder.nodes, specify the node protocol type through the `protocol` option, and when the corresponding traffic is detected, it will be forwarded to this node.
 
 === "Local Port Forwarding"
 
@@ -334,6 +336,14 @@ In forwarder.nodes, specify the node protocol type as `ssh` through the `protoco
         type: tcp
       forwarder:
         nodes:
+        - name: http-server
+          host: example.com
+          addr: example.com:80
+          protocol: http
+        - name: https-server
+          host: example.com
+          addr: example.com:443
+          protocol: tls
         - name: ssh-server
           addr: example.com:22
           protocol: ssh
@@ -354,6 +364,12 @@ In forwarder.nodes, specify the node protocol type as `ssh` through the `protoco
         chain: chain-0
       forwarder:
         nodes:
+        - name: local-http
+          addr: 192.168.2.1:80
+          protocol: http
+        - name: local-https
+          addr: 192.168.2.1:443
+          protocol: tls
         - name: local-ssh
           addr: 192.168.2.1:22
           protocol: ssh
@@ -369,9 +385,6 @@ In forwarder.nodes, specify the node protocol type as `ssh` through the `protoco
           dialer:
             type: wss
     ```
-
-!!! note "Priority"
-    When the `host` and `protocol` options are set at the same time, only `host` will be matched.
 
 ## Forwarding Tunnel
 

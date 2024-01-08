@@ -12,6 +12,12 @@ GOST can use the RESTful API to interact with the GOST process by starting the W
 	gost -L http://:8080 -api :18080
 	```
 
+	or
+
+	```sh
+	gost -L http://:8080 -api "user:pass@:18080?pathPrefix=/api&accesslog=true"
+	```
+
 === "File (YAML)"
 
     ```yaml
@@ -32,9 +38,10 @@ GOST can use the RESTful API to interact with the GOST process by starting the W
 	  auther: auther-0
 	```
 
-You can even only open the API service, and then dynamically configure the service and other components through the API.
+You can also start the API service only, and then dynamically configure services and other components through the API.
 
 === "CLI"
+
     ```sh
 	gost -api :18080
 	```
@@ -63,16 +70,26 @@ Use the `accesslog` property to enable the API access log. By default, no access
 
 ## Authentication
 
-Authentication information can be set through the `auth` or `auther` property. If the `auther` property is set, the `auth` property is ignored. Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
+Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
 
-```yaml
-api:
-  addr: :18080
-  auth:
-    username: user
-    password: pass
-  auther: auther-0
-```
+Authentication information can be set through the `auth` or `auther` options. If the `auther` option is set, the `auth` option is ignored. 
+
+=== "CLI"
+
+    ```sh
+	gost -api user:pass@:18080
+	```
+
+=== "File (YAML)"
+
+    ```yaml
+    api:
+      addr: :18080
+      auth:
+        username: user
+        password: pass
+      auther: auther-0
+    ```
 
 ## Online Test
 

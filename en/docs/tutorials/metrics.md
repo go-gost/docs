@@ -16,6 +16,12 @@ Use the `metrics` option to enable metrics, which is disabled by default.
 	gost -L :8080 -metrics=:9000
 	```
 
+	or
+
+	```bash
+	gost -L :8080 -metrics "user:pass@:9000?path=/metrics"
+	```
+
 === "File (YAML)"
 
     ```yaml
@@ -44,16 +50,26 @@ Use the `metrics` option to enable metrics, which is disabled by default.
 
 ### Authentication
 
-Authentication information can be set through the `auth` or `auther` property. If the `auther` property is set, the `auth` property is ignored. Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
+Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
 
-```yaml
-metrics:
-  addr: :9000
-  auth:
-    username: user
-    password: pass
-  auther: auther-0
-```
+Authentication information can be set through the `auth` or `auther` option. If the `auther` option is set, the `auth` option is ignored. 
+
+=== "CLI"
+
+    ```bash
+    gost -L :8080 -metrics "user:pass@:9000"
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    metrics:
+      addr: :9000
+      auth:
+        username: user
+        password: pass
+      auther: auther-0
+    ```
 
 After enabling, you can view the metrics data through the `http://localhost:9000/metrics` endpoint.
 

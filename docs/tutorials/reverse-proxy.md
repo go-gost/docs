@@ -316,11 +316,13 @@ services:
 
 ## 特定应用转发
 
-本地和远程端口转发服务也支持对特定的应用流量嗅探。目前支持的应用协议有：SSH。
+本地和远程端口转发服务也支持对特定的应用流量嗅探。目前支持的应用协议有：
 
-### SSH
+* `http` - HTTP流量数据。
+* `tls` - TLS流量数据。
+* `ssh` - SSH数据。
 
-在forwarder.nodes中通过`protocol`选项指定节点协议类型为`ssh`，当嗅探到SSH协议流量则会转发到此节点。
+在forwarder.nodes中通过`protocol`选项指定节点协议类型，当嗅探到对应类型流量则会转发到此节点。
 
 === "本地端口转发"
 
@@ -336,6 +338,14 @@ services:
         type: tcp
       forwarder:
         nodes:
+        - name: http-server
+          host: example.com
+          addr: example.com:80
+          protocol: http
+        - name: https-server
+          host: example.com
+          addr: example.com:443
+          protocol: tls
         - name: ssh-server
           addr: example.com:22
           protocol: ssh
@@ -356,6 +366,12 @@ services:
         chain: chain-0
       forwarder:
         nodes:
+        - name: local-http
+          addr: 192.168.2.1:80
+          protocol: http
+        - name: local-https
+          addr: 192.168.2.1:443
+          protocol: tls
         - name: local-ssh
           addr: 192.168.2.1:22
           protocol: ssh
@@ -371,9 +387,6 @@ services:
           dialer:
             type: wss
     ```
-
-!!! note "优先级"
-    当同时设置了`host`和`protocol`选项，仅会按`host`进行匹配。
 
 ## 转发通道
 
