@@ -326,7 +326,7 @@ services:
 
 === "本地端口转发"
 
-    ```yaml hl_lines="14"
+    ```yaml hl_lines="15 19 22"
     services:
     - name: https
       addr: :443
@@ -353,7 +353,7 @@ services:
 
 === "远程端口转发"
 
-    ```yaml hl_lines="15"
+    ```yaml hl_lines="15 18 21"
     services:
     - name: https
       addr: :443
