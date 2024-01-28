@@ -55,7 +55,7 @@ The `entrypoint` option specifies the public entry point for traffic, the `ingre
 === "CLI"
 
     ```bash
-    gost -L rtcp://:0/192.168.1.1:80 -F tunnel://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b
+    gost -L rtcp://:0/192.168.1.1:80 -F "tunnel://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b&tunnel.weight=1"
     ```
 
 === "File (YAML)"
@@ -84,18 +84,23 @@ The `entrypoint` option specifies the public entry point for traffic, the `ingre
             type: tunnel
             metadata:
               tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+              tunnel.weight: 1
           dialer:
             type: tcp
     ```
 
-Specify tunnel ID via `tunnel.id` option, and the `addr` parameter specified in the rtcp service is invalid at this time.
+`tunnel.id` (string)
+:    tunnel ID, the `addr` parameter specified in the rtcp service is invalid at this time.
+
+`tunnel.weight` (uint8, default=1)
+:    Client connection weight, the range of value [1, 255]. When the weight value is 255, other client connections with a weight value less than 255 are ignored.
 
 In this example, when the traffic enters the entry point (port 80 of the server), it will sniff the traffic to obtain the hostname, and then find the matching rule in the Ingress through the hostname to obtain the corresponding service endpoint (tunnel) , and finally obtain a valid connection in the connection pool of the tunnel and send the traffic to the client through this connection.
 
 When the hostname is `example.com`, the tunnel with the ID 4d21094e-b74c-4916-86c1-d9fa36ea677b is matched according to the rules in the Ingress. When the traffic reaches the client, it is forwarded by the rtcp service to the 192.168.1.1:80 service.
 
 !!! tip "High Availability"
-    In order to improve the availability of a single tunnel, multiple clients can be run, and these clients use the same tunnel ID. When obtaining a connection from the tunnel, a round-robin mechanism will be used, with up to 3 failed retries.
+    In order to improve the availability of a single tunnel, multiple clients can be run, and these clients use the same tunnel ID. When obtaining a connection from the tunnel, a weighted random mechanism will be used, with up to 3 failed retries.
 
 ## External Public Entry Point
 

@@ -172,7 +172,7 @@ services:
 
 ## HTTP请求头设置
 
-当嗅探到HTTP流量时，可以在目标节点上通过`forwarder.nodes.http`选项对HTTP的请求头部信息进行设置，包括Host头重写和自定义头部信息，对本地和远程端口转发均适用。
+当嗅探到HTTP流量时，可以在目标节点上通过`forwarder.nodes.http`选项对HTTP的请求头部信息进行设置，包括Host头重写，自定义头部信息和开启Basic Auth，对本地和远程端口转发均适用。
 
 ### 重写Host头
 
@@ -246,6 +246,31 @@ services:
 
 当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
 
+### HTTP Basic Authentication
+
+可以通过设置`http.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
+
+```yaml hl_lines="15 16 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:443
+      host: example.com
+      http:
+        auth:
+          username: user
+          password: pass
+```
+
 ## TLS请求设置
 
 如果转发的目标节点启用了TLS，可以通过设置`forwarder.nodes.tls`来建立TLS连接。
@@ -289,30 +314,6 @@ services:
 
 `tls.options.cipherSuites` (list)
 :    加密套件，可选值参考[Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants)。
-
-## HTTP Basic Authentication
-
-可以通过设置`forwarder.nodes.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
-
-```yaml hl_lines="15 16 17"
-services:
-- name: http
-  addr: :80
-  handler:
-    type: tcp
-    metadata:
-      sniffing: true
-  listener:
-    type: tcp
-  forwarder:
-    nodes:
-    - name: example-com
-      addr: example.com:443
-      host: example.com
-      auth:
-        username: user
-        password: pass
-```
 
 ## 特定应用转发
 

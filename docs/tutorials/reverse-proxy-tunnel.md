@@ -55,7 +55,7 @@ comments: true
 === "命令行"
 
     ```bash
-    gost -L rtcp://:0/192.168.1.1:80 -F tunnel://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b
+    gost -L rtcp://:0/192.168.1.1:80 -F "tunnel://:8443?tunnel.id=4d21094e-b74c-4916-86c1-d9fa36ea677b&tunnel.weight=1"
     ```
 
 === "配置文件"
@@ -84,18 +84,23 @@ comments: true
             type: tunnel
             metadata:
               tunnel.id: 4d21094e-b74c-4916-86c1-d9fa36ea677b
+              tunnel.weight: 1
           dialer:
             type: tcp
     ```
 
-通过`tunnel.id`指定隧道ID，此时rtcp服务中指定的`addr`参数无效。
+`tunnel.id` (string)
+:    隧道ID，此时rtcp服务中指定的`addr`参数无效。
+
+`tunnel.weight` (uint8, default=1)
+:    客户端连接权重，取值范围[1, 255]。当权重值为`255`时，其他权重值小于255的客户端连接将被忽略。
 
 本例中当流量进入公共入口点(服务端的80端口)后会嗅探流量信息获取所要访问的主机名，再通过主机名在Ingress中找到匹配的规则，获取对应的服务端点(endpoint即隧道ID)，最后在隧道的连接池中获取一个有效连接将流量通过此连接发送到客户端。
 
 当主机名为`example.com`时，根据Ingress中的规则匹配到ID为4d21094e-b74c-4916-86c1-d9fa36ea677b的隧道。当流量到达客户端后再由rtcp服务转发给192.168.1.1:80服务。
 
 !!! tip "高可用性"
-    为了提高单个隧道的可用性，可以运行多个客户端，这些客户端使用相同的隧道ID。当需要从隧道获取连接时，将采用轮询机制，最多3次失败重试。
+    为了提高单个隧道的可用性，可以运行多个客户端，这些客户端使用相同的隧道ID。当需要从隧道获取连接时，将采用加权随机方式选择一个客户端连接，最多3次失败重试。
 
 ## 外部公共入口点
 

@@ -170,7 +170,7 @@ services:
 
 ## HTTP Request Header Settings
 
-When sniffing HTTP traffic, you can set the HTTP request header information on the target node through the `forwarder.nodes.http` option, including Host header rewriting and custom header information.
+When sniffing HTTP traffic, you can set the HTTP request header information on the target node through the `forwarder.nodes.http` option, including Host header rewriting, custom header information and basic auth.
 
 ### Rewrite Host Header
 
@@ -244,6 +244,31 @@ services:
 
 When requesting http://example.com, three fields `User-Agent`, `Foo` and `Bar` will be added to the HTTP request header sent to example.com:80.
 
+### HTTP Basic Authentication
+
+You can enable [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) for target node by setting the `http.auth` option.
+
+```yaml hl_lines="15 16 17"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:443
+      host: example.com
+      http:
+        auth:
+          username: user
+          password: pass
+```
+
 ## TLS Settings
 
 If the forwarding target node has TLS enabled, you can establish a TLS connection by setting `forwarder.nodes.tls`.
@@ -288,30 +313,6 @@ services:
 `tls.options.cipherSuites` (list)
 :    Cipher Suites, See [Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants) for more information.
 
-## HTTP Basic Authentication
-
-You can enable [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) for target node by setting the `forwarder.nodes.auth` option.
-
-```yaml hl_lines="15 16 17"
-services:
-- name: http
-  addr: :80
-  handler:
-    type: tcp
-    metadata:
-      sniffing: true
-  listener:
-    type: tcp
-  forwarder:
-    nodes:
-    - name: example-com
-      addr: example.com:443
-      host: example.com
-      auth:
-        username: user
-        password: pass
-```
-
 ## Application-Specific Forwarding
 
 Local and remote port forwarding services also support sniffing of specific application traffic. Currently supported application protocols are: 
@@ -324,7 +325,7 @@ In forwarder.nodes, specify the node protocol type through the `protocol` option
 
 === "Local Port Forwarding"
 
-    ```yaml hl_lines="14"
+    ```yaml hl_lines="15 19 22"
     services:
     - name: https
       addr: :443
@@ -351,7 +352,7 @@ In forwarder.nodes, specify the node protocol type through the `protocol` option
 
 === "Remote Port Forwarding"
 
-    ```yaml hl_lines="15"
+    ```yaml hl_lines="15 18 21"
     services:
     - name: https
       addr: :443
