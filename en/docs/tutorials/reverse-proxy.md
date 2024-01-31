@@ -168,9 +168,9 @@ services:
       path: /test
 ```
 
-## HTTP Request Header Settings
+## HTTP Request Settings
 
-When sniffing HTTP traffic, you can set the HTTP request header information on the target node through the `forwarder.nodes.http` option, including Host header rewriting, custom header information and basic auth.
+When sniffing HTTP traffic, you can set the HTTP request information on the target node through the `forwarder.nodes.http` option, including Host header rewriting, custom header information, basic auth, URL path rewriting.
 
 ### Rewrite Host Header
 
@@ -261,13 +261,46 @@ services:
   forwarder:
     nodes:
     - name: example-com
-      addr: example.com:443
+      addr: example.com:80
       host: example.com
       http:
         auth:
           username: user
           password: pass
 ```
+
+When requesting http://example.com directly, HTTP status code 401 will be returned to require authentication.
+
+### Rewrite URL Path
+
+Define URL path rewriting rules by setting the `http.rewrite` option. `rewrite.match` specifies the path matching mode (supports regular expression), and `rewrite.replacement` sets the path replacement content.
+
+```yaml hl_lines="16-20"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: example.com
+      http:
+        rewrite:
+        - match: /api/login
+          replacement: /user/login
+        - match: /api/(.*)
+          replacement: /$1
+```
+
+`http://example.com/api/login` will be rewritten to `http://example.com/user/login`.
+
+`http://example.com/api/logout` will be rewritten to `http://example.com/logout`.
 
 ## TLS Settings
 

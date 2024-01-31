@@ -170,9 +170,9 @@ services:
       path: /test
 ```
 
-## HTTP请求头设置
+## HTTP请求设置
 
-当嗅探到HTTP流量时，可以在目标节点上通过`forwarder.nodes.http`选项对HTTP的请求头部信息进行设置，包括Host头重写，自定义头部信息和开启Basic Auth，对本地和远程端口转发均适用。
+当嗅探到HTTP流量时，可以在目标节点上通过`forwarder.nodes.http`选项对HTTP的请求信息进行设置，包括Host头重写，自定义头部信息，开启Basic Auth，URL路径重写。对本地和远程端口转发均适用。
 
 ### 重写Host头
 
@@ -246,9 +246,9 @@ services:
 
 当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
 
-### HTTP Basic Authentication
+### Basic Authentication
 
-可以通过设置`http.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
+通过设置`http.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
 
 ```yaml hl_lines="15 16 17"
 services:
@@ -263,13 +263,46 @@ services:
   forwarder:
     nodes:
     - name: example-com
-      addr: example.com:443
+      addr: example.com:80
       host: example.com
       http:
         auth:
           username: user
           password: pass
 ```
+
+当直接请求http://example.com时，会返回HTTP状态码401要求认证。
+
+### URL路径重写
+
+通过设置`http.rewrite`选项定义URL路径重写规则。`rewrite.match`指定路径匹配模式(支持正则表达式)，`rewrite.replacement`设置路径替换内容。
+
+```yaml hl_lines="16-20"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      host: example.com
+      http:
+        rewrite:
+        - match: /api/login
+          replacement: /user/login
+        - match: /api/(.*)
+          replacement: /$1
+```
+
+`http://example.com/api/login`会被重写为`http://example.com/user/login`。
+
+`http://example.com/api/logout`会被重写为`http://example.com/logout`。
 
 ## TLS请求设置
 
