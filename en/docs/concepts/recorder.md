@@ -6,6 +6,9 @@ comments: true
 
 ## Recorder
 
+!!! tip "Dynamic configuration"
+    Recorder supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+
 Recorder can be used to record specific data, by configuring and referencing different recorder types to record data to different targets.
 
 ```yaml

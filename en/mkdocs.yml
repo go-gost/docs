@@ -217,4 +217,5 @@ nav:
       - SNI: reference/connectors/sni.md
       - SSHD: reference/connectors/sshd.md
   - Donation: donation.md
+  - GOST+: https://gost.plus
 

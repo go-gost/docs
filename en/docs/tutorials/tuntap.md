@@ -54,8 +54,10 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 :    keepalive period, valid when `keepAlive` is true.
 
 `passphrase` (string)
-:     Client authentication code, up to 16 characters, only valid for the client.
+:     Client authentication code, up to 16 characters, Only valid for client.
 
+`p2p` (bool)
+:    Point-to-point tunnel, when enabled, routing will be ignored. Only valid for server.
 
 ### Example
 

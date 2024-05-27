@@ -58,6 +58,9 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `passphrase` (string)
 :     客户端认证码，最多16个字符，仅客户端有效
 
+`p2p` (bool)
+:    点对点隧道，当开启后路由将被忽略，仅服务端有效
+
 ### 使用示例
 
 **服务端**

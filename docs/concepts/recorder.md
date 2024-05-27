@@ -6,6 +6,9 @@ comments: true
 
 ## 记录器
 
+!!! tip "动态配置"
+    记录器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+
 记录器可以用来记录特定数据，通过配置和引用不同的记录器类型将数据记录到不同的目标中。
 
 ```yaml hl_lines="4 5 6 12"

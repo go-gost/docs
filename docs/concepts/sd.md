@@ -4,6 +4,9 @@ comments: true
 
 # 服务发现
 
+!!! tip "动态配置"
+    服务发现支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+
 !!! note "使用限制"
     服务发现目前仅在[反向代理隧道](/tutorials/reverse-proxy-tunnel-ha/)中使用。
 

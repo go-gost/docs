@@ -4,6 +4,9 @@ comments: true
 
 # Service Discovery
 
+!!! tip "Dynamic configuration"
+    Service discovery supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+
 !!! note "Limitation"
     Service discovery is currently only used within [reverse proxy tunnel](/en/tutorials/reverse-proxy-tunnel-ha/).
 

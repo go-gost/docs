@@ -6,6 +6,9 @@ comments: true
 
 The observer is a component used to observe the internal status of the service, including service status changes, connection and traffic statistics, and the observer reports this information through events.
 
+!!! tip "Dynamic configuration"
+    Observer supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+
 
 !!! note "Limitation"
     Observer are currently only available as plugins.
