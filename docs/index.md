@@ -20,7 +20,7 @@
 - [x] 监控指标
 - [x] 动态配置
 - [x] Web API
-- [ ] Web UI
+- [ ] GUI/WebUI
 
 ## 概览
 
@@ -66,7 +66,13 @@ go build
 docker run --rm gogost/gost -V
 ```
 
-### WebUI(非官方)
+## 工具
+
+### GUI
+
+[go-gost/gostctl](https://github.com/go-gost/gostctl)
+
+### WebUI
 
 [cnwhy/gost-ui](https://github.com/cnwhy/gost-ui)
 
@@ -77,10 +83,12 @@ docker run --rm gogost/gost -V
 
 ## 帮助与支持
 
-Telegram讨论群：[https://t.me/gogost](https://t.me/gogost)
+GitHub：[https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+
+YouTube: [https://www.youtube.com/@gost-tunnel](https://www.youtube.com/@gost-tunnel)
+
+Telegram：[https://t.me/gogost](https://t.me/gogost)
 
 Google讨论组：[https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
-
-提交Issue：[https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
 
 旧版入口：[v2.gost.run](https://v2.gost.run)

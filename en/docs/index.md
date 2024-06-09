@@ -20,7 +20,7 @@
 - [x] Plugin system
 - [x] Prometheus metrics
 - [x] Web API
-- [ ] Web UI
+- [ ] GUI/WebUI
 
 ## Overview
 
@@ -66,7 +66,13 @@ go build
 docker run --rm gogost/gost -V
 ```
 
-### WebUI (Unofficial)
+## Tools
+
+### GUI
+
+[go-gost/gostctl](https://github.com/go-gost/gostctl)
+
+### WebUI
 
 [cnwhy/gost-ui](https://github.com/cnwhy/gost-ui)
 
@@ -76,10 +82,12 @@ docker run --rm gogost/gost -V
 
 ## Support
 
+GitHub: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
+
+YouTube: [https://www.youtube.com/@gost-tunnel](https://www.youtube.com/@gost-tunnel)
+
 Telegram: [https://t.me/gogost](https://t.me/gogost)
 
 Google group: [https://groups.google.com/d/forum/go-gost](https://groups.google.com/d/forum/go-gost)
-
-Github issue: [https://github.com/go-gost/gost/issues](https://github.com/go-gost/gost/issues)
 
 Legacy version: [v2.gost.run](https://v2.gost.run)
