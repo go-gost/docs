@@ -14,7 +14,7 @@ GOST中的[端口转发](/tutorials/port-forwarding/)服务也可以被当作是
 
 ## 本地端口转发
 
-```yaml hl_lines="7 14 17"
+```yaml hl_lines="7 15 19"
 services:
 - name: https
   addr: :443
@@ -28,11 +28,13 @@ services:
     nodes:
     - name: google
       addr: www.google.com:443
-      host: www.google.com
+      filter:
+        host: www.google.com
     - name: github
       addr: github.com:443
-      host: "*.github.com"
-      # host: .github.com
+      filter:
+        host: "*.github.com"
+        # host: .github.com
 - name: http
   addr: :80
   handler:
@@ -45,19 +47,21 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: example.com
+      filter:
+        host: example.com
     - name: example-org
       addr: example.org:80
-      host: example.org
+      filter:
+        host: example.org
 ```
 
-通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`host`选项可以对每一个节点设置(虚拟)主机名。
+通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`filter.host`选项可以对每一个节点设置(虚拟)主机名过滤。
 
-当开启流量嗅探后，转发服务会通过客户端的请求数据获取访问的目标主机，再通过转发器(forwarder)中的节点设置的虚拟主机名(node.host)找到最终转发的目标地址(node.addr)。
+当开启流量嗅探后，转发服务会通过客户端的请求数据获取访问的目标主机，再通过转发器(forwarder)中的节点设置的虚拟主机名(filter.host)找到最终转发的目标地址(addr)。
 
 ![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
 
-`node.host`也支持通配符，*.example.com或.example.com匹配example.com及其子域名：abc.example.com，def.abc.example.com等。
+`filter.host`也支持通配符，*.example.com或.example.com匹配example.com及其子域名：abc.example.com，def.abc.example.com等。
 
 此时可以将对应的域名解析到本地通过反向代理来访问：
 
@@ -73,7 +77,7 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 远程端口转发服务同样也可以对流量进行嗅探。
 
-```yaml hl_lines="7 15 18"
+```yaml hl_lines="7 16 20"
 services:
 - name: https
   addr: :443
@@ -88,10 +92,12 @@ services:
     nodes:
     - name: local-0
       addr: 192.168.1.1:443
-      host: srv-0.local
+      filter:
+        host: srv-0.local
     - name: local-1
       addr: 192.168.1.2:443
-      host: srv-1.local
+      filter:
+        host: srv-1.local
     - name: fallback
       addr: 192.168.2.1:443
 - name: http
@@ -107,10 +113,12 @@ services:
     nodes:
     - name: local-0
       addr: 192.168.1.1:80
-      host: srv-0.local
+      filter:
+        host: srv-0.local
     - name: local-1
       addr: 192.168.1.2:80
-      host: srv-1.local
+      filter:
+        host: srv-1.local
 chains:
 - name: chain-0
   hops:
@@ -124,7 +132,7 @@ chains:
         type: wss
 ```
 
-通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`host`选项可以对每一个节点设置(虚拟)主机名。
+通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`filter.host`选项对每一个节点设置(虚拟)主机名过滤。
 
 ![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
@@ -148,9 +156,9 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 ## URL路径路由
 
-通过`path`选项为节点指定路径前缀。当嗅探到HTTP流量后，会使用URL路径通过最长前缀匹配模式来选择节点。
+通过`filter.path`选项为节点指定路径前缀。当嗅探到HTTP流量后，会使用URL路径通过最长前缀匹配模式来选择节点。
 
-```yaml hl_lines="14 17"
+```yaml hl_lines="15 19"
 services:
 - name: http
   addr: :80
@@ -164,10 +172,12 @@ services:
     nodes:
     - name: target-0
       addr: 192.168.1.1:80
-      path: /
+      filter:
+        path: /
     - name: target-1
       addr: 192.168.1.2:80
-      path: /test
+      filter:
+        path: /test
 ```
 
 ## HTTP请求设置
@@ -178,7 +188,7 @@ services:
 
 通过设置`http.host`选项可以重写原始请求头中的Host。
 
-```yaml hl_lines="15 16"
+```yaml hl_lines="16 17"
 services:
 - name: http
   addr: :80
@@ -192,12 +202,14 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: example.com
+      filter:
+        host: example.com
       http:
         host: test.example.com
     - name: example-org
       addr: example.org:80
-      host: example.org
+      filter:
+        host: example.org
       http:
         host: test.example.org:80
 ```
@@ -211,71 +223,6 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 ### 自定义头
 
 通过设置`http.header`选项可以自定义头部信息，如果所设置的头部字段已存在则会被覆盖。
-
-```yaml hl_lines="15 16 17 18 19"
-services:
-- name: http
-  addr: :80
-  handler:
-    type: tcp
-    metadata:
-      sniffing: true
-  listener:
-    type: tcp
-  forwarder:
-    nodes:
-    - name: example-com
-      addr: example.com:80
-      host: example.com
-      http:
-        header:
-          User-Agent: gost/3.0.0
-          foo: bar
-          bar: 123
-        # host: test.example.com
-    - name: example-org
-      addr: example.org:80
-      host: example.org
-      http:
-        header:
-          User-Agent: curl/7.81.0
-          foo: bar
-          bar: baz
-        # host: test.example.org:80
-```
-
-当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
-
-### Basic Authentication
-
-通过设置`http.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
-
-```yaml hl_lines="15 16 17"
-services:
-- name: http
-  addr: :80
-  handler:
-    type: tcp
-    metadata:
-      sniffing: true
-  listener:
-    type: tcp
-  forwarder:
-    nodes:
-    - name: example-com
-      addr: example.com:80
-      host: example.com
-      http:
-        auth:
-          username: user
-          password: pass
-```
-
-当直接请求http://example.com时，会返回HTTP状态码401要求认证。
-
-### URL路径重写
-
-通过设置`http.rewrite`选项定义URL路径重写规则。`rewrite.match`指定路径匹配模式(支持正则表达式)，`rewrite.replacement`设置路径替换内容。
 
 ```yaml hl_lines="16-20"
 services:
@@ -291,7 +238,76 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: example.com
+      filter:
+        host: example.com
+      http:
+        header:
+          User-Agent: gost/3.0.0
+          foo: bar
+          bar: 123
+        # host: test.example.com
+    - name: example-org
+      addr: example.org:80
+      filter:
+        host: example.org
+      http:
+        header:
+          User-Agent: curl/7.81.0
+          foo: bar
+          bar: baz
+        # host: test.example.org:80
+```
+
+当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
+
+### Basic Authentication
+
+通过设置`http.auth`选项为目标节点启用[HTTP基本认证](https://zh.wikipedia.org/zh-cn/HTTP%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81)功能。
+
+```yaml hl_lines="16-19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+      http:
+        auth:
+          username: user
+          password: pass
+```
+
+当直接请求http://example.com时，会返回HTTP状态码401要求认证。
+
+### URL路径重写
+
+通过设置`http.rewrite`选项定义URL路径重写规则。`rewrite.match`指定路径匹配模式(支持正则表达式)，`rewrite.replacement`设置路径替换内容。
+
+```yaml hl_lines="16-21"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
       http:
         rewrite:
         - match: /api/login
@@ -308,7 +324,7 @@ services:
 
 如果转发的目标节点启用了TLS，可以通过设置`forwarder.nodes.tls`来建立TLS连接。
 
-```yaml hl_lines="15 16 17"
+```yaml hl_lines="16-23"
 services:
 - name: http
   addr: :80
@@ -322,7 +338,8 @@ services:
     nodes:
     - name: example-com
       addr: example.com:443
-      host: example.com
+      filter:
+        host: example.com
       tls:
         secure: true
         serverName: example.com
@@ -356,11 +373,11 @@ services:
 * `tls` - TLS流量数据。
 * `ssh` - SSH数据。
 
-在forwarder.nodes中通过`protocol`选项指定节点协议类型，当嗅探到对应类型流量则会转发到此节点。
+在forwarder.nodes中通过`filter.protocol`选项指定节点协议类型，当嗅探到对应类型流量则会转发到此节点。
 
 === "本地端口转发"
 
-    ```yaml hl_lines="15 19 22"
+    ```yaml hl_lines="16 21 25"
     services:
     - name: https
       addr: :443
@@ -373,21 +390,24 @@ services:
       forwarder:
         nodes:
         - name: http-server
-          host: example.com
           addr: example.com:80
-          protocol: http
+          filter:
+            host: example.com
+            protocol: http
         - name: https-server
-          host: example.com
           addr: example.com:443
-          protocol: tls
+          filter:
+            host: example.com
+            protocol: tls
         - name: ssh-server
           addr: example.com:22
-          protocol: ssh
+          filter:
+            protocol: ssh
     ```
 
 === "远程端口转发"
 
-    ```yaml hl_lines="15 18 21"
+    ```yaml hl_lines="16 20 24"
     services:
     - name: https
       addr: :443
@@ -402,13 +422,16 @@ services:
         nodes:
         - name: local-http
           addr: 192.168.2.1:80
-          protocol: http
+          filter:
+            protocol: http
         - name: local-https
           addr: 192.168.2.1:443
-          protocol: tls
+          filter:
+            protocol: tls
         - name: local-ssh
           addr: 192.168.2.1:22
-          protocol: ssh
+          filter:
+            protocol: ssh
     chains:
     - name: chain-0
       hops:
@@ -446,10 +469,12 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: .example.com
+      filter:
+        host: .example.com
     - name: example-org
       addr: example.org:80
-      host: .example.org
+      filter:
+        host: .example.org
 ```
 
 ```bash
@@ -474,10 +499,12 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: .example.com
+      filter:
+        host: .example.com
     - name: example-org
       addr: example.org:80
-      host: .example.org
+      filter:
+        host: .example.org
 ```
 
 ```bash

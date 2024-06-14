@@ -197,10 +197,12 @@ services:
     nodes:
     - name: example-com
       addr: 192.168.1.1:80
-      host: example.com
+      filter:
+        host: example.com
     - name: sub-example-com
       addr: 192.168.1.2:80
-      host: sub.example.com
+      filter:
+        host: sub.example.com
     - name: fallback
       addr: 192.168.2.1:80
 chains:
@@ -377,10 +379,12 @@ services:
     nodes:
     - name: ssh
       addr: 192.168.2.1:22
-      host: ssh.srv-2.local
+      filter:
+        host: ssh.srv-2.local
     - name: redis
       addr: 192.168.2.2:6379
-      host: redis.srv-3.local
+      filter:
+        host: redis.srv-3.local
 chains:
 - name: chain-0
   hops:
@@ -470,10 +474,12 @@ services:
     nodes:
     - name: dns-1
       addr: 192.168.2.1:53
-      host: dns.srv-2.local
+      filter:
+        host: dns.srv-2.local
     - name: dns-2
       addr: 192.168.2.2:53
-      host: dns.srv-3.local
+      filter:
+        host: dns.srv-3.local
 chains:
 - name: chain-0
   hops:
@@ -651,7 +657,8 @@ Since there is only one forwarding target, you can use the command line to forwa
         nodes:
         - name: iperf
           addr: :5201
-          host: iperf.local
+          filter:
+            host: iperf.local
     - name: iperf-udp
       addr: :0
       handler:
@@ -663,7 +670,8 @@ Since there is only one forwarding target, you can use the command line to forwa
         nodes:
         - name: iperf
           addr: :5201
-          host: iperf.local
+          filter:
+            host: iperf.local
     chains:
     - name: chain-0
       hops:

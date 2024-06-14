@@ -30,14 +30,14 @@ observers:
 `addr` (string, required)
 :    插件服务地址
 
-`tls` (duration, default=null)
+`tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ## 使用观测器
 
 当服务的状态变化时会通过服务上的观测器上报状态，如果服务开启了统计(`enableStats`选项)，同时也会上报连接和流量统计信息。
 
-```yaml hl_lines="4 10"
+```yaml hl_lines="4 10 11"
 services:
 - name: service-0
   addr: ":8080"
@@ -48,6 +48,7 @@ services:
     type: tcp
   metadata:
     enableStats: true # 开启统计
+    observePeriod: 5s
 
 observers:
 - name: observer-0
@@ -59,6 +60,9 @@ observers:
       serverName: example.com
 ```
 
+`observePeriod` (duration, default=5s)
+:    观测器上报周期。
+
 ## HTTP插件
 
 ```yaml
@@ -67,7 +71,11 @@ observers:
   plugin:
     type: http
     addr: http://127.0.0.1:8000/observer
+    timeout: 10s
 ```
+
+`timeout` (duration, default=0s)
+:   上报请求超时时长。 
 
 ### 请求示例
 
@@ -128,13 +136,15 @@ curl -XPOST http://127.0.0.1:8000/observer \
 
 对于支持认证的代理服务(HTTP，HTTP2，SOCKS4，SOCKS5，Relay)，观测器也可以用在处理器上。
 
-```yaml hl_lines="6"
+```yaml hl_lines="6 8"
 services:
 - name: service-0
   addr: ":8080"
   handler:
     type: http
     observer: observer-0
+    metadata:
+      observePeriod: 5s
   listener:
     type: tcp
 
@@ -143,6 +153,10 @@ observers:
   plugin:
     addr: 127.0.0.1:8000
 ```
+
+`observePeriod` (duration, default=5s)
+:    观测器上报周期。
+
 
 ### 基于用户标识的流量统计
 

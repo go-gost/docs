@@ -109,7 +109,7 @@ services:
   listener:
     type: tcp
   forwarder:
-    name: hop-0
+    hop: hop-0
 
 hops:
 - name: hop-0

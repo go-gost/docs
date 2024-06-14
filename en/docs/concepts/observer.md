@@ -32,14 +32,14 @@ observers:
 `addr` (string, required)
 :    Plugin server address.
 
-`tls` (duration, default=null)
+`tls` (object, default=null)
 :    TLS encryption will be used for transmission, TLS encryption is not used by default.
 
 ## Usage
 
 When the status of the service changes, the status will be reported through the observer on the service. If the service has statistics enabled (`enableStats` option), connection and traffic statistics will also be reported.
 
-```yaml hl_lines="4 10"
+```yaml hl_lines="4 10 11"
 services:
 - name: service-0
   addr: ":8080"
@@ -50,6 +50,7 @@ services:
     type: tcp
   metadata:
     enableStats: true 
+    observePeriod: 5s
 
 observers:
 - name: observer-0
@@ -61,6 +62,9 @@ observers:
       serverName: example.com
 ```
 
+`observePeriod` (duration, default=5s)
+:    Observer reporting period.
+
 ## HTTP Plugin
 
 ```yaml
@@ -69,7 +73,11 @@ observers:
   plugin:
     type: http
     addr: http://127.0.0.1:8000/observer
+    timeout: 10s
 ```
+
+`timeout` (duration, default=0s)
+:   Request timeout.
 
 ### Example
 
@@ -137,6 +145,8 @@ services:
   handler:
     type: http
     observer: observer-0
+    metadata:
+      observePeriod: 5s
   listener:
     type: tcp
 
@@ -145,6 +155,9 @@ observers:
   plugin:
     addr: 127.0.0.1:8000
 ```
+
+`observePeriod` (duration, default=5s)
+:    Observer reporting period.
 
 ### Observer Based On Client ID
 

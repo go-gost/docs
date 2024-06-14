@@ -12,7 +12,7 @@ Reverse proxy is an extension of the port forwarding service, which relies on th
 
 ## Local Port Forwarding
 
-```yaml hl_lines="7 14 17"
+```yaml hl_lines="7 15 19"
 services:
 - name: https
   addr: :443
@@ -26,11 +26,13 @@ services:
     nodes:
     - name: google
       addr: www.google.com:443
-      host: www.google.com
+      filter:
+        host: www.google.com
     - name: github
       addr: github.com:443
-      host: "*.github.com"
-      # host: .github.com
+      filter:
+        host: "*.github.com"
+        # host: .github.com
 - name: http
   addr: :80
   handler:
@@ -43,19 +45,21 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: example.com
+      filter:
+        host: example.com
     - name: example-org
       addr: example.org:80
-      host: example.org
+      filter:
+        host: example.org
 ```
 
-Use the `sniffing` option to enable traffic sniffing, and pass the `host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
+Use the `sniffing` option to enable traffic sniffing, and pass the `filter.host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
 
-When traffic sniffing is enabled, the forwarding service will obtain the target host through the client’s request data, and then find the final forwarding target address (node.addr) via `node.host`.
+When traffic sniffing is enabled, the forwarding service will obtain the target host through the client’s request data, and then find the final forwarding target address (addr) via `filter.host`.
 
 ![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
 
-`node.host` also supports wildcards, *.example.com or .example.com matches example.com and its subdomains: abc.example.com, def.abc.example.com, etc.
+`filter.host` also supports wildcards, *.example.com or .example.com matches example.com and its subdomains: abc.example.com, def.abc.example.com, etc.
 
 At this time, the corresponding domain name can be resolved to the local and then accessed through the reverse proxy:
 
@@ -71,7 +75,7 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 Remote port forwarding services can also sniff traffic.
 
-```yaml hl_lines="7 15 18"
+```yaml hl_lines="7 16 20"
 services:
 - name: https
   addr: :443
@@ -86,10 +90,12 @@ services:
     nodes:
     - name: local-0
       addr: 192.168.1.1:443
-      host: srv-0.local
+      filter:
+        host: srv-0.local
     - name: local-1
       addr: 192.168.1.2:443
-      host: srv-1.local
+      filter:
+        host: srv-1.local
 	- name: fallback
 	  addr: 192.168.2.1:443
 - name: http
@@ -105,10 +111,12 @@ services:
     nodes:
     - name: local-0
       addr: 192.168.1.1:80
-      host: srv-0.local
+      filter:
+        host: srv-0.local
     - name: local-1
       addr: 192.168.1.2:80
-      host: srv-1.local
+      filter:
+        host: srv-1.local
 chains:
 - name: chain-0
   hops:
@@ -122,7 +130,7 @@ chains:
         type: wss
 ```
 
-Use the `sniffing` option to enable traffic sniffing, and pass the `host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
+Use the `sniffing` option to enable traffic sniffing, and pass the `filter.host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
 
 ![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
 
@@ -146,9 +154,9 @@ Since srv-2.local does not match the node, it will be forwarded to the fallback 
 
 ## URL Path Routing
 
-Specify the path prefix for the node via the `path` option. When HTTP traffic is sniffed, the URL path is used to select nodes using the longest prefix matching pattern.
+Specify the path prefix for the node via the `filter.path` option. When HTTP traffic is sniffed, the URL path is used to select nodes using the longest prefix matching pattern.
 
-```yaml hl_lines="14 17"
+```yaml hl_lines="15 19"
 services:
 - name: http
   addr: :80
@@ -162,10 +170,12 @@ services:
     nodes:
     - name: target-0
       addr: 192.168.1.1:80
-      path: /
+      filter:
+        path: /
     - name: target-1
       addr: 192.168.1.2:80
-      path: /test
+      filter:
+        path: /test
 ```
 
 ## HTTP Request Settings
@@ -176,7 +186,7 @@ When sniffing HTTP traffic, you can set the HTTP request information on the targ
 
 The Host in the original request header can be overridden by setting the `http.host` option.
 
-```yaml hl_lines="15 16"
+```yaml hl_lines="16 17"
 services:
 - name: http
   addr: :80
@@ -190,12 +200,14 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: example.com
+      filter:
+        host: example.com
       http:
         host: test.example.com
     - name: example-org
       addr: example.org:80
-      host: example.org
+      filter:
+        host: example.org
       http:
         host: test.example.org:80
 ```
@@ -209,71 +221,6 @@ When requesting http://example.com, the Host in the HTTP request header sent to 
 ### Custom Header
 
 The header information can be customized by setting the `http.header` option, if the header field already exists, it will be overwritten.
-
-```yaml hl_lines="15 16 17 18 19"
-services:
-- name: http
-  addr: :80
-  handler:
-    type: tcp
-    metadata:
-      sniffing: true
-  listener:
-    type: tcp
-  forwarder:
-    nodes:
-    - name: example-com
-      addr: example.com:80
-      host: example.com
-      http:
-        header:
-          User-Agent: gost/3.0.0
-          foo: bar
-          bar: 123
-        # host: test.example.com
-    - name: example-org
-      addr: example.org:80
-      host: example.org
-      http:
-        header:
-          User-Agent: curl/7.81.0
-          foo: bar
-          bar: baz
-        # host: test.example.org:80
-```
-
-When requesting http://example.com, three fields `User-Agent`, `Foo` and `Bar` will be added to the HTTP request header sent to example.com:80.
-
-### HTTP Basic Authentication
-
-You can enable [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) for target node by setting the `http.auth` option.
-
-```yaml hl_lines="15 16 17"
-services:
-- name: http
-  addr: :80
-  handler:
-    type: tcp
-    metadata:
-      sniffing: true
-  listener:
-    type: tcp
-  forwarder:
-    nodes:
-    - name: example-com
-      addr: example.com:80
-      host: example.com
-      http:
-        auth:
-          username: user
-          password: pass
-```
-
-When requesting http://example.com directly, HTTP status code 401 will be returned to require authentication.
-
-### Rewrite URL Path
-
-Define URL path rewriting rules by setting the `http.rewrite` option. `rewrite.match` specifies the path matching mode (supports regular expression), and `rewrite.replacement` sets the path replacement content.
 
 ```yaml hl_lines="16-20"
 services:
@@ -289,7 +236,76 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: example.com
+      filter:
+        host: example.com
+      http:
+        header:
+          User-Agent: gost/3.0.0
+          foo: bar
+          bar: 123
+        # host: test.example.com
+    - name: example-org
+      addr: example.org:80
+      filter:
+        host: example.org
+      http:
+        header:
+          User-Agent: curl/7.81.0
+          foo: bar
+          bar: baz
+        # host: test.example.org:80
+```
+
+When requesting http://example.com, three fields `User-Agent`, `Foo` and `Bar` will be added to the HTTP request header sent to example.com:80.
+
+### HTTP Basic Authentication
+
+You can enable [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication) for target node by setting the `http.auth` option.
+
+```yaml hl_lines="16-19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+      http:
+        auth:
+          username: user
+          password: pass
+```
+
+When requesting http://example.com directly, HTTP status code 401 will be returned to require authentication.
+
+### Rewrite URL Path
+
+Define URL path rewriting rules by setting the `http.rewrite` option. `rewrite.match` specifies the path matching mode (supports regular expression), and `rewrite.replacement` sets the path replacement content.
+
+```yaml hl_lines="16-21"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
       http:
         rewrite:
         - match: /api/login
@@ -306,7 +322,7 @@ services:
 
 If the forwarding target node has TLS enabled, you can establish a TLS connection by setting `forwarder.nodes.tls`.
 
-```yaml hl_lines="15 16 17"
+```yaml hl_lines="16-23"
 services:
 - name: http
   addr: :80
@@ -320,7 +336,8 @@ services:
     nodes:
     - name: example-com
       addr: example.com:443
-      host: example.com
+      filter:
+        host: example.com
       tls:
         secure: true
         serverName: example.com
@@ -354,11 +371,11 @@ Local and remote port forwarding services also support sniffing of specific appl
 * `tls` - TLS traffic.
 * `ssh` - SSH traffic.
 
-In forwarder.nodes, specify the node protocol type through the `protocol` option, and when the corresponding traffic is detected, it will be forwarded to this node.
+In forwarder.nodes, specify the node protocol type through the `filter.protocol` option, and when the corresponding traffic is detected, it will be forwarded to this node.
 
 === "Local Port Forwarding"
 
-    ```yaml hl_lines="15 19 22"
+    ```yaml hl_lines="16 21 25"
     services:
     - name: https
       addr: :443
@@ -371,21 +388,24 @@ In forwarder.nodes, specify the node protocol type through the `protocol` option
       forwarder:
         nodes:
         - name: http-server
-          host: example.com
           addr: example.com:80
-          protocol: http
+          filter:
+            host: example.com
+            protocol: http
         - name: https-server
-          host: example.com
           addr: example.com:443
-          protocol: tls
+          filter:
+            host: example.com
+            protocol: tls
         - name: ssh-server
           addr: example.com:22
-          protocol: ssh
+          filter:
+            protocol: ssh
     ```
 
 === "Remote Port Forwarding"
 
-    ```yaml hl_lines="15 18 21"
+    ```yaml hl_lines="16 20 24"
     services:
     - name: https
       addr: :443
@@ -400,13 +420,16 @@ In forwarder.nodes, specify the node protocol type through the `protocol` option
         nodes:
         - name: local-http
           addr: 192.168.2.1:80
-          protocol: http
+          filter:
+            protocol: http
         - name: local-https
           addr: 192.168.2.1:443
-          protocol: tls
+          filter:
+            protocol: tls
         - name: local-ssh
           addr: 192.168.2.1:22
-          protocol: ssh
+          filter:
+            protocol: ssh
     chains:
     - name: chain-0
       hops:
@@ -444,10 +467,12 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: .example.com
+      filter:
+        host: .example.com
     - name: example-org
       addr: example.org:80
-      host: .example.org
+      filter:
+        host: .example.org
 ```
 
 ```bash
@@ -472,10 +497,12 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      host: .example.com
+      filter:
+        host: .example.com
     - name: example-org
       addr: example.org:80
-      host: .example.org
+      filter:
+        host: .example.org
 ```
 
 ```bash

@@ -12,7 +12,7 @@ GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到
 === "命令行"
 
     ```
-    gost -L=http://gost:gost@:8080?probeResistance=code:400&knock=www.example.com
+    gost -L=http://gost:gost@:8080?probeResist=code:400&knock=www.example.com
     ```
 
 === "配置文件"
@@ -28,35 +28,35 @@ GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到
           password: gost
         metadata:
           knock: www.example.com
-          probeResistance: code:404
+          probeResist: code:404
       listener:
         type: tcp
     ```
 
-## probeResistance
+## `probeResist`选项
 
-代理服务通过`probeResistance`参数来指定防御策略。参数值的格式为：`type:value`。
+代理服务通过`probeResist`参数来指定防御策略。参数值的格式为：`type:value`。
 
 type可选值有:
 
 * `code` - 对应value为HTTP响应码，代理服务器会回复客户端指定的响应码。例如：
     ```
-    gost -L=http://gost:gost@:8080?probeResistance=code:403
+    gost -L=http://gost:gost@:8080?probeResist=code:403
     ```
 
 * `web` - 对应的value为URL，代理服务器会使用HTTP GET方式访问此URL，并将响应返回给客户端。例如: 
     ```
-    gost -L=http://gost:gost@:8080?probeResistance=web:example.com/page.html
+    gost -L=http://gost:gost@:8080?probeResist=web:example.com/page.html
     ```
 
 * `host` - 对应的value为主机地址，代理服务器会将客户端请求转发给设置的主机地址，并将主机的响应返回给客户端，代理服务器在这里相当于端口转发服务。例如：
 	```
-	gost -L=https://gost:gost@:443?probeResistance=host:www.example.com:8080
+	gost -L=https://gost:gost@:443?probeResist=host:www.example.com:8080
 	```
 
 * `file` - 对应的value为本地文件路径，代理服务器会回复客户端200响应码，并将指定的文件内容作为Body发送给客户端。例如：
 	```
-	gost -L=http2://gost:gost@:443?probeResistance=file:/send/to/client/file.txt
+	gost -L=http2://gost:gost@:443?probeResist=file:/send/to/client/file.txt
 	```
 
 ## knock
