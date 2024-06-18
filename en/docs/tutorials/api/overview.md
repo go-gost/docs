@@ -93,9 +93,9 @@ Authentication information can be set through the `auth` or `auther` options. If
 
 ## Online Test
 
-You can use [online environment](https://gost.run/play/webapi/config) to test, or try it directly in swaggerUI below. For API documentation, please refer to [API Documentation](/swagger-ui/).
+You can use [online environment](https://api.gost.run/config) to test, or try it directly in swaggerUI below. For API documentation, please refer to [API Documentation](https://api.gost.run/swagger-ui/?url=/docs/swagger.yaml).
 
-The GOST program has built-in swagger API documentation. If the Web API service is enabled locally, you can also use [https://gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml]( /swagger-ui/?url=http://localhost:18080/docs/swagger.yaml) to try to configure the local service (this assumes that the local Web API service is running on port 18080).
+The GOST program has built-in swagger API documentation. If the Web API service is enabled locally, you can also use [https://api.gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml](https://api.gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml) to try to configure the local service (this assumes that the local Web API service is running on port 18080).
 
 !!! note "Switch Scheme"
 	The default scheme in SwaggerUI is HTTPS. If you want to test local services, you need to manually switch to HTTP.
