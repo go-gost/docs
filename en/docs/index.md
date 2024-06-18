@@ -20,7 +20,7 @@
 - [x] Plugin system
 - [x] Prometheus metrics
 - [x] Web API
-- [ ] GUI/WebUI
+- [x] GUI/WebUI
 
 ## Overview
 
@@ -74,7 +74,9 @@ docker run --rm gogost/gost -V
 
 ### WebUI
 
-[cnwhy/gost-ui](https://github.com/cnwhy/gost-ui)
+[ui.gost.run](https://ui.gost.run)
+
+[go-gost/gost-ui](https://github.com/go-gost/gost-ui)
 
 ### Shadowsocks Android Plugin
 

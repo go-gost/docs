@@ -20,7 +20,7 @@
 - [x] 监控指标
 - [x] 动态配置
 - [x] Web API
-- [ ] GUI/WebUI
+- [x] GUI/WebUI
 
 ## 概览
 
@@ -74,7 +74,9 @@ docker run --rm gogost/gost -V
 
 ### WebUI
 
-[cnwhy/gost-ui](https://github.com/cnwhy/gost-ui)
+[ui.gost.run](https://ui.gost.run)
+
+[go-gost/gost-ui](https://github.com/go-gost/gost-ui)
 
 ### Shadowsocks Android插件
 
