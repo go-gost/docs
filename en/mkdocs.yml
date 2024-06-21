@@ -112,6 +112,9 @@ nav:
     - Observer: concepts/observer.md
     - Plugin System: concepts/plugin.md
   - Tutorials:
+    - WebAPI:
+      - Overview: tutorials/api/overview.md
+      - Dynamic Configuration: tutorials/api/config.md
     - TLS: tutorials/tls.md
     - HTTP Tunnel: tutorials/http-tunnel.md
     - Port Forwarding: tutorials/port-forwarding.md
@@ -131,9 +134,6 @@ nav:
     - Serial Port Redirector: tutorials/serial.md
     - Prometheus Metrics: tutorials/metrics.md
     - Log: tutorials/log.md
-    - WebAPI:
-      - Overview: tutorials/api/overview.md
-      - Dynamic Configuration: tutorials/api/config.md
   - References:
     - Configuration: 
       - CLI: reference/configuration/cmd.md

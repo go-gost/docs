@@ -157,6 +157,9 @@ nav:
       - KCP: tutorials/protocols/kcp.md
       - SSH: tutorials/protocols/ssh.md
       - MTCP: tutorials/protocols/mtcp.md
+    - WebAPI:
+      - 概述: tutorials/api/overview.md
+      - 动态配置: tutorials/api/config.md
     - TLS设置: tutorials/tls.md
     - HTTP通道: tutorials/http-tunnel.md
     - 端口转发: tutorials/port-forwarding.md
@@ -175,9 +178,6 @@ nav:
     - 串口重定向: tutorials/serial.md
     - 监控指标: tutorials/metrics.md
     - 日志: tutorials/log.md
-    - WebAPI:
-      - 概述: tutorials/api/overview.md
-      - 动态配置: tutorials/api/config.md
   - 参考:
     - 配置: 
       - 命令行: reference/configuration/cmd.md

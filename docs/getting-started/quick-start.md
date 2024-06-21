@@ -139,7 +139,7 @@ GOST按照`-F`设置的顺序将请求最终转发给192.168.1.2:1080处理。
 
 ## 转发模式
 
-更详细的使用说明请参考[端口转发](../tutorials/port-forwarding/)。
+更详细的使用说明请参考[端口转发](../tutorials/port-forwarding.md)。
 
 ### TCP本地端口转发
 
