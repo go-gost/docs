@@ -37,10 +37,6 @@ GOST完整的实现了SOCKS5协议的所有功能，包括[RFC1928](https://www.
     ```bash
     gost -L socks5://user:pass@:1080
     ```
-	或
-	```bash
-    gost -L socks://user:pass@:1080
-	```
 
 === "配置文件"
 
@@ -50,10 +46,9 @@ GOST完整的实现了SOCKS5协议的所有功能，包括[RFC1928](https://www.
       addr: :1080
       handler:
         type: socks5
-        # type: socks
-		auth:
-		  username: user
-		  password: pass
+        auth:
+          username: user
+          password: pass
       listener:
         type: tcp
     ```
@@ -89,10 +84,12 @@ BIND功能在服务端默认是禁用状态，可以通过`bind`选项来开启�
 
 UDP中转功能在服务端默认是禁用状态，可以通过`udp`选项来开启此功能。
 
+**服务端**
+
 === "命令行"
 
     ```bash
-    gost -L socks5://user:pass@:1080?udp=true
+    gost -L "socks5://:1080?udp=true&udpBufferSize=4096"
     ```
 
 === "配置文件"
@@ -103,14 +100,91 @@ UDP中转功能在服务端默认是禁用状态，可以通过`udp`选项来开
       addr: :1080
       handler:
         type: socks5
-        auth:
-          username: user
-          password: pass
         metadata:
           udp: true
+          udpBufferSize: 4096
       listener:
         type: tcp
     ```
+
+`udp` (bool, default=false)
+:    开启UDP中转功能，默认禁用。
+
+`udpBufferSize` (int, default=4096)
+:    UDP缓冲区大小。最小值为：最大UDP包大小+10，否则数据中转会失败。
+
+**客户端**
+
+=== "命令行"
+
+    ```bash
+    gost -L udp://:1053/:53 -F "socks5://:1080?relay=udp&udpBufferSize=4096"
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :1053
+      handler:
+        type: udp
+        chain: chain-0
+      listener:
+        type: udp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: :53
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :1080
+          connector:
+            type: socks5
+            metadata:
+              relay: udp
+              udpBufferSize: 4096
+          dialer:
+            type: tcp
+    ```
+
+`relay` (bool, default=false)
+:    使用标准的UDP中转方式传输数据，默认使用UDP-TUN(UDP-Over-TCP tunnel)方式。
+
+`udpBufferSize` (int, default=4096)
+:    UDP缓冲区大小。最小值为：最大UDP包大小+10，否则数据中转会失败。
+
+#### iperf测试
+
+可以通过iperf3来测试UDP中转功能。
+
+开启iperf3服务
+
+```bash
+iperf3 -s
+```
+
+开启标准SOCKS5服务(也可以使用其他支持UDP中转的SOCKS5服务)
+
+```bash
+gost -L "socks5://:1080?notls=true&udp=true&udpBufferSize=65535"
+```
+
+开启端口转发
+
+```bash
+gost -L "tcp://:15201/:5201" -L "udp://:15201/:5201?keepalive=true&readBufferSize=65535" -F "socks5://:1080?relay=udp&udpBufferSize=65535"
+```
+
+执行perf3客户端测试
+
+```bash
+iperf3 -c 127.0.0.1 -p 15201 -u
+```
 
 ### 扩展功能
 
@@ -202,7 +276,7 @@ GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2
         - name: node-0
           addr: :1080
           connector:
-            type: socks
+            type: socks5
           dialer:
             type: tcp
     ```
@@ -264,7 +338,7 @@ GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此�
         - name: node-0
           addr: :1080
           connector:
-            type: socks
+            type: socks5
           dialer:
             type: tcp
     ```

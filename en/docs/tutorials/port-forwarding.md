@@ -39,9 +39,11 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 You can also set multiple destination addresses for one-to-many port forwarding:
 
 === "CLI"
+
 	```bash
-	gost -L tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080?strategy=round&maxFails=1&failTimeout=30s
+	gost -L "tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080?strategy=round&maxFails=1&failTimeout=30s"
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -73,44 +75,54 @@ After each forwarding request is received, the node selector in the forwarder wi
 Similar to TCP port forwarding, single and multiple destination forwarding addresses can also be specified.
 
 === "CLI"
+
 	```bash
-	gost -L udp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?keepAlive=true&ttl=5s
+	gost -L "udp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?keepAlive=true&ttl=5s&readBufferSize=4096"
 	```
+
 === "File (YAML)"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: :10053
-	  handler:
-		type: udp
-	  listener:
-		type: udp
-		metadata:
-		  keepAlive: true
-		  ttl: 5s
-	  forwarder:
-	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:53
-		- name: target-1
-		  addr: 192.168.1.2:53
-		- name: target-2
-		  addr: 192.168.1.3:53
-	```
+    services:
+    - name: service-0
+      addr: :10053
+      handler:
+        type: udp
+      listener:
+        type: udp
+        metadata:
+          keepAlive: true
+          ttl: 5s
+          readBufferSize: 4096
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 192.168.1.1:53
+        - name: target-1
+          addr: 192.168.1.2:53
+        - name: target-2
+          addr: 192.168.1.3:53
+    ```
 
-Each client corresponds to a forwarding channel. When the `keepAlive` option is set to `false`, the channel will be closed immediately after the requested response data is returned to the client.
+`keepalive` (bool, default=false)
+:    Each client corresponds to a forwarding channel. When the `keepAlive` option is set to `false`, the channel will be closed immediately after the requested response data is returned to the client.
 
-When the `keepAlive` option is set to `true`, the forwarding service does not receive data from the forwarding target host within a certain period of time, and the forwarding channel will be marked as idle. The forwarding service internally checks whether the forwarding channel is idle according to the period specified by the `ttl` option (default value is 5 seconds). If it is idle, the channel will be closed. An idle channel will be closed for at most two check cycles.
+`ttl` (duration, default=5s)
+:    When the `keepAlive` option is set to `true`, the forwarding service does not receive data from the forwarding target host within a certain period of time, and the forwarding channel will be marked as idle. The forwarding service internally checks whether the forwarding channel is idle according to the period specified by the `ttl` option (default value is 5 seconds). If it is idle, the channel will be closed. An idle channel will be closed for at most two check cycles.
+
+`readBufferSize` (int, default=4096)
+:    UDP read buffer size, also the maximum size of UDP data packet. If the data packet size exceeds this setting value, the data will be truncated.
 
 ### Forwarding Chain
 
 Port forwarding can be used in conjunction with forwarding chains to perform indirect forwarding.
 
 === "CLI"
+
 	```bash
-    gost -L=tcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
+    gost -L tcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -142,9 +154,11 @@ Port forwarding can be used in conjunction with forwarding chains to perform ind
 Map the local TCP port 8080 to port 80 of 192.168.1.1 through the forwarding chain.
 
 === "CLI"
+
 	```bash
-    gost -L=udp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
+    gost -L udp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -179,13 +193,17 @@ Map the local UDP port 10053 to port 53 of 192.168.1.1 through the forwarding ch
 	When forwarding chains are used in UDP local port forwarding, the last node at the end of the forwarding chain must be of the following type:
 
 	* GOST HTTP proxy service and enable UDP forwarding function, using UDP-over-TCP method.
-	```
+
+	```bash
 	gost -L http://:8080?udp=true
 	```
+
 	* GOST SOCKS5 proxy service and enable UDP forwarding function, using UDP-over-TCP method.
-	```
+
+	```bash
 	gost -L socks5://:1080?udp=true
 	```
+
 	* Relay service, using UDP-over-TCP method.
 	* SSU service.
 
@@ -197,9 +215,11 @@ Map the local UDP port 10053 to port 53 of 192.168.1.1 through the forwarding ch
 TCP port forwarding can be indirectly forwarded by means of the port forwarding function of the standard SSH protocol
 
 === "CLI"
+
 	```bash
-    gost -L=tcp://:8080/192.168.1.1:80 -F sshd://user:pass@192.168.1.2:22
+    gost -L tcp://:8080/192.168.1.1:80 -F sshd://user:pass@192.168.1.2:22
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -234,9 +254,11 @@ TCP port forwarding can be indirectly forwarded by means of the port forwarding 
 The 192.168.1.2:22 service here can be the standard SSH service of the system itself, or the sshd type service of GOST
 
 === "CLI"
-    ```
+
+    ```bash
 	gost -L sshd://user:pass@:22
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -257,9 +279,11 @@ The 192.168.1.2:22 service here can be the standard SSH service of the system it
 ### TCP
 
 === "CLI"
+
 	```bash
 	gost -L rtcp://:8080/192.168.1.1:80
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -281,9 +305,11 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 ### UDP
 
 === "CLI"
+
 	```bash
 	gost -L rudp://:10053/192.168.1.1:53,192.168.1.2:53,192.168.1.3:53?ttl=5s
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -312,9 +338,11 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 ### Forwarding Chain
 
 === "CLI"
+
 	```bash
-    gost -L=rtcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
+    gost -L rtcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -346,9 +374,11 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 According to the address specified by the rtcp service, listen on the 8080 TCP port on the host 192.168.1.2 through the forwarding chain. After receiving the request, it forwards the data to the rtcp service through the forwarding chain, and the rtcp service forwards the request to port 192.168.1.1:80.
 
 === "CLI"
+
 	```bash
-    gost -L=rudp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
+    gost -L rudp://:10053/192.168.1.1:53 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -402,9 +432,11 @@ According to the address specified by the rudp service, listen on port 10053 on 
 TCP remote port forwarding can be indirectly forwarded by means of the remote port forwarding function of the standard SSH protocol:
 
 === "CLI"
+
 	```bash
-    gost -L=rtcp://:8080/192.168.1.1:80 -F sshd://user:pass@192.168.1.2:22
+    gost -L rtcp://:8080/192.168.1.1:80 -F sshd://user:pass@192.168.1.2:22
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -493,9 +525,11 @@ The above forwarding method can be regarded as client forwarding, and the client
 ### Server
 
 === "CLI"
+
 	```bash
 	gost -L tls://:8443/192.168.1.1:80
 	```
+
 === "File (YAML)"
 
     ```yaml
@@ -514,9 +548,11 @@ The above forwarding method can be regarded as client forwarding, and the client
 ### Client
 
 === "CLI"
+
 	```bash
-    gost -L=tcp://:8080 -F forward+tls://:8443
+    gost -L tcp://:8080 -F forward+tls://:8443
 	```
+
 === "File (YAML)"
 
     ```yaml
