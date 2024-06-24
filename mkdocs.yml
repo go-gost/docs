@@ -173,6 +173,7 @@ nav:
     - 透明代理: tutorials/redirect.md
     - 多网络接口: tutorials/multi-homed.md
     - TUN/TAP设备: tutorials/tuntap.md
+    - 网络命名空间: tutorials/netns.md
     - ICMP通道: tutorials/icmp.md
     - Unix域套接字重定向: tutorials/unix.md
     - 串口重定向: tutorials/serial.md

@@ -129,6 +129,7 @@ nav:
     - Transparent Proxy: tutorials/redirect.md
     - Multi-homed Host: tutorials/multi-homed.md
     - TUN/TAP Device: tutorials/tuntap.md
+    - Network Namespace: tutorials/netns.md
     - ICMP Tunnel: tutorials/icmp.md
     - Unix Domain Socket Redirector: tutorials/unix.md
     - Serial Port Redirector: tutorials/serial.md
