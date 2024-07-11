@@ -87,7 +87,7 @@ ip -n ns2 link set dev veth3 up
 
 ## 使用网络命名空间
 
-GOST中的网络命名空间有以下几种用法：
+通过`netns`选项来指定命名空间名称或路径。GOST中的网络命名空间有以下几种用法：
 
 ### 监听和转发在不同的命名空间
 
@@ -122,7 +122,7 @@ GOST中的网络命名空间有以下几种用法：
 === "命令行"
 
     ```bash
-    gost -L "tcp://10.0.0.1:8000/10.0.1.1:8000?netns=ns1&netns.out=ns2"
+    gost -L "tcp://10.0.0.1:8000/10.0.1.1:8000?netns=ns1&netns.out=/run/netns/ns2"
     ```
 
 === "配置文件"
@@ -141,7 +141,7 @@ GOST中的网络命名空间有以下几种用法：
           addr: 10.0.1.1:8000
       metadata:
         netns: ns1
-        netns.out: ns2
+        netns.out: /run/netns/ns2
     ```
 
 将`ns1`中的8000端口映射到`ns2`中的8000端口。

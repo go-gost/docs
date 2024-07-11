@@ -87,7 +87,7 @@ You can view the network status of `ns2` through `ip -n ns2 addr`:
 
 ## Using Network Namespaces
 
-The network namespace in GOST has the following usages:
+The namespace name or path can be specified via the `netns` option. The network namespace in GOST has the following usages:
 
 ### Listening And Forwarding In Different Namespaces
 
@@ -122,7 +122,7 @@ You can also specify the namespace where the forwarding is located through the `
 === "CLI"
 
     ```bash
-    gost -L "tcp://10.0.0.1:8000/10.0.1.1:8000?netns=ns1&netns.out=ns2"
+    gost -L "tcp://10.0.0.1:8000/10.0.1.1:8000?netns=ns1&netns.out=/run/netns/ns2"
     ```
 
 === "File (YAML)"
@@ -141,7 +141,7 @@ You can also specify the namespace where the forwarding is located through the `
           addr: 10.0.1.1:8000
       metadata:
         netns: ns1
-        netns.out: ns2
+        netns.out: /run/netns/ns2
     ```
 
 Mapping port 8000 in `ns1` to port 8000 in `ns2`.
