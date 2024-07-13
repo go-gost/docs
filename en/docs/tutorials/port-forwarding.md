@@ -472,50 +472,56 @@ The 192.168.1.2:22 service here can be the standard SSH service of the system it
 
 ## Port Range
 
-The target node addresses in forwarder are supported using the port range format.
+The port range format is supported in command line mode.
 
-=== "CLI"
-
-	```bash
-	gost -L tcp://:8080/192.168.1.1:8000-8003
-	```
-
-=== "File (YAML)"
-
-    ```yaml
-	services:
-	- name: service-0
-	  addr: :8080
-	  handler:
-		type: tcp
-	  listener:
-		type: tcp
-	  forwarder:
-	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:8000-8003
-	```
+```bash
+gost -L tcp://:8000-8003/192.168.1.1:8000-8003
+```
 
 It is equivalent to:
 
 ```yaml
 services:
-- name: service-0
-    addr: :8080
+  - name: service-0
+    addr: :8000
     handler:
       type: tcp
     listener:
       type: tcp
     forwarder:
       nodes:
-      - name: target-0
-    	addr: 192.168.1.1:8000
-      - name: target-1
-    	addr: 192.168.1.1:8001
-      - name: target-2
-    	addr: 192.168.1.1:8002
-      - name: target-3
-    	addr: 192.168.1.1:8003
+        - name: target-0
+          addr: 192.168.1.1:8000
+  - name: service-1
+    addr: :8001
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-1
+          addr: 192.168.1.1:8001
+  - name: service-2
+    addr: :8002
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-2
+          addr: 192.168.1.1:8002
+  - name: service-3
+    addr: :8003
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-3
+          addr: 192.168.1.1:8003
 ```
 
 ## Server-side Forwarding

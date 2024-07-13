@@ -12,7 +12,7 @@ comments: true
 !!! tip "流量嗅探"
     TCP透明代理支持对HTTP和TLS流量进行识别，识别后将使用HTTP`Host`头部信息或TLS的`SNI`扩展信息作为目标访问地址。
 
-    通过`sniffing`参数开启流量嗅探，默认不开启。
+    通过`sniffing`选项开启流量嗅探，默认不开启。通过`sniffing.timeout`选项设置嗅探超时时长。
 
 ## REDIRECT
 
@@ -37,6 +37,7 @@ comments: true
         chain: chain-0
         metadata:
           sniffing: true
+          sniffing.timeout: 5s
       listener:
         type: red
     chains:
@@ -163,6 +164,7 @@ comments: true
         type: red
         metadata:
           sniffing: true
+          sniffing.timeout: 5s
           tproxy: true
       listener:
         type: red
@@ -189,6 +191,7 @@ comments: true
         chain: chain-0
         metadata:
           sniffing: true
+          sniffing.timeout: 5s
           tproxy: true
       listener:
         type: red
@@ -385,29 +388,29 @@ comments: true
 
 通过网络命名空间可以在单机上构建测试环境而不影响正常的网络设置。这里用ns1模拟网关，ns2模拟客户机，默认命名空间模拟目标主机。
 
-新建网络命名空间ns1，通过veth0(172.111.1.1/24)和veth1(172.111.1.2/24)与默认命名空间互连
+新建网络命名空间ns1，通过veth0(10.0.10.1/24)和veth1(10.0.10.2/24)与默认命名空间互连
 
 ```bash
 ip netns add ns1
 ip link add dev veth0 type veth peer name veth1 netns ns1
-ip addr add 172.111.1.1/24 dev veth0
+ip addr add 10.0.10.1/24 dev veth0
 ip link set dev veth0 up
-ip -n ns1 addr add 172.111.1.2/24 dev veth1
+ip -n ns1 addr add 10.0.10.2/24 dev veth1
 ip -n ns1 link set dev lo up
 ip -n ns1 link set dev veth1 up
 ```
 
-新建网络命名空间ns2，通过veth2(172.111.2.1/24)和veth3(172.111.2.2/24)让命名空间ns2与ns1互连，命名空间ns2把ns1作为网关
+新建网络命名空间ns2，通过veth2(10.0.20.1/24)和veth3(10.0.20.2/24)让命名空间ns2与ns1互连，命名空间ns2把ns1作为网关
 
 ```bash
 ip netns add ns2
 ip netns exec ns1 ip link add veth2 type veth peer name veth3 netns ns2
-ip netns exec ns1 ip addr add 172.111.2.1/24 dev veth2
+ip netns exec ns1 ip addr add 10.0.20.1/24 dev veth2
 ip netns exec ns1 ip link set veth2 up
-ip netns exec ns2 ip addr add 172.111.2.2/24 dev veth3
+ip netns exec ns2 ip addr add 10.0.20.2/24 dev veth3
 ip netns exec ns2 ip link set veth3 up
 ip netns exec ns2 ip link set lo up
-ip netns exec ns2 ip route add default via 172.111.2.1 dev veth3
+ip netns exec ns2 ip route add default via 10.0.20.1 dev veth3
 ```
 
 在命名空间ns1中配置路由和iptables规则
@@ -446,7 +449,7 @@ gost -L relay://:8420
 在命名空间ns1中运行GOST透明代理(TCP/UDP)，并通过默认命名空间的relay代理服务中转
 
 ```bash
-ip netns exec ns1 gost -L "red://:12345?tproxy=true" -L "redu://:12345?ttl=30s" -F "relay://172.111.1.1:8420?so_mark=100"
+ip netns exec ns1 gost -L "red://:12345?tproxy=true" -L "redu://:12345?ttl=30s" -F "relay://10.0.10.1:8420?so_mark=100"
 ```
 
 在默认命名空间中运行iperf3服务
@@ -459,10 +462,10 @@ iperf3 -s
 
 ```bash
 # TCP
-ip netns exec ns2 iperf3 -c 172.111.1.1
+ip netns exec ns2 iperf3 -c 10.0.10.1
 
 # UDP
-ip netns exec ns2 iperf3 -c 172.111.1.1 -u
+ip netns exec ns2 iperf3 -c 10.0.10.1 -u
 ```
 
 清理
@@ -471,4 +474,3 @@ ip netns exec ns2 iperf3 -c 172.111.1.1 -u
 ip netns delete ns1
 ip netns delete ns2
 ```
-

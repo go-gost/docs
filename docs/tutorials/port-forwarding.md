@@ -473,50 +473,56 @@ TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能�
 
 ## 端口范围
 
-转发器中的目标节点地址支持使用端口范围格式。
+命令行模式下支持使用端口范围格式。
 
-=== "命令行"
+```bash
+gost -L tcp://:8000-8003/192.168.1.1:8000-8003
+```
 
-	```bash
-	gost -L tcp://:8080/192.168.1.1:8000-8003
-	```
-
-=== "配置文件"
-
-    ```yaml
-	services:
-	- name: service-0
-	  addr: :8080
-	  handler:
-		type: tcp
-	  listener:
-		type: tcp
-	  forwarder:
-	    nodes:
-		- name: target-0
-		  addr: 192.168.1.1:8000-8003
-	```
-
-以上配置等价于
+等价于
 
 ```yaml
 services:
-- name: service-0
-    addr: :8080
+  - name: service-0
+    addr: :8000
     handler:
       type: tcp
     listener:
       type: tcp
     forwarder:
       nodes:
-      - name: target-0
-    	addr: 192.168.1.1:8000
-      - name: target-1
-    	addr: 192.168.1.1:8001
-      - name: target-2
-    	addr: 192.168.1.1:8002
-      - name: target-3
-    	addr: 192.168.1.1:8003
+        - name: target-0
+          addr: 192.168.1.1:8000
+  - name: service-1
+    addr: :8001
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-1
+          addr: 192.168.1.1:8001
+  - name: service-2
+    addr: :8002
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-2
+          addr: 192.168.1.1:8002
+  - name: service-3
+    addr: :8003
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-3
+          addr: 192.168.1.1:8003
 ```
 
 ## 服务端转发

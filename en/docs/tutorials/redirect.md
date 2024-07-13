@@ -384,29 +384,29 @@ Set the mark value via the `so_mark` (command line) or `sockopts` (config file) 
 
 The network namespace allows you to build a test environment on a single machine without affecting the normal network settings. Here, ns1 is used to simulate the gateway, ns2 is used to simulate the client, and the default namespace is used to simulate the target host.
 
-Create a new network namespace ns1, and interconnect it with the default namespace through veth0 (172.111.1.1/24) and veth1 (172.111.1.2/24) pair.
+Create a new network namespace ns1, and interconnect it with the default namespace through veth0 (10.0.10.1/24) and veth1 (10.0.10.2/24) pair.
 
 ```bash
 ip netns add ns1
 ip link add dev veth0 type veth peer name veth1 netns ns1
-ip addr add 172.111.1.1/24 dev veth0
+ip addr add 10.0.10.1/24 dev veth0
 ip link set dev veth0 up
-ip -n ns1 addr add 172.111.1.2/24 dev veth1
+ip -n ns1 addr add 10.0.10.2/24 dev veth1
 ip -n ns1 link set dev lo up
 ip -n ns1 link set dev veth1 up
 ```
 
-Create a new network namespace ns2, and interconnect namespace ns2 with ns1 through veth2 (172.111.2.1/24) and veth3 (172.111.2.2/24) pair. Namespace ns2 uses ns1 as the gateway.
+Create a new network namespace ns2, and interconnect namespace ns2 with ns1 through veth2 (10.0.20.1/24) and veth3 (10.0.20.2/24) pair. Namespace ns2 uses ns1 as the gateway.
 
 ```bash
 ip netns add ns2
 ip netns exec ns1 ip link add veth2 type veth peer name veth3 netns ns2
-ip netns exec ns1 ip addr add 172.111.2.1/24 dev veth2
+ip netns exec ns1 ip addr add 10.0.20.1/24 dev veth2
 ip netns exec ns1 ip link set veth2 up
-ip netns exec ns2 ip addr add 172.111.2.2/24 dev veth3
+ip netns exec ns2 ip addr add 10.0.20.2/24 dev veth3
 ip netns exec ns2 ip link set veth3 up
 ip netns exec ns2 ip link set lo up
-ip netns exec ns2 ip route add default via 172.111.2.1 dev veth3
+ip netns exec ns2 ip route add default via 10.0.20.1 dev veth3
 ```
 
 Configure routing and iptables rules in namespace ns1.
@@ -445,7 +445,7 @@ gost -L relay://:8420
 Run GOST transparent proxy (TCP/UDP) in namespace ns1 and forward through the relay proxy service of the default namespace.
 
 ```bash
-ip netns exec ns1 gost -L "red://:12345?tproxy=true" -L "redu://:12345?ttl=30s" -F "relay://172.111.1.1:8420?so_mark=100"
+ip netns exec ns1 gost -L "red://:12345?tproxy=true" -L "redu://:12345?ttl=30s" -F "relay://10.0.10.1:8420?so_mark=100"
 ```
 
 Run the iperf3 service in the default namespace.
@@ -458,10 +458,10 @@ Execute iperf test in namespace ns2.
 
 ```bash
 # TCP
-ip netns exec ns2 iperf3 -c 172.111.1.1
+ip netns exec ns2 iperf3 -c 10.0.10.1
 
 # UDP
-ip netns exec ns2 iperf3 -c 172.111.1.1 -u
+ip netns exec ns2 iperf3 -c 10.0.10.1 -u
 ```
 
 Cleaning
