@@ -354,7 +354,7 @@ services:
 `rewriteBody.match` (string)
 :    Specify content matching pattern (regular expressions are supported).
 
-`rewrite.replacement` (string)
+`rewriteBody.replacement` (string)
 :    Set the replacement content.
 
 `rewriteBody.type` (string, default=text/html)

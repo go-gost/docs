@@ -356,7 +356,7 @@ services:
 `rewriteBody.match` (string)
 :    指定内容匹配模式(支持正则表达式)。
 
-`rewrite.replacement` (string)
+`rewriteBody.replacement` (string)
 :    设置替换内容。
 
 `rewriteBody.type` (string, default=text/html)
