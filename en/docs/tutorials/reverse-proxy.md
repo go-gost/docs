@@ -288,7 +288,7 @@ When requesting http://example.com directly, HTTP status code 401 will be return
 
 ### Rewrite URL Path
 
-Define URL path rewriting rules by setting the `http.rewrite` option. `rewrite.match` specifies the path matching mode (supports regular expression), and `rewrite.replacement` sets the path replacement content.
+Define URL path rewriting rules by setting the `http.rewrite` option. 
 
 ```yaml hl_lines="16-21"
 services:
@@ -314,9 +314,51 @@ services:
           replacement: /$1
 ```
 
+`rewrite.match` (string)
+:    specify path matching pattern (supports regular expression).
+
+`rewrite.replacement` (string)
+:    set the path replacement content.
+
 `http://example.com/api/login` will be rewritten to `http://example.com/user/login`.
 
 `http://example.com/api/logout` will be rewritten to `http://example.com/logout`.
+
+### Rewrite Response Body
+
+Define the response body rewriting rules by setting the `http.rewriteBody` option.
+
+```yaml hl_lines="16-20"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+      http:
+        rewriteBody:
+        - match: foo
+          replacement: bar
+          type: text/html
+```
+
+`rewriteBody.match` (string)
+:    Specify content matching pattern (regular expressions are supported).
+
+`rewrite.replacement` (string)
+:    Set the replacement content.
+
+`rewriteBody.type` (string, default=text/html)
+:    Set the content type of the response, matching the `Content-Type` header. It can be multiple types separated by `,` or `*` to match all types.
 
 ## TLS Settings
 

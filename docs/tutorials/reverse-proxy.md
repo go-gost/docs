@@ -290,7 +290,7 @@ services:
 
 ### URL路径重写
 
-通过设置`http.rewrite`选项定义URL路径重写规则。`rewrite.match`指定路径匹配模式(支持正则表达式)，`rewrite.replacement`设置路径替换内容。
+通过设置`http.rewrite`选项定义URL路径重写规则。
 
 ```yaml hl_lines="16-21"
 services:
@@ -316,9 +316,51 @@ services:
           replacement: /$1
 ```
 
+`rewrite.match` (string)
+:    指定路径匹配模式(支持正则表达式)。
+
+`rewrite.replacement` (string)
+:    设置路径替换内容。
+
 `http://example.com/api/login`会被重写为`http://example.com/user/login`。
 
 `http://example.com/api/logout`会被重写为`http://example.com/logout`。
+
+### 重写响应体
+
+通过设置`http.rewriteBody`选项定义响应体重写规则。
+
+```yaml hl_lines="16-20"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+      http:
+        rewriteBody:
+        - match: foo
+          replacement: bar
+          type: text/html
+```
+
+`rewriteBody.match` (string)
+:    指定内容匹配模式(支持正则表达式)。
+
+`rewrite.replacement` (string)
+:    设置替换内容。
+
+`rewriteBody.type` (string, default=text/html)
+:    设置响应的内容类型，与`Content-Type`匹配。可以是`,`分割的多个类型或`*`代表匹配所有类型。
 
 ## TLS请求设置
 
