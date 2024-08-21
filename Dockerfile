@@ -1,4 +1,4 @@
-FROM squidfunk/mkdocs-material:9.5.19 AS builder
+FROM squidfunk/mkdocs-material:9.5.32 AS builder
 
 RUN pip install jieba
 
