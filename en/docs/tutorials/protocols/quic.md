@@ -1,19 +1,19 @@
 # QUIC
 
-QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[quic-go/quic-go](https://github.com/quic-go/quic-go)库。
+QUIC is a data channel type in GOST. The implementation of QUIC depends on the [quic-go/quic-go](https://github.com/quic-go/quic-go) library.
 
-!!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+!!! tip "TLS Certificate Configuration"
+    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
 
-## 示例
+## Usage
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+quic://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -25,19 +25,19 @@ QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[quic-go/quic-
         type: quic
     ```
 
-## 选项
+## Options
 
-### 心跳
+### Keep-Alive
 
-客户端或服务端可以通过`keepalive`选项开启心跳，并通过`ttl`选项设置心跳包发送的间隔时长。
+The client or server can enable keep-alive through `keepalive` option, and set the interval for sending heartbeat packets through `ttl` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F "quic://:8443?keepalive=true&ttl=10s"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -64,19 +64,19 @@ QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[quic-go/quic-
               ttl: 10s
     ```
 
-## 代理协议
+## Proxy
 
-QUIC数据通道可以与各种代理协议组合使用。
+QUIC tunnel can be used in combination with various proxy protocols.
 
 ### HTTP Over QUIC
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+quic://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -88,18 +88,18 @@ QUIC数据通道可以与各种代理协议组合使用。
         type: quic
     ```
 
-!!! note "QUIC与HTTP3"
-    HTTP-over-QUIC并不是HTTP3，因此不能将一个HTTP-over-QUIC服务当作HTTP3服务使用。
+!!! note "QUIC and HTTP3"
+    HTTP-over-QUIC is not HTTP3, so you cannot use an HTTP-over-QUIC service as an HTTP3 service.
 
 ### SOCKS5 Over QUIC
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+quic://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -113,13 +113,13 @@ QUIC数据通道可以与各种代理协议组合使用。
 
 ### Relay Over QUIC
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+quic://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -131,23 +131,25 @@ QUIC数据通道可以与各种代理协议组合使用。
         type: quic
     ```
 
-## 端口转发
+## Port Forwarding
 
-QUIC通道也可以用作端口转发。
+QUIC tunnel can also be used as port forwarding.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L quic://:8443/:1080 -L socks5://:1080
     ```
-    等同于
+
+    is equivalent to
+
     ```bash
     gost -L forward+quic://:8443/:1080 -L socks5://:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -169,9 +171,10 @@ QUIC通道也可以用作端口转发。
         type: tcp
     ```
 
-通过使用QUIC数据通道的端口转发，给1080端口的SOCKS5代理服务增加了QUIC数据通道。
+By using port forwarding of the QUIC tunnel, a QUIC data channel is added to the SOCKS5 proxy service on port 1080.
 
-此时8443端口等同于：
+At this time, port 8443 is equivalent to:
+
 
 ```bash
 gost -L socks5+quic://:8443

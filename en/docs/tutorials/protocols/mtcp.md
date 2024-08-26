@@ -1,16 +1,16 @@
 # MTCP
 
-具有多路复用功能的TCP数据通道。多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。
+TCP data channel with multiplexing function. Multiplexing is based on [xtaci/smux](https://github.com/xtaci/smux) library.
 
-## 用法
+## Usage
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L mtcp://:8000
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -30,42 +30,44 @@
           mux.maxStreamBuffer: 65536
     ```
 
-## 选项 
+
+## Options
 
 `mux.version` (int, default=2)
-:    SMUX协议版本
+:    SMUX protocol version.
 
 `mux.keepaliveDisabled` (bool, default=false)
-:    是否禁用心跳
+:    Whether to disable keep-alive.
 
 `mux.keepaliveInterval` (duration, default=10s)
-:    心跳间隔时长
+:    Heartbeat interval.
 
 `mux.keepaliveTimeout` (duration, default=30s)
-:    心跳超时时长
+:    Heartbeat timeout.
 
 `mux.maxFrameSize` (int, default=32768)
-:    帧最大长度
+:    Maximum frame length.
 
 `mux.maxReceiveBuffer` (int, default=4194304)
-:    接收缓冲区大小
+:    Receive buffer size.
 
 `mux.maxStreamBuffer` (int, default=65536)
-:    Steam缓冲区大小
+:    Steam Buffer Size.
 
-## 代理协议
 
-MTCP数据通道可以与各种代理协议组合使用。
+## Proxy
+
+MTCP tunnel can be used in combination with various proxy protocols.
 
 ### HTTP Over MTCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+mtcp://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -79,13 +81,13 @@ MTCP数据通道可以与各种代理协议组合使用。
 
 ### SOCKS5 Over MTCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+mtcp://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -99,13 +101,13 @@ MTCP数据通道可以与各种代理协议组合使用。
 
 ### Relay Over MTCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+mtcp://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -117,25 +119,25 @@ MTCP数据通道可以与各种代理协议组合使用。
         type: mtcp
     ```
 
-## 端口转发
+## Port Forwarding
 
-MTCP通道也可以用作端口转发。
+MTCP tunnel can also be used as port forwarding.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L mtcp://:8443/:8080 -L http://:8080
     ```
 
-    等同于
+    is equivalent to
 
     ```bash
     gost -L forward+mtcp://:8443/:8080 -L http://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:

@@ -1,18 +1,18 @@
 # SNI
 
-[SNI](https://www.cloudflare.com/zh-cn/learning/ssl/what-is-sni/)(Server Name Indication)是TLS协议的扩展，包含在TLS握手的流程中(Client Hello)，用来标识所访问目标主机名。SNI代理通过解析TLS握手信息中的SNI部分，从而获取目标访问地址。
+[SNI](https://www.cloudflare.com/zh-cn/learning/ssl/what-is-sni/) (Server Name Indication) is an extension of the TLS protocol and is included in the TLS handshake process (Client Hello) to identify the target hostname. The SNI proxy obtains the target access address by parsing the SNI part in the TLS handshake information.
 
-SNI代理同时也接受HTTP请求，使用HTTP的`Host`头作为目标访问地址。
+The SNI proxy also accepts HTTP requests, using the HTTP `Host` header as the target address.
 
-## 标准SNI代理
+## Standard SNI Proxy
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L sni://:443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -24,17 +24,17 @@ SNI代理同时也接受HTTP请求，使用HTTP的`Host`头作为目标访问地
         type: tcp
     ```
 
-## Host混淆
+## Host Obfuscation
 
-SNI客户端可以通过`host`选项来指定Host别名，SNI客户端会将TLS握手中的SNI部分或HTTP请求头中的Host替换为host选项指定的内容。
+The SNI client can specify the Host alias through `host` option. The SNI client will replace the SNI part in the TLS handshake or the Host in the HTTP request header with the content specified by the host option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F sni://:443?host=example.com
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -61,19 +61,19 @@ SNI客户端可以通过`host`选项来指定Host别名，SNI客户端会将TLS�
     ```
 
 
-## 数据通道
+## Data Channel
 
-SNI代理属于数据处理层，因此也可以与各种数据通道组合使用。
+The SNI proxy belongs to the data processing layer, so it can also be used in combination with various data channels.
 
 ### SNI Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L sni+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -87,7 +87,7 @@ SNI代理属于数据处理层，因此也可以与各种数据通道组合使�
 
 ### SNI Over Websocket
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L sni+ws://:8080
@@ -97,7 +97,7 @@ SNI代理属于数据处理层，因此也可以与各种数据通道组合使�
     gost -L sni+wss://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -112,13 +112,13 @@ SNI代理属于数据处理层，因此也可以与各种数据通道组合使�
 
 ### SS Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L sni+kcp://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:

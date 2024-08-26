@@ -1,21 +1,21 @@
 # HTTP2
 
-HTTP2有两种模式：代理模式和通道模式。
+HTTP2 has two modes: proxy mode and tunnel mode.
 
-!!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+!!! tip "TLS Certificate Configuration"
+    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
 
-## 代理模式
+## Proxy Mode
 
-在代理模式中，HTTP2被用作代理协议，HTTP2代理的数据通道层必须为`http2`。
+In proxy mode, HTTP2 is used as the proxy protocol and the data channel layer of the HTTP2 proxy must be `http2`.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http2://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -27,11 +27,11 @@ HTTP2有两种模式：代理模式和通道模式。
         type: http2
     ```
 
-## 通道模式
+## Tunnel Mode
 
-在通道模式中，HTTP2被用作数据通道，分为加密(h2)和明文(h2c)两种。
+In tunnel mode, HTTP2 is used as the data channel, which is divided into encrypted (h2) and plain text (h2c).
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+h2://:8443
@@ -41,7 +41,7 @@ HTTP2有两种模式：代理模式和通道模式。
     gost -L http+h2c://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -54,22 +54,22 @@ HTTP2有两种模式：代理模式和通道模式。
         # type: h2c
     ```
 
-### 自定义请求路径
+### Custom Request Path
 
-HTTP2数据通道默认使用`CONNECT`方法建立连接，可以通过`path`选项自定义请求路径，此时则采用`GET`方法建立连接。
+The HTTP2 data channel uses `CONNECT` method to establish a connection by default. You can customize the request path through `path` option. In this case, the method `GET` is used to establish a connection.
 
-!!! note "路径匹配验证"
-    仅当客户端和服务端设定的`path`选项相同时，连接才能成功建立。
+!!! note "Path Matching Verification"
+    The connection can be successfully established only when the `path` option set by the client and the server are the same.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+h2://:8443?path=/http2
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="9"
     services:
@@ -83,15 +83,15 @@ HTTP2数据通道默认使用`CONNECT`方法建立连接，可以通过`path`选
 		  path: /http2
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F http+h2://:8443?path=/http2
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="21"
     services:
@@ -117,17 +117,17 @@ HTTP2数据通道默认使用`CONNECT`方法建立连接，可以通过`path`选
               path: /http2
     ```
 
-### 自定义请求主机名
+### Custom Request Hostname
 
-HTTP2数据通道客户端默认使用节点地址(-F参数或nodes.addr中指定的地址)作为请求主机名(`Host`头部信息)，可以通过`host`选项自定义请求主机名。
+By default, the HTTP2 data channel client uses the node address (-F parameter or the address specified in nodes.addr) as the request hostname (HTTP `Host` header). The request hostname can be customized through `host` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F http+h2://:8443?host=example.com
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="21"
     services:
@@ -153,9 +153,9 @@ HTTP2数据通道客户端默认使用节点地址(-F参数或nodes.addr中指�
               host: example.com
     ```
 
-### 自定义HTTP请求头
+### Custom HTTP Request Headers
 
-通过`header`选项可以自定义请求头部信息。
+You can customize the request header information through `header` option.
 
 ```yaml hl_lines="21-23"
 services:

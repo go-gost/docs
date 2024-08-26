@@ -1,25 +1,25 @@
 # HTTP3
 
-HTTP3有两种模式：通道模式(数据通道)和反向代理模式。
+HTTP3 has two modes: tunnel mode (data channel) and reverse proxy mode.
 
-!!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+!!! tip "TLS Certificate Configuration"
+    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
 
-## 数据通道
+## Data Channel
 
-HTTP3的数据通道有两种模式：PHT和WebTransport。
+HTTP3's data channel has two modes: PHT and WebTransport.
 
 ### PHT
 
-由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](/tutorials/protocols/pht/)来实现数据通道功能。
+Since HTTP3 is similar to HTTP protocol, it is used for Web data transmission and cannot be used directly as a data channel. The HTTP3 data channel in GOST adopts PHT-over-HTTP3, which uses [PHT](/en/tutorials/protocols/pht/) on top of HTTP3 protocol to implement the data channel function.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "h3://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -37,15 +37,15 @@ HTTP3的数据通道有两种模式：PHT和WebTransport。
 
 ### WebTransport
 
-与HTTP协议中的Websocket类似，HTTP3中也定义了一个用于双向数据传输的扩展协议[WebTransport](https://web.dev/webtransport/)。
+Similar to Websocket in the HTTP protocol, HTTP3 also defines an extended protocol [WebTransport](https://web.dev/webtransport/) for bidirectional data transmission.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "wt://:8443"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -57,11 +57,11 @@ HTTP3的数据通道有两种模式：PHT和WebTransport。
         type: wt
     ```
 
-## 反向代理
+## Reverse Proxy
 
-HTTP3-to-HTTP反向代理。
+HTTP3-to-HTTP reverse proxy.
 
-HTTP3反向代理服务可以动态的给后端HTTP服务添加HTTP/3支持。
+The HTTP3 reverse proxy service can dynamically add HTTP/3 support to the backend HTTP service.
 
 ```yaml
 services:

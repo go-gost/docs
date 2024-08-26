@@ -1,20 +1,20 @@
 # SSH
 
-SSH是GOST中的一种数据通道类型。
+SSH is a data channel type in GOST.
 
-SSH有两种模式：隧道模式和转发模式。
+SSH has two modes: tunnel mode and forwarding mode.
 
-## 隧道模式
+## Tunnel Mode
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+ssh://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -26,15 +26,15 @@ SSH有两种模式：隧道模式和转发模式。
         type: ssh
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L :8080 -F relay+ssh://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -58,19 +58,19 @@ SSH有两种模式：隧道模式和转发模式。
             type: ssh
     ```
 
-## 转发模式
+## Forwarding Mode
 
-采用标准SSH协议的端口转发功能，仅支持TCP。
+The port forwarding function of the standard SSH protocol is used and only TCP is supported.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L sshd://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -82,15 +82,15 @@ SSH有两种模式：隧道模式和转发模式。
         type: sshd
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L tcp://:8080/:80 -F sshd://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -118,33 +118,31 @@ SSH有两种模式：隧道模式和转发模式。
             type: sshd
     ```
 
-!!! tip "使用系统本身的SSH服务"
-    在转发模式下服务端可以直接使用系统本身的SSH服务，例如Linux中的[OpenSSH(sshd)服务](https://linux.die.net/man/8/sshd)。
+!!! tip "Use the system's native SSH service"
+    In forwarding mode, the server can directly use the system's standard SSH service, such as the [OpenSSH](https://linux.die.net/man/8/sshd) (sshd) service in Linux .
 
-## 认证
+## Authentication
 
-SSH支持用户名/密码认证和PubKey认证两种认证方式。
+SSH tunnel supports two authentication methods: username-password authentication and PubKey authentication.
 
-### 用户名/密码认证
+### Username-Password Authentication
 
-!!! caution "认证信息作用对象"
-    在命令行模式下，认证信息(user:pass)设置的是SSH通道的认证(Listener和Dialer)，而非Handler和Connector。
-	  此行为仅在使用ssh和sshd通道时有效。
+!!! caution "The Scope of Authentication information"
+    In command line mode, the authentication information (user:pass) sets the authentication of the SSH tunnel (Listener and Dialer), not the Handler and Connector. This behavior is only valid when using ssh or sshd tunnels.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+ssh://user:pass@:2222
     ```
-	  或
 
     ```bash
     gost -L sshd://user:pass@:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -159,20 +157,19 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
           password: pass
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L :8080 -F relay+ssh://user:pass@:2222
     ```
-	  或
 
     ```bash
     gost -L tcp://:8080/:80 -F sshd://user:pass@:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -199,24 +196,23 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
               password: pass
     ```
 
-### PubKey认证
+### PubKey Authentication
 
-**服务端**
+**Server**
 
-服务端通过`authorizedKeys`选项设置已授权客户端公钥列表。
+The server sets the authorized client public key list through `authorizedKeys` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "relay+ssh://:2222?authorizedKeys=/path/to/authorizedKeys"
     ```
-	或
 
     ```bash
     gost -L "sshd://:2222?authorizedKeys=/path/to/authorizedKeys"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -230,22 +226,21 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
           authorizedKeys: /path/to/authorizedKeys
     ```
 
-**客户端**
+**Client**
 
-客户端通过`privateKeyFile`和`passphrase`选项设置证书私钥和私钥密码。
+The client sets the certificate private key and private key password through the `privateKeyFile` and `passphrase` options.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L :8080 -F "relay+ssh://:2222?privateKeyFile=/path/to/privateKeyFile&passphrase=123456"
     ```
-	  或
 
     ```bash
     gost -L tcp://:8080/:80 -F "sshd://:2222?privateKeyFile=/path/to/privateKeyFile&passphrase=123456"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -272,24 +267,24 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 			  passphrase: "123456"
     ```
 
-## 心跳
 
-客户端通过`keepalive`选项开启心跳，并通过`ttl`选项设置心跳包发送的间隔时长(默认30s)。
+### Keep-Alive
 
-也可以通过`keepalive.timeout`选项设置心跳超时时长(默认15s)，`keepalive.retries`选项设置心跳发送重试次数(默认1次)
+The client can enable keep-alive through `keepalive` option and set the interval for sending heartbeat packets through `ttl` option (default value is 30s).
 
-=== "命令行"
+You can also set the heartbeat timeout duration (default value is 15s) through `keepalive.timeout` option and the number of heartbeat retries (default value is 1) through `keepalive.retries` option.
+
+=== "CLI"
 
     ```bash
     gost -L :8080 -F "relay+ssh://:2222?keepalive=true&ttl=30s"
     ```
-	  或
 
     ```bash
     gost -L tcp://:8080/:80 -F "sshd://:2222?keepalive=true&ttl=30s"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -318,19 +313,19 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 			  keepalive.retries: 1
     ```
 
-## 组合使用
+## Proxy
 
-SSH数据通道的隧道模式可以与各种代理协议组合使用。
+SSH tunnel can be used in combination with various proxy protocols.
 
 ### HTTP Over SSH
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+ssh://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -344,13 +339,13 @@ SSH数据通道的隧道模式可以与各种代理协议组合使用。
 
 ### SOCKS5 Over SSH
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+ssh://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -364,13 +359,13 @@ SSH数据通道的隧道模式可以与各种代理协议组合使用。
 
 ### Relay Over SSH
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+ssh://:2222
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -382,24 +377,26 @@ SSH数据通道的隧道模式可以与各种代理协议组合使用。
         type: ssh
     ```
 
-## 端口转发
+## Port Forwarding
 
-SSH通道的隧道模式也可以用作端口转发。
+SSH tunnel can also be used as port forwarding.
 
-**服务端**
 
-=== "命令行"
+**Server**
+
+=== "CLI"
 
     ```bash
     gost -L ssh://:2222/:1080 -L socks5://:1080
     ```
-	  等同于
+
+    is equivalent to
 
     ```bash
     gost -L forward+ssh://:2222/:1080 -L socks5://:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -421,9 +418,10 @@ SSH通道的隧道模式也可以用作端口转发。
         type: tcp
     ```
 
-通过使用SSH数据通道的端口转发，给1080端口的SOCKS5代理服务增加了SSH数据通道。
 
-此时2222端口等同于：
+By using port forwarding of the SSH tunnel, a SSH data channel is added to the SOCKS5 proxy service on port 1080.
+
+At this time, port 2222 is equivalent to:
 
 ```bash
 gost -L socks5+ssh://:2222

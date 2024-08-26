@@ -153,10 +153,10 @@ nav:
       - Websocket: tutorials/protocols/ws.md
       - gRPC: tutorials/protocols/grpc.md
       - QUIC: tutorials/protocols/quic.md
-      - PHT: tutorials/protocols/pht.md
       - KCP: tutorials/protocols/kcp.md
       - SSH: tutorials/protocols/ssh.md
       - MTCP: tutorials/protocols/mtcp.md
+      - PHT: tutorials/protocols/pht.md
     - WebAPI:
       - 概述: tutorials/api/overview.md
       - 动态配置: tutorials/api/config.md

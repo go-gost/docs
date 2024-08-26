@@ -25,25 +25,29 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tls` - 等价与`auto+tls`，处理器auto与监听器tls的组合
 
 !!! example "示例"
-	```
+	```bash
 	gost -L http://:8080
 	```
-	```
+
+	```bash
 	gost -L http://:8080 -L socks5://:1080?foo=bar
 	```
-	```
+
+	```bash
 	gost -L http+tls://gost:gost@:8443
 	```
-	```
+
+	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
-	```
+
+	```bash
 	gost -L tls://:8443
 	```
 
 !!! tip "转发地址列表"
     端口转发模式支持转发目标地址列表形式：
-	```
+	```bash
 	gost -L tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080
 	```
 
@@ -63,79 +67,94 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tls` - 等价与`http+tls`
 
 !!! example
-	```
+	```bash
     gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080 -F socks5+tls://192.168.1.2:1080?foo=bar
 	```
 
 !!! tip "节点组"
     也可以通过设置地址列表构成节点组：
-	```
+
+	```bash
 	gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080,192.168.1.2:8080
 	```
 
-> **`-C`** - 指定外部配置文件。
+> **`-C`** - 指定外部配置文件路径或内容。
 
 !!! example
     使用配置文件`gost.yml`
-	```
+
+	```bash
     gost -C gost.yml
+	```
+
+	或直接使用JSON格式的配置内容
+
+	```bash
+	gost -C '{"api":{"addr":":8080"}}'
 	```
 
 > **`-O`** - 指定配置输出格式，目前支持yaml或json。
 
 !!! example
 	输出yaml格式配置
-	```
+
+	```bash
 	gost -L http://:8080 -O yaml
 	```
 
 	输出json格式配置
-	```
+
+	```bash
     gost -L http://:8080 -O json
 	```
 
 	将json格式配置转成yaml格式
-	```
+
+	```bash
 	gost -C gost.json -O yaml
 	```
 
 > **`-D`** - 开启Debug模式，更详细的日志输出。
 
 !!! example
-	```
+
+	```bash
 	gost -L http://:8080 -D
 	```
 
 > **`-V`** - 查看版本，显示当前运行的GOST版本号。
 
 !!! example
-    ```
+
+    ```bash
 	gost -V
 	```
 
 > **`-api`** - 指定WebAPI地址。
 
 !!! example
-	```
+
+	```bash
 	gost -L http://:8080 -api :18080
 	```
 
 > **`-metrics`** - 指定prometheus metrics API地址。
 
 !!! example
-    ```
+
+    ```bash
 	gost -L http://:8080 -metrics :9000
 	```
 
 !!! tip "scheme参数在命令行中的问题"
-    macOS系统默认的zsh不支持命令行参数使用`?`和`&`，所以在macOS环境下，如果你的scheme包含特殊字符，请使用双引号`""`，否则会报错：“zsh: no matches found: ...”。
+    在部分系统中字符`?`或`&`在命令行中具有特殊意义和功能，如果scheme包含这些特殊字符，请使用双引号`"`。
 
-=== "Bash"
-    ```
+    ```bash
 	gost -L http://:8080 -L socks5://:1080?foo=bar
 	```
 
-=== "Zsh"
-    ```
-	gost -L http://:8080 -L "socks5://:1080?foo=bar"
+	或
+
+    ```bash
+	gost -L http://:8080 -L "socks5://:1080?foo=bar&bar=baz"
 	```

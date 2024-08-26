@@ -2,15 +2,15 @@
 
 ## SOCKS4
 
-标准的SOCKS4代理服务，同时兼容SOCKS4A协议。
+Standard SOCKS4 proxy service, also compatible with SOCKS4A protocol.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks4://:1080
     ```
 
-=== "配置文件"
+=== "CLI"
 
     ```yaml
     services:
@@ -22,23 +22,24 @@
         type: tcp
     ```
 
-!!! note "BIND方法"
-    SOCKS4(A)当前仅支持CONNECT方法，不支持BIND方法。
+!!! note "BIND Method"
+    SOCKS4(A) currently only supports the CONNECT method.
 
 
 ## SOCKS5
 
-GOST完整的实现了SOCKS5协议的所有功能，包括[RFC1928](https://www.rfc-editor.org/rfc/rfc1928)中的三个命令(CONNECT，BIND，UDP ASSOCIATE)和[RFC1929](https://www.rfc-editor.org/rfc/rfc1929)中的用户名/密码认证。
+GOST fully implements all the functions of the SOCKS5 protocol, including three commands (CONNECT, BIND and UDP ASSOCIATE) in [RFC1928](https://www.rfc-editor.org/rfc/rfc1928) 
+and the username/password authentication in [RFC1929](https://www.rfc-editor.org/rfc/rfc1929).
 
-### 标准的SOCKS5代理服务
+### Standard SOCKS5 Proxy Service
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5://user:pass@:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -55,15 +56,15 @@ GOST完整的实现了SOCKS5协议的所有功能，包括[RFC1928](https://www.
 
 ### BIND
 
-BIND功能在服务端默认是禁用状态，可以通过`bind`选项来开启此功能。
+The BIND function is disabled by default on the server, but can be enabled through `bind` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5://user:pass@:1080?bind=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -82,17 +83,17 @@ BIND功能在服务端默认是禁用状态，可以通过`bind`选项来开启�
 
 ### UDP ASSOCIATE
 
-UDP中转功能在服务端默认是禁用状态，可以通过`udp`选项来开启此功能。
+The UDP relay feature is disabled by default on the server side, and can be enabled through `udp` option.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "socks5://:1080?udp=true&udpBufferSize=4096"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -108,20 +109,20 @@ UDP中转功能在服务端默认是禁用状态，可以通过`udp`选项来开
     ```
 
 `udp` (bool, default=false)
-:    开启UDP中转功能，默认禁用。
+:    Enable UDP relay function, which is disabled by default.
 
 `udpBufferSize` (int, default=4096)
-:    UDP缓冲区大小。最小值为：最大UDP包大小+10，否则数据中转会失败。
+:    UDP buffer size. The minimum value is: maximum UDP packet size + 10, otherwise data transfer will fail.
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L udp://:1053/:53 -F "socks5://:1080?relay=udp&udpBufferSize=4096"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -153,56 +154,56 @@ UDP中转功能在服务端默认是禁用状态，可以通过`udp`选项来开
     ```
 
 `relay` (bool, default=false)
-:    使用标准的UDP中转方式传输数据，默认使用UDP-TUN(UDP-Over-TCP tunnel)方式。
+:    Use standard UDP relay method to transmit data, UDP-TUN (UDP-Over-TCP tunnel) method is used by default.
 
 `udpBufferSize` (int, default=4096)
-:    UDP缓冲区大小。最小值为：最大UDP包大小+10，否则数据中转会失败。
+:    UDP buffer size. The minimum value is: maximum UDP packet size + 10, otherwise data transfer will fail.
 
-#### iperf测试
+#### iperf Test
 
-可以通过iperf3来测试UDP中转功能。
+You can use iperf3 to test the UDP relay function.
 
-开启iperf3服务
+Start iperf3 service:
 
 ```bash
 iperf3 -s
 ```
 
-开启标准SOCKS5服务(也可以使用其他支持UDP中转的SOCKS5服务)
+Start the standard SOCKS5 service (you can also use other SOCKS5 services that support UDP relay):
 
 ```bash
 gost -L "socks5://:1080?notls=true&udp=true&udpBufferSize=65535"
 ```
 
-开启端口转发
+Start port forwarding:
 
 ```bash
 gost -L "tcp://:15201/:5201" -L "udp://:15201/:5201?keepalive=true&readBufferSize=65535" -F "socks5://:1080?relay=udp&udpBufferSize=65535"
 ```
 
-执行perf3客户端测试
+Execute perf3 UDP test:
 
 ```bash
 iperf3 -c 127.0.0.1 -p 15201 -u
 ```
 
-### 扩展功能
+### Extended functions
 
-GOST在标准SOCKS5协议基础之上增加了一些扩展功能。
+GOST adds some extended functions based on the standard SOCKS5 protocol.
 
-#### 协商加密
+#### Negotiated Encryption
 
-GOST支持标准SOCKS5协议的0x00(NO AUTHENTICATION REQUIRED)和0x02(USERNAME/PASSWORD)方法，并在此基础上扩展了两个方法：TLS(0x80)和TLS-AUTH(0x82)，用于数据加密。
+GOST supports the 0x00 (NO AUTHENTICATION REQUIRED) and 0x02 (USERNAME/PASSWORD) methods of the standard SOCKS5 protocol, and expands two methods on this basis: TLS (0x80) and TLS-AUTH (0x82) for data encryption.
 
-如果客户端和服务端都使用GOST，则数据传输默认会被加密(协商使用0x80或0x82方法)，否则使用标准SOCKS5进行通讯(0x00或0x02方法)。可以在任意一端通过`notls`选项关闭加密协商功能。
+If both the client and the server use GOST, data transmission will be encrypted by default (negotiation method 0x80 or 0x82), otherwise standard SOCKS5 communication is used (0x00 or 0x02 method). The encryption negotiation function can be turned off on either side through `notls` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5://user:pass@:1080?notls=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -221,17 +222,17 @@ GOST支持标准SOCKS5协议的0x00(NO AUTHENTICATION REQUIRED)和0x02(USERNAME/
 
 #### MBIND (Multiplex BIND)
 
-GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2)，多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。此扩展主要用于TCP远程端口转发。
+GOST extends the BIND method and adds a Multiplex-BIND method (0xF2) that supports multiplexing. Multiplexing is based on the [xtaci/smux](https://github.com/xtaci/smux). This extension is mainly used for TCP remote port forwarding.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5://:1080?bind=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -245,15 +246,15 @@ GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2
         type: tcp
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L rtcp://:2222/:22 -F socks5://:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -283,17 +284,17 @@ GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2
 
 #### UDP-TUN (UDP-Over-TCP Tunnel)
 
-GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此扩展主要用于UDP端口转发。
+GOST extends the UDP relay method and adds the UDP-Over-TCP method (0xF3). This extension is mainly used for UDP port forwarding.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5://:1080?udp=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -307,15 +308,15 @@ GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此�
         type: tcp
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L udp://:10053/:53 -F socks5://:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -343,13 +344,13 @@ GOST对UDP中转方法进行了扩展，增加了UDP-Over-TCP方法(0xF3)，此�
             type: tcp
     ```
 
-## 数据通道
+## Data Channel
 
-SOCKS代理可以与各种数据通道组合使用。
+SOCKS proxy can be used in combination with various data channels.
 
 ### SOCKS Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks4+tls://:8443
@@ -359,7 +360,7 @@ SOCKS代理可以与各种数据通道组合使用。
     gost -L socks5+tls://:8443?notls=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -374,12 +375,12 @@ SOCKS代理可以与各种数据通道组合使用。
         type: tls
     ```
 
-!!! tip "双重加密"
-    这里为了避免双重加密，将SOCKS5的加密协商功能关闭(notls)。
+!!! tip "Double Encryption"
+    In order to avoid double encryption, the encryption negotiation function of SOCKS5 is turned off (notls=true).
 
 ### SOCKS Over Websocket
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+ws://:8080
@@ -389,7 +390,7 @@ SOCKS代理可以与各种数据通道组合使用。
     gost -L socks5+wss://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -405,13 +406,13 @@ SOCKS代理可以与各种数据通道组合使用。
 
 ### SOCKS Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+kcp://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:

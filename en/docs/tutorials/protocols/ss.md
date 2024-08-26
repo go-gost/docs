@@ -1,16 +1,16 @@
 # Shadowsocks
 
-GOST对shadowsocks的支持基于[shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go)和[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)库。
+GOST's support for shadowsocks is based on the [shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go) and [shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) libraries.
 
-## 标准shadowsocks代理
+## Standard Proxy
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L ss://chacha20-ietf-poly1305:pass@:8338
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -25,27 +25,26 @@ GOST对shadowsocks的支持基于[shadowsocks/shadowsocks-go](https://github.com
         type: tcp
     ```
 
-!!! tip "延迟发送"
-    默认情况下shadowsocks协议会等待请求数据，当收到请求数据后会把协议头部信息与请求数据一起发给服务端。当客户端`nodelay`选项设为`true`后，协议头部信息会立即发给服务端，不再等待用户的请求数据。当通过代理连接的服务端会主动发送数据给客户端时(例如FTP，VNC，MySQL)需要开启此选项，以免造成连接异常。
-
+!!! tip "Delay Sending"
+    By default, the shadowsocks protocol will wait for request data, and when it receives the request data, it will send the protocol header information to the server together with the request data. When the client option `nodelay` is set to `true`, the protocol header information will be sent to the server immediately without waiting for the user's request data. When the server connected through the proxy actively sends data to the client (such as FTP, VNC, MySQL), this option needs to be turned on to avoid abnormal connection.
 
 ## UDP
 
-GOST中shadowsocks的TCP和UDP服务是相互独立的两个服务。
+The TCP and UDP services of shadowsocks in GOST are two independent services.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L ssu://chacha20-ietf-poly1305:pass@:8338
     ```
 
-	  等同于
+	  is equivalent to
 
     ```bash
     gost -L ssu+udp://chacha20-ietf-poly1305:pass@:8338
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -60,17 +59,17 @@ GOST中shadowsocks的TCP和UDP服务是相互独立的两个服务。
         type: udp
     ```
 
-### 端口转发
+### Port Forwarding
 
-Shadowsocks UDP relay可以配合UDP端口转发来使用：
+Shadowsocks UDP relay can be used with UDP port forwarding:
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L udp://:10053/1.1.1.1:53 -F ssu://chacha20-ietf-poly1305:123456@:8338
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -101,19 +100,19 @@ Shadowsocks UDP relay可以配合UDP端口转发来使用：
             type: udp
     ```
 
-## 数据通道
+## Data Channel
 
-Shadowsocks代理可以与各种数据通道组合使用。
+Shadowsocks proxy can be used in combination with various data channels.
 
 ### SS Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L ss+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -125,12 +124,12 @@ Shadowsocks代理可以与各种数据通道组合使用。
         type: tls
     ```
 
-!!! tip "双重加密"
-    这里为了避免双重加密，Shadowsocks未使用任何加密方法，采用明文传输。
+!!! tip "Double Encryption"
+    In order to avoid double encryption, Shadowsocks does not use any encryption method and adopts plain text transmission.
 
 ### SS Over Websocket
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L ss+ws://:8080
@@ -140,7 +139,7 @@ Shadowsocks代理可以与各种数据通道组合使用。
     gost -L ss+wss://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -155,13 +154,13 @@ Shadowsocks代理可以与各种数据通道组合使用。
 
 ### SS Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L ss+kcp://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:

@@ -1,21 +1,21 @@
 # gRPC
 
-gRPC是GOST中的一种数据通道类型。
+gRPC is a data channel type in GOST.
 
-!!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+!!! tip "TLS Certificate Configuration"
+    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
 
-## 使用TLS
+## With TLS
 
-gRPC通道默认采用TLS加密。
+gRPC tunnel use TLS encryption by default.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+grpc://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -27,17 +27,17 @@ gRPC通道默认采用TLS加密。
         type: grpc
     ```
 
-## 不使用TLS
+## Without TLS
 
-通过`grpc.insecure`选项开启明文gRPC传输。
+Enable plaintext gRPC tunnel via `grpc.insecure` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+grpc://:8443?grpc.insecure=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="9"
     services:
@@ -51,19 +51,19 @@ gRPC通道默认采用TLS加密。
           grpc.insecure: true
     ```
 
-## 选项
+## Options
 
-### 自定义请求主机名
+### Custom Request Hostname
 
-客户端默认使用节点地址(-F参数或nodes.addr中指定的地址)作为请求主机名(`:authority`头部信息)，可以通过`host`选项自定义请求主机名。
+By default, the client uses the node address (-F parameter or the address specified in nodes.addr) as the request hostname (`:authority` header). The request hostname can be customized through `host` option.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F grpc://:8443?host=example.com
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="21"
     services:
@@ -89,22 +89,22 @@ gRPC通道默认采用TLS加密。
               host: example.com
     ```
 
-### 自定义请求路径
+### Custom Request Path
 
-可以通过`path`选项自定义请求路径，默认值为`/GostTunel/Tunnel`。
+The request path can be customized via `path` option, the default value is `/GostTunel/Tunnel`.
 
-!!! note "路径匹配验证"
-    仅当客户端和服务端设定的`path`参数相同时，连接才能成功建立。
+!!! note "Path Matching Verification"
+    The connection can be successfully established only when the `path` option set by the client and the server are the same.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L grpc://:8443?path=/GostTunel/Tunnel
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="9"
     services:
@@ -118,15 +118,15 @@ gRPC通道默认采用TLS加密。
 		  path: /GostTunel/Tunnel
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F grpc://:8443?path=/GostTunel/Tunnel
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="21"
     services:
@@ -152,19 +152,19 @@ gRPC通道默认采用TLS加密。
               path: /GostTunel/Tunnel
     ```
 
-### 心跳
+### Keep-Alive
 
-客户端和服务端可以分别通过若干选项来控制心跳的发送。
+The client and server can each control the sending of heartbeats through several options.
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080 -F "grpc://:8443?keepalive=true&keepalive.time=30s&keepalive.timeout=30s&keepalive.permitWithoutStream=true"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="21-24"
     services:
@@ -193,15 +193,15 @@ gRPC通道默认采用TLS加密。
               keepalive.permitWithoutStream: true
     ```
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "grpc://:8443?keepalive=true&keepalive.minTime=30s&keepalive.time=60s&keepalive.timeout=30s&keepalive.permitWithoutStream=true&keepalive.maxConnectionIdle=5m"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="9-14"
     services:
@@ -221,39 +221,39 @@ gRPC通道默认采用TLS加密。
     ```
 
 `keepalive` (bool, default=false)
-:   是否开启心跳，只有当此选项开启后，其他相关参数才有效。
+:   Whether to enable keep-alive.
 
 `keepalive.time` (duration, default=30s)
-:    当空闲时长超过此设定值后，发送心跳包。
+:    When the idle time exceeds this set value, a heartbeat packet is sent. 
 
 `keepalive.timeout` (duration, default=30s)
-:    等待心跳响应时长。
+:    The duration of waiting for a heartbeat response.
 
 `keepalive.permitWithoutStream` (bool, default=false)
-:    是否允许在空闲状态下也发送心跳包。**注意**：当客户端开启此选项后，服务端也应同时开启，否则服务端会强行关闭当前连接。
+:    Whether to allow sending heartbeat packets in idle state. **Note**: When the client turns on this option, the server should also turn it on at the same time, otherwise the server will forcibly close the current connection.
 
 `keepalive.minTime` (duration, default=30s)
-:    客户端在发送心跳包之前最小等待时长。**仅服务端有效**。
+:    The minimum waiting time before the client sends a heartbeat packet. **Only valid on the server side.**
 
 `keepalive.maxConnectionIdle` (duration, default=5m)
-:    当连接空闲超过此设定时长后，连接将被关闭。**仅服务端有效**。
+:    When the connection is idle for more than this time, the connection will be closed. **Only valid on the server side.**
 
-!!! caution "谨慎使用"
-    gRPC的心跳机制需要客户端和服务端相互配合，如果参数设置有误可能会导致连接异常，建议在使用心跳之前先阅读[官方文档](https://github.com/grpc/grpc/blob/master/doc/keepalive.md)。
+!!! caution "Use With Caution"
+    The keep-alive mechanism of gRPC requires cooperation between the client and the server. If the parameters are set incorrectly, connection abnormalities may occur. It is recommended to read the [official documentation](https://github.com/grpc/grpc/blob/master/doc/keepalive.md) before using it.
 
-## 代理协议
+## Proxy
 
-gRPC数据通道可以与各种代理协议组合使用。
+gRPC tunnel can be used in combination with various proxy protocols.
 
 ### HTTP Over gRPC
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+grpc://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -267,13 +267,13 @@ gRPC数据通道可以与各种代理协议组合使用。
 
 ### SOCKS5 Over gRPC
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+grpc://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -287,13 +287,13 @@ gRPC数据通道可以与各种代理协议组合使用。
 
 ### Relay Over gRPC
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+grpc://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -305,24 +305,27 @@ gRPC数据通道可以与各种代理协议组合使用。
         type: grpc
     ```
 
-## 端口转发
 
-gRPC通道也可以用作端口转发。
 
-**服务端**
+## Port Forwarding
 
-=== "命令行"
+gRPC tunnel can also be used as port forwarding.
+
+**Server**
+
+=== "CLI"
 
     ```bash
     gost -L grpc://:8443/:1080 -L socks5://:1080
     ```
-	  等同于
+
+    is equivalent to
 
     ```bash
     gost -L forward+grpc://:8443/:1080 -L socks5://:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -344,9 +347,10 @@ gRPC通道也可以用作端口转发。
         type: tcp
     ```
 
-通过使用gRPC数据通道的端口转发，给1080端口的SOCKS5代理服务增加了gRPC数据通道。
+By using port forwarding of the gRPC tunnel, a gRPC data channel is added to the SOCKS5 proxy service on port 1080.
 
-此时8443端口等同于：
+At this time, port 8443 is equivalent to:
+
 
 ```bash
 gost -L socks5+grpc://:8443

@@ -112,6 +112,24 @@ nav:
     - Observer: concepts/observer.md
     - Plugin System: concepts/plugin.md
   - Tutorials:
+    - Protocols:
+      - Overview: tutorials/protocols/overview.md
+      - HTTP: tutorials/protocols/http.md
+      - HTTP2: tutorials/protocols/http2.md
+      - HTTP3: tutorials/protocols/http3.md
+      - SOCKSv4/v5: tutorials/protocols/socks.md
+      - Shadowsocks: tutorials/protocols/ss.md
+      - SNI: tutorials/protocols/sni.md
+      - Relay: tutorials/protocols/relay.md
+      - TLS: tutorials/protocols/tls.md
+      - DTLS: tutorials/protocols/dtls.md
+      - Websocket: tutorials/protocols/ws.md
+      - gRPC: tutorials/protocols/grpc.md
+      - QUIC: tutorials/protocols/quic.md
+      - KCP: tutorials/protocols/kcp.md
+      - SSH: tutorials/protocols/ssh.md
+      - MTCP: tutorials/protocols/mtcp.md
+      - PHT: tutorials/protocols/pht.md
     - WebAPI:
       - Overview: tutorials/api/overview.md
       - Dynamic Configuration: tutorials/api/config.md
@@ -122,7 +140,6 @@ nav:
     - Reverse Proxy Tunnel: tutorials/reverse-proxy-tunnel.md
     - Reverse Proxy Tunnel - HA: tutorials/reverse-proxy-tunnel-ha.md
     - HTTP File Server: tutorials/file.md
-    - Relay Protocol: tutorials/relay.md
     - Probe Resistance: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS Proxy: tutorials/dns.md

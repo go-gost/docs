@@ -1,40 +1,40 @@
-# Relay协议
+# Relay Protocol
 
-Relay协议是GOST特有的一个协议，同时具有代理和转发功能，可同时处理TCP和UDP的数据，并支持用户认证。
+The Relay protocol is a GOST-specific protocol that has both proxy and forwarding functions. It can process TCP and UDP data at the same time and supports user authentication.
 
-!!! note "无加密"
-    Relay协议本身不具备加密功能，如果需要对数据进行加密传输，可以配合具有加密功能的数据通道(例如tls，wss，quic等)使用。
+!!! note "No Encryption"
+    The Relay protocol itself does not have encryption capabilities. If data needs to be transmitted encrypted, it can be used in conjunction with a data channel with encryption capabilities (such as tls, wss, quic, etc.).
 
-## 代理
+## Proxy
 
-Relay协议可以像HTTP/SOCKS5一样用作代理协议。
+The Relay protocol can be used as a proxy protocol just like HTTP/SOCKS5.
 
-**服务端**
+**Server**
 
 ```bash
 gost -L relay://username:password@:12345
 ```
 
-**客户端**
+**Client**
 
 ```bash
 gost -L :8080 -F relay://username:password@:12345?nodelay=false
 ```
 
-!!! tip "延迟发送"
-    默认情况下relay协议会等待请求数据，当收到请求数据后会把协议头部信息与请求数据一起发给服务端，减少数据交互次数。当`nodelay`选项设为`true`后不再等待客户端的请求数据，协议头部信息会立即发给代理服务并与目标主机建立连接。这种模式在某些情况下是必要的，例如当通过代理连接的目标服务会主动发送数据给客户端时(FTP，VNC，MySQL等)需要开启此选项，以免造成连接异常。
+!!! tip "Delay Sending"
+    By default, the relay protocol will wait for request data, and when it receives the request data, it will send the protocol header information to the server together with the request data. When the client option `nodelay` is set to `true`, the protocol header will be sent to the server immediately without waiting for the user's request data. When the server connected through the proxy actively sends data to the client (such as FTP, VNC, MySQL), this option needs to be turned on to avoid abnormal connection.
 
-也可以配合端口转发支持同时转发TCP和UDP数据
+It can also support forwarding TCP and UDP data at the same time with port forwarding
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay://:8420
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -46,15 +46,15 @@ gost -L :8080 -F relay://username:password@:12345?nodelay=false
         type: tcp
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L tcp://:2222/:22 -L udp://:1053/:53 -F relay://:8420
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -93,19 +93,19 @@ gost -L :8080 -F relay://username:password@:12345?nodelay=false
             type: tcp
     ```
 
-## 端口转发
+## Port Forwarding
 
-Relay服务本身也可以作为端口转发服务。
+The Relay service itself can also be used as a port forwarding service.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay://:8420/:53
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -121,15 +121,15 @@ Relay服务本身也可以作为端口转发服务。
           addr: :53
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L udp://:1053 -L tcp://:2222 -F relay://:8420
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -160,21 +160,21 @@ Relay服务本身也可以作为端口转发服务。
             type: tcp
     ```
 
-## 远程端口转发
+## Remote Port Forwarding
 
-Relay协议实现了类似于SOCKS5的BIND功能，可以配合远程端口转发服务使用。
+The Relay protocol implements a BIND function similar to SOCKS5 and can be used in conjunction with remote port forwarding services.
 
-BIND功能默认未开启，需要通过设置`bind`选项为true来开启。
+The BIND function is not enabled by default and needs to be enabled by setting the `bind` option to `true`.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay://:8420?bind=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -188,15 +188,15 @@ BIND功能默认未开启，需要通过设置`bind`选项为true来开启。
         type: tcp
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L rtcp://:2222/:22 -L rudp://:10053/:53 -F relay://:8420
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -235,19 +235,19 @@ BIND功能默认未开启，需要通过设置`bind`选项为true来开启。
             type: tcp
     ```
 
-## 数据通道
+## Data Channel
 
-Relay协议可以与各种数据通道组合使用。
+The Relay protocol can be used in combination with various data channels.
 
 ### Relay Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -261,7 +261,7 @@ Relay协议可以与各种数据通道组合使用。
 
 ### Relay Over Websocket
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+ws://:8080
@@ -271,7 +271,7 @@ Relay协议可以与各种数据通道组合使用。
     gost -L relay+wss://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -286,13 +286,13 @@ Relay协议可以与各种数据通道组合使用。
 
 ### Relay Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+kcp://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:

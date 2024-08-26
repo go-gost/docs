@@ -50,13 +50,13 @@
 * `wt` - HTTP/3 WebTransport模式
 * `ohttp` - HTTP Obfuscation
 * `otls` - TLS Obfuscation
-* `icmp` - ICMP协议
+* `icmp`, `icmp6` - ICMP和ICMPv6协议
 * `ftcp` - Fake TCP
 
 ## 一些特殊的协议
 
 `file`
-:    开启一个HTTP文件服务
+:    开启一个[HTTP文件服务](/tutorials/file/)
 
 `https`
 :    等同于HTTP代理与TLS通道组合（http+tls）
@@ -65,31 +65,31 @@
 :    用于HTTP3反向代理服务
 
 `dns`
-:    DNS代理
+:    [DNS代理](/tutorials/dns/)
 
 `red`，`redir`，`redirect`
-:    TCP透明代理
+:    TCP[透明代理](/tutorials/redirect/)
 
 `redu`
-:    UDP透明代理
+:    UDP[透明代理](/tutorials/redirect/)
 
 `tun`
-:    TUN设备
+:    [TUN设备](/tutorials/tuntap/)
 
 `tap`
-:    TAP设备
+:    [TAP设备](/tutorials/tuntap/)
 
 `forward`
-:    特殊的转发类型
+:    [服务端转发](/tutorials/port-forwarding/#_7)
 
 `virtual`
-:    虚拟节点
+:    [虚拟节点](/concepts/chain/#_5)
 
 `unix`
-:    Unix Domain Socket转发
+:    [Unix Domain Socket转发](/tutorials/unix/)
 
 `serial`
-:    串口转发
+:    [串口转发](/tutorials/serial/)
 
 
 ## 限制

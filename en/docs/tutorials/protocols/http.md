@@ -1,18 +1,18 @@
 # HTTP
 
-HTTP代理是利用HTTP协议的[CONNECT方法](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/CONNECT)实现的代理服务。
+HTTP proxy is a proxy service implemented using the [CONNECT method](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/CONNECT) of the HTTP protocol.
 
-## 标准HTTP代理
+## Standard HTTP Proxy
 
-一个最简单的无加密无认证的HTTP代理服务。
+A simple HTTP proxy service without encryption or authentication.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -24,17 +24,17 @@ HTTP代理是利用HTTP协议的[CONNECT方法](https://developer.mozilla.org/zh
         type: tcp
     ```
 
-## 标准HTTP代理(开启认证)
+## Standard HTTP Proxy (With Authentication Enabled)
 
-一个无加密具有用户认证的HTTP代理服务。
+A non-encrypted HTTP proxy service with user authentication.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://user:pass@:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="6-8"
     services:
@@ -49,11 +49,11 @@ HTTP代理是利用HTTP协议的[CONNECT方法](https://developer.mozilla.org/zh
         type: tcp
     ```
 
-## 参数选项
+## Options
 
-### 自定义HTTP头
+### Custom HTTP Headers
 
-通过`header`选项可以自定义请求和响应头部信息。
+Option `header` allow you to customize request and response headers.
 
 ```yaml hl_lines="7 8 9 22 23 24"
 services:
@@ -84,27 +84,27 @@ chains:
         type: tcp
 ```
 
-## 数据通道
+## Data Channel
 
-HTTP代理可以与各种数据通道组合使用。
+HTTP proxies can be used in combination with various data channels.
 
 ### HTTP Over TLS
 
-标准HTTPS代理服务。
+Standard HTTPS proxy service.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L https://:8443
     ```
 
-    等同于
+    is equivalent to
 
     ```bash
     gost -L http+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -118,7 +118,7 @@ HTTP代理可以与各种数据通道组合使用。
 
 ### HTTP Over Websocket
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+ws://:8080
@@ -128,7 +128,7 @@ HTTP代理可以与各种数据通道组合使用。
     gost -L http+wss://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -143,13 +143,13 @@ HTTP代理可以与各种数据通道组合使用。
 
 ### HTTP Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+kcp://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -161,20 +161,19 @@ HTTP代理可以与各种数据通道组合使用。
         type: kcp
     ```
 
-## UDP数据转发
+## UDP Data Forwarding
 
-HTTP代理在标准协议基础之上扩展了对UDP数据的支持，实现UDP-Over-HTTP功能。
-HTTP代理服务UDP转发功能默认关闭，需要通过`udp`选项开启。
+HTTP proxy extends the support for UDP data based on the standard protocol to implement UDP-Over-HTTP function. The UDP forwarding function of HTTP proxy service is disabled by default and needs to be enabled through `udp` option.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http://:8080?udp=true
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="7"
     services:
@@ -188,15 +187,15 @@ HTTP代理服务UDP转发功能默认关闭，需要通过`udp`选项开启。
         type: tcp
     ```
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L udp://:10053/1.1.1.1:53 -F http://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:

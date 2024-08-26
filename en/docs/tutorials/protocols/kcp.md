@@ -1,16 +1,16 @@
 # KCP
 
-KCP是GOST中的一种数据通道类型。KCP的实现依赖于[xtaci/kcp-go](https://github.com/xtaci/kcp-go)库。
+KCP is a data channel type in GOST. The implementation of KCP depends on the [xtaci/kcp-go](https://github.com/xtaci/kcp-go) library.
 
-## 示例
+## Usage
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L kcp://:8443?kcp.configFile=/path/to/config/file
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -36,11 +36,12 @@ KCP是GOST中的一种数据通道类型。KCP的实现依赖于[xtaci/kcp-go](h
           kcp.mode: fast
     ```
 
-## 配置
+## Configuration
 
-GOST中内置了一套默认的KCP配置项，默认值与[xtaci/kcptun](https://github.com/xtaci/kcptun)一致。
+GOST has a built-in set of default KCP configuration items, and the default values ​​are consistent with [xtaci/kcptun](https://github.com/xtaci/kcptun).
 
 可以通过`kcp.config`选项直接指定配置。也可以通过选项`kcp.configFile`指定外部配置文件，配置文件为JSON格式：
+You can specify the configuration directly through `kcp.config` option. You can also specify an external configuration file through `kcp.configFile` option. The configuration file is in JSON format:
 
 ```json
 {
@@ -68,7 +69,7 @@ GOST中内置了一套默认的KCP配置项，默认值与[xtaci/kcptun](https:/
 }
 ```
 
-部分参数也可以直接通过选项指定:
+Some parameters can also be specified directly through options:
 
 `kcp.tcp`:
 :    config.tcp   
@@ -94,21 +95,21 @@ GOST中内置了一套默认的KCP配置项，默认值与[xtaci/kcptun](https:/
 `kcp.smuxver`:
 :    config.smuxver
 
-配置文件中的参数说明请参考[kcptun](https://github.com/xtaci/kcptun#usage)。
+For a description of the parameters in the configuration file, see [kcptun](https://github.com/xtaci/kcptun#usage).
 
-## 代理协议
+## Proxy
 
-KCP数据通道可以与各种代理协议组合使用。
+KCP tunnel can be used in combination with various proxy protocols.
 
 ### HTTP Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+kcp://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -122,13 +123,13 @@ KCP数据通道可以与各种代理协议组合使用。
 
 ### SOCKS5 Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+kcp://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -142,13 +143,13 @@ KCP数据通道可以与各种代理协议组合使用。
 
 ### Relay Over KCP
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+kcp://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -160,23 +161,25 @@ KCP数据通道可以与各种代理协议组合使用。
         type: kcp
     ```
 
-## 端口转发
+## Port Forwarding
 
-KCP通道也可以用作端口转发，相当于在UDP端口转发服务基础上增加KCP传输协议。
+KCP tunnel can also be used as port forwarding.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L kcp://:8443/:8080 -L ss://:8080
     ```
-	  等同于
+
+    is equivalent to
+
     ```bash
     gost -L forward+kcp://:8443/:8080 -L ss://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -198,9 +201,9 @@ KCP通道也可以用作端口转发，相当于在UDP端口转发服务基础�
         type: tcp
     ```
 
-通过使用KCP数据通道的端口转发，给8080端口的Shadowsocks代理服务增加了KCP数据通道。
+By using port forwarding of the KCP tunnel, a KCP data channel is added to the Shadowsocks proxy service on port 8080.
 
-此时8443端口等同于：
+At this time, port 8443 is equivalent to:
 
 ```bash
 gost -L ss+kcp://:8443

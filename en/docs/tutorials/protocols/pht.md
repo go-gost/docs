@@ -1,21 +1,21 @@
 # Plain HTTP Tunnel
 
-PHT是GOST中的一种数据通道类型。
+PHT is a data channel type in GOST.
 
-CONNECT方法并不是所有HTTP服务都支持，为了更加通用，GOST利用HTTP协议中更加常用的GET和POST方法来实现数据通道，包括加密的`phts`和明文的`pht`两种模式。
+The CONNECT method is not supported by all HTTP services. For more general use, GOST uses the more commonly used GET and POST methods in the HTTP protocol to implement data channels, including encrypted `phts` and plain text `pht` modes.
 
-!!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+!!! tip "TLS Certificate Configuration"
+    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
 
-## 不使用TLS
+## Without TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "http+pht://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -31,17 +31,17 @@ CONNECT方法并不是所有HTTP服务都支持，为了更加通用，GOST利�
           pullPath: /pull
     ```
 
-## 使用TLS 
+## With TLS 
 
 PHT over LTS。
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "http+phts://:8443?authorizePath=/authorize&pushPath=/push&pullPath=/pull"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -57,30 +57,30 @@ PHT over LTS。
           pullPath: /pull
     ```
 
-## 自定义请求路径
+## Custom Request Path
 
-PHT通道由三部分组成：
+The PHT channel consists of three parts:
 
-* 授权 - 客户端在与服务端进行数据传输前需要获取服务端的授权码，通过`authorizePath`选项设置请求的URI，默认值为`/authorize`。
-* 接收数据 - 客户端从服务端获取数据，通过`pullPath`选项设置请求的URI，默认值为`/pull`。
-* 发送数据 - 客户端发送数据到服务端，通过`pushPath`选项设置请求的URI，默认值为`/push`。
+* Authorization - The client needs to obtain the server's authorization code before transferring data with the server. The request URI is set through the `authorizePath` option. The default value is `/authorize`.
+* Receive data - The client receives data from the server. The request URI is set by `pullPath` option. The default value is `/pull`.
+* Send data - The client sends data to the server. The request URI is set by `pushPath` option. The default value is `/push`.
 
-!!! note "路径匹配验证"
-    仅当客户端和服务端设定的path参数相同时，连接才能成功建立。
+!!! note "Path Matching Verification"
+    The connection can be successfully established only when the options set by the client and the server are the same.
 
-## 代理协议
+## Proxy
 
-PHT数据通道可以与各种代理协议组合使用。
+PHT tunnel can be used in combination with various proxy protocols.
 
 ### HTTP Over PHT
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+pht://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -95,13 +95,13 @@ PHT数据通道可以与各种代理协议组合使用。
 
 ### SOCKS5 Over PHT
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+pht://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -116,13 +116,13 @@ PHT数据通道可以与各种代理协议组合使用。
 
 ### Relay Over PHT
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+pht://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -135,24 +135,25 @@ PHT数据通道可以与各种代理协议组合使用。
         # type: phts
     ```
 
-## 端口转发
+## Port Forwarding
 
-PHT通道也可以用作端口转发。
+PHT tunnel can also be used as port forwarding.
 
-**服务端**
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L pht://:8443/:1080 -L socks5://:1080
     ```
-	  等同于
+
+    is equivalent to
 
     ```bash
     gost -L forward+pht://:8443/:1080 -L socks5://:1080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -175,9 +176,9 @@ PHT通道也可以用作端口转发。
         type: tcp
     ```
 
-通过使用PHT数据通道的端口转发，给1080端口的SOCKS5代理服务增加了PHT数据通道。
+By using port forwarding of the PHT tunnel, a PHT data channel is added to the SOCKS5 proxy service on port 1080.
 
-此时8443端口等同于：
+At this time, port 8443 is equivalent to:
 
 ```bash
 gost -L socks5+pht://:8443

@@ -1,19 +1,19 @@
 # TLS
 
-TLS是GOST中的一种数据通道类型。
+TLS is a data channel type in GOST.
 
-!!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+!!! tip "TLS Certificate Configuration"
+    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
 
-## 标准TLS服务
+## Standard TLS Service
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -25,17 +25,17 @@ TLS是GOST中的一种数据通道类型。
         type: tls
     ```
 
-## 多路复用
+## Multiplexing
 
-GOST在TLS基础之上扩展出具有多路复用(Multiplex)特性的TLS传输类型(mtls)。多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。
+GOST extends TLS with multiplexing feature (mtls). Multiplexing is based on [xtaci/smux](https://github.com/xtaci/smux) library.
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L mtls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -49,42 +49,44 @@ GOST在TLS基础之上扩展出具有多路复用(Multiplex)特性的TLS传输�
           mux.version: 1
     ```
 
-### 多路复用相关选项
+## Options 
+
+### Multiplexing Related Options
 
 `mux.version` (int, default=1)
-:    SMUX协议版本
+:    SMUX protocol version.
 
 `mux.keepaliveDisabled` (bool, default=false)
-:    是否禁用心跳
+:    Whether to disable heartbeat.
 
 `mux.keepaliveInterval` (duration, default=10s)
-:    心跳间隔时长
+:    Heartbeat interval.
 
 `mux.keepaliveTimeout` (duration, default=30s)
-:    心跳超时时长
+:    Heartbeat timeout.
 
 `mux.maxFrameSize` (int, default=32768)
-:    帧最大长度
+:    Maximum frame length.
 
 `mux.maxReceiveBuffer` (int, default=4194304)
-:    接收缓冲区大小
+:    Receive buffer size.
 
 `mux.maxStreamBuffer` (int, default=65536)
-:    Steam缓冲区大小
+:    Steam Buffer Size.
 
-## 代理协议
+## Proxy
 
-TLS数据通道可以与各种代理协议组合使用。
+TLS data channel can be used in combination with various proxy protocols.
 
 ### HTTP Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L http+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -99,13 +101,13 @@ TLS数据通道可以与各种代理协议组合使用。
 
 ### SOCKS5 Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L socks5+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -120,13 +122,13 @@ TLS数据通道可以与各种代理协议组合使用。
 
 ### Relay Over TLS
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L relay+tls://:8443
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -139,23 +141,25 @@ TLS数据通道可以与各种代理协议组合使用。
         # type: mtls
     ```
 
-## 端口转发
+## Port Forwarding
 
-TLS通道也可以用作端口转发，相当于在TCP端口转发服务基础上增加TLS加密。
+TLS tunnel can also be used for port forwarding, which is equivalent to adding TLS encryption on top of TCP port forwarding services.
 
-### 服务端
+**Server**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L tls://:8443/:8080 -L http://:8080
     ```
-	  等同于
+
+    is equivalent to
+
     ```bash
     gost -L forward+tls://:8443/:8080 -L http://:8080
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -177,9 +181,9 @@ TLS通道也可以用作端口转发，相当于在TCP端口转发服务基础�
         type: tcp
     ```
 
-通过使用TLS数据通道的端口转发，给8080端口的HTTP代理服务增加了TLS加密数据通道。
+By using port forwarding of the TLS data channel, a TLS encrypted data channel is added to the HTTP proxy service on port 8080.
 
-此时8443端口等同于：
+At this time, port 8443 is equivalent to:
 
 ```bash
 gost -L http+tls://:8443
