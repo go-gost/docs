@@ -49,9 +49,9 @@ comments: true
 
 * 作用域(Scope)：限速作用范围，IP地址或CIDR，例如192.168.1.1，192.168.0.0/16。其中两个特殊的值: `$`代表服务级别，`$$`代表连接级别。
 
-* 入站速率(Input)：服务接收数据的速率(每秒流量)，支持的单位有: B，KB，MB，GB，TB，例如 128KB，1MB，10GB。
+* 入站速率(Input)：服务接收数据的速率(每秒流量)，支持的单位有: B，KB，MB，GB，TB，例如 128KB，1MB，10GB。0或负值代表无限制。
 
-* 出站速率(Output)：服务发送数据的速率(每秒流量)，单位同入站速率。出站速率可选，不设置代表无限制。
+* 出站速率(Output)：服务发送数据的速率(每秒流量)，单位同入站速率。出站速率可选，0或负值代表无限制。
 
 ### 请求速率限制
 
@@ -404,17 +404,19 @@ limiters:
 - name: limiter-0
   plugin:
     type: grpc
-    # type: http
     addr: 127.0.0.1:8000
     tls: 
       secure: false
       serverName: example.com
 ```
 
-`addr` (string, required)
-:    插件服务地址
+`type` (string, default=grpc)
+:    插件类型：`grpc`, `http`。
 
-`tls` (duration, default=null)
+`addr` (string, required)
+:    插件服务地址。
+
+`tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ### HTTP插件
@@ -431,34 +433,40 @@ limiters:
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/limiter \
--d'{"network":"tcp","addr":"example.com:443","client":"gost","src":"192.168.1.1:12345"}'
+-d'{"scope":"client","service":"service-0","network":"tcp","addr":"example.com:443","client":"gost","src":"192.168.1.1:12345"}'
 ```
 
 ```json
 {"in":1048576, "out":524288}
 ```
 
-`network` (string, default=ip4)
-:    网络地址类型：`tcp`,`udp`.
+`scope` (string)
+:    作用域，`service` - 服务级别，`conn` - 连接级别，`client` - 用户级别。
+
+`service` (string)
+:    服务名。
+
+`network` (string)
+:    网络地址类型：`tcp`，`udp`。
 
 `addr` (string)
-:    请求目标地址
+:    请求目标地址。
 
 `client` (string)
-:    用户身份标识，此信息由认证器插件服务生成。
+:    用户身份标识，此信息由认证器生成。
 
 `src` (string)
-:    客户端地址
+:    客户端地址。
 
 `in` (int64)
-:    入站速率(bytes/s)
+:    入站速率(bytes/s)，0或负值代表无限制。
 
 `out` (int64)
-:    出站速率(bytes/s)
+:    出站速率(bytes/s)，0或负值代表无限制。
 
 ## 处理器(Handler)上的限制器
 
-对于支持认证的代理服务(HTTP，HTTP2，SOCKS4，SOCKS5，Relay)，流量速率限制器也可以用在处理器上。
+对于支持认证的处理器(HTTP，HTTP2，SOCKS4，SOCKS5，Relay, Tunnel)，流量速率限制器也可以用在这些类型的处理器上。
 
 ```yaml hl_lines="6"
 services:
@@ -477,6 +485,9 @@ limiters:
 
 ### 基于用户标识的限流
 
-GOST内部的限制器逻辑未处理针对特定用户的流量限制，如果需要实现此功能需要组合使用认证器插件和处理器上的限制器插件。
+GOST内部的限制器逻辑未处理针对特定用户的流量限制，如果需要实现此功能需要组合使用认证器和处理器上的限制器插件。
     
-认证器插件在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给限制器插件服务，限制器插件服务就可以根据用户标识来做不同的限流配置。
+认证器在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给限制器插件服务，并设置作用域为用户级别(scope=client)，限制器插件服务就可以根据用户标识来做不同的限流配置。
+
+!!! tip "Tunnel处理器"
+    对于Tunnel处理器，限流单位为单个隧道，client值为Tunnel ID。

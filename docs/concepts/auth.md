@@ -286,16 +286,20 @@ authers:
 authers:
 - name: auther-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
       secure: false
       serverName: example.com
 ```
 
-`addr` (string, required)
-:    插件服务地址
+`type` (string, default=grpc)
+:    插件类型：`grpc`, `http`。
 
-`tls` (duration, default=null)
+`addr` (string, required)
+:    插件服务地址。
+
+`tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ### HTTP插件

@@ -464,16 +464,20 @@ bypasses:
 bypasses:
 - name: bypass-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
       secure: false
       serverName: example.com
 ```
 
-`addr` (string, required)
-:    插件服务地址
+`type` (string, default=grpc)
+:    插件类型：`grpc`, `http`。
 
-`tls` (duration, default=null)
+`addr` (string, required)
+:    插件服务地址。
+
+`tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ### HTTP插件
@@ -497,9 +501,9 @@ curl -XPOST http://127.0.0.1:8000/bypass -d '{"addr": "example.com:80", "client"
 ```
 
 `client` (string)
-:    用户身份标识，此信息由认证器插件服务生成。
+:    用户身份标识，此信息由认证器生成。
 
 !!! tip "基于用户标识的分流"
-    GOST内部的分流器逻辑未处理针对特定用户的分流逻辑，如果需要实现此功能需要组合使用认证器插件和分流器插件。
+    GOST内部的分流器逻辑未处理针对特定用户的分流逻辑，如果需要实现此功能需要组合使用认证器和分流器插件。
     
-    认证器插件在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给分流器插件服务，分流器插件服务就可以根据用户标识来做不同的分流策略。
+    认证器在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给分流器插件服务，分流器插件服务就可以根据用户标识来做不同的分流策略。

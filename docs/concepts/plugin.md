@@ -40,15 +40,15 @@ authers:
 ```
 
 `type` (string, default=grpc)
-:    插件类型，`grpc`或`http`
+:    插件类型，`grpc`，`http`。
 
 `addr` (string, required)
-:    插件服务地址
+:    插件服务地址。
 
 `token` (string)
 :    认证信息，作为服务认证机制，插件服务可以选择对此信息进行验证。
 
-`tls` (duration, default=null)
+`tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ## 编写插件

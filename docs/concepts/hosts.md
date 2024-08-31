@@ -253,16 +253,20 @@ hosts:
 hosts:
 - name: hosts-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
       secure: false
       serverName: example.com
 ```
 
-`addr` (string, required)
-:    插件服务地址
+`type` (string, default=grpc)
+:    插件类型：`grpc`, `http`。
 
-`tls` (duration, default=null)
+`addr` (string, required)
+:    插件服务地址。
+
+`tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
 
 ### HTTP插件
@@ -292,7 +296,7 @@ curl -XPOST http://127.0.0.1:8000/hosts -d '{"network": "ip4", "host":"example.c
 :    主机名。
 
 `client` (string)
-:    用户身份标识，此信息由认证器插件服务生成。
+:    用户身份标识，此信息由认证器生成。
 
 `ips` ([]string)
 :    IP地址列表

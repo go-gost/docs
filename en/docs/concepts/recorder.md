@@ -167,16 +167,20 @@ Recorder can be configured to use an external [plugin](/en/concepts/plugin/) ser
 recorders:
 - name: recorder-0
   plugin:
+    type: grpc
     addr: 127.0.0.1:8000
     tls: 
       secure: false
       serverName: example.com
 ```
 
+`type` (string, default=grpc)
+:    plugin type: `grpc`, `http`.
+
 `addr` (string, required)
 :    plugin server address.
 
-`tls` (duration, default=null)
+`tls` (object, default=null)
 :    TLS encryption will be used for transmission, TLS encryption is not used by default.
 
 ### HTTP Plugin

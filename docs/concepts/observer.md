@@ -27,8 +27,11 @@ observers:
       serverName: example.com
 ```
 
+`type` (string, default=grpc)
+:    插件类型：`grpc`, `http`。
+
 `addr` (string, required)
-:    插件服务地址
+:    插件服务地址。
 
 `tls` (object, default=null)
 :    设置后将使用TLS加密传输，默认不使用TLS加密。
@@ -60,6 +63,9 @@ observers:
       serverName: example.com
 ```
 
+`enableStats` (bool, default=false)
+:    是否上报连接和流量数据。
+
 `observePeriod` (duration, default=5s)
 :    观测器上报周期。
 
@@ -74,7 +80,7 @@ observers:
     timeout: 10s
 ```
 
-`timeout` (duration, default=0s)
+`timeout` (duration, default=5s)
 :   上报请求超时时长。 
 
 ### 请求示例
@@ -134,7 +140,7 @@ curl -XPOST http://127.0.0.1:8000/observer \
 
 ## 处理器(Handler)上的观测器
 
-对于支持认证的代理服务(HTTP，HTTP2，SOCKS4，SOCKS5，Relay)，观测器也可以用在处理器上。
+对于支持认证的处理器(HTTP，HTTP2，SOCKS4，SOCKS5，Relay，Tunnel)，观测器也可以用在这些类型的处理器上。
 
 ```yaml hl_lines="6 8"
 services:
@@ -160,9 +166,12 @@ observers:
 
 ### 基于用户标识的流量统计
 
-服务级别的观测器只能用来观测服务整体的统计信息，无法针对用户进行更细的划分。如果需要实现此功能需要组合使用认证器插件和处理器上的观测器插件。
+服务级别的观测器只能用来观测服务整体的统计信息，无法针对用户进行更细的划分。如果需要实现此功能需要组合使用认证器和处理器上的观测器插件。
     
-认证器插件在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给观测器插件服务。
+认证器在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给观测器插件服务。
+
+!!! tip "Tunnel处理器"
+    对于Tunnel处理器，统计对象为单个隧道，client值为Tunnel ID。
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
@@ -175,4 +184,4 @@ curl -XPOST http://127.0.0.1:8000/observer \
 ```
 
 `client` (string)
-:    用户标识
+:    用户或隧道标识

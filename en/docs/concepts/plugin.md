@@ -47,7 +47,7 @@ authers:
 `token` (string)
 :    credentials, plugin server can choose to validate this information.
 
-`tls` (duration, default=null)
+`tls` (object, default=null)
 :    After the configuration, TLS will be used to encrypt transmission. By default, TLS is not used.
 
 ## Plugin Service
