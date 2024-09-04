@@ -14,6 +14,8 @@ Transparent proxy supports two modes: REDIRECT and TPROXY. The REDIRECT mode onl
 
     Traffic sniffing is enabled through the `sniffing` option, which is not enabled by default.
 
+     If the SNI information is not sniffed for HTTPS traffic, you can enable the `sniffing.fallback` option and try to connect again using the original target address.
+
 ## REDIRECT
 
 Transparent proxy using REDIRECT can choose to mark packets. Using Mark requires administrator privileges to run.
@@ -37,6 +39,8 @@ Transparent proxy using REDIRECT can choose to mark packets. Using Mark requires
         chain: chain-0
         metadata:
           sniffing: true
+          sniffing.timeout: 5s
+          sniffing.fallback: true
       listener:
         type: red
     chains:
@@ -162,8 +166,10 @@ Set the mark value via the `so_mark` (command line) or `sockopts` (config file) 
       handler:
         type: red
         metadata:
-          sniffing: true
           tproxy: true
+          sniffing: true
+          sniffing.timeout: 5s
+          sniffing.fallback: true
       listener:
         type: red
         metadata:

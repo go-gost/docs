@@ -14,6 +14,8 @@ comments: true
 
     通过`sniffing`选项开启流量嗅探，默认不开启。通过`sniffing.timeout`选项设置嗅探超时时长。
 
+    对于HTTPS流量如果未嗅探到SNI信息，可以开启`sniffing.fallback`选项，再次使用目标地址尝试连接。
+
 ## REDIRECT
 
 采用REDIRECT方式的透明代理可以选择给数据包打标记(Mark)。使用Mark需要管理员权限运行。
@@ -38,6 +40,7 @@ comments: true
         metadata:
           sniffing: true
           sniffing.timeout: 5s
+          sniffing.fallback: true
       listener:
         type: red
     chains:
@@ -163,9 +166,10 @@ comments: true
       handler:
         type: red
         metadata:
+          tproxy: true
           sniffing: true
           sniffing.timeout: 5s
-          tproxy: true
+          sniffing.fallback: true
       listener:
         type: red
         metadata:

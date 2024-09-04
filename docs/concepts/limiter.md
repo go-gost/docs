@@ -466,7 +466,7 @@ curl -XPOST http://127.0.0.1:8000/limiter \
 
 ## 处理器(Handler)上的限制器
 
-对于支持认证的处理器(HTTP，HTTP2，SOCKS4，SOCKS5，Relay, Tunnel)，流量速率限制器也可以用在这些类型的处理器上。
+对于支持认证的处理器(HTTP，HTTP2，SOCKS4，SOCKS5，Relay，Tunnel)，流量速率限制器也可以用在这些类型的处理器上。
 
 ```yaml hl_lines="6"
 services:
