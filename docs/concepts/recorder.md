@@ -17,7 +17,7 @@ services:
   addr: :8080
   recorders:
   - name: recorder-0
-    record: recorder.service.router.dial.address
+    record: recorder.service.handler
   handler:
     type: auto
   listener:
@@ -128,7 +128,7 @@ services:
   addr: :8080
   recorders:
   - name: recorder-0
-    record: recorder.service.router.dial.address
+    record: recorder.service.handler
   - name: recorder-1
     record: recorder.service.router.dial.address.error
   handler:
@@ -147,17 +147,54 @@ services:
 
 目前支持的记录对象有：
 
-`recorder.service.client.address`
-:    所有访问服务的客户端地址
 
-`recorder.service.router.dial.address`
-:   所有访问的目标地址
+#### recorder.service.client.address
 
-`recorder.service.router.dial.address.error`
-:   建立连接失败的目标地址
+所有访问服务的客户端地址
 
-`recorder.service.handler.serial`
-:    串口设备通讯数据
+#### recorder.service.router.dial.address
+
+所有访问的目标地址
+
+#### recorder.service.router.dial.address.error
+
+建立连接失败的目标地址
+
+#### recorder.service.handler
+
+处理器以JSON格式记录每次请求处理的相关信息
+
+```json
+{"service":"service-0","network":"tcp","remote":"[::1]:37808","local":"[::1]:8080","host":":18000","err":"dial tcp :18000: connect: connection refused","time":"2024-09-14T09:53:13.281723394+08:00","duration":1430855}
+```
+
+对于能够处理HTTP流量的处理器会在`http`字段中额外记录HTTP请求和响应信息
+
+```json
+{"service":"service-0","network":"tcp",
+"remote":"[::1]:59234","local":"[::1]:8080",
+"host":"www.example.com","client":"user1",
+"http":{"host":"www.example.com","method":"GET","proto":"HTTP/1.1","scheme":"http","uri":"http://www.example.com/","statusCode":200,
+"requestHeader":{"Accept":["*/*"],"Proxy-Authorization":["Basic dXNlcjE6cGFzczE="],"Proxy-Connection":["Keep-Alive"],"User-Agent":["curl/8.5.0"]},
+"responseHeader":{"Age":["525134"],"Cache-Control":["max-age=604800"],"Content-Length":["1256"],"Content-Type":["text/html; charset=UTF-8"],"Date":["Sat, 14 Sep 2024 01:56:59 GMT"],"Etag":["\"3147526947+ident\""],"Expires":["Sat, 21 Sep 2024 01:56:59 GMT"],"Last-Modified":["Thu, 17 Oct 2019 07:18:26 GMT"],"Server":["ECAcc (sac/2538)"],"Vary":["Accept-Encoding"],"X-Cache":["HIT"]}},
+"time":"2024-09-14T09:56:58.997252296+08:00","duration":282125918}
+```
+
+对于DNS处理器会在`dns`字段中记录DNS请求和响应信息
+
+```json
+{"service":"service-0","network":"udp",
+"remote":"127.0.0.1:52801","local":":1053","host":"udp://192.168.1.1:53",
+"dns":{"id":58727,"name":"www.google.com.","class":"IN","type":"A",
+"question":";; opcode: QUERY, status: NOERROR, id: 58727\n;; flags: rd ad; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1\n\n;; OPT PSEUDOSECTION:\n; EDNS: version 0; flags:; udp: 1232\n; COOKIE: e9fde848447e55b9\n\n;; QUESTION SECTION:\n;www.google.com.\tIN\t A\n",
+"answer":";; opcode: QUERY, status: NOERROR, id: 58727\n;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0\n\n;; QUESTION SECTION:\n;www.google.com.\tIN\t A\n\n;; ANSWER SECTION:\nwww.google.com.\t227\tIN\tA\t157.240.17.35\n",
+"cached":false},
+"time":"2024-09-14T10:10:22.82722339+08:00","duration":2409303}
+```
+
+#### recorder.service.handler.serial
+
+记录串口设备[通讯数据](https://gost.run/tutorials/serial/#_5)
 
 ## 插件
 
