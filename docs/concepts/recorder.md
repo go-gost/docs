@@ -179,10 +179,10 @@ services:
 
 #### recorder.service.handler
 
-处理器以JSON格式记录每次请求处理的相关信息
-
 !!! tip "Blog"
     关于处理器上的记录器更详细的使用示例可以参考这篇[博文](https://gost.run/blog/2024/log/)。
+
+处理器以JSON格式记录每次请求处理的相关信息
 
 ```json
 {"service":"service-0","network":"tcp",
