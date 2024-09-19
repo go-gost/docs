@@ -181,6 +181,9 @@ services:
 
 处理器以JSON格式记录每次请求处理的相关信息
 
+!!! tip "Blog"
+    关于处理器上的记录器更详细的使用示例可以参考这篇[博文](https://gost.run/blog/2024/log/)。
+
 ```json
 {"service":"service-0","network":"tcp",
 "remote":"[::1]:37808","local":"[::1]:8080",
@@ -220,8 +223,6 @@ services:
 "duration":2409303,
 "sid":"crk2ig2ohhhpjksr2shg"
 ```
-
-关于处理器上的记录器更详细的使用示例可以参考这篇[博文](https://gost.run/blog/2024/log/)
 
 #### recorder.service.handler.serial
 
