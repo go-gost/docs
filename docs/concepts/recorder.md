@@ -221,6 +221,8 @@ services:
 "sid":"crk2ig2ohhhpjksr2shg"
 ```
 
+关于处理器上的记录器更详细的使用示例可以参考这篇[博文](https://gost.run/blog/2024/log/)
+
 #### recorder.service.handler.serial
 
 记录串口设备[通讯数据](https://gost.run/tutorials/serial/#_5)
