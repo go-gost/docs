@@ -92,3 +92,12 @@ recorders:
 ```
 
 通过这些数据可以更加方便的统计和分析请求的状态。更进一步，可以在记录器服务中基于实时的状态数据进行业务扩展，例如之前提到的[动态分流功能](https://gost.run/blog/2022/dynamic-bypass/)等。
+
+你也可以选择直接使用[gost-plugins](https://github.com/ginuerzh/gost-plugins)中的记录器插件服务，其会将接收到的记录数据保存在MongoDB数据库中或推送给Loki服务。
+
+
+![Loki - HTTP](../../images/loki01.png) 
+
+![Loki - DNS](../../images/loki02.png) 
+
+

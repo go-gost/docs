@@ -80,6 +80,8 @@ recorders:
   http:
     url: http://192.168.1.1:80
     timeout: 10s
+    header:
+      foo: bar
 ```
 
 `http.url` (string)
@@ -87,6 +89,9 @@ recorders:
 
 `timeout` (duration)
 :    Timeout for establishing a connection
+
+`http.header` (object)
+:    HTTP request header.
 
 ### Redis
 

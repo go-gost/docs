@@ -80,13 +80,18 @@ recorders:
   http:
     url: http://192.168.1.1:80
     timeout: 10s
+    header:
+      foo: bar
 ```
 
 `http.url` (string)
-:    HTTP URL地址
+:    HTTP URL地址。
 
 `http.timeout` (duration)
-:    请求超时时长
+:    请求超时时长。
+
+`http.header` (object)
+:    自定义HTTP请求头。
 
 ### Redis
 
@@ -192,7 +197,7 @@ services:
 ```json
 {"service":"service-0","network":"tcp",
 "remote":"[::1]:59234","local":"[::1]:8080",
-"host":"www.example.com","client":"user1",
+"host":"www.example.com","client":"user1","clientIP":"192.168.1.2",
 "http":{"host":"www.example.com","method":"GET","proto":"HTTP/1.1","scheme":"http","uri":"http://www.example.com/","statusCode":200,
 "request":{"contentLength":0,"header":{"Accept":["*/*"],"Proxy-Authorization":["Basic dXNlcjE6cGFzczE="],"Proxy-Connection":["Keep-Alive"],"User-Agent":["curl/8.5.0"]}},
 "response":{"contentLength":1256,"header":{"Age":["525134"],"Cache-Control":["max-age=604800"],"Content-Length":["1256"],"Content-Type":["text/html; charset=UTF-8"],"Date":["Sat, 14 Sep 2024 01:56:59 GMT"],"Etag":["\"3147526947+ident\""],"Expires":["Sat, 21 Sep 2024 01:56:59 GMT"],"Last-Modified":["Thu, 17 Oct 2019 07:18:26 GMT"],"Server":["ECAcc (sac/2538)"],"Vary":["Accept-Encoding"],"X-Cache":["HIT"]}}},
