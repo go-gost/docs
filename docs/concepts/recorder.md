@@ -195,7 +195,7 @@ services:
 }
 ```
 
-对于能够处理HTTP流量的处理器会在`http`字段中额外记录HTTP请求和响应信息
+对于能够处理HTTP流量的处理器，会在`http`字段中额外记录HTTP请求和响应信息
 
 ```json
 {"service":"service-0","network":"tcp",
@@ -207,6 +207,19 @@ services:
 "time":"2024-09-14T09:56:58.997252296+08:00",
 "duration":282125918,
 "sid":"crk3evaohhhk8lipb8qg"
+}
+```
+
+对于能够处理TLS流量的处理器，会在`tls`字段中额外记录TLS握手信息
+
+```json
+{"service":"service-0","network":"tcp",
+"remote":"127.0.0.1:50144","local":"127.0.0.1:443",
+"host":"www.google.com:443","clientIP":"127.0.0.1",
+"tls":{"serverName":"www.google.com","cipherSuite":"TLS_AES_256_GCM_SHA384","compressionMethod":0,"proto":"h2","version":"tls.1.3"},
+"duration":2091323186,
+"time":"2024-09-16T16:53:19.235320555+08:00",
+"sid":"crmjfvqohhhgqqu0f0h0"
 }
 ```
 

@@ -206,6 +206,19 @@ For handlers that can handle HTTP traffic, HTTP request and response will be add
 }
 ```
 
+For handlers that can handle TLS traffic, TLS handshake will be additionally recorded in the `tls` field
+
+```json
+{"service":"service-0","network":"tcp",
+"remote":"127.0.0.1:50144","local":"127.0.0.1:443",
+"host":"www.google.com:443","clientIP":"127.0.0.1",
+"tls":{"serverName":"www.google.com","cipherSuite":"TLS_AES_256_GCM_SHA384","compressionMethod":0,"proto":"h2","version":"tls.1.3"},
+"duration":2091323186,
+"time":"2024-09-16T16:53:19.235320555+08:00",
+"sid":"crmjfvqohhhgqqu0f0h0"
+}
+```
+
 The DNS handler will record DNS request and response information in the `dns` field
 
 ```json
