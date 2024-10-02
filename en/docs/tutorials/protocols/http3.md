@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP3
 
 HTTP3 has two modes: tunnel mode (data channel) and reverse proxy mode.

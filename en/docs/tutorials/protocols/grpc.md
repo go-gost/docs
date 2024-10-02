@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # gRPC
 
 gRPC is a data channel type in GOST.

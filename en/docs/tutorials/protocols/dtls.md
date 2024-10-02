@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # DTLS
 
 DTLS is a data channel type in GOST. The implementation of DTLS depends on the [pion/dtls](https://github.com/pion/dtls) library.

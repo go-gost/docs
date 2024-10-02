@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Plain HTTP Tunnel
 
 PHT is a data channel type in GOST.

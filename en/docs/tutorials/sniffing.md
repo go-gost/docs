@@ -2,22 +2,24 @@
 comments: true
 ---
 
-# 流量嗅探与MITM
+# Traffic Sniffing and MITM
 
-默认情况下客户端与服务端之间的数据交互对于中间的代理和转发服务来说是透明的，除了部分服务（例如SNI代理，透明代理，DNS代理等）需要根据请求中的信息获取目标主机地址外，都是对所经过的流量进行简单的转发而并不知道所转发的数据内容。
+By default, the data interaction between the client and the server is transparent to the intermediate proxy and forwarding services. Except for some services (such as SNI proxy, transparent proxy, DNS proxy, etc.) that need to obtain the target host address based on the information in the request, they simply forward the passing traffic without knowing the content of the forwarded data.
 
-有些时候我们可能需要对流量进行更进一步的分析，从而可以实现流量的实时监控，统计分析，对于开发人员来说也可以更好的辅助协议调试。
 
-!!! note "协议支持"
-    流量嗅探目前支持HTTP/1，HTTP/2，TLS和DNS协议。
+Sometimes we may need to conduct further analysis of the traffic, so that we can achieve real-time monitoring and statistical analysis of the traffic, which can also better assist developers in protocol debugging.
 
-## 流量嗅探
+!!! note "Protocol Support"
+    Traffic sniffing currently supports HTTP/1, HTTP/2, TLS and DNS protocols.
 
-流量嗅探是指对于所中转的流量进行分析，一般是对客户端的首次请求数据进行协议匹配，大多数情况下会检查是否为HTTP或TLS请求。如果满足条件，后面的数据交互就会按照特定的协议进行解析，从而可以获取到具体的通信内容。
+## Traffic Sniffing
 
-GOST中大部分代理和转发服务都支持流量嗅探。流量嗅探需要配合[记录器](../concepts/recorder.md)插件，服务会将嗅探到的内容通过记录器实时上报。 
+Traffic sniffing refers to the analysis of the transferred traffic, generally matching the protocol of the client's first request data. In most cases, it checks whether it is an HTTP or TLS request. If the conditions are met, the subsequent data interaction will be parsed according to a specific protocol, so that the specific communication content can be obtained.
 
-例如以下是一个开启了流量嗅探的HTTP代理服务，当代理协商阶段结束后，会进一步检查流量，尝试嗅探出HTTP或TLS流量。
+
+Most proxy and forwarding services in GOST support traffic sniffing. Traffic sniffing needs to be combined with a [recorder](../concepts/recorder.md) plugin, and the service will report the sniffed content in real time through the recorder.
+
+For example, the following is an HTTP proxy service with traffic sniffing enabled. After the proxy negotiation phase is over, it will further check the traffic and try to sniff out HTTP or TLS traffic.
 
 ```yaml hl_lines="8-11 15-18"
 services:
@@ -27,16 +29,17 @@ services:
       - name: recorder-0
         record: recorder.service.handler
         metadata:
-          # 同时记录HTTP请求和响应体
+          # Also record both HTTP request and response body.
           http.body: true
-          # 记录的请求和响应体最大大小，默认最多记录1MB数据。
+          # The maximum size of the request and response body to be recorded. 
+          # By default, a maximum of 1MB of data is recorded.
           http.maxBodySize: 1048576
     handler:
       type: http
       metadata:
-        # 开启流量嗅探
+        # Enable traffic sniffing.
         sniffing: true
-        # 流量嗅探超时时长，当嗅探请求超时后，退回到简单的数据中转逻辑。
+        # Traffic sniffing timeout. When the sniffing request times out, it will fall back to the simple data transfer logic.
         sniffing.timeout: 3s
     listener:
       type: tcp
@@ -47,7 +50,7 @@ recorders:
       timeout: 1s
 ```
 
-当通过代理请求`http://www.example.com`时，代理会嗅探到HTTP协议，并在请求结束后上报HTTP请求响应信息：
+When a request to `http://www.example.com` is made through the proxy, the proxy will sniff the HTTP protocol and report the HTTP request/response information after the request is completed:
 
 ```bash
 curl -p -x localhost:8080 http://www.example.com
@@ -66,7 +69,7 @@ curl -p -x localhost:8080 http://www.example.com
 "time":"2024-10-02T17:13:54.45553392+08:00"}
 ```
 
-作为对比，如果不开启流量嗅探（sniffing选项为false），代理也会上报基本的请求信息：
+In contrast, if traffic sniffing is not enabled (the sniffing option is false), the proxy will also report basic request information:
 
 ```json
 {"service":"service-0","network":"tcp","remote":"[::1]:38478","local":"[::1]:8080",
@@ -80,7 +83,7 @@ curl -p -x localhost:8080 http://www.example.com
 "time":"2024-10-02T17:10:43.884912063+08:00"}
 ```
 
-当通过代理请求`https://www.example.com`时，代理会嗅探到TLS协议，并在请求结束后上报TLS握手相关信息：
+When the request to `https://www.example.com` is made through the proxy, the proxy will sniff the TLS protocol and report TLS handshake related information after the request is completed:
 
 ```bash
 curl -x localhost:8080 https://www.example.com
@@ -99,26 +102,26 @@ curl -x localhost:8080 https://www.example.com
 "time":"2024-10-02T16:55:49.538015062+08:00"}
 ```
 
-## TLS终止与MITM代理
+## TLS Termination and MITM Proxy
 
-!!! note "开启流量嗅探"
-    MITM代理功能依赖流量嗅探，需要同时开启流量嗅探功能（sniffing选项设置为true）后才生效。
+!!! note "Enable traffic sniffing"
+    The MITM proxy function relies on traffic sniffing and will only take effect after the traffic sniffing function is enabled (the sniffing option is set to true).
 
-通过开启流量嗅探可以解析出TLS握手阶段的交互信息，但如果想更进一步嗅探到后续TLS加密传输的数据，就需要在代理服务端实现[TLS终止（TLS Termination）](https://www.haproxy.com/glossary/what-is-ssl-tls-termination)，也就是让客户端认为代理服务就是所要访问的目标服务端主机，从而在代理端对TLS数据进行解密。此过程也称作[中间人攻击(MITM)](https://zh.wikipedia.org/wiki/%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB)，此时HTTP代理也是一个MITM代理，可以劫持TLS流量。
+By enabling traffic sniffing, you can parse the interactive information in the TLS handshake phase. However, if you want to further sniff the subsequent TLS encrypted transmission data, you need to implement [TLS Termination](https://www.haproxy.com/glossary/what-is-ssl-tls-termination) on the proxy server, that is, let the client think that the proxy service is the target server host to be accessed, so as to decrypt the TLS data on the proxy side. This process is also called a [Man-in-the-middle attack (MITM)](https://en.wikipedia.org/wiki/Man-in-the-middle_attack). At this time, the HTTP proxy is also a MITM proxy, which can hijack TLS traffic.
 
-TLS流量劫持的关键是对私有CA根证书的信任，用我们提供的根证书来签发并替代原始主机的证书。仅当同时设置了正确的CA证书和私钥（`mitm.certFile`和`mitm.keyFile`选项）后才会开启TLS流量劫持。
+The key to TLS traffic hijacking is to trust the private CA root certificate, and use the root certificate we provide to issue and replace the certificate of the original host. TLS traffic hijacking will only be enabled when the correct CA certificate and private key (`mitm.certFile` and `mitm.keyFile` options) are set at the same time.
 
-!!! tip "生成CA根证书"
-    借助于[openssl](https://github.com/openssl/openssl)命令，可以生成私有CA证书：
+!!! tip "Generate CA root certificate"
+    With the help of [openssl](https://github.com/openssl/openssl) command, you can generate a private CA certificate:
 
     ```bash
-    # 生成根证书私钥ca.key文件
+    # Generate the CA private key file ca.key.
     openssl genrsa -out ca.key 2048
-    # 生成自签名根证书ca.crt文件
+    # Generate the self-signed CA certificate file ca.crt. 
     openssl req -new -x509 -days 365 -key ca.key -out ca.crt
     ```
 
-以下是开启了TLS流量劫持的HTTP代理，并仅对访问`example.com`及其子域名的TLS流量进行劫持。
+The following is an HTTP proxy with TLS traffic hijacking enabled, which only hijacks TLS traffic to `example.com` and its subdomains.
 
 ```yaml hl_lines="19-26"
 services:
@@ -128,24 +131,24 @@ services:
       - name: recorder-0
         record: recorder.service.handler
         metadata:
-          # 同时记录HTTP请求和响应体
+          # Also record both HTTP request and response body.
           http.body: true
-          # 记录的请求和响应体最大大小，默认最多记录1MB数据。
+          # The maximum size of the request and response body to be recorded. 
+          # By default, a maximum of 1MB of data is recorded.
           http.maxBodySize: 1048576
     handler:
       type: http
       metadata:
-        # 开启流量嗅探
+        # Enable traffic sniffing.
         sniffing: true
-        # 流量嗅探超时时长，当嗅探请求超时后，退回到简单的数据中转逻辑。
+        # Traffic sniffing timeout. When the sniffing request times out, it will fall back to the simple data transfer logic.
         sniffing.timeout: 3s
-        # CA根证书文件
+        # The CA root certificate file.
         mitm.certFile: ca.crt
-        # CA根证书私钥文件
+        # The CA private key file.
         mitm.keyFile: ca.key
-        # 自定义ALPN协商结果
+        # Customize ALPN negotiation result
         mitm.alpn: h2
-        # TLS流量劫持过滤
         mitm.bypass: mitm
     listener:
       type: tcp
@@ -162,19 +165,18 @@ bypasses:
 ```
 
 `mitm.certFile` (string, required)
-:    CA根证书文件路径，用于签发服务端证书。
+:    The CA root certificate file path, which is used to issue server certificates.
 
 `mitm.keyFile` (string, required)
-:    CA根证书私钥文件路径，用于签发服务端证书。
+:    The CA private key file path, which is used to issue server certificates.
 
 `mitm.alpn` (string)
-:    指定TLS-ALPN协商结果，例如`h2`，`http/1.1`。
+:    Specifies the TLS-ALPN negotiation result, for example `h2`，`http/1.1`.
 
 `mitm.bypass` (string)
-:    Bypass名称，引用`bypasses.name`，通过bypass可以对指定的主机进行TLS流量劫持。
+:    Bypass name, reference to `bypasses.name`. Bypass can be used to hijack TLS traffic on the specified host.
 
-
-当通过代理请求`https://www.example.com`时，代理会嗅探到TLS协议，并执行TLS终止来对流量进行解密后再次嗅探解密后的流量，因此会进一步嗅探到解密后的HTTP/2请求响应内容：
+When requesting `https://www.example.com` through the proxy, the proxy will sniff the TLS protocol, perform TLS termination to decrypt the traffic, and then sniff the decrypted traffic again, so it will further sniff the decrypted HTTP/2 request/response content:
 
 ```bash
 curl -k -x localhost:8080 https://www.example.com
@@ -196,11 +198,11 @@ curl -k -x localhost:8080 https://www.example.com
 "time":"2024-10-02T18:28:35.048920855+08:00"}
 ```
 
-## 数据聚合与分析
+## Data Aggregation And Analysis
 
-GOST对于流量嗅探信息仅作上报操作，不会再进一步处理。如果需要对信息进行查询统计和分析，可以把接收到的上报信息存储在[ELK](https://www.elastic.co/cn/elastic-stack)，[Grafana Loki](https://grafana.com/oss/loki/)等日志聚合系统。
+GOST only reports the traffic sniffing information and does not process it further. If you need to query, count and analyze the information, you can store the received reported information in a log aggregation system such as [ELK](https://www.elastic.co/cn/elastic-stack), [Grafana Loki](https://grafana.com/oss/loki/), etc.
 
-你也可以选择直接使用[gost-plugins](https://github.com/ginuerzh/gost-plugins)中的记录器插件服务，其会将接收到的记录数据保存在MongoDB数据库中或推送给Loki服务。
+You can also choose to use the recorder plugin service in [gost-plugins](https://github.com/ginuerzh/gost-plugins) directly, which will save the received data in a MongoDB database or push it to the Loki service.
 
 ```bash
 docker run -p 8000:8000 ginuerzh/gost-plugins  \
@@ -208,8 +210,8 @@ docker run -p 8000:8000 ginuerzh/gost-plugins  \
   --mongo.uri=mongodb://mongo.db:27017 --mongo.db=gost
 ```
 
-![Loki - HTTP](../../images/loki01.png) 
+![Loki - HTTP](/images/loki01.png) 
 
-![Loki - DNS](../../images/loki02.png) 
+![Loki - DNS](/images/loki02.png) 
 
-![Mongo - HTTP](../../images/mongo01.png) 
+![Mongo - HTTP](/images/mongo01.png) 

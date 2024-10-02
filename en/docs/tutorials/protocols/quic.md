@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # QUIC
 
 QUIC is a data channel type in GOST. The implementation of QUIC depends on the [quic-go/quic-go](https://github.com/quic-go/quic-go) library.

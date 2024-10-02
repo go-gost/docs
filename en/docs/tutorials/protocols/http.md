@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP
 
 HTTP proxy is a proxy service implemented using the [CONNECT method](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/CONNECT) of the HTTP protocol.

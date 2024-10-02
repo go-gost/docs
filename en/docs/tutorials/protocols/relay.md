@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Relay Protocol
 
 The Relay protocol is a GOST-specific protocol that has both proxy and forwarding functions. It can process TCP and UDP data at the same time and supports user authentication.

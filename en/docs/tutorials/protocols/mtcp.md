@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # MTCP
 
 TCP data channel with multiplexing function. Multiplexing is based on [xtaci/smux](https://github.com/xtaci/smux) library.

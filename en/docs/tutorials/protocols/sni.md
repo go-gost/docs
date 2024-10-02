@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # SNI
 
 [SNI](https://www.cloudflare.com/zh-cn/learning/ssl/what-is-sni/) (Server Name Indication) is an extension of the TLS protocol and is included in the TLS handshake process (Client Hello) to identify the target hostname. The SNI proxy obtains the target access address by parsing the SNI part in the TLS handshake information.

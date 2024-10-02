@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # TLS
 
 TLS is a data channel type in GOST.

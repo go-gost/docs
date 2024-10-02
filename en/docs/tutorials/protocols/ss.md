@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Shadowsocks
 
 GOST's support for shadowsocks is based on the [shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go) and [shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) libraries.

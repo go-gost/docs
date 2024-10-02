@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Websocket
 
 Websocket is a data channel type in GOST.

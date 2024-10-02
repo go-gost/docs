@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # SSH
 
 SSH is a data channel type in GOST.

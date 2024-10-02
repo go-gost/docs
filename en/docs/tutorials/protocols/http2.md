@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP2
 
 HTTP2 has two modes: proxy mode and tunnel mode.

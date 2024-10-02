@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Protocol
 
 As described in [Proxy, Forwarding and Tunnel](/en/concepts/proxy/), a GOST service or node is divided into two layers, the data processing layer and the data channel layer, each layer corresponds to a network protocol. The two layers are independent of each other and can be used in any combination (except for some restrictions).

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KCP
 
 KCP is a data channel type in GOST. The implementation of KCP depends on the [xtaci/kcp-go](https://github.com/xtaci/kcp-go) library.
