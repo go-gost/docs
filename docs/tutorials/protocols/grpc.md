@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # gRPC
 
 gRPC是GOST中的一种数据通道类型。

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Plain HTTP Tunnel
 
 PHT是GOST中的一种数据通道类型。

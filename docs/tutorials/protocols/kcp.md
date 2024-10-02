@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # KCP
 
 KCP是GOST中的一种数据通道类型。KCP的实现依赖于[xtaci/kcp-go](https://github.com/xtaci/kcp-go)库。

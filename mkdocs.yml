@@ -166,6 +166,7 @@ nav:
     - 反向代理: tutorials/reverse-proxy.md
     - 反向代理隧道: tutorials/reverse-proxy-tunnel.md
     - 反向代理隧道-高可用: tutorials/reverse-proxy-tunnel-ha.md
+    - 流量嗅探: tutorials/sniffing.md
     - HTTP文件服务: tutorials/file.md
     - 探测防御: tutorials/probe-resistance.md
     - PROXY Protocol: tutorials/proxy-protocol.md
@@ -177,7 +178,6 @@ nav:
     - ICMP通道: tutorials/icmp.md
     - Unix域套接字重定向: tutorials/unix.md
     - 串口重定向: tutorials/serial.md
-    - 流量嗅探与MITM: tutorials/sniffing.md
     - 监控指标: tutorials/metrics.md
     - 日志: tutorials/log.md
   - 参考:

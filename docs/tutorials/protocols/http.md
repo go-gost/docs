@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP
 
 HTTP代理是利用HTTP协议的[CONNECT方法](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/CONNECT)实现的代理服务。

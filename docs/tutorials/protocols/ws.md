@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Websocket
 
 Websocket是GOST中的一种数据通道类型。

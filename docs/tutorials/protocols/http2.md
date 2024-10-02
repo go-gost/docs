@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # HTTP2
 
 HTTP2有两种模式：代理模式和通道模式。

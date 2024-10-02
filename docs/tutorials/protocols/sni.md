@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # SNI
 
 [SNI](https://www.cloudflare.com/zh-cn/learning/ssl/what-is-sni/)(Server Name Indication)是TLS协议的扩展，包含在TLS握手的流程中(Client Hello)，用来标识所访问目标主机名。SNI代理通过解析TLS握手信息中的SNI部分，从而获取目标访问地址。

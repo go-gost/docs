@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # MTCP
 
 具有多路复用功能的TCP数据通道。多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。

@@ -2,18 +2,18 @@
 comments: true
 ---
 
-默认情况下客户端与服务端之间的数据交互对于中间的代理和转发服务来说是透明的，除了部分服务（例如SNI代理，透明代理等）需要根据请求中的信息获取目标主机地址外，都是对所经过的流量进行简单的转发而并不知道所转发的数据内容。
+# 流量嗅探
+
+默认情况下客户端与服务端之间的数据交互对于中间的代理和转发服务来说是透明的，除了部分服务（例如SNI代理，透明代理，DNS代理等）需要根据请求中的信息获取目标主机地址外，都是对所经过的流量进行简单的转发而并不知道所转发的数据内容。
 
 有些时候我们可能需要对流量进行更进一步的分析，从而可以实现流量的实时监控，统计分析，对于开发人员来说也可以更好的辅助协议调试。
 
-# 流量嗅探
-
 !!! note "协议支持"
-    流量嗅探目前支持HTTP/1，HTTP/2，TLS协议和DNS协议。
+    流量嗅探目前支持HTTP/1，HTTP/2，TLS和DNS协议。
 
 流量嗅探是指对于所中转的流量进行分析，一般是对客户端的首次请求数据进行协议匹配，大多数情况下会检查是否为HTTP或TLS请求。如果满足条件，后面的数据交互就会按照特定的协议进行解析，从而可以获取到具体的通信内容。
 
-GOST中大部分的代理和转发服务都支持流量嗅探（具体请查看响应的协议文档说明）。流量嗅探需要配合[记录器](../concepts/recorder.md)插件，服务会将嗅探到的内容通过记录器实时上报。 
+GOST中大部分代理和转发服务都支持流量嗅探。流量嗅探需要配合[记录器](../concepts/recorder.md)插件，服务会将嗅探到的内容通过记录器实时上报。 
 
 例如以下是一个开启了流量嗅探的HTTP代理服务，当代理协商阶段结束后，会进一步检查流量，尝试嗅探出HTTP或TLS流量。
 
@@ -106,8 +106,6 @@ curl -x localhost:8080 https://www.example.com
 
 TLS流量劫持的关键是对私有CA根证书的信任，用我们提供的根证书来签发并替代原始主机的证书。仅当同时设置了正确的CA证书和私钥（mitm.certFile和mitm.keyFile）后才会开启TLS流量劫持。
 
-以下是开启了MITM TLS流量劫持的HTTP代理，并仅对访问`example.com`及其子域名的TLS流量进行劫持。
-
 !!! tip "生成CA根证书"
     借助于[openssl](https://github.com/openssl/openssl)命令，可以生成私有CA证书：
 
@@ -117,6 +115,8 @@ TLS流量劫持的关键是对私有CA根证书的信任，用我们提供的根
     # 生成自签名根证书ca.crt文件
     openssl req -new -x509 -days 365 -key ca.key -out ca.crt
     ```
+
+以下是开启了TLS流量劫持的HTTP代理，并仅对访问`example.com`及其子域名的TLS流量进行劫持。
 
 ```yaml hl_lines="19-26"
 services:
@@ -172,7 +172,7 @@ bypasses:
 :    Bypass名称，引用`bypasses.name`，通过bypass可以对指定的主机进行TLS流量劫持。
 
 
-当通过代理请求`https://www.example.com`时，代理会嗅探到TLS协议，并执行TLS终止来对流量进行解密后再次嗅探解密后的流量，此时会同时嗅探到TLS握手信息和解密后的HTTP/2请求响应内容：
+当通过代理请求`https://www.example.com`时，代理会嗅探到TLS协议，并执行TLS终止来对流量进行解密后再次嗅探解密后的流量，因此会进一步嗅探到解密后的HTTP/2请求响应内容：
 
 ```bash
 curl -k -x localhost:8080 https://www.example.com
@@ -196,10 +196,14 @@ curl -k -x localhost:8080 https://www.example.com
 
 # 数据聚合与分析
 
-GOST对于流量嗅探信息仅作上报操作，不会再进一步处理，如果需要对信息进行查询统计分析，可以把接收到的上报信息存储在ELK，Loki等日志聚合系统。你也可以选择直接使用[gost-plugins](https://github.com/ginuerzh/gost-plugins)中的记录器插件服务，其会将接收到的记录数据保存在MongoDB数据库中或推送给Loki服务。
+GOST对于流量嗅探信息仅作上报操作，不会再进一步处理。如果需要对信息进行查询统计和分析，可以把接收到的上报信息存储在[ELK](https://www.elastic.co/cn/elastic-stack)，[Grafana Loki](https://grafana.com/oss/loki/)等日志聚合系统。
+
+你也可以选择直接使用[gost-plugins](https://github.com/ginuerzh/gost-plugins)中的记录器插件服务，其会将接收到的记录数据保存在MongoDB数据库中或推送给Loki服务。
 
 ```bash
-docker run -p 8000:8000 ginuerzh/gost-plugins recorder --addr=:8000 --loki.url=http://loki.write:3100/loki/api/v1/push --loki.id=gost --mongo.uri=mongodb://mongo.db:27017 --mongo.db=gost
+docker run -p 8000:8000 ginuerzh/gost-plugins  \
+  recorder --addr=:8000 --loki.url=http://loki.write:3100/loki/api/v1/push --loki.id=gost \
+  --mongo.uri=mongodb://mongo.db:27017 --mongo.db=gost
 ```
 
 ![Loki - HTTP](../../images/loki01.png) 

@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # QUIC
 
 QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[quic-go/quic-go](https://github.com/quic-go/quic-go)库。

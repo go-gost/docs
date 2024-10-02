@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Shadowsocks
 
 GOST对shadowsocks的支持基于[shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go)和[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)库。

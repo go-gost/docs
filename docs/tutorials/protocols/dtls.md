@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # DTLS
 
 DTLS是GOST中的一种数据通道类型。DTLS的实现依赖于[pion/dtls](https://github.com/pion/dtls)库。

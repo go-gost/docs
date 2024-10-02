@@ -1,3 +1,7 @@
+---
+comments: true
+---
+
 # Relay协议
 
 Relay协议是GOST特有的一个协议，同时具有代理和转发功能，可同时处理TCP和UDP的数据，并支持用户认证。
