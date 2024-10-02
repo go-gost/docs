@@ -103,6 +103,7 @@ recorders:
   redis:
     addr: 127.0.0.1:6379
     db: 1
+    username: user
     password: 123456
     key: gost:recorder:recorder-0
     type: set
@@ -114,8 +115,11 @@ recorders:
 `db` (int, default=0)
 :    database name 
 
+`username` (string)
+:    username
+
 `password` (string)
-:    redis password
+:    password
 
 `key` (string, required)
 :    redis key

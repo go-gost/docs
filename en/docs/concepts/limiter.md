@@ -255,6 +255,7 @@ Specify the redis service as the data source, and the redis data type must be Se
       redis:
         addr: 127.0.0.1:6379
         db: 1
+        username: user
         password: 123456
         key: gost:limiters:limiter-0
         type: set
@@ -268,6 +269,7 @@ Specify the redis service as the data source, and the redis data type must be Se
       redis:
         addr: 127.0.0.1:6379
         db: 1
+        username: user
         password: 123456
         key: gost:rlimiters:rlimiter-0
         type: set
@@ -281,6 +283,7 @@ Specify the redis service as the data source, and the redis data type must be Se
       redis:
         addr: 127.0.0.1:6379
         db: 1
+        username: user
         password: 123456
         key: gost:climiters:climiter-0
         type: set
@@ -291,6 +294,9 @@ Specify the redis service as the data source, and the redis data type must be Se
 
 `db` (int, default=0)
 :    database name.
+
+`username` (string)
+:    username
 
 `password` (string)
 :    password

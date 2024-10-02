@@ -142,6 +142,9 @@ services:
         maxVersion: VersionTLS13
         cipherSuites:
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+		alpn:
+		- h2
+		- http/1.1
 ```
 
 `minVersion` (string)
@@ -152,6 +155,9 @@ services:
 
 `cipherSuites` (list)
 :    Cipher Suites, See [Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants) for more information.
+
+`alpn` (list)
+: ALPN list
 
 ## Mutual TLS authentication
 

@@ -177,6 +177,7 @@ nav:
     - ICMP通道: tutorials/icmp.md
     - Unix域套接字重定向: tutorials/unix.md
     - 串口重定向: tutorials/serial.md
+    - 流量嗅探与MITM: tutorials/sniffing.md
     - 监控指标: tutorials/metrics.md
     - 日志: tutorials/log.md
   - 参考:

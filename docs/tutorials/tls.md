@@ -142,6 +142,9 @@ services:
         maxVersion: VersionTLS13
         cipherSuites:
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+		alpn:
+		- h2
+		- http/1.1
 ```
 
 `minVersion` (string)
@@ -152,6 +155,9 @@ services:
 
 `cipherSuites` (list)
 :    加密套件，可选值参考[Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants)。
+
+`alpn` (list)
+:    APLN列表
 
 ## 双向证书校验
 

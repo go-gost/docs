@@ -391,6 +391,7 @@ bypasses:
   redis:
     addr: 127.0.0.1:6379
     db: 1
+    username: user
     password: 123456
     key: gost:bypasses:bypass-0
 ```
@@ -400,6 +401,9 @@ bypasses:
 
 `db` (int, default=0)
 :    数据库名
+
+`username` (string)
+:    用户名
 
 `password` (string)
 :    密码

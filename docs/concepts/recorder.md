@@ -103,6 +103,7 @@ recorders:
   redis:
     addr: 127.0.0.1:6379
     db: 1
+    username: user
     password: 123456
     key: gost:recorder:recorder-0
     type: set
@@ -113,6 +114,9 @@ recorders:
 
 `db` (int, default=0)
 :    数据库名
+
+`username` (string)
+:    用户名
 
 `password` (string)
 :    密码
@@ -155,7 +159,7 @@ services:
 :    参数选项。
 
 `http.body` (bool, default=false)
-:    当记录HTTP数据时，同时记录请求和相应体。
+:    当记录HTTP数据时，同时记录请求和响应体(base64格式)。
 
 `http.maxBodySize` (int, default=1048576)
 :    HTTP请求和响应体数据记录大小，默认为1MB，仅当`http.body`选项开启后有效。
