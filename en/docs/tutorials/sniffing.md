@@ -10,7 +10,7 @@ By default, the data interaction between the client and the server is transparen
 Sometimes we may need to conduct further analysis of the traffic, so that we can achieve real-time monitoring and statistical analysis of the traffic, which can also better assist developers in protocol debugging.
 
 !!! note "Protocol Support"
-    Traffic sniffing currently supports HTTP/1, HTTP/2, TLS and DNS protocols.
+    Traffic sniffing currently supports HTTP/1, HTTP/2, TLS, Websocket and DNS protocols.
 
 ## Traffic Sniffing
 
@@ -32,8 +32,8 @@ services:
           # Also record both HTTP request and response body.
           http.body: true
           # The maximum size of the request and response body to be recorded. 
-          # By default, a maximum of 1MB of data is recorded.
-          http.maxBodySize: 1048576
+          # By default, a maximum of 64KB of data is recorded.
+          http.maxBodySize: 65536
     handler:
       type: http
       metadata:
@@ -41,6 +41,10 @@ services:
         sniffing: true
         # Traffic sniffing timeout. When the sniffing request times out, it will fall back to the simple data transfer logic.
         sniffing.timeout: 3s
+        # sniffing websocket frame
+        sniffing.websocket: true
+        # sampling rate of websocket frames
+        sniffing.websocket.sampleRate: 10
     listener:
       type: tcp
 recorders:
@@ -49,6 +53,8 @@ recorders:
       url: http://localhost:8000
       timeout: 1s
 ```
+
+### HTTP
 
 When a request to `http://www.example.com` is made through the proxy, the proxy will sniff the HTTP protocol and report the HTTP request/response information after the request is completed:
 
@@ -63,10 +69,7 @@ curl -p -x localhost:8080 http://www.example.com
 "request":{"contentLength":0,"header":{"Accept":["*/*"],"User-Agent":["curl/8.5.0"]},"body":null},
 "response":{"contentLength":1256,"header":{"Accept-Ranges":["bytes"],"Age":["531603"],"Cache-Control":["max-age=604800"],"Content-Length":["1256"],"Content-Type":["text/html; charset=UTF-8"],"Date":["Wed, 02 Oct 2024 09:13:54 GMT"],"Etag":["\"3147526947+gzip\""],"Expires":["Wed, 09 Oct 2024 09:13:54 GMT"],"Last-Modified":["Thu, 17 Oct 2019 07:18:26 GMT"],"Server":["ECAcc (sac/255D)"],"Vary":["Accept-Encoding"],"X-Cache":["HIT"]},
 "body":"PCFkb2N0eXBlIGh0bWw+CjxodG1sPgo8aGVhZD4KICAgIDx0aXRsZT5FeGFtcGxlIERvbWFpbjwvdGl0bGU+CgogICAgPG1ldGEgY2hhcnNldD0idXRmLTgiIC8+CiAgICA8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LXR5cGUiIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD11dGYtOCIgLz4KICAgIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MSIgLz4KICAgIDxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+CiAgICBib2R5IHsKICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZjBmMGYyOwogICAgICAgIG1hcmdpbjogMDsKICAgICAgICBwYWRkaW5nOiAwOwogICAgICAgIGZvbnQtZmFtaWx5OiAtYXBwbGUtc3lzdGVtLCBzeXN0ZW0tdWksIEJsaW5rTWFjU3lzdGVtRm9udCwgIlNlZ29lIFVJIiwgIk9wZW4gU2FucyIsICJIZWx2ZXRpY2EgTmV1ZSIsIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWY7CiAgICAgICAgCiAgICB9CiAgICBkaXYgewogICAgICAgIHdpZHRoOiA2MDBweDsKICAgICAgICBtYXJnaW46IDVlbSBhdXRvOwogICAgICAgIHBhZGRpbmc6IDJlbTsKICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiAjZmRmZGZmOwogICAgICAgIGJvcmRlci1yYWRpdXM6IDAuNWVtOwogICAgICAgIGJveC1zaGFkb3c6IDJweCAzcHggN3B4IDJweCByZ2JhKDAsMCwwLDAuMDIpOwogICAgfQogICAgYTpsaW5rLCBhOnZpc2l0ZWQgewogICAgICAgIGNvbG9yOiAjMzg0ODhmOwogICAgICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTsKICAgIH0KICAgIEBtZWRpYSAobWF4LXdpZHRoOiA3MDBweCkgewogICAgICAgIGRpdiB7CiAgICAgICAgICAgIG1hcmdpbjogMCBhdXRvOwogICAgICAgICAgICB3aWR0aDogYXV0bzsKICAgICAgICB9CiAgICB9CiAgICA8L3N0eWxlPiAgICAKPC9oZWFkPgoKPGJvZHk+CjxkaXY+CiAgICA8aDE+RXhhbXBsZSBEb21haW48L2gxPgogICAgPHA+VGhpcyBkb21haW4gaXMgZm9yIHVzZSBpbiBpbGx1c3RyYXRpdmUgZXhhbXBsZXMgaW4gZG9jdW1lbnRzLiBZb3UgbWF5IHVzZSB0aGlzCiAgICBkb21haW4gaW4gbGl0ZXJhdHVyZSB3aXRob3V0IHByaW9yIGNvb3JkaW5hdGlvbiBvciBhc2tpbmcgZm9yIHBlcm1pc3Npb24uPC9wPgogICAgPHA+PGEgaHJlZj0iaHR0cHM6Ly93d3cuaWFuYS5vcmcvZG9tYWlucy9leGFtcGxlIj5Nb3JlIGluZm9ybWF0aW9uLi4uPC9hPjwvcD4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo="}},
-"route":"www.example.com:80",
-"sid":"crugtkkdfur6asj5vbtg",
-"duration":275290907,
-"time":"2024-10-02T17:13:54.45553392+08:00"}
+"route":"www.example.com:80","sid":"crugtkkdfur6asj5vbtg","duration":275290907,"time":"2024-10-02T17:13:54.45553392+08:00"}
 ```
 
 In contrast, if traffic sniffing is not enabled (the sniffing option is false), the proxy will also report basic request information:
@@ -77,11 +80,10 @@ In contrast, if traffic sniffing is not enabled (the sniffing option is false), 
 "http":{"host":"www.example.com:80","method":"CONNECT","proto":"HTTP/1.1","scheme":"","uri":"www.example.com:80","statusCode":200,
 "request":{"contentLength":0,"header":{"Proxy-Connection":["Keep-Alive"],"User-Agent":["curl/8.5.0"]},"body":null},
 "response":{"contentLength":0,"header":{"Proxy-Agent":["gost/3.0"]},"body":null}},
-"route":"www.example.com:80",
-"sid":"crugs4sdfur6173lghpg",
-"duration":286770422,
-"time":"2024-10-02T17:10:43.884912063+08:00"}
+"route":"www.example.com:80","sid":"crugs4sdfur6173lghpg","duration":286770422,"time":"2024-10-02T17:10:43.884912063+08:00"}
 ```
+
+### TLS
 
 When the request to `https://www.example.com` is made through the proxy, the proxy will sniff the TLS protocol and report TLS handshake related information after the request is completed:
 
@@ -96,10 +98,48 @@ curl -x localhost:8080 https://www.example.com
 "response":{"contentLength":0,"header":{"Proxy-Agent":["gost/3.0"]},"body":null}},
 "tls":{"serverName":"www.example.com","cipherSuite":"TLS_CHACHA20_POLY1305_SHA256","compressionMethod":0,"proto":"h2","version":"tls1.3","clientHello":"1603010200010001fc030376cf0725e0fdd0eacbcd3a3812a7c485b9a6d8f56ba0be60e6478034fbb1d4fc20d9ba04c56294e5d47cf90e602ae9cc035a3dd5f3176282d5607c97ccfc67da11003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff0100017500000014001200000f7777772e6578616d706c652e636f6d000b000403000102000a00160014001d0017001e00190018010001010102010301040010000e000c02683208687474702f312e31001600000017000000310000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d00202df40f29d72881390f179f1de16e0e90e98f7b1bc8c6a238598d6f494452926a001500b200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 "serverHello":"160303007a02000076030347c2e7bbf9682466d474c3e73ba80b65814df3d31ed915790425525ff0080be920d9ba04c56294e5d47cf90e602ae9cc035a3dd5f3176282d5607c97ccfc67da11130300002e002b0002030400330024001d0020207342df1ceb5399e366b31045804b35e57d202818d59dcfba9f106297c83354"},
-"route":"www.example.com:443",
-"sid":"crugl5cdfur509g9qu40",
-"duration":605161979,
-"time":"2024-10-02T16:55:49.538015062+08:00"}
+"route":"www.example.com:443","sid":"crugl5cdfur509g9qu40","duration":605161979,"time":"2024-10-02T16:55:49.538015062+08:00"}
+```
+
+### Websocket
+
+When sniffing of Websocket data frames is enabled (`sniffing.websocket` option value is `true`), the recorder will record the websocket data frames according to the set sampling rate (`sniffing.websocket.sampleRate`). The default rate is 10 frames per second. When set to a negative number, all frames will be recorded.
+
+
+For example, when requesting `ws://ws.vi-server.org/mirror` and sending `hello`, the server will also return the same data and then disconnect. The recorder will record HTTP request/response information and websocket data frame information in the `websocket` field, including the frame header and data part.
+
+```json
+// client -> server: hello
+{"service":"tproxy-tcp","network":"tcp","remote":"192.168.100.15:60550","local":"192.236.209.31:80","host":"ws.vi-server.org:80","dst":"192.236.209.31:80",
+"proto":"http","clientIP":"192.168.100.15",
+"http":{"host":"ws.vi-server.org","method":"GET","proto":"HTTP/1.1","scheme":"","uri":"/mirror","statusCode":101},
+"websocket":{"from":"client","fin":true,"rsv1":false,"rsv2":false,"rsv3":false,"opcode":1,"masked":true,"maskKey":1114857390,"length":5,"payload":"xjofLsE="},
+"route":"ws.vi-server.org:80","inputBytes":11,"outputBytes":0,"sid":"cs9spk2gj0p6p7n799ag","duration":1967127504,"time":"2024-10-19T23:14:26.756895008+08:00"}
+// server -> client: hello
+{"service":"tproxy-tcp","network":"tcp","remote":"192.168.100.15:60550","local":"192.236.209.31:80","host":"ws.vi-server.org:80","dst":"192.236.209.31:80",
+"proto":"http","clientIP":"192.168.100.15",
+"http":{"host":"ws.vi-server.org","method":"GET","proto":"HTTP/1.1","scheme":"","uri":"/mirror","statusCode":101},
+"websocket":{"from":"server","fin":true,"rsv1":false,"rsv2":false,"rsv3":false,"opcode":1,"masked":false,"maskKey":0,"length":5,"payload":"aGVsbG8="},
+"route":"ws.vi-server.org:80","inputBytes":0,"outputBytes":7,"sid":"cs9spk2gj0p6p7n799ag","duration":2254987752,"time":"2024-10-19T23:14:27.044724535+08:00"}
+// client -> server: close
+{"service":"tproxy-tcp","network":"tcp","remote":"192.168.100.15:60550","local":"192.236.209.31:80","host":"ws.vi-server.org:80","dst":"192.236.209.31:80",
+"proto":"http","clientIP":"192.168.100.15",
+"http":{"host":"ws.vi-server.org","method":"GET","proto":"HTTP/1.1","scheme":"","uri":"/mirror","statusCode":101},
+"websocket":{"from":"client","fin":true,"rsv1":false,"rsv2":false,"rsv3":false,"opcode":8,"masked":true,"maskKey":57819923,"length":2,"payload":"EKs="},
+"route":"ws.vi-server.org:80","inputBytes":8,"outputBytes":0,"sid":"cs9spk2gj0p6p7n799ag","duration":2260247557,"time":"2024-10-19T23:14:29.020240685+08:00"}
+// server -> client: close
+{"service":"tproxy-tcp","network":"tcp","remote":"192.168.100.15:60550","local":"192.236.209.31:80","host":"ws.vi-server.org:80","dst":"192.236.209.31:80",
+"proto":"http","clientIP":"192.168.100.15",
+"http":{"host":"ws.vi-server.org","method":"GET","proto":"HTTP/1.1","scheme":"","uri":"/mirror","statusCode":101},
+"websocket":{"from":"server","fin":true,"rsv1":false,"rsv2":false,"rsv3":false,"opcode":8,"masked":false,"maskKey":0,"length":2,"payload":"A+g="},
+"route":"ws.vi-server.org:80","inputBytes":0,"outputBytes":4,"sid":"cs9spk2gj0p6p7n799ag","duration":2261099022,"time":"2024-10-19T23:14:29.30869087+08:00"}
+// final http upgrade
+{"service":"tproxy-tcp","network":"tcp","remote":"192.168.100.15:60550","local":"192.236.209.31:80","host":"ws.vi-server.org:80","dst":"192.236.209.31:80",
+"proto":"http","clientIP":"192.168.100.15",
+"http":{"host":"ws.vi-server.org","method":"GET","proto":"HTTP/1.1","scheme":"","uri":"/mirror","statusCode":101,
+"request":{"contentLength":0,"header":{"Connection":["Upgrade"],"Sec-Websocket-Extensions":["permessage-deflate; client_max_window_bits"],"Sec-Websocket-Key":["lCdg9pXejhfB2C0ctgrM+Q=="],"Sec-Websocket-Version":["13"],"Upgrade":["websocket"]},"body":null},
+"response":{"contentLength":0,"header":{"Connection":["Upgrade"],"Date":["Sat, 19 Oct 2024 15:14:24 GMT"],"Sec-Websocket-Accept":["WuiLuYXPRRuqesR7hOysliuXwFI="],"Server":["Caddy"],"Upgrade":["websocket"]},"body":null}},
+"route":"ws.vi-server.org:80","inputBytes":587,"outputBytes":192,"sid":"cs9spk2gj0p6p7n799ag","duration":4811915579,"time":"2024-10-19T23:14:24.499595959+08:00"}
 ```
 
 ## TLS Termination and MITM Proxy
@@ -134,8 +174,8 @@ services:
           # Also record both HTTP request and response body.
           http.body: true
           # The maximum size of the request and response body to be recorded. 
-          # By default, a maximum of 1MB of data is recorded.
-          http.maxBodySize: 1048576
+          # By default, a maximum of 64KB of data is recorded.
+          http.maxBodySize: 65536
     handler:
       type: http
       metadata:
@@ -182,7 +222,7 @@ When requesting `https://www.example.com` through the proxy, the proxy will snif
 curl -k -x localhost:8080 https://www.example.com
 ```
 
-```yaml
+```json
 {"service":"service-0","network":"tcp","remote":"[::1]:56736","local":"[::1]:8080",
 "host":"www.example.com:443","proto":"tls","clientIP":"::1",
 "http":{"host":"www.example.com","method":"GET","proto":"HTTP/2.0","scheme":"https","uri":"/","statusCode":200,
@@ -192,10 +232,7 @@ curl -k -x localhost:8080 https://www.example.com
 "tls":{"serverName":"www.example.com","cipherSuite":"TLS_AES_256_GCM_SHA384","compressionMethod":0,"proto":"h2","version":"tls1.3",
 "clientHello":"1603010200010001fc03031a324876144e1406181bdf3aaa82474d857e645e42ed0c99659d118c636ff590207e005956244f53c6dd72e63ba6a82f6574acddb3d5fce8a9d1b356fe54849ef1003e130213031301c02cc030009fcca9cca8ccaac02bc02f009ec024c028006bc023c0270067c00ac0140039c009c0130033009d009c003d003c0035002f00ff0100017500000014001200000f7777772e6578616d706c652e636f6d000b000403000102000a00160014001d0017001e00190018010001010102010301040010000e000c02683208687474702f312e31001600000017000000310000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d002003cb950898f056e0bf91c1055b7842d6a56c596e9b50c6f37679ebce73dda737001500b200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 "serverHello":""},
-"route":"www.example.com:443",
-"sid":"crui0kkdfur17s14pcn0",
-"duration":131862082,
-"time":"2024-10-02T18:28:35.048920855+08:00"}
+"route":"www.example.com:443","sid":"crui0kkdfur17s14pcn0","duration":131862082,"time":"2024-10-02T18:28:35.048920855+08:00"}
 ```
 
 ## Data Aggregation And Analysis
