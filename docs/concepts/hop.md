@@ -312,7 +312,7 @@ hops:
 #### 请求示例
 
 ```bash
-curl -XPOST http://127.0.0.1:8000/hop -d '{"addr": "example.com:80", "client": "gost"}'
+curl -XPOST http://127.0.0.1:8000/hop -d '{"network":"tcp","addr":"example.com:80","client":"gost","src":"192.168.1.1:1234"}'
 ```
 
 ```json
@@ -332,5 +332,15 @@ curl -XPOST http://127.0.0.1:8000/hop -d '{"addr": "example.com:80", "client": "
 }
 ```
 
+`network` (string)
+:    网络类型: `tcp`, `udp`
+
+`addr` (string)
+:    目标访问地址
+
+`src` (string)
+:    客户端地址
+
 `client` (string)
 :    用户身份标识，此信息由认证器生成。
+

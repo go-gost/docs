@@ -21,7 +21,7 @@ Most proxy and forwarding services in GOST support traffic sniffing. Traffic sni
 
 For example, the following is an HTTP proxy service with traffic sniffing enabled. After the proxy negotiation phase is over, it will further check the traffic and try to sniff out HTTP or TLS traffic.
 
-```yaml hl_lines="8-11 15-18"
+```yaml hl_lines="5-12 16-23"
 services:
   - name: service-0
     addr: :8080
@@ -163,7 +163,7 @@ The key to TLS traffic hijacking is to trust the private CA root certificate, an
 
 The following is an HTTP proxy with TLS traffic hijacking enabled, which only hijacks TLS traffic to `example.com` and its subdomains.
 
-```yaml hl_lines="19-26"
+```yaml hl_lines="20-27"
 services:
   - name: service-0
     addr: :8080
@@ -189,6 +189,7 @@ services:
         mitm.keyFile: ca.key
         # Customize ALPN negotiation result
         mitm.alpn: h2
+        # mitm bypass
         mitm.bypass: mitm
     listener:
       type: tcp

@@ -19,7 +19,7 @@ GOST中大部分代理和转发服务都支持流量嗅探。流量嗅探需要�
 
 例如以下是一个开启了流量嗅探的HTTP代理服务，当代理协商阶段结束后，会进一步检查流量，尝试嗅探出HTTP或TLS流量。
 
-```yaml hl_lines="8-11 15-18"
+```yaml hl_lines="5-12 16-23"
 services:
   - name: service-0
     addr: :8080
@@ -29,7 +29,8 @@ services:
         metadata:
           # 同时记录HTTP请求和响应体
           http.body: true
-          # 记录的请求和响应体最大大小，默认最多记录64KB数据。
+          # 记录的请求和响应体最大大小，
+          # 默认最多记录64KB数据。
           http.maxBodySize: 65536
     handler:
       type: http
@@ -159,7 +160,7 @@ TLS流量劫持的关键是对私有CA根证书的信任，用我们提供的根
 
 以下是开启了TLS流量劫持的HTTP代理，并仅对访问`example.com`及其子域名的TLS流量进行劫持。
 
-```yaml hl_lines="19-26"
+```yaml hl_lines="20-27"
 services:
   - name: service-0
     addr: :8080
@@ -169,7 +170,8 @@ services:
         metadata:
           # 同时记录HTTP请求和响应体
           http.body: true
-          # 记录的请求和响应体最大大小，默认最多记录64KB数据。
+          # 记录的请求和响应体最大大小，
+          # 默认最多记录64KB数据。
           http.maxBodySize: 65536
     handler:
       type: http

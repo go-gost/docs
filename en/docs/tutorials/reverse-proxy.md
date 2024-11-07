@@ -218,9 +218,9 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 When requesting http://example.com, the Host in the HTTP request header sent to example.com:80 is test.example.com.
 
-### Custom Header
+### Custom Request Header
 
-The header information can be customized by setting the `http.header` option, if the header field already exists, it will be overwritten.
+The request header can be customized by setting the `http.header` option, if the header field already exists, it will be overwritten.
 
 ```yaml hl_lines="16-20"
 services:
@@ -257,6 +257,34 @@ services:
 ```
 
 When requesting http://example.com, three fields `User-Agent`, `Foo` and `Bar` will be added to the HTTP request header sent to example.com:80.
+
+### Custom Response Header
+
+The response header can be customized by setting the `http.responseHeader` option, if the header field already exists, it will be overwritten.
+
+```yaml hl_lines="17-19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+      http:
+        responseHeader:
+          foo: bar
+          bar: 123
+```
+
+When requesting http://example.com, `Foo` and `Bar` fields will be added to the HTTP response header received from example.com:80.
 
 ### HTTP Basic Authentication
 

@@ -220,9 +220,9 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 当请求http://example.com时，最终发送给example.com:80的HTTP请求头中Host为test.example.com。
 
-### 自定义头
+### 自定义请求头
 
-通过设置`http.header`选项可以自定义头部信息，如果所设置的头部字段已存在则会被覆盖。
+通过设置`http.header`选项可以自定义请求头部信息，如果所设置的头部字段已存在则会被覆盖。
 
 ```yaml hl_lines="16-20"
 services:
@@ -259,6 +259,34 @@ services:
 ```
 
 当请求http://example.com时，最终发送给example.com:80的HTTP请求头中将会添加`User-Agent`，`Foo`和`Bar`三个字段。
+
+### 自定义响应头
+
+通过设置`http.responseHeader`选项可以自定义响应头部信息，如果所设置的头部字段已存在则会被覆盖。
+
+```yaml hl_lines="17-19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+      http:
+        responseHeader:
+          foo: bar
+          bar: 123
+```
+
+当请求http://example.com时，最终来自example.com:80的HTTP响应头中将会添加`Foo`和`Bar`两个字段。
 
 ### Basic Authentication
 
