@@ -5,7 +5,7 @@ comments: true
 # Service
 
 !!! tip "Dynamic configuration"
-    Service supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Service supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 !!! tip "Everything as a Service"
     In GOST, the client and the server are relative, and the client itself is also a service. If a forwarding chain or forwarder is used, the node in it is regarded as the server.
@@ -16,7 +16,7 @@ A service consists of a listener as a data channel, a handler for data processin
 
 === "CLI"
 
-    ```sh
+    ```bash
     gost -L http://:8080
     ```
 
@@ -36,14 +36,14 @@ A service consists of a listener as a data channel, a handler for data processin
 
 When a service is running, the listener will listen on the specified port according to the configuration of the service and communicate using the specified protocol. After receiving the correct data, the listener establishes a data channel connection and hands this connection to the handler for use. The handler performs data communication according to the specified protocol, and after receiving the request from the client, obtains the target address. If a forwarder is used, the target address specified in the forwarder is used, and then the router is used to send the request to the target host.
 
-!!! info "Router"
+!!! tip "Router"
     Router is an abstract module inside the handler, which contains the forwarding chain, resolver, host mapper, etc., for request routing between the service and the target host.
 
 ## Ignore Chain
 
 In command line mode, if there is a forwarding chain, all services will use this forwarding chain by default. The `ignoreChain` option allows specific services not to use the forwarding chain.
 
-```
+```bash
 gost -L http://:8080?ignoreChain=true -L socks://:1080 -F http://:8000
 ```
 
@@ -53,7 +53,7 @@ The HTTP service on port 8080 does not use the forwarding chain, and the SOCKS5 
 
 In the command line mode, all services run in the same process by default, use the `--` separator to make the service run in a separate process.
 
-```
+```bash
 gost -L http://:8080 -- -L http://:8000 -- -L socks://:1080 -F http://:8000
 ```
 

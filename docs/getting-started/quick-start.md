@@ -15,7 +15,7 @@ comments: true
 
 === "命令行"
 
-    ```sh
+    ```bash
 	gost -L http://:8080
 	```
 

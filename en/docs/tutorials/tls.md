@@ -60,7 +60,7 @@ The listeners and handlers of each service can set their own certificates separa
 
 === "CLI"
 
-    ```
+    ```bash
 	gost -L http+tls://:8443?certFile=cert.pem&keyFile=key.pem&caFile=ca.pem
 	```
 
@@ -86,7 +86,7 @@ Clients can set certificates separately for dialers and connectors for each node
 
 === "CLI"
 
-	```
+	```bash
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?secure=true&serverName=www.example.com
 	```
 	
@@ -165,7 +165,7 @@ If a CA certificate is set on the server, the client certificate will be verifie
 
 === "CLI"
 
-	```
+	```bash
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?certFile=cert.pem&keyFile=key.pem
 	```
 	

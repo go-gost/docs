@@ -5,7 +5,7 @@ comments: true
 # 分流
 
 !!! tip "动态配置"
-    分流器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    分流器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 
 关于分流器的更详细说明和使用示例可以参考这篇[博文](/blog/2022/bypass/)。
@@ -338,7 +338,7 @@ comments: true
 
 ### 转发器节点上的分流器
 
-此类型分流器类似于转发链节点上的分流器，目前仅应用于[DNS代理服务](/tutorials/dns/)。
+此类型分流器类似于转发链节点上的分流器，目前仅应用于[DNS代理服务](../tutorials/dns.md)。
 
 ## 数据源
 
@@ -462,7 +462,7 @@ bypasses:
 
 ## 插件
 
-分流器可以配置为使用外部[插件](/concepts/plugin/)服务，分流器会将请求转发给插件服务处理。当使用插件时其他参数无效。
+分流器可以配置为使用外部[插件](plugin.md)服务，分流器会将请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 bypasses:

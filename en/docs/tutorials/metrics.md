@@ -125,7 +125,7 @@ After enabling, you can view the metrics data through the `http://localhost:9000
 `gost_service_requests_in_flight` (type=gauge)
 :    Current in-flight requests
 
-`gost_service_request_duration_seconds` (type=histogram)
+`gost_service_request_duration_seconds_*` (type=histogram)
 :    Distribution of request latencies
 
 `gost_service_handler_errors_total` (type=counter)

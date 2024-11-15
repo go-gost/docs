@@ -489,7 +489,7 @@ gRPC uses TLS encryption by default and can communicate in clear text by setting
 
 The HTTP/3 protocol supports the CONNECT method and the WebTransport method to establish a tunnel.
 
-GOST currently does not support the above two methods, but establishes a tunnel by using pht on top of HTTP/3
+GOST currently does not support the above two methods, but establishes a tunnel by using [PHT](protocols/pht.md) on top of HTTP/3
 
 !!! note "WebTransport"
     [WebTransport](https://web.dev/webtransport/) is currently in the early draft stage, and GOST will add support for it when the time is right.

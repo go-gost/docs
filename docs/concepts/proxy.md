@@ -30,13 +30,15 @@ comments: true
 === "Relay代理模式"
 
     服务端
-	```
+
+	```bash
 	gost -L relay+wss://gost:gost@:8420
 	# 或者：gost -L relay+wss://gost:gost@192.168.1.1:8420
 	```
 
 	客户端
-	```
+
+	```bash
 	gost -L http://:8080 -F relay+wss://gost:gost@192.168.1.1:8420
 	```
 
@@ -45,12 +47,14 @@ comments: true
 === "Relay转发模式"
 
     服务端
-	```
+
+	```bash
 	gost -L relay+wss://:8420/:18080
 	```
 
     客户端
-	```
+
+	```bash
 	gost -L tcp://:8080 -F relay+wss://:8420
 	```
 
@@ -64,7 +68,7 @@ comments: true
 
 某些情况下，端口转发中的两个端口之间不能直接建立连接，这时可以通过转发链利用代理服务来进行中转。
 
-```
+```bash
 gost -L tcp://:8080/192.168.1.1:80 -F http://192.168.1.2:8080
 ```
 
@@ -76,7 +80,7 @@ gost -L tcp://:8080/192.168.1.1:80 -F http://192.168.1.2:8080
 
 #### HTTP-over-TLS
 
-```
+```bash
 gost -L tls://:8443/:8080 -L http://:8080
 ```
 
@@ -84,13 +88,13 @@ gost -L tls://:8443/:8080 -L http://:8080
 
 此时8443端口等同于：
 
-```
+```bash
 gost -L https://:8443
 ```
 
 #### Shadowsocks-over-KCP
 
-```
+```bash
 gost -L kcp://:8338/:8388 -L ss://:8388
 ```
 
@@ -98,7 +102,7 @@ gost -L kcp://:8338/:8388 -L ss://:8388
 
 此时8338端口等同于：
 
-```
+```bash
 gost -L ss+kcp://:8338
 ```
 
@@ -110,31 +114,33 @@ gost -L ss+kcp://:8338
 
 将HTTPS代理服务转成HTTP代理服务
 
-```
+```bash
 gost -L https://:8443
 ```
 
-```
+```bash
 gost -L tcp://:8080 -F forward+tls://:8443
 ```
 
 此时8080端口等同于：
-```
+
+```bash
 gost -L http://:8080
 ```
 
 #### Shadowsocks-over-KCP to Shadowsocks
 
-```
+```bash
 gost -L ss+kcp://:8338
 ```
 
-```
+```bash
 gost -L tcp://:8080 -F forward+kcp://:8338
 ```
 
 此时8080端口等同于：
-```
+
+```bash
 gost -L ss://:8080
 ```
 

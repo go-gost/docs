@@ -33,7 +33,7 @@ Enable PROXY protocol function with the `proxyProtocol` option.
 
 ## Example
 
-```
+```bash
 gost -L tcp://:8000/:8080 -L tcp://:8080/example.com:80?proxyProtocol=1
 ```
 

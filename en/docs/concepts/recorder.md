@@ -7,7 +7,7 @@ comments: true
 ## Recorder
 
 !!! tip "Dynamic configuration"
-    Recorder supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Recorder supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 Recorder can be used to record specific data, by configuring and referencing different recorder types to record data to different targets.
 
@@ -244,7 +244,7 @@ Serial port device [communication data](https://gost.run/en/tutorials/serial/#da
 
 ## Plugin
 
-Recorder can be configured to use an external [plugin](/en/concepts/plugin/) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Recorder can be configured to use an external [plugin](plugin.md) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 recorders:

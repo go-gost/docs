@@ -24,7 +24,7 @@
 
 ## 概览
 
-![Overview](/images/overview.png)
+![Overview](images/overview.png)
 
 GOST作为隧道有三种主要使用方式。
 
@@ -32,19 +32,19 @@ GOST作为隧道有三种主要使用方式。
 
 作为代理服务访问网络，可以组合使用多种协议组成转发链进行转发。
 
-![Proxy](/images/proxy.png)
+![Proxy](images/proxy.png)
 
 ### 端口转发
 
 将一个服务的端口映射到另外一个服务的端口，同样可以组合使用多种协议组成转发链进行转发。
 
-![Forward](/images/forward.png)
+![Forward](images/forward.png)
 
 ### 反向代理
 
 利用隧道和内网穿透将内网服务暴露到公网访问。
 
-![Reverse Proxy](/images/reverse-proxy.png)
+![Reverse Proxy](images/reverse-proxy.png)
 
 ## 下载安装
 

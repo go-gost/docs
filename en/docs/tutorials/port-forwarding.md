@@ -419,11 +419,14 @@ According to the address specified by the rudp service, listen on port 10053 on 
 	When forwarding chains are used in remote port forwarding, the last node at the end of the forwarding chain must be of the following type:
 
 	* GOST SOCKS5 proxy service and enable BIND function, using UDP-over-TCP method.
-	```
+
+	```bash
 	gost -L socks5://:1080?bind=true
 	```
+
 	* Relay service and enable BIND function, using UDP-over-TCP method.
-	```
+
+	```bash
 	gost -L relay://:8421?bind=true
 	```
 

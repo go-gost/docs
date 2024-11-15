@@ -9,7 +9,7 @@ PHT is a data channel type in GOST.
 The CONNECT method is not supported by all HTTP services. For more general use, GOST uses the more commonly used GET and POST methods in the HTTP protocol to implement data channels, including encrypted `phts` and plain text `pht` modes.
 
 !!! tip "TLS Certificate Configuration"
-    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
+    For TLS configuration, please refer to [TLS configuration](../tls.md).
 
 ## Without TLS
 

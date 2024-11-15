@@ -4,7 +4,7 @@ comments: true
 
 # Protocol
 
-As described in [Proxy, Forwarding and Tunnel](/en/concepts/proxy/), a GOST service or node is divided into two layers, the data processing layer and the data channel layer, each layer corresponds to a network protocol. The two layers are independent of each other and can be used in any combination (except for some restrictions).
+As described in [Proxy, Forwarding and Tunnel](../../concepts/proxy.md), a GOST service or node is divided into two layers, the data processing layer and the data channel layer, each layer corresponds to a network protocol. The two layers are independent of each other and can be used in any combination (except for some restrictions).
 
 ## Data Processing
 
@@ -59,7 +59,7 @@ The data channel is used to carry proxy or forward protocol data. Currently supp
 ## Some Special Protocols
 
 `file`
-:    [HTTP File Server](/en/tutorials/file/)
+:    [HTTP File Server](../file.md)
 
 `https`
 :    Equivalent to HTTP proxy and TLS channel combination (http+tls)
@@ -68,31 +68,31 @@ The data channel is used to carry proxy or forward protocol data. Currently supp
 :    HTTP3 reverse proxy service
 
 `dns`
-:    [DNS Proxy](/en/tutorials/dns/)
+:    [DNS Proxy](../dns.md)
 
 `red`，`redir`，`redirect`
-:    TCP [Transparent Proxy](/en/tutorials/redirect/)
+:    TCP [Transparent Proxy](../redirect.md)
 
 `redu`
-:    UDP [Transparent Proxy](/en/tutorials/redirect/)
+:    UDP [Transparent Proxy](../redirect.md)
 
 `tun`
-:    [TUN Device](/en/tutorials/tuntap/)
+:    [TUN Device](../tuntap.md)
 
 `tap`
-:    [TAP Device](/en/tutorials/tuntap/)
+:    [TAP Device](../tuntap.md)
 
 `forward`
-:    [Server-Side Forwarding](/en/tutorials/port-forwarding/#_7)
+:    [Server-Side Forwarding](../port-forwarding.md#_7)
 
 `virtual`
-:    [Virtual Node](/en/concepts/chain/#_5)
+:    [Virtual Node](../../concepts/chain.md#_5)
 
 `unix`
-:    [Unix Domain Socket Redirector](/en/tutorials/unix/)
+:    [Unix Domain Socket Redirector](../unix.md)
 
 `serial`
-:    [Serial Port Redirector](/en/tutorials/serial/)
+:    [Serial Port Redirector](../serial.md)
 
 ## Limitation
 

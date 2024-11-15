@@ -7,7 +7,7 @@ comments: true
 Domain name resolution can be customized by setting a Host mapper in the service or forwarding chain.
 
 !!! tip "Dynamic configuration"
-    Host mapper supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Host mapper supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 ## Host Mapper
 
@@ -18,7 +18,8 @@ A host mapper is a hostname-to-IP address mapping table. When domain name resolu
 The handler in service will use the mapper to try to resolve the request target address before establishing a connection with the target host.
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8080?hosts=example.org:127.0.0.1,example.org:::1,example.com:2001:db8::1
 	```
 
@@ -53,7 +54,8 @@ The handler in service will use the mapper to try to resolve the request target 
 A mapper can be set on hop or node in the forwarding chain. When no mapper is set on the node, the mapper on the hop is used.
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8000 -F http://example.com:8080?hosts=example.com:127.0.0.1,example.com:2001:db8::1
 	```
 
@@ -100,7 +102,7 @@ A mapper can be set on hop or node in the forwarding chain. When no mapper is se
 
 The mapper is directly applied to DNS query requests in the DNS proxy service to implement custom domain name resolution.
 
-```
+```bash
 gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 ```
 
@@ -249,7 +251,7 @@ hosts:
 
 ## Plugin
 
-Host Mapper can be configured to use an external [plugin](/en/concepts/plugin/) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Host Mapper can be configured to use an external [plugin](plugin.md) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 hosts:

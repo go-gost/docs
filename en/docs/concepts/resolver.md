@@ -5,7 +5,7 @@ comments: true
 # Domain Name Resolution
 
 !!! tip "Dynamic configuration"
-    Resolver supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Resolver supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 ## Resolver
 
@@ -16,7 +16,8 @@ Resolver resolves the domain name by setting the upper-level DNS list, and the r
 Use Resolver to resolve the request target address.
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8080?resolver=1.1.1.1,tcp://8.8.8.8,tls://8.8.8.8:853,https://1.0.0.1/dns-query
 	```
 
@@ -64,7 +65,8 @@ The format of each DNS is:
 Resolver can be set on a hop or a node in the forwarding chain. When no resolver is set on the node, the resolver on the hop is used.
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8000 -F http://example.com:8080?resolver=1.1.1.1,tcp://8.8.8.8,tls://8.8.8.8:853,https://1.0.0.1/dns-query
 	```
 
@@ -225,7 +227,7 @@ resolvers:
 
 ## Plugin
 
-Resolver can be configured to use an external [plugin](/en/concepts/plugin/) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Resolver can be configured to use an external [plugin](plugin.md) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 resolvers:

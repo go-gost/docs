@@ -7,7 +7,7 @@ comments: true
 Authentication can be performed by setting single authentication information or authenticator.
 
 !!! tip "Dynamic configuration"
-    Authenticator supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Authenticator supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 ## Single Authentication
 
@@ -19,17 +19,17 @@ If multi-user authentication is not required, single-user authentication can be 
 
 	Set directly by `username:password`:
 
-    ```sh
+    ```bash
 	gost -L http://user:pass@:8080
 	```
 
 	If the authentication information contains special characters, it can also be set through the `auth` option. The value of `auth` is a base64 encoded value in the form of `username:password`.
 
-	```sh
+	```bash
 	echo -n user:pass | base64
 	```
 
-	```sh
+	```bash
 	gost -L http://:8080?auth=dXNlcjpwYXNz
 	```
 
@@ -283,7 +283,7 @@ authers:
 
 ## Plugin
 
-Authenticator can be configured to use an external [plugin](/en/concepts/plugin/) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Authenticator can be configured to use an external [plugin](plugin.md) service, and authenticator will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 authers:

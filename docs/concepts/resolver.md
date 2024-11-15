@@ -7,7 +7,7 @@ comments: true
 通过在服务或转发链中设置域名解析器，可以更改域名解析行为。
 
 !!! tip "动态配置"
-    解析器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    解析器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 ## 域名解析器
 
@@ -18,7 +18,8 @@ comments: true
 当服务中的处理器在与目标主机建立连接之前，会使用域名解析器对请求目标地址进行解析。
 
 === "命令行"
-	```
+
+	```bash
 	gost -L http://:8080?resolver=1.1.1.1,tcp://8.8.8.8,tls://8.8.8.8:853,https://1.0.0.1/dns-query
 	```
 
@@ -66,7 +67,8 @@ comments: true
 转发链中可以在跳跃点上或节点上设置解析器，当节点上未设置解析器，则使用跳跃点上的解析器。
 
 === "命令行"
-	```
+
+	```bash
 	gost -L http://:8000 -F http://example.com:8080?resolver=1.1.1.1,tcp://8.8.8.8,tls://8.8.8.8:853,https://1.0.0.1/dns-query
 	```
 
@@ -227,7 +229,7 @@ resolvers:
 
 ## 插件
 
-域名解析器可以配置为使用外部[插件](/concepts/plugin/)服务，解析器会将解析请求转发给插件服务处理。当使用插件时其他参数无效。
+域名解析器可以配置为使用外部[插件](plugin.md)服务，解析器会将解析请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 resolvers:

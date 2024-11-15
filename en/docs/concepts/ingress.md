@@ -5,10 +5,10 @@ comments: true
 # Ingress
 
 !!! tip "Dynamic configuration"
-    Ingress supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Ingress supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 !!! note "Limitation"
-    Ingress currently can only be used in [reverse proxy tunnel](/en/tutorials/reverse-proxy-tunnel/).
+    Ingress currently can only be used in [reverse proxy tunnel](../tutorials/reverse-proxy-tunnel.md).
 
 Ingress consists of a set of rules, each rule is a mapping from a hostname to a service endpoint, and the entry point traffic is routed and load-balanced through Ingress in the reverse proxy.
 
@@ -148,7 +148,7 @@ ingresses:
 
 ## Plugin
 
-Ingress can be configured to use an external [plugin](/en/concepts/plugin/) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Ingress can be configured to use an external [plugin](plugin.md) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 ingresses:

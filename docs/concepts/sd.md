@@ -5,10 +5,10 @@ comments: true
 # 服务发现
 
 !!! tip "动态配置"
-    服务发现支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    服务发现支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 !!! note "使用限制"
-    服务发现目前仅在[反向代理隧道](/tutorials/reverse-proxy-tunnel-ha/)中使用。
+    服务发现目前仅在[反向代理隧道](../tutorials/reverse-proxy-tunnel-ha.md)中使用。
 
 服务发现为反向代理隧道提供了一种服务的注册和发现机制，服务发现目前仅能以插件的方式来使用。
 
@@ -29,7 +29,7 @@ comments: true
 
 ## 插件
 
-服务发现可以配置为使用外部[插件](/concepts/plugin/)服务。
+服务发现可以配置为使用外部[插件](plugin.md)服务。
 
 ```yaml
 sds:

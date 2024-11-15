@@ -7,7 +7,7 @@ comments: true
 HTTP3有两种模式：通道模式(数据通道)和反向代理模式。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## 数据通道
 
@@ -15,7 +15,7 @@ HTTP3的数据通道有两种模式：PHT和WebTransport。
 
 ### PHT
 
-由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](/tutorials/protocols/pht/)来实现数据通道功能。
+由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](pht.md)来实现数据通道功能。
 
 === "命令行"
 

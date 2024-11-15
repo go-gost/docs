@@ -6,13 +6,13 @@ comments: true
 
 [Reverse Proxy](https://en.wikipedia.org/wiki/Reverse_proxy) is a type of proxy service. According to the client's request, the server obtains resources from one or more groups of backend servers (such as web servers) related to it, and then returns these resources to the client. The client only knows the IP address of the reverse proxy, without knowing the existence of server clusters behind proxy servers.
 
-The port forwarding service in GOST can also be regarded as a reverse proxy with limited functions, because it can only forward to a fixed one or a set of backend services.
+The [port forwarding](port-forwarding.md) service in GOST can also be regarded as a reverse proxy with limited functions, because it can only forward to a fixed one or a set of backend services.
 
 Reverse proxy is an extension of the port forwarding service, which relies on the port forwarding function, and obtains the target host information in a specific protocol (currently supports HTTP/HTTPS) by sniffing the forwarded data.
 
 ## Local Port Forwarding
 
-```yaml hl_lines="7 15 19"
+```yaml
 services:
 - name: https
   addr: :443
@@ -26,13 +26,16 @@ services:
     nodes:
     - name: google
       addr: www.google.com:443
-      filter:
-        host: www.google.com
+      # filter:
+      #   host: www.google.com
+      matcher:
+        rule: Host(`www.google.com`)
     - name: github
       addr: github.com:443
-      filter:
-        host: "*.github.com"
-        # host: .github.com
+      # filter:
+      #   host: *.github.com
+      matcher:
+        rule: Host(`*.github.com`)
 - name: http
   addr: :80
   handler:
@@ -45,19 +48,24 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: example.org
+      # filter:
+      #   host: example.org
+      #   path: /
+      matcher:
+        rule: Host(`example.org`) && PathPrefix(`/`)
 ```
 
-Use the `sniffing` option to enable traffic sniffing, and pass the `filter.host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
+Use the `sniffing` option to enable traffic sniffing, and set routing conditions or rules through the `filter` or `matcher.rule` options in `forwarder.nodes`.
 
-When traffic sniffing is enabled, the forwarding service will obtain the target host through the client’s request data, and then find the final forwarding target address (addr) via `filter.host`.
+When traffic sniffing is enabled, the forwarding service will apply the matching conditions (filter) or matching rules (matcher.rule) set in the node of the forwarder to the client's request information to filter out the final forwarding target node.
 
-![Reverse Proxy - TCP Port Forwarding](/images/reverse-proxy-tcp.png) 
+![Reverse Proxy - TCP Port Forwarding](../images/reverse-proxy-tcp.png) 
 
 `filter.host` also supports wildcards, *.example.com or .example.com matches example.com and its subdomains: abc.example.com, def.abc.example.com, etc.
 
@@ -75,7 +83,7 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 Remote port forwarding services can also sniff traffic.
 
-```yaml hl_lines="7 16 20"
+```yaml
 services:
 - name: https
   addr: :443
@@ -90,14 +98,18 @@ services:
     nodes:
     - name: local-0
       addr: 192.168.1.1:443
-      filter:
-        host: srv-0.local
+      # filter:
+      #   host: srv-0.local
+      matcher:
+        rule: Host(`srv-0.local`)
     - name: local-1
       addr: 192.168.1.2:443
-      filter:
-        host: srv-1.local
-	- name: fallback
-	  addr: 192.168.2.1:443
+      # filter:
+      #   host: srv-1.local
+      matcher:
+        rule: Host(`srv-1.local`)
+    - name: fallback
+      addr: 192.168.2.1:443
 - name: http
   addr: :80
   handler:
@@ -111,12 +123,16 @@ services:
     nodes:
     - name: local-0
       addr: 192.168.1.1:80
-      filter:
-        host: srv-0.local
+      # filter:
+      #   host: srv-0.local
+      matcher:
+        rule: Host(`srv-0.local`)
     - name: local-1
       addr: 192.168.1.2:80
-      filter:
-        host: srv-1.local
+      # filter:
+      #   host: srv-1.local
+      matcher:
+        rule: Host(`srv-1.local`)
 chains:
 - name: chain-0
   hops:
@@ -130,9 +146,7 @@ chains:
         type: wss
 ```
 
-Use the `sniffing` option to enable traffic sniffing, and pass the `filter.host` option in `forwarder.nodes` to set the (virtual) hostname for each node.
-
-![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp.png) 
+![Reverse Proxy - Remote TCP Port Forwarding](../images/reverse-proxy-rtcp.png) 
 
 At this time, the corresponding domain name can be resolved to the server address to access the internal service through the reverse proxy:
 
@@ -152,9 +166,83 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 Since srv-2.local does not match the node, it will be forwarded to the fallback node (192.168.2.1:443).
 
-## URL Path Routing
+## Request Routing
 
-Specify the path prefix for the node via the `filter.path` option. When HTTP traffic is sniffed, the URL path is used to select nodes using the longest prefix matching pattern.
+There are two modes for routing requests to target nodes: conditional filtering and rule matching. When choosing between the two modes, rule matching takes precedence.
+
+### Conditional Filtering
+
+The filter condition is set on the node through the `filter` option. When the request meets this filter condition, this node is a qualified node and will participate in the next step of target node selection.
+
+#### Hostname Filtering
+
+Set hostname filtering for a node via the `filter.host` option.
+
+`filter.host` also supports wildcards, `*.example.com` or `.example.com` matches example.com and its subdomains abc.example.com, def.abc.example.com, etc.
+
+```yaml  hl_lines="15 19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      filter:
+        host: example.com
+    - name: example-org
+      addr: example.org:80
+      filter:
+        host: *.example.org
+```
+
+#### Protocol Filtering
+
+The protocol type filter is set through the `filter.protocol` option. When the corresponding type of traffic is sniffed, it will be forwarded to this node.
+
+Currently supported application protocols are:
+
+* `http` - HTTP traffic.
+* `tls` - TLS traffic.
+* `ssh` - SSH traffic.
+
+```yaml hl_lines="16 21 25"
+services:
+- name: service-0
+  addr: :8000
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: http-server
+      addr: example.com:80
+      filter:
+        host: example.com
+        protocol: http
+    - name: https-server
+      addr: example.com:443
+      filter:
+        host: example.com
+        protocol: tls
+    - name: ssh-server
+      addr: example.com:22
+      filter:
+        protocol: ssh
+```
+
+#### URL Path Filtering
+
+Set the path prefix filtering for the node through the `filter.path` option. When sniffing HTTP traffic, the URL path prefix matching pattern is used to select the node.
 
 ```yaml hl_lines="15 19"
 services:
@@ -177,6 +265,80 @@ services:
       filter:
         path: /test
 ```
+
+### Rule Matching
+
+In addition to simple conditional filtering, request routing also integrates the powerful and flexible [rule-based routing](https://doc.traefik.io/traefik/routing/routers/) function in Traefik.
+
+#### Rule
+
+Currently supported rules are
+
+| Rule                                    | Description                                                         | Example                                                |
+| ----------------------------------------| ---------------------------------------------------------------------| --------------------------------------------------- |
+| ```Host(`domain`)```                    | The host for HTTP requests or SNI for TLS requests match `domain`, equivalent to `filter.host`. | ```Host(`example.com`)```，```Host(`*.example.org`)```      |
+| ```HostRegexp(`regexp`)```              | The host for HTTP requests or SNI for TLS requests match the regular expression `regexp`.       | ```HostRegexp(`^.+\.example\.com$`)``` |
+| ```Method(`method`)```                  | The method for HTTP requests match `method`.                                          | ```Method(`POST`)```                 |
+| ```Path(`path`)```                      | The path for HTTP requests match `path`.                                          | ```Path(`/products/1234`)```   |
+| ```PathPrefix(`prefix`)```              | The path for HTTP requests match the prefix `prefix`, equivalent to `filter.path`.          | ```PathPrefix(`/products`)```  |
+| ```PathRegexp(`regexp`)```              | The path for HTTP requests match the regular expression `regexp`.                              | ```PathRegexp(`\.(jpeg|jpg|png)$`)```  |
+| ```Query(`key`)```                      | The query parameters for HTTP requests contain `key`                                         | ```Query(`foo``)```   |
+| ```Query(`key`, `value`)```             | The query parameters for HTTP requests contain `key`, and the corresponding value match `value`.   | ```Query(`foo`, `bar`)```   |
+| ```QueryRegexp(`key`, `regexp`)```      | The query parameters for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.       | ```QueryRegexp(`foo`, `^.*$`)```      |
+| ```Header(`key`)```                     | The header for HTTP requests contain `key`.     | ```Header(`Content-Type`)```                         |
+| ```Header(`key`, `value`)```            | The header for HTTP requests contain `key`, and the corresponding value match `value`.     | ```Header(`Content-Type`, `application/json`)```                         |
+| ```HeaderRegexp(`key`, `regexp`)```     | The header for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
+| ```ClientIP(`ip`)```                    | The requests client IP match `ip`. The format of `ip` is IPv4, IPv6 or CIDR.                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
+| ```Proto(`proto`)```                    | Match the protocol，equivalent to `filter.protocol`.                                  | ```Proto(`http`)```                                 |
+
+!!! important "Regexp Syntax"
+    Matchers that accept a regexp as their value use a [Go](https://golang.org/pkg/regexp/) flavored syntax.
+
+!!! tip "Expressing Complex Rules Using Operators and Parenthesis"
+    The usual AND (`&&`) and OR (`||`) logical operators can be used, with the expected precedence rules, as well as parentheses.
+
+    One can invert a matcher by using the NOT (`!`) operator.
+
+    The following rule matches requests where:
+
+    - either host is `example.com` OR,
+    - host is `example.org` AND path is NOT `/path`
+
+    ```yaml
+    Host(`example.com`) || (Host(`example.org`) && !Path(`/path`))
+    ```
+
+#### Priority
+
+To avoid path overlap, routes are sorted, by default, in descending order using rules length. The priority is directly equal to the length of the rule, and so the longest length has the highest priority.
+
+The `matcher.priority` option can be used to set the priority of the node, thereby changing the priority of node selection.
+
+```yaml hl_lines="16 21"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: target-0
+      addr: 192.168.1.1:80
+      matcher:
+        rule: Host(`www.example.com`)
+        priority: 100
+    - name: target-1
+      addr: 192.168.1.2:80
+      matcher:
+        rule: Host(`*.example.com`)
+        priority: 50
+```
+
+When the requested Host is `www.example.com`, the `target-0` node will be selected first.
 
 ## HTTP Request Settings
 
@@ -432,86 +594,6 @@ services:
 
 `tls.options.cipherSuites` (list)
 :    Cipher Suites, See [Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants) for more information.
-
-## Application-Specific Forwarding
-
-Local and remote port forwarding services also support sniffing of specific application traffic. Currently supported application protocols are: 
-
-* `http` - HTTP traffic.
-* `tls` - TLS traffic.
-* `ssh` - SSH traffic.
-
-In forwarder.nodes, specify the node protocol type through the `filter.protocol` option, and when the corresponding traffic is detected, it will be forwarded to this node.
-
-=== "Local Port Forwarding"
-
-    ```yaml hl_lines="16 21 25"
-    services:
-    - name: https
-      addr: :443
-      handler:
-        type: tcp
-        metadata:
-          sniffing: true
-      listener:
-        type: tcp
-      forwarder:
-        nodes:
-        - name: http-server
-          addr: example.com:80
-          filter:
-            host: example.com
-            protocol: http
-        - name: https-server
-          addr: example.com:443
-          filter:
-            host: example.com
-            protocol: tls
-        - name: ssh-server
-          addr: example.com:22
-          filter:
-            protocol: ssh
-    ```
-
-=== "Remote Port Forwarding"
-
-    ```yaml hl_lines="16 20 24"
-    services:
-    - name: https
-      addr: :443
-      handler:
-        type: rtcp
-        metadata:
-          sniffing: true
-      listener:
-        type: rtcp
-        chain: chain-0
-      forwarder:
-        nodes:
-        - name: local-http
-          addr: 192.168.2.1:80
-          filter:
-            protocol: http
-        - name: local-https
-          addr: 192.168.2.1:443
-          filter:
-            protocol: tls
-        - name: local-ssh
-          addr: 192.168.2.1:22
-          filter:
-            protocol: ssh
-    chains:
-    - name: chain-0
-      hops:
-      - name: hop-0
-        nodes:
-        - name: node-0
-          addr: SERVER_IP:8443 
-          connector:
-            type: relay
-          dialer:
-            type: wss
-    ```
 
 ## Forwarding Tunnel
 

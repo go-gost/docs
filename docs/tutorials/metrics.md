@@ -125,7 +125,7 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 `gost_service_requests_in_flight` (type=gauge)
 :    服务当前正在处理中的请求数
 
-`gost_service_request_duration_seconds` (type=histogram)
+`gost_service_request_duration_seconds_*` (type=histogram)
 :    服务请求处理的时长分布
 
 `gost_service_handler_errors_total` (type=counter)

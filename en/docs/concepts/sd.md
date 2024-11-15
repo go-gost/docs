@@ -5,10 +5,10 @@ comments: true
 # Service Discovery
 
 !!! tip "Dynamic configuration"
-    Service discovery supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Service discovery supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 !!! note "Limitation"
-    Service discovery is currently only used within [reverse proxy tunnel](/en/tutorials/reverse-proxy-tunnel-ha/).
+    Service discovery is currently only used within [reverse proxy tunnel](../tutorials/reverse-proxy-tunnel-ha.md).
 
 Service discovery provides a service registrry and discovery mechanism for reverse proxy tunnel. Service discovery can currently only be used in the form of plugins.
 
@@ -29,7 +29,7 @@ The registered service-related information includes:
 
 ## Plugin
 
-Service discovery can be configured to use external [plugin](/en/concepts/plugin/) services.
+Service discovery can be configured to use external [plugin](plugin.md) services.
 
 ```yaml
 sds:

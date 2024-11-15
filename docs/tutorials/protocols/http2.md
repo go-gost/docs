@@ -7,7 +7,7 @@ comments: true
 HTTP2有两种模式：代理模式和通道模式。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## 代理模式
 

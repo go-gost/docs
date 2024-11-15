@@ -17,7 +17,7 @@ Use the `interface` option to specify the network exit to use. The value of the 
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L :8080?interface=eth0
     ```
 
@@ -50,9 +50,10 @@ If the `interface` option is not set on the node, the option on the hop is used.
 The `interface` option on the command line corresponds to the option on the hop.
 
 === "CLI"
+
+    ```bash
+    gost -L :8080 -F :8000?interface=192.168.0.1 
     ```
-	gost -L :8080 -F :8000?interface=192.168.0.1 
-	```
 
 === "File (YAML)"
 
@@ -84,7 +85,7 @@ The `interface` option on the command line corresponds to the option on the hop.
 
 ## Direct Connection Mode
 
-If the service does not need to use an upper-stream proxy, you can use [Virtual Node](/en/concepts/chain/) to allow the service to use multiple network interfaces for load balancing.
+If the service does not need to use an upper-stream proxy, you can use [Virtual Node](../concepts/chain.md) to allow the service to use multiple network interfaces for load balancing.
 
 === "File (YAML)"
 

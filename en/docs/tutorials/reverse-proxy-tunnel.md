@@ -4,13 +4,13 @@ comments: true
 
 # Reverse Proxy Tunnel
 
-In the previous [Reverse Proxy](/en/tutorials/reverse-proxy/) tutorial, port forwarding was used to implement a simple reverse proxy function. In this article, we will implement an enhanced reverse proxy similar to [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
+In the previous [Reverse Proxy](reverse-proxy.md) tutorial, port forwarding was used to implement a simple reverse proxy function. In this article, we will implement an enhanced reverse proxy similar to [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/).
 
 ## Tunnel
 
 Tunnel is a (logical) channel between the server and the client. The server will listen on the entry point at the same time, and the traffic entering from the entry point will be sent to the client through the tunnel. Each tunnel has a unique ID (legal UUID), and a tunnel can have multiple connections (connection pools) to achieve high availability.
 
-![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
+![Reverse Proxy - Remote TCP Port Forwarding](../images/reverse-proxy-rtcp2.png) 
 
 **Server**
 
@@ -45,7 +45,7 @@ Tunnel is a (logical) channel between the server and the client. The server will
         endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
-The `entrypoint` option specifies the public entry point for traffic, the `ingress` option specifies [Ingress](/en/concepts/ingress/) to define traffic routing rules.
+The `entrypoint` option specifies the public entry point for traffic, the `ingress` option specifies [Ingress](../concepts/ingress.md) to define traffic routing rules.
 
 !!! note "Tunnel ID Allocation"
     If Ingress is used, the tunnel ID should be allocated by the server in advance and recorded in the Ingress. If the client uses a tunnel ID that is not registered in the Ingress, traffic cannot be routed to the client.
@@ -232,7 +232,7 @@ In Ingress, access to the tunnel can be restricted by marking the tunnel as priv
 
 To use a private tunnel, the user (visitor side) needs to start a service as the private entry point. This service specifies the tunnel to be accessed by setting the tunnel ID (not limited to the private tunnel).
 
-![Reverse Proxy - Web Private Tunnel](/images/private-tunnel-web.png) 
+![Reverse Proxy - Web Private Tunnel](../images/private-tunnel-web.png) 
 
 **Server**
 
@@ -362,7 +362,7 @@ The visitor start a service to listen on port 8000, and specifies the tunnel to 
 
 Tunnel can also be applied to any TCP service (such as SSH). In the above example, the tunnel corresponding to the `ssh.srv-2.local` and `redis.srv-3.local` in the Ingress of the server can be regarded as a dedicated tunnel for SSH and redis traffic.
 
-![Reverse Proxy - TCP Private Tunnel](/images/private-tunnel-tcp.png) 
+![Reverse Proxy - TCP Private Tunnel](../images/private-tunnel-tcp.png) 
 
 **Client**
 
@@ -457,7 +457,7 @@ The visitor needs to specify the target node address in the forwarder, which nee
 
 Tunnel can also be applied to any UDP service (eg DNS). For example, the tunnel corresponding to the `dns.srv-2.local` and `dns.srv-3.local` hosts in the Ingress of the server above.
 
-![Reverse Proxy - UDP Tunnel](/images/tunnel-udp.png) 
+![Reverse Proxy - UDP Tunnel](../images/tunnel-udp.png) 
 
 **Client**
 
@@ -589,7 +589,7 @@ TCP and UDP services can share the same tunnel. The tunnel will distinguish betw
 
 ## Example: iperf Test Through Tunnel
 
-![Reverse Proxy - iperf3](/images/tunnel-iperf.png) 
+![Reverse Proxy - iperf3](../images/tunnel-iperf.png) 
 
 **Server**
 
@@ -765,13 +765,13 @@ iperf3 -s
 
 TCP Test
 
-```
+```bash
 iperf3 -c 127.0.0.1 -p 15201
 ```
 
 UDP Test
 
-```
+```bash
 iperf3 -c 127.0.0.1 -p 15201 -u
 ```
 
@@ -779,13 +779,13 @@ iperf3 -c 127.0.0.1 -p 15201 -u
 
 If you need to temporarily reverse proxy local service to provide public network access, you can use the public reverse proxy service provided by `GOST.PLUS` to anonymously expose your local service to the public network for access.
 
-```sh
+```bash
 gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443
 ```
 
 or specify the tunnel ID manually:
 
-```sh
+```bash
 gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
 ```
 

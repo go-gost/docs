@@ -248,8 +248,8 @@ docker run -p 8000:8000 ginuerzh/gost-plugins  \
   --mongo.uri=mongodb://mongo.db:27017 --mongo.db=gost
 ```
 
-![Loki - HTTP](/images/loki01.png) 
+![Loki - HTTP](../images/loki01.png) 
 
-![Loki - DNS](/images/loki02.png) 
+![Loki - DNS](../images/loki02.png) 
 
-![Mongo - HTTP](/images/mongo01.png) 
+![Mongo - HTTP](../images/mongo01.png) 

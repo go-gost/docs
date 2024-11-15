@@ -5,7 +5,7 @@ comments: true
 # Limiting
 
 !!! tip "Dynamic configuration"
-    Limiter supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Limiter supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 ## Limiter
 
@@ -362,7 +362,7 @@ limiters:
 
 ## Plugin
 
-Traffic limiter can be configured to use an external [plugin](/en/concepts/plugin/) service, and it will forward the request to the plugin server for processing. Other parameters are ignored when using plugin.
+Traffic limiter can be configured to use an external [plugin](plugin.md) service, and it will forward the request to the plugin server for processing. Other parameters are ignored when using plugin.
 
 ```yaml
 limiters:

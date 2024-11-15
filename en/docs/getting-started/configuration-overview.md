@@ -21,13 +21,14 @@ For detailed configuration specification, please refer to:
 
 There is a conversion relationship between the command line mode and the configuration file, for example:
 
-```
+```bash
 gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.168.1.1:8080?bar=baz
 ```
 
 The corresponding configuration file:
 
 === "YAML"
+
 	```yaml
 	services:
 	- name: service-0
@@ -64,6 +65,7 @@ The corresponding configuration file:
 			  bar: baz
 	```
 === "JSON"
+
 	```json
 	{
 	  "services": [

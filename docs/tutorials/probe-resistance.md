@@ -11,7 +11,7 @@ GOST对HTTP/HTTPS/HTTP2代理提供了探测防御功能。当代理服务收到
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L=http://gost:gost@:8080?probeResist=code:400&knock=www.example.com
     ```
 

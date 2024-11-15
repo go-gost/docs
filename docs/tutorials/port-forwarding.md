@@ -39,9 +39,11 @@ comments: true
 也可以设置多个目标地址进行一对多端口转发
 
 === "命令行"
+
 	```bash
 	gost -L "tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080?strategy=round&maxFails=1&failTimeout=30s"
 	```
+
 === "配置文件"
 
     ```yaml

@@ -16,10 +16,13 @@ Start one or more proxy services, and can be forwarded through the forwarding ch
 Start an HTTP proxy service listening on port 8080:
 
 === "CLI"
-    ```sh
+
+    ```bash
 	gost -L http://:8080
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -35,10 +38,13 @@ Start an HTTP proxy service listening on port 8080:
 Start two services, an HTTP proxy service listening on port 8080, and a SOCKS5 proxy service listening on port 1080:
 
 === "CLI"
-    ```
+
+    ```bash
     gost -L http://:8080 -L socks5://:1080 
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -60,10 +66,13 @@ Start two services, an HTTP proxy service listening on port 8080, and a SOCKS5 p
 Start an HTTP proxy service listening on port 8080, and use 192.168.1.1:8080 as the upper-level proxy for forwarding:
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8080 -F http://192.168.1.1:8080
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -91,10 +100,13 @@ Start an HTTP proxy service listening on port 8080, and use 192.168.1.1:8080 as 
 GOST finally forwards the request to 192.168.1.2:1080 through the forwarding chain in the order set by `-F`:
 
 === "CLI"
-	```
+
+	```bash
 	gost -L :8080 -F http://192.168.1.1:8080 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -130,10 +142,13 @@ GOST finally forwards the request to 192.168.1.2:1080 through the forwarding cha
 ### TCP Local Port Forwarding
 
 === "CLI"
+
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -153,10 +168,13 @@ Map local TCP port 8080 to port 80 of 192.168.1.1, all data sent to the local po
 ### UDP Local Port Forwarding
 
 === "CLI"
+
 	```bash
     gost -L udp://:10053/192.168.1.1:53
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -176,10 +194,13 @@ Map local UDP port 10053 to port 53 of 192.168.1.1, all data sent to the local p
 ### TCP Local Port Forwarding (With Chain)
 
 === "CLI"
+
 	```bash
     gost -L=tcp://:8080/192.168.1.1:80 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -211,10 +232,13 @@ Map local TCP port 8080 to port 80 of 192.168.1.2 through the forwarding chain `
 ### TCP Remote Port Forwarding
 
 === "CLI"
+
 	```sh
     gost -L=rtcp://:2222/:22 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0
@@ -246,10 +270,13 @@ Listen on TCP port 2222 on 192.168.1.2, and map it to local TCP port 22, all dat
 ### UDP Remote Port Forwarding
 
 === "CLI"
+
 	```sh
     gost -L=rudp://:10053/:53 -F socks5://192.168.1.2:1080
 	```
+
 === "File (YAML)"
+
     ```yaml
 	services:
 	- name: service-0

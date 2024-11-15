@@ -7,7 +7,7 @@ comments: true
 The observer is a component used to observe the internal status of the service, including service status changes, connection and traffic statistics, and the observer reports this information through events.
 
 !!! tip "Dynamic configuration"
-    Observer supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Observer supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 
 !!! note "Limitation"
@@ -16,7 +16,7 @@ The observer is a component used to observe the internal status of the service, 
 
 ## Plugin
 
-Observer can be configured to use external [plugin](/en/concepts/plugin/) services.
+Observer can be configured to use external [plugin](plugin.md) services.
 
 ```yaml
 observers:

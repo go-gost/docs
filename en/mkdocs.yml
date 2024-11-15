@@ -5,8 +5,8 @@ edit_uri: ""
 
 theme:
   name: material
-  logo: /images/gost.png
-  favicon: /images/favicon.ico
+  logo: images/gost.png
+  favicon: images/favicon.ico
   custom_dir: overrides
   features:
     - navigation.instant

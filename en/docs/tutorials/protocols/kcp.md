@@ -44,7 +44,6 @@ KCP is a data channel type in GOST. The implementation of KCP depends on the [xt
 
 GOST has a built-in set of default KCP configuration items, and the default values ​​are consistent with [xtaci/kcptun](https://github.com/xtaci/kcptun).
 
-可以通过`kcp.config`选项直接指定配置。也可以通过选项`kcp.configFile`指定外部配置文件，配置文件为JSON格式：
 You can specify the configuration directly through `kcp.config` option. You can also specify an external configuration file through `kcp.configFile` option. The configuration file is in JSON format:
 
 ```json

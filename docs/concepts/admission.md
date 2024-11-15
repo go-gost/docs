@@ -5,7 +5,7 @@ comments: true
 # 准入控制
 
 !!! tip "动态配置"
-    准入控制器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    准入控制器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 ## 准入控制器
 
@@ -218,7 +218,7 @@ admissions:
 
 ## 插件
 
-准入控制器可以配置为使用外部[插件](/concepts/plugin/)服务，控制器会将请求转发给插件服务处理。当使用插件时其他参数无效。
+准入控制器可以配置为使用外部[插件](plugin.md)服务，控制器会将请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 admissions:

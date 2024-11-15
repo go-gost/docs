@@ -9,7 +9,7 @@ PHT是GOST中的一种数据通道类型。
 CONNECT方法并不是所有HTTP服务都支持，为了更加通用，GOST利用HTTP协议中更加常用的GET和POST方法来实现数据通道，包括加密的`phts`和明文的`pht`两种模式。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## 不使用TLS
 

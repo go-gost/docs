@@ -5,7 +5,7 @@ comments: true
 # 服务
 
 !!! tip "动态配置"
-    服务支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    服务支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 !!! tip "一切皆服务"
     在GOST中客户端和服务端是相对的，客户端本身也是一个服务，如果使用了转发链或转发器，则其中的节点就被当作服务端。
@@ -42,7 +42,7 @@ comments: true
 
 在命令行模式下，如果有转发链，则默认所有服务均会使用此转发链。通过`ignoreChain`选项可以让特定的服务不使用转发链。
 
-```
+```bash
 gost -L http://:8080?ignoreChain=true -L socks://:1080 -F http://:8000
 ```
 
@@ -52,7 +52,7 @@ gost -L http://:8080?ignoreChain=true -L socks://:1080 -F http://:8000
 
 命令行模式下默认所有服务在同一个进程中运行，通过`--`分割符让服务在单独的进程中运行。
 
-```
+```bash
 gost -L http://:8080 -- -L http://:8000 -- -L socks://:1080 -F http://:8000
 ```
 

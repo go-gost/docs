@@ -7,7 +7,7 @@ comments: true
 ## 记录器
 
 !!! tip "动态配置"
-    记录器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    记录器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 记录器可以用来记录特定数据，通过配置和引用不同的记录器类型将数据记录到不同的目标中。
 
@@ -243,11 +243,11 @@ services:
 
 #### recorder.service.handler.serial
 
-记录串口设备[通讯数据](https://gost.run/tutorials/serial/#_5)
+记录串口设备[通讯数据](../tutorials/serial.md#_5)
 
 ## 插件
 
-记录器可以配置为使用外部[插件](/concepts/plugin/)服务，记录器会将数据转发给插件服务处理。当使用插件时其他参数无效。
+记录器可以配置为使用外部[插件](plugin.md)服务，记录器会将数据转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 recorders:

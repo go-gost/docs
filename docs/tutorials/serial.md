@@ -167,7 +167,7 @@ comments: true
 
 ## 记录数据
 
-可以通过[记录器](/concepts/recorder/)来记录串口收发的数据。
+可以通过[记录器](../concepts/recorder.md)来记录串口收发的数据。
 
 === "配置文件"
 

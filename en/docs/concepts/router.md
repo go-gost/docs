@@ -5,10 +5,10 @@ comments: true
 # Router
 
 !!! tip "Dynamic configuration"
-    Router supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Router supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 !!! note "Limitation"
-    Router currently can only be used in [TUN device](/en/tutorials/tuntap/).
+    Router currently can only be used in [TUN device](../tutorials/tuntap.md).
 
 A router is composed of a routing table. Each routing item is a mapping from the target network to the gateway. Traffic is routed through the router in the TUN device.
 
@@ -136,7 +136,7 @@ routers:
 
 ## Plugin
 
-Router can be configured to use an external [plugin](/en/concepts/plugin/) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Router can be configured to use an external [plugin](plugin.md) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 routers:

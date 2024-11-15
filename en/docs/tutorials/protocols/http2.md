@@ -7,7 +7,7 @@ comments: true
 HTTP2 has two modes: proxy mode and tunnel mode.
 
 !!! tip "TLS Certificate Configuration"
-    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
+    For TLS configuration, please refer to [TLS configuration](../tls.md).
 
 ## Proxy Mode
 

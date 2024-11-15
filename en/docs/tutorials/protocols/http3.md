@@ -7,7 +7,7 @@ comments: true
 HTTP3 has two modes: tunnel mode (data channel) and reverse proxy mode.
 
 !!! tip "TLS Certificate Configuration"
-    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
+    For TLS configuration, please refer to [TLS configuration](../tls.md).
 
 ## Data Channel
 
@@ -15,7 +15,7 @@ HTTP3's data channel has two modes: PHT and WebTransport.
 
 ### PHT
 
-Since HTTP3 is similar to HTTP protocol, it is used for Web data transmission and cannot be used directly as a data channel. The HTTP3 data channel in GOST adopts PHT-over-HTTP3, which uses [PHT](/en/tutorials/protocols/pht/) on top of HTTP3 protocol to implement the data channel function.
+Since HTTP3 is similar to HTTP protocol, it is used for Web data transmission and cannot be used directly as a data channel. The HTTP3 data channel in GOST adopts PHT-over-HTTP3, which uses [PHT](pht.md) on top of HTTP3 protocol to implement the data channel function.
 
 === "CLI"
 

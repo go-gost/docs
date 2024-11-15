@@ -167,7 +167,7 @@ Redirect local serial port `COM1` to the serial port `COM1` on the remote host `
 
 ## Data Record
 
-The data sent and received by serial port can be recorded by [Recorder](/en/concepts/recorder/).
+The data sent and received by serial port can be recorded by [Recorder](../concepts/recorder.md).
 
 === "File (YAML)"
 

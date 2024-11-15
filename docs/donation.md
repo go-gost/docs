@@ -6,10 +6,10 @@
 
 **微信赞赏码**
 
-![WeChat](../images/wechat.png)
+![WeChat](images/wechat.png)
 
 **虚拟货币**
 
-![BTC](../images/btc.png) 
-![ETH](../images/eth.png)
-![USDT](../images/usdt.png)
+![BTC](images/btc.png) 
+![ETH](images/eth.png)
+![USDT](images/usdt.png)

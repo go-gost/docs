@@ -7,7 +7,7 @@ comments: true
 通过在服务或转发链中设置映射器，可以自定义域名解析。
 
 !!! tip "动态配置"
-    映射器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    映射器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 ## 映射器
 
@@ -18,11 +18,12 @@ comments: true
 当服务中的处理器在与目标主机建立连接之前，会使用映射器对请求目标地址进行解析。
 
 === "命令行"
-	```
-	gost -L http://:8080?hosts=example.org:127.0.0.1,example.org:::1,example.com:2001:db8::1
-	```
 
-	通过`hosts`参数来指定映射表。映射项为以`:`分割的host:ip对，ip可以是ipv4或ipv6格式。
+    ```bash
+    gost -L http://:8080?hosts=example.org:127.0.0.1,example.org:::1,example.com:2001:db8::1
+    ```
+
+    通过`hosts`参数来指定映射表。映射项为以`:`分割的host:ip对，ip可以是ipv4或ipv6格式。
 
 === "配置文件"
 
@@ -53,11 +54,12 @@ comments: true
 转发链中可以在跳跃点上或节点上设置映射器，当节点上未设置映射器，则使用跳跃点上的映射器。
 
 === "命令行"
-	```
-	gost -L http://:8000 -F http://example.com:8080?hosts=example.com:127.0.0.1,example.com:2001:db8::1
-	```
 
-	通过`hosts`参数来指定映射表。`hosts`参数对应配置文件中hop级别的映射器。
+    ```bash
+    gost -L http://:8000 -F http://example.com:8080?hosts=example.com:127.0.0.1,example.com:2001:db8::1
+    ```
+
+    通过`hosts`参数来指定映射表。`hosts`参数对应配置文件中hop级别的映射器。
 
 === "配置文件"
 
@@ -100,11 +102,11 @@ comments: true
 
 映射器在DNS代理服务中会直接应用到DNS查询请求，用来实现自定义域名解析。
 
-```
+```bash
 gost -L dns://:10053?dns=1.1.1.1&hosts=example.org:127.0.0.1,example.org:::1
 ```
 
-此时通过此DNS代理服务查询example.org会匹配到映射器中的定义而不会使用1.1.1.1查询。详细信息请参考[DNS代理](/tutorials/dns/)。
+此时通过此DNS代理服务查询example.org会匹配到映射器中的定义而不会使用1.1.1.1查询。详细信息请参考[DNS代理](../tutorials/dns.md)。
 
 ## 域名通配符
 
@@ -251,7 +253,7 @@ hosts:
 
 ## 插件
 
-映射器可以配置为使用外部[插件](/concepts/plugin/)服务，映射器会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
+映射器可以配置为使用外部[插件](plugin.md)服务，映射器会将查询请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 hosts:

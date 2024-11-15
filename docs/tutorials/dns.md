@@ -97,61 +97,61 @@ comments: true
 
 !!! example "DNS查询example.org(ipv4)"
 
-	```bash
-	dig -p 10053 example.org
-	```
+    ```bash
+    dig -p 10053 example.org
+    ```
 
-	```
-	;; QUESTION SECTION:
+    ```bash
+    ;; QUESTION SECTION:
     ;example.org.				IN	A
 
     ;; ANSWER SECTION:
     example.org.		3600	IN	A	127.0.0.1
-	```
+    ```
 
 !!! example "DNS查询example.org(ipv6)"
 
-	```bash
-	dig -p 10053 AAAA example.org
-	```
+    ```bash
+    dig -p 10053 AAAA example.org
+    ```
 
-	```
-	;; QUESTION SECTION:
+    ```bash
+    ;; QUESTION SECTION:
     ;example.org.				IN	AAAA
 
     ;; ANSWER SECTION:
     example.org.		3600	IN	AAAA	::1
-	```
+    ```
 
 解析example.com时，由于ipv4在映射器中无对应项，因此会使用1.1.1.1进行解析。
 
 !!! example "DNS查询example.com(ipv4)"
 
-	```bash
-	dig -p 10053 example.com
-	```
+    ```bash
+    dig -p 10053 example.com
+    ```
 
-	```
-	;; QUESTION SECTION:
+    ```bash
+    ;; QUESTION SECTION:
     ;example.com.				IN	A
 
     ;; ANSWER SECTION:
     example.com.		10610	IN	A	93.184.216.34
-	```
+    ```
 
 !!! example "DNS查询example.com(ipv6)"
 
-	```bash
-	dig -p 10053 AAAA example.com
-	```
+    ```bash
+    dig -p 10053 AAAA example.com
+    ```
 
-	```
-	;; QUESTION SECTION:
+    ```bash
+    ;; QUESTION SECTION:
     ;example.com.				IN	AAAA
 
     ;; ANSWER SECTION:
     example.com.		3600	IN	AAAA	2001:db8::1
-	```
+    ```
 
 ## 分流
 
@@ -192,30 +192,30 @@ comments: true
 
 !!! example "DNS查询example.com(ipv4)"
 
-	```bash
-	dig -p 10053 example.com
-	```
+    ```bash
+    dig -p 10053 example.com
+    ```
 
-	```
-	;; QUESTION SECTION:
+    ```bash
+    ;; QUESTION SECTION:
     ;example.com.				IN	A
-	```
+    ```
 
 当查询`example.org`时，通过服务上的分流器bypass-0，查询将正常返回结果。
 
 !!! example "DNS查询example.org(ipv4)"
 
-	```bash
-	dig -p 10053 example.org
-	```
+    ```bash
+    dig -p 10053 example.org
+    ```
 
-	```
-	;; QUESTION SECTION:
+    ```bash
+    ;; QUESTION SECTION:
     ;example.org.				IN	A
 
     ;; ANSWER SECTION:
     example.org.		74244	IN	A	93.184.216.34
-	```
+    ```
 
 ### 目标节点上的分流器
 
@@ -257,7 +257,8 @@ comments: true
 通过`ttl`选项可以设置缓存时长，默认使用DNS查询返回结果中的TTL，当设置为负值则不使用缓存。
 
 === "命令行"
-    ```
+
+    ```sh
     gost -L dns://:10053/1.1.1.1?ttl=60s
     ```
 
@@ -284,7 +285,8 @@ comments: true
 通过`async`选项设置对上级DNS服务的查询请求为异步，此时当缓存失效后仍旧返回客户端缓存中的结果，同时再向上级DNS代理服务异步发送查询请求并更新缓存。
 
 === "命令行"
-    ```
+
+    ```sh
     gost -L dns://:10053/1.1.1.1?async=true
     ```
 
@@ -311,7 +313,8 @@ comments: true
 通过`clientIP`选项设置客户端IP，开启ECS(EDNS Client Subnet)扩展功能。
 
 === "命令行"
-    ```
+
+    ```sh
     gost -L dns://:10053/1.1.1.1?clientIP=1.2.3.4
     ```
 

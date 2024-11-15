@@ -162,7 +162,7 @@ Packets send to network 10.138.0.0/16 will be forwarded to the client with the I
 
 #### Router
 
-Server can also use a [Router](/en/concepts/router/) to route.
+Server can also use a [Router](../concepts/router.md) to route.
 
 ```yaml hl_lines="10"
 services:
@@ -186,7 +186,7 @@ routers:
 
 ### Authentication
 
-The server can use [Auther](/en/concepts/auth/) to authenticate the client.
+The server can use [Auther](../concepts/auth.md) to authenticate the client.
 
 **Server**
 

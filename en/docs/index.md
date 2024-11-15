@@ -24,7 +24,7 @@
 
 ## Overview
 
-![Overview](/images/overview.png)
+![Overview](images/overview.png)
 
 There are three main ways to use GOST as a tunnel.
 
@@ -32,19 +32,19 @@ There are three main ways to use GOST as a tunnel.
 
 As a proxy service to access the network, multiple protocols can be used in combination to form a forwarding chain for traffic forwarding.
 
-![Proxy](/images/proxy.png)
+![Proxy](images/proxy.png)
 
 ### Port Forwarding
 
 Mapping the port of one service to the port of another service, you can also use a combination of multiple protocols to form a forwarding chain for traffic forwarding.
 
-![Forward](/images/forward.png)
+![Forward](images/forward.png)
 
 ### Reverse Proxy
 
 Use tunnel and intranet penetration to expose local services behind NAT or firewall to public network for access.
 
-![Reverse Proxy](/images/reverse-proxy.png)
+![Reverse Proxy](images/reverse-proxy.png)
 
 ## Installation
 

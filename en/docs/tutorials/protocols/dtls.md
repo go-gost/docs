@@ -7,8 +7,7 @@ comments: true
 DTLS is a data channel type in GOST. The implementation of DTLS depends on the [pion/dtls](https://github.com/pion/dtls) library.
 
 !!! tip "TLS Certificate Configuration"
-    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
-
+    For TLS configuration, please refer to [TLS configuration](../tls.md).
 
 ## DTLS Service
 

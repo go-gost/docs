@@ -5,7 +5,7 @@ comments: true
 # 转发链
 
 !!! tip "动态配置"
-    转发链支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    转发链支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 转发链是由若干个节点按照特定的层级分组所形成的节点组列表，每一层级节点组构成一个跳跃点，数据依次经过每个跳跃点进行转发。转发链是GOST中一个重要模块，是服务与服务之间建立连接的纽带。
 
@@ -13,7 +13,7 @@ comments: true
 
 === "命令行"
 
-	```
+	```bash
 	gost -L http://:8080 -F https://192.168.1.1:8080 -F socks5+ws://192.168.1.2:1080
 	```
 
@@ -58,7 +58,7 @@ comments: true
 
 === "命令行"
 
-	```
+	```bash
 	gost -L http://:8080 -F https://192.168.1.1:8080,192.168.1.1:8081,192.168.1.2:8082 -F socks5+ws://192.168.0.1:1080,192.168.0.1:1081,192.168.0.2:1082
 	```
 
@@ -239,7 +239,7 @@ chains:
 
 ## 转发链组
 
-在服务的监听器或处理器上也可以通过`chainGroup`参数来指定转发链组来使用多条转发链，同时也可以设置一个[选择器(selector)](/concepts/selector/)指定转发链使用方式，默认使用轮询策略。
+在服务的监听器或处理器上也可以通过`chainGroup`参数来指定转发链组来使用多条转发链，同时也可以设置一个[选择器(selector)](selector.md)指定转发链使用方式，默认使用轮询策略。
 
 
 ```yaml hl_lines="6 7 8 9 10 11 12 13"
@@ -289,7 +289,7 @@ chains:
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L :8080 -F virtual://:0?interface=eth0
     ```
 
@@ -325,7 +325,7 @@ chains:
               type: virtual
 	```
 
-这里node-0和node-1为直连节点，当主机具有[多个网络出口](/tutorials/multi-homed/)时，可以通过`interface`参数为每个节点指定不同的网络出口，从而达到网络出口级别的负载均衡。
+这里node-0和node-1为直连节点，当主机具有[多个网络出口](../tutorials/multi-homed.md)时，可以通过`interface`参数为每个节点指定不同的网络出口，从而达到网络出口级别的负载均衡。
 
 !!! caution "限制"
     如果节点的数据通道使用UDP协议，例如QUIC, KCP等，则此节点只能用于转发链第一层级。

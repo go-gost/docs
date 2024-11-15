@@ -7,7 +7,7 @@ comments: true
 TLS is a data channel type in GOST.
 
 !!! tip "TLS Certificate Configuration"
-    For TLS configuration, please refer to [TLS configuration](/en/tutorials/tls/)。
+    For TLS configuration, please refer to [TLS configuration](../tls.md).
 
 ## Standard TLS Service
 

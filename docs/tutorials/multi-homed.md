@@ -15,7 +15,7 @@ comments: true
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L :8080?interface=eth0
     ```
 
@@ -48,9 +48,10 @@ comments: true
 命令行中的`interface`参数对应于跳跃点上的参数。
 
 === "命令行"
+
+    ```bash
+    gost -L :8080 -F :8000?interface=192.168.0.1 
     ```
-	gost -L :8080 -F :8000?interface=192.168.0.1 
-	```
 
 === "配置文件"
 
@@ -90,7 +91,7 @@ comments: true
 
 ## 直连模式
 
-如果不使用上级代理，则可以通过[虚拟节点](/concepts/chain/)让服务使用多网口进行负载均衡。
+如果不使用上级代理，则可以通过[虚拟节点](../concepts/chain.md)让服务使用多网口进行负载均衡。
 
 === "配置文件"
 

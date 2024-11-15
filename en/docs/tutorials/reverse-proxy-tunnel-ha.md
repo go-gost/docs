@@ -4,7 +4,7 @@ comments: true
 
 # Reverse Proxy Tunnel - High Availability
 
-In the previous [Reverse Proxy Tunnel](/en/tutorials/reverse-proxy-tunnel/) tutorial, the functions and usage of reverse proxy tunnels were described in detail. In this tutorial, we will focus on the deployment and the high availability of the system.
+In the previous [Reverse Proxy Tunnel](reverse-proxy-tunnel.md) tutorial, the functions and usage of reverse proxy tunnels were described in detail. In this tutorial, we will focus on the deployment and the high availability of the system.
 
 ## Single Point Of Failure
 
@@ -14,29 +14,29 @@ A reverse proxy tunnel system consists of three parts:
 * Client - Establishes a tunnel connection with the server, receives traffic from the server, routes and forwards it to the target host again.
 * Visitor - The visitor forwards the request to the server through the entry point, and the server then routes the traffic to the client of the corresponding tunnel, and finally reaches the target host.
 
-![Tunnel](/images/tunnel.png) 
+![Tunnel](../images/tunnel.png) 
 
 There is a [single point of failure (SPOF)](https://en.wikipedia.org/wiki/Single_point_of_failure) problem in the above system. When any one of the three parts fails, the tunnel becomes unavailable. For example, in the figure below, when the client network fails to establish a tunnel connection with the server, or the entry point cannot connect to the service, its corresponding tunnel becomes inaccessible.
 
-![Tunnel SPOF](/images/tunnel-spof.png)
+![Tunnel SPOF](../images/tunnel-spof.png)
 
 A mature solution to solving SPOF is to allow every part of the system to be horizontally scalable. By running multiple instances to form a cluster, when a single instance in the cluster fails, other instances can continue to operate, thereby achieving high availability of the entire system. Single point problems on the client and visitor side can be solved simply by running multiple instances.
 
-![Tunnel HA](/images/tunnel-ha.png)
+![Tunnel HA](../images/tunnel-ha.png)
 
 A single tunnel in a reverse proxy tunnel supports multiple connections by running multiple clients and specifying the same tunnel ID. Multiple connections form a connection pool on the tunnel server. The server uses these connections in a round-robin manner. When it detects a client connection exception, it will remove the connection from the connection pool. Visitor can also increase availability by running multiple entry points.
 
 Clients and visitors are stateless, so they can be easily scaled horizontally. However, the server cannot simply do this. The server needs to maintain the status of each tunnel, and the tunnel itself cannot be automatically migrated or copied as the server expands.
 
-![Tunnel SPOF](/images/tunnel-spof2.png)
+![Tunnel SPOF](../images/tunnel-spof2.png)
 
 As shown in the figure above, two server instances are running, and the client is connected to Server-1. At this time, if the request from the visitor is sent to Server-2, routing fails because there is no tunnel connection in Server-2. The server needs some additional means to achieve scalability.
 
 ## Service Registry and Discovery
 
-The reason why the server cannot achieve horizontal scaling is that the server instances are independent of each other and cannot perceive the tunnel information in other instances. Therefore we need a way for the server to share all client tunnel and connection information. The reverse proxy tunnel server achieves this goal through [service registry and discovery](/en/concepts/sd/) mechanisms, but it does not integrate specific service registry and discovery functional modules. Instead, the functions are opened through plugins, and the user chooses the implementation method.
+The reason why the server cannot achieve horizontal scaling is that the server instances are independent of each other and cannot perceive the tunnel information in other instances. Therefore we need a way for the server to share all client tunnel and connection information. The reverse proxy tunnel server achieves this goal through [service registry and discovery](../concepts/sd.md) mechanisms, but it does not integrate specific service registry and discovery functional modules. Instead, the functions are opened through plugins, and the user chooses the implementation method.
 
-![Tunnel SD](/images/tunnel-sd.png)
+![Tunnel SD](../images/tunnel-sd.png)
 
 When the client connects to the tunnel server, the server will send the client's connection information to the plugin (Register). The server will regularly check the connection status and report (Renew) to the plugin to maintain the validity of the connection information. When the client disconnects, the server will also report the plugin (Deregister).
 

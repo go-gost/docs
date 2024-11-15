@@ -5,9 +5,9 @@ comments: true
 # Hop
 
 !!! tip "Dynamic configuration"
-    Hop supports dynamic configuration via [Web API](/en/tutorials/api/overview/) when using reference mode.
+    Hop supports dynamic configuration via [Web API](../tutorials/api/overview.md) when using reference mode.
 
-Hop is an abstraction of the forwarding chain level and is the basic component of the forwarding chain. A hop contains one or more nodes, and a node [selector] (/concepts/selector/), each time a forwarding request is performed, by using the selector on each hop, the selector selects a node in the node group, and finally forms a route to process the request.
+Hop is an abstraction of the forwarding chain level and is the basic component of the forwarding chain. A hop contains one or more nodes, and a node [selector] (selector.md), each time a forwarding request is performed, by using the selector on each hop, the selector selects a node in the node group, and finally forms a route to process the request.
 
 Hops are used in two ways: inline mode and reference mode.
 
@@ -17,7 +17,7 @@ Hops can be defined directly in the chain.
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L http://:8080 -F https://192.168.1.1:8080 -F socks5+ws://192.168.1.2:1080
     ```
 
@@ -278,7 +278,7 @@ hops:
 
 ## Plugin
 
-The hop can be configured to use the external [Plugin](/en/concepts/plugin/) service, and the hop will forward the node selection request to the plugin service for processing. Other parameters have no effect when using plugin.
+The hop can be configured to use the external [Plugin](plugin.md) service, and the hop will forward the node selection request to the plugin service for processing. Other parameters have no effect when using plugin.
 
 ```yaml
 hops:

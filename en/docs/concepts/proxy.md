@@ -31,12 +31,14 @@ It is a logical division, specific protocols do not have these restrictions. For
 === "Relay Proxy Mode"
 
     Server
-    ```
+
+    ```bash
     gost -L relay+wss://gost:gost@:8420
     ```
 
 	Client
-    ```
+
+    ```bash
     gost -L http://:8080 -F relay+wss://gost:gost@:8420
     ```
 
@@ -45,12 +47,14 @@ It is a logical division, specific protocols do not have these restrictions. For
 === "Relay Forwarding Mode"
 
     Server
-    ```
+
+    ```bash
     gost -L relay+wss://:8420/:18080
     ```
 
     Client
-    ```
+
+    ```bash
     gost -L tcp://:8080 -F relay+wss://:8420
     ```
 
@@ -64,7 +68,7 @@ Both proxy and forwarding can work individually, but using them in combination c
 
 In some cases, a direct connection cannot be established between the two ports in port forwarding, which can be achieved through a forwarding chain.
 
-```
+```bash
 gost -L tcp://:8080/192.168.1.1:80 -F http://192.168.1.2:8080
 ```
 
@@ -76,7 +80,7 @@ Data channel can be dynamically added to existing services through forwarding.
 
 #### HTTP-over-TLS
 
-```
+```bash
 gost -L tls://:8443/:8080 -L http://:8080
 ```
 
@@ -84,13 +88,13 @@ Added a TLS encrypted data channel to the HTTP proxy service on port 8080 by usi
 
 Service on port 8443 is equivalent to:
 
-```
+```bash
 gost -L https://:8443
 ```
 
 #### Shadowsocks-over-KCP
 
-```
+```bash
 gost -L kcp://:8338/:8388 -L ss://:8388
 ```
 
@@ -98,7 +102,7 @@ By using port forwarding of the KCP data channel, a KCP data channel is added to
 
 Service on port 8338 is equivalent to:
 
-```
+```bash
 gost -L ss+kcp://:8338
 ```
 
@@ -110,33 +114,33 @@ Contrary to the above example, the data channel of an existing service can also 
 
 Convert HTTPS proxy service to HTTP proxy service:
 
-```
+```bash
 gost -L https://:8443
 ```
 
-```
+```bash
 gost -L tcp://:8080 -F forward+tls://:8443
 ```
 
 Service on port 8080 is equivalent to:
 
-```
+```bash
 gost -L http://:8080
 ```
 
 #### Shadowsocks-over-KCP to Shadowsocks
 
-```
+```bash
 gost -L ss+kcp://:8338
 ```
 
-```
+```bash
 gost -L tcp://:8080 -F forward+kcp://:8338
 ```
 
 Service on port 8080 is equivalent to:
 
-```
+```bash
 gost -L ss://:8080
 ```
 

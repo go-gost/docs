@@ -25,7 +25,8 @@ In GOST, the selection of nodes in a node group is done through node selector. T
 Selector can be set on each hop level of chain. The default selector uses the `round` strategy for node selection.
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8080 -F socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=rand&maxFails=3&failTimeout=60s
 	```
 
@@ -68,9 +69,11 @@ Selector can be set on each hop level of chain. The default selector uses the `r
 Forwarder is used for port forwarding, it consists of a node group and a node selector. When forwarding is performed, zero or one node is selected from the node group for the forwarding destination address through the selector. The forwarder is now similar to a single-hop forwarding chain.
 
 === "CLI"
+
+    ```bash
+    gost -L "tcp://:8080/:8081,:8082?strategy=round&maxFails=1&failTimeout=30s
     ```
-	gost -L "tcp://:8080/:8081,:8082?strategy=round&maxFails=1&failTimeout=30s
-	```
+
 === "File (YAML)"
 
     ```yaml hl_lines="14 15 16 17"
@@ -313,7 +316,7 @@ Set weights on nodes (or chains) via the `metadata.weight` option. The weight ra
 
 Hash strategy is based on the Hash value of a specific data to select. The current Hash type supports the client IP and the request target host address, and the client IP is used by default.
 
-```
+```bash
 gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash"
 ```
 
@@ -323,7 +326,7 @@ Each service can set the hash type individually.
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L http://:8080?hash=host -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash&maxFails=1&failTimeout=10s"
     ```
 

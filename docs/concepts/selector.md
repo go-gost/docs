@@ -5,7 +5,7 @@ comments: true
 # 选择器
 
 选择器负责在一个可选择的对象列表中使用选择策略选择出零个或一个对象，目前选择器所支持的对象有节点和转发链两种。
-选择器可以应用于转发链组，转发链，转发链中的跳跃点，和转发器上。选择器在GOST中可以用来实现[负载均衡](/concepts/load-balancing/)。
+选择器可以应用于转发链组，转发链，转发链中的跳跃点，和转发器上。选择器在GOST中可以用来实现[负载均衡](load-balancing.md)。
 
 `strategy` (string, default=round)
 :    指定选择策略。
@@ -27,7 +27,7 @@ comments: true
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=rand&maxFails=1&failTimeout=10s"
     ```
 
@@ -77,7 +77,7 @@ comments: true
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L "tcp://:8080/:8081,:8082?strategy=round&maxFails=1&failTimeout=30s"
     ```
 
@@ -325,7 +325,7 @@ chains:
 
 Hash策略是针对某一特定数据的Hash值来选择。目前的Hash类型支持客户端IP和请求目标主机地址，默认采用客户端IP。
 
-```
+```bash
 gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash"
 ```
 
@@ -335,7 +335,7 @@ gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=has
 
 === "命令行"
 
-    ```
+    ```bash
     gost -L http://:8080?hash=host -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=hash&maxFails=1&failTimeout=10s"
     ```
 

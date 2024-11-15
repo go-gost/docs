@@ -5,7 +5,7 @@ comments: true
 # Bypass
 
 !!! tip "Dynamic configuration"
-    Bypass supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Bypass supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 ## Bypass Controller
 
@@ -332,7 +332,7 @@ When requesting `example.org`, it does not pass the bypass-0 on node node-0, but
 
 ### Forwarder Node Level Bypass
 
-This type of bypass is similar to the bypass on the chain node and currently only applies to the [DNS proxy service](/en/tutorials/dns/).
+This type of bypass is similar to the bypass on the chain node and currently only applies to the [DNS proxy service](../tutorials/dns.md).
 
 ## Data Source
 
@@ -451,7 +451,7 @@ bypasses:
 
 ## Plugin
 
-Bypass can be configured to use an external [plugin](/en/concepts/plugin/) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+Bypass can be configured to use an external [plugin](plugin.md) service, and it will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 bypasses:

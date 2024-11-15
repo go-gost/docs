@@ -6,7 +6,7 @@ comments: true
 
 GOST can be dynamically configured through Web API. The objects that support dynamic configuration are: service, chain, auther, bypass, admission controller, resolver, hosts. Configuration changes take effect immediately.
 
-For detailed description, please refer to the online [API documentation](/swagger-ui/).
+For detailed description, please refer to the online [API documentation](../../swagger-ui/index.html).
 
 !!! tip "Immutability"
     In GOST, all dynamically configured objects are immutable instances. Subsequent update operations generate a new object instance to replace the existing one.
@@ -15,7 +15,7 @@ For detailed description, please refer to the online [API documentation](/swagge
 
 ### Get Current Config
 
-```sh
+```bash
 curl https://gost.run/play/webapi/config?format=json
 ```
 
@@ -23,7 +23,7 @@ curl https://gost.run/play/webapi/config?format=json
 
 Save the current configuration to the `gost.json` or `gost.yaml` file.
 
-```sh
+```bash
 curl -X POST https://gost.run/play/webapi/config?format=yaml
 ```
 
@@ -35,7 +35,7 @@ Services can be dynamically configured through Web API.
 
 Adding a new service will not affect the existing service. If the configuration is successful, the service will take effect immediately.
 
-```sh
+```bash
 curl https://gost.run/play/webapi/config/services -d \
 '{"name":"service-0","addr":":8080","handler":{"type":"http"},"listener":{"type":"tcp"}}'
 ```
@@ -44,7 +44,7 @@ curl https://gost.run/play/webapi/config/services -d \
 
 Updating an existing service will cause the service to restart.
 
-```sh
+```bash
 curl -X PUT https://gost.run/play/webapi/config/services/service-0 -d \
 '{"name":"service-0","addr":":8080","handler":{"type":"socks5"},"listener":{"type":"tcp"}}'
 ```
@@ -53,7 +53,7 @@ curl -X PUT https://gost.run/play/webapi/config/services/service-0 -d \
 
 Deleting an existing service immediately shuts down and deletes the service.
 
-```sh
+```bash
 curl -X DELETE https://gost.run/play/webapi/config/services/service-0 
 ```
 
@@ -66,7 +66,7 @@ curl -X DELETE https://gost.run/play/webapi/config/services/service-0
 
 After the forwarding chain is successfully configured, the objects referencing this forwarding chain will take effect immediately.
 
-```sh
+```bash
 curl https://gost.run/play/webapi/config/chains -d \
 '{"name":"chain-0","hops":[{"name":"hop-0", 
 "nodes":[{"name":"node-0","addr":":1080", 
@@ -77,7 +77,7 @@ curl https://gost.run/play/webapi/config/chains -d \
 
 Replaces an existing forward chain object with the requested configuration.
 
-```sh
+```bash
 curl -X PUT https://gost.run/play/webapi/config/chains/chain-0 -d \
 '{"name":"chain-0","hops":[{"name":"hop-0", 
 "nodes":[{"name":"node-0","addr":":1080", 
@@ -86,6 +86,6 @@ curl -X PUT https://gost.run/play/webapi/config/chains/chain-0 -d \
 
 ### Delete Chain
 
-```sh
+```bash
 curl -X DELETE https://gost.run/play/webapi/config/chains/chain-0 
 ```

@@ -8,13 +8,13 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 
 === "命令行"
 
-    ```sh
+    ```bash
 	gost -L http://:8080 -api :18080
 	```
 
 	开启认证并设置选项
 
-	```sh
+	```bash
 	gost -L http://:8080 -api "user:pass@:18080?pathPrefix=/api&accesslog=true"
 	```
 

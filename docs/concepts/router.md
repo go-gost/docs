@@ -5,10 +5,10 @@ comments: true
 # 路由器
 
 !!! tip "动态配置"
-    路由器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    路由器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 !!! note "使用限制"
-    路由器目前仅在[TUN设备](/tutorials/tuntap/)中使用。
+    路由器目前仅在[TUN设备](../tutorials/tuntap.md)中使用。
 
 路由器由路由表组成，每个路由项为目标网络(Network)到网关(Gateway)的映射，在TUN设备中通过路由器实现流量的路由。
 
@@ -138,7 +138,7 @@ routers:
 
 ## 插件
 
-路由器可以配置为使用外部[插件](/concepts/plugin/)服务，路由器会将路由查询请求转发给插件服务处理。当使用插件时其他参数无效。
+路由器可以配置为使用外部[插件](plugin.md)服务，路由器会将路由查询请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 routers:

@@ -7,7 +7,7 @@ comments: true
 QUIC是GOST中的一种数据通道类型。QUIC的实现依赖于[quic-go/quic-go](https://github.com/quic-go/quic-go)库。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## 示例
 

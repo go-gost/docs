@@ -7,7 +7,7 @@ comments: true
 GOST中可以通过设置单认证信息或认证器进行简单的身份认证。
 
 !!! tip "动态配置"
-    认证器支持通过[Web API](/tutorials/api/overview/)进行动态配置。
+    认证器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 ## 单认证信息
 
@@ -54,12 +54,12 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 
 	直接通过`username:password`方式设置
 
-    ```
+    ```bash
 	gost -L http://:8080 -F socks5://user:pass@:1080
 	```
 	如果认证信息中包含特殊字符，也可以通过`auth`参数来设置，`auth`的值为`username:password`形式的base64编码值。
 
-	```
+	```bash
 	gost -L http://:8080 -F socks5://:1080?auth=dXNlcjpwYXNz
 	```
 
@@ -284,7 +284,7 @@ authers:
 
 ## 插件
 
-认证器可以配置为使用外部[插件](/concepts/plugin/)服务，认证器会将认证请求转发给插件服务处理。当使用插件时其他参数无效。
+认证器可以配置为使用外部[插件](plugin.md)服务，认证器会将认证请求转发给插件服务处理。当使用插件时其他参数无效。
 
 ```yaml
 authers:

@@ -11,7 +11,7 @@ TUN的实现依赖于[wireguard-go](https://git.zx2c4.com/wireguard-go)。
 !!! note "Windows系统"
     Windows需要下载[wintun](https://www.wintun.net/)。
 
-关于TUN设备更详细的使用示例可以参考这篇[博文](/blog/2022/tun/)。
+关于TUN设备更详细的使用示例可以参考这篇[博文](https://gost.run/blog/2022/tun/)。
 
 ### 使用说明
 
@@ -183,7 +183,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 #### 路由器
 
-服务端也可以使用[路由器](/concepts/router/)模块来路由。
+服务端也可以使用[路由器](../concepts/router.md)模块来路由。
 
 ```yaml hl_lines="10"
 services:
@@ -207,7 +207,7 @@ routers:
 
 ### 认证
 
-服务端可以使用[认证器](/concepts/auth/)来对客户端进行认证。
+服务端可以使用[认证器](../concepts/auth.md)来对客户端进行认证。
 
 **服务端**
 

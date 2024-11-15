@@ -7,7 +7,7 @@ comments: true
 gRPC是GOST中的一种数据通道类型。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## 使用TLS
 

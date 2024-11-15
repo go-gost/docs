@@ -4,7 +4,7 @@ comments: true
 
 # 协议
 
-正如[代理转发和通道](/concepts/proxy/)所述，一个GOST服务或节点被分为两层，数据处理层和数据通道层，每一层分别对应一种网络协议。两层之间相互独立，并可以任意组合使用（除了有部分限制）。
+正如[代理转发和通道](../../concepts/proxy.md)所述，一个GOST服务或节点被分为两层，数据处理层和数据通道层，每一层分别对应一种网络协议。两层之间相互独立，并可以任意组合使用（除了有部分限制）。
 
 
 ## 数据处理
@@ -60,7 +60,7 @@ comments: true
 ## 一些特殊的协议
 
 `file`
-:    开启一个[HTTP文件服务](/tutorials/file/)
+:    开启一个[HTTP文件服务](../file.md)
 
 `https`
 :    等同于HTTP代理与TLS通道组合（http+tls）
@@ -69,31 +69,31 @@ comments: true
 :    用于HTTP3反向代理服务
 
 `dns`
-:    [DNS代理](/tutorials/dns/)
+:    [DNS代理](../dns.md)
 
 `red`，`redir`，`redirect`
-:    TCP[透明代理](/tutorials/redirect/)
+:    TCP[透明代理](../redirect.md)
 
 `redu`
-:    UDP[透明代理](/tutorials/redirect/)
+:    UDP[透明代理](../redirect.md)
 
 `tun`
-:    [TUN设备](/tutorials/tuntap/)
+:    [TUN设备](../tuntap.md)
 
 `tap`
-:    [TAP设备](/tutorials/tuntap/)
+:    [TAP设备](../tuntap.md)
 
 `forward`
-:    [服务端转发](/tutorials/port-forwarding/#_7)
+:    [服务端转发](../port-forwarding.md#_7)
 
 `virtual`
-:    [虚拟节点](/concepts/chain/#_5)
+:    [虚拟节点](../../concepts/chain.md#_5)
 
 `unix`
-:    [Unix Domain Socket转发](/tutorials/unix/)
+:    [Unix Domain Socket转发](../unix.md)
 
 `serial`
-:    [串口转发](/tutorials/serial/)
+:    [串口转发](../serial.md)
 
 
 ## 限制

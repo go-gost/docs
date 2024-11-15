@@ -4,13 +4,13 @@ comments: true
 
 # 反向代理隧道
 
-在上一篇[反向代理](/tutorials/reverse-proxy/)教程中，利用端口转发实现了简单的反向代理功能，在本篇中将利用隧道服务实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
+在上一篇[反向代理](reverse-proxy.md)教程中，利用端口转发实现了简单的反向代理功能，在本篇中将利用隧道服务实现类似于[Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)的增强版反向代理。
 
 ## 隧道(Tunnel)
 
 隧道是一条服务端和客户端之间的(逻辑上的)通道，服务端可以开启一个额外的公共入口点(EntryPoint)，由入口点进入的流量会通过隧道发送给客户端。每个隧道有一个唯一的ID(合法的UUID)，一个隧道可以有多个连接(连接池)来实现隧道的高可用性。
 
-![Reverse Proxy - Remote TCP Port Forwarding](/images/reverse-proxy-rtcp2.png) 
+![Reverse Proxy - Remote TCP Port Forwarding](../images/reverse-proxy-rtcp2.png) 
 
 **服务端**
 
@@ -45,7 +45,7 @@ comments: true
         endpoint: ac74d9dd-3125-442a-a7c1-f9e49e05faca
     ```
 
-通过`entrypoint`选项指定流量的公共入口点，同时通过`ingress`选项指定[Ingress](/concepts/ingress/)对象来定义流量路由规则。
+通过`entrypoint`选项指定流量的公共入口点，同时通过`ingress`选项指定[Ingress](../concepts/ingress.md)对象来定义流量路由规则。
 
 !!! note "隧道ID分配"
     如果使用了Ingress，隧道将通过(虚拟)主机名进行路由，隧道的ID应当由服务端提前分配并记录在Ingress中。如果客户端使用了一个未在Ingress中注册的隧道ID，则流量无法路由到此客户端。
@@ -232,7 +232,7 @@ chains:
 
 若要使用私有隧道，用户(访问端)需要开启一个私有入口点将流量转发到指定的隧道，通过设置隧道ID来指定想要访问的隧道(不仅限于私有隧道)。
 
-![Reverse Proxy - Web Private Tunnel](/images/private-tunnel-web.png) 
+![Reverse Proxy - Web Private Tunnel](../images/private-tunnel-web.png) 
 
 **服务端**
 
@@ -363,7 +363,7 @@ ingresses:
 
 隧道并不限于Web流量，也可以应用于任何TCP服务(例如SSH)。例如上面服务端的Ingress中`ssh.srv-2.local`和`redis.srv-3.local`主机对应的隧道。
 
-![Reverse Proxy - TCP Tunnel](/images/private-tunnel-tcp.png) 
+![Reverse Proxy - TCP Tunnel](../images/private-tunnel-tcp.png) 
 
 **客户端**
 
@@ -458,7 +458,7 @@ chains:
 
 隧道也可以应用于任何UDP服务(例如DNS)。例如上面服务端的Ingress中`dns.srv-2.local`和`dns.srv-3.local`主机对应的隧道。
 
-![Reverse Proxy - UDP Tunnel](/images/tunnel-udp.png) 
+![Reverse Proxy - UDP Tunnel](../images/tunnel-udp.png) 
 
 **客户端**
 
@@ -592,7 +592,7 @@ TCP和UDP服务可以共用同一个隧道，隧道会对TCP和UDP的客户端�
 
 ### 示例 - 通过隧道进行iperf测试
 
-![Reverse Proxy - iperf3](/images/tunnel-iperf.png) 
+![Reverse Proxy - iperf3](../images/tunnel-iperf.png) 
 
 **服务端**
 

@@ -16,11 +16,13 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 **服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://user:pass@:8080
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -39,11 +41,13 @@ HTTP是目前互联网上使用最广泛的一种数据交换协议，随着互�
 **客户端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L http://:8000 -F http://user:pass@:8080
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -78,15 +82,19 @@ CONNECT方法并不是所有服务都支持，为了尽可能通用，GOST利用
 **服务端**
 
 === "命令行"
-    ```
+
+    ```bash
 	gost -L relay+pht://:8080?authorizePath=/authorize&pushPath=/push&pullPath=/pull
 	```
+
 	或
-    ```
+
+    ```bash
 	gost -L relay+phts://:8080
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -290,7 +298,8 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 	gost -L socks5+h2://user:pass@:8443
 	```
 	或
-    ```
+
+    ```sh
 	gost -L socks5+h2c://user:pass@:8443
 	```
 
@@ -313,15 +322,18 @@ HTTP/2做为数据通道可以使用加密(h2)和明文(h2c)两种模式。
 **客户端**
 
 === "命令行"
-    ```
+
+    ```sh
 	gost -L http://:8000 -F socks5+h2://user:pass@:8443
 	```
 	或
-    ```
+
+    ```sh
 	gost -L http://:8000 -F socks5+h2c://user:pass@:8443
 	```
 
 === "配置文件"
+
     ```yaml
 	services:
 	- name: service-0
@@ -481,7 +493,7 @@ GOST的HTTP/3数据通道有两种模式：PHT和WebTransport。
 
 ### PHT
 
-由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](/tutorials/protocols/pht/)来实现数据通道功能。
+由于HTTP3和HTTP协议类似，本身是用作Web数据传输，不能直接作为数据通道使用。GOST中的HTTP3数据通道采用PHT-over-HTTP3，在HTTP3协议之上利用[PHT](protocols/pht.md)来实现数据通道功能。
 
 **服务端**
 

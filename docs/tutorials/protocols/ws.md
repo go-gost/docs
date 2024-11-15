@@ -7,7 +7,7 @@ comments: true
 Websocket是GOST中的一种数据通道类型。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## Websocket
 
@@ -62,6 +62,7 @@ GOST在Websocket基础之上扩展出具有多路复用(Multiplex)特性的传�
     ```bash
     gost -L mws://:8443
     ```
+
     或
 
     ```bash

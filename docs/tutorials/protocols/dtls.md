@@ -7,7 +7,7 @@ comments: true
 DTLS是GOST中的一种数据通道类型。DTLS的实现依赖于[pion/dtls](https://github.com/pion/dtls)库。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## DTLS服务
 

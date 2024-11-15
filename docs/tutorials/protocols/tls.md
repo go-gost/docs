@@ -7,7 +7,7 @@ comments: true
 TLS是GOST中的一种数据通道类型。
 
 !!! tip "TLS证书配置"
-    TLS配置请参考[TLS配置说明](/tutorials/tls/)。
+    TLS配置请参考[TLS配置说明](../tls.md)。
 
 ## 标准TLS服务
 
@@ -154,7 +154,9 @@ TLS通道也可以用作端口转发，相当于在TCP端口转发服务基础�
     ```bash
     gost -L tls://:8443/:8080 -L http://:8080
     ```
+
 	  等同于
+
     ```bash
     gost -L forward+tls://:8443/:8080 -L http://:8080
     ```

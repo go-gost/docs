@@ -5,16 +5,18 @@ comments: true
 # Admission Control
 
 !!! tip "Dynamic configuration"
-    Admission Controller supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Admission Controller supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 ## Admission Controller
 
 An admission controller can be set on each service to control client access.
 
 === "CLI"
-    ```
+
+    ```bash
     gost -L http://:8080?admission=127.0.0.1,192.168.0.0/16,example.com
     ```
+
     Specify a list of client address matching rules via the `admission` option, each rule is a comma-separated IP, CIDR, or domain, domain will be resolved to IP.
 
 === "File (YAML)"
@@ -43,7 +45,8 @@ An admission controller can be set on each service to control client access.
 Similar to the bypass, the admission controller can also set the blacklist or whitelist mode, the default is the blacklist mode.
 
 === "CLI"
-    ```
+
+    ```bash
     gost -L http://:8080?admission=~127.0.0.1,192.168.0.0/16
     ```
 
@@ -210,7 +213,7 @@ admissions:
 
 ## Plugin
 
-The admission controller can be configured to use an external [plugin](/en/concepts/plugin/) service, and the controller will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
+The admission controller can be configured to use an external [plugin](plugin.md) service, and the controller will forward the request to the plugin server for processing. Other parameters are invalid when using plugin.
 
 ```yaml
 admissions:

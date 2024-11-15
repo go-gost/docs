@@ -6,10 +6,10 @@ Buy me a coffee if you want:
 
 **WeChat Reward QR Code**
 
-![WeChat](../images/wechat.png)
+![WeChat](images/wechat.png)
 
 **imToken**
 
-![BTC](../images/btc.png) 
-![ETH](../images/eth.png)
-![USDT](../images/usdt.png)
+![BTC](images/btc.png) 
+![ETH](images/eth.png)
+![USDT](images/usdt.png)

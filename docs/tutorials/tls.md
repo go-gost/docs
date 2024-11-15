@@ -60,7 +60,7 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 
 === "命令行"
 
-    ```
+    ```bash
 	gost -L http+tls://:8443?certFile=cert.pem&keyFile=key.pem&caFile=ca.pem
 	```
 
@@ -86,7 +86,7 @@ GOST在每次运行时自动生成TLS证书，如果未指定任何证书，会�
 
 === "命令行"
 
-	```
+	```bash
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?secure=true&serverName=www.example.com
 	```
 	
@@ -165,7 +165,7 @@ services:
 
 === "命令行"
 
-	```
+	```bash
 	gost -L http://:8080 -F tls://IP_OR_DOMAIN:8443?certFile=cert.pem&keyFile=key.pem
 	```
 	

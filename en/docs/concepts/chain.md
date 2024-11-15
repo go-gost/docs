@@ -5,16 +5,18 @@ comments: true
 # Forwarding Chain
 
 !!! tip "Dynamic configuration"
-    Forwarding chain supports dynamic configuration via [Web API](/en/tutorials/api/overview/).
+    Forwarding chain supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 Forwarding chain is a list of node groups formed by several nodes grouped according to a specific level. Each level of node group is a hop, and data is forwarded through each hop in turn. Forwarding chain is an important module in GOST, it is the link for establishing connections between services.
 
 The nodes in the forwarding chain are independent of each other, and each node can use different data channels and data processing protocols independently.
 
 === "CLI"
-	```
+
+	```bash
 	gost -L http://:8080 -F https://192.168.1.1:8080 -F socks5+ws://192.168.1.2:1080
 	```
+
 	All `-F` parameters on the command line form a forwarding chain, and all services use this forwarding chain.
 
 === "File (YAML)"
@@ -56,7 +58,7 @@ Each hop level can add multiple nodes to form a node group.
 
 === "CLI"
 
-	```
+	```bash
 	gost -L http://:8080 -F https://192.168.1.1:8080,192.168.1.1:8081,192.168.1.2:8082 -F socks5+ws://192.168.0.1:1080,192.168.0.1:1081,192.168.0.2:1082
 	```
 
@@ -241,7 +243,7 @@ The service `service-0` uses the forwarding chain `chain-0`, and the service `se
 
 ## Chain Group
 
-Listener or handler of a service can also use the `chainGroup` parameter to specify a chain group to use multiple chains. You can also set a [Selector](/en/concepts/selector/) to specify the usage of the chains, the default selector strategy is round-robin.
+Listener or handler of a service can also use the `chainGroup` parameter to specify a chain group to use multiple chains. You can also set a [Selector](selector.md) to specify the usage of the chains, the default selector strategy is round-robin.
 
 !!! example "Chain Group"
 
@@ -292,7 +294,7 @@ If the service does not need to use an upper-stream proxy, a special virtual nod
 
 === "CLI"
 
-    ```
+    ```bash
     gost -L :8080 -F direct://:0?interface=eth0
     ```
 
@@ -328,7 +330,7 @@ If the service does not need to use an upper-stream proxy, a special virtual nod
               type: virtual
 	```
 
-Here node-0 and node-1 are virtual nodes. When the host is [multi-homed] (/en/tutorials/multi-homed/), you can specify different interfaces for each node through the `interface` parameter, so that achieve load balancing at the network egress level.
+Here node-0 and node-1 are virtual nodes. When the host is [multi-homed] (../tutorials/multi-homed.md), you can specify different interfaces for each node through the `interface` parameter, so that achieve load balancing at the network egress level.
 
 !!! caution "Limitation"
 	If the data channel of the node uses the UDP protocol, such as QUIC, KCP, etc., this node can only be used for the first level of the forwarding chain.
