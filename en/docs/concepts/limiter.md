@@ -32,6 +32,8 @@ This type of limiter includes three levels: service, connection and IP, the thre
         type: auto
       listener:
         type: tcp
+      metadata:
+        limiter.refreshInterval: 30s
     limiters:
     - name: limiter-0
       limits:
@@ -52,6 +54,9 @@ A list of configurations is specified via the `limits` option, each configuratio
 * Input: The rate at which the service receives data (per second). The supported units are: B, KB, MB, GB, TB, such as 128KB, 1MB, 10GB. Zero or negative value means unlimited.
 
 * Output: The rate at which the service sends data (per second), in the same unit as the input rate. The output rate is optional, zero, negative value or not set means unlimited.
+
+`limiter.refreshInterval` (duration, default=30s)
+:    Limiter plugin synchronization configuration interval.
 
 ### Request Rate Limiter
 

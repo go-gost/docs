@@ -315,22 +315,24 @@ If the service does not need to use an upper-stream proxy, a special virtual nod
         - name: hop-0
           nodes:
           - name: node-0
-            addr: :0
             interface: eth0
             connector:
               type: virtual
             dialer:
               type: virtual
           - name: node-1
-            addr: :0
             interface: eth1
             connector:
               type: virtual
+              # metadata:
+              #   action: reject
             dialer:
               type: virtual
 	```
 
 Here node-0 and node-1 are virtual nodes. When the host is [multi-homed] (../tutorials/multi-homed.md), you can specify different interfaces for each node through the `interface` parameter, so that achieve load balancing at the network egress level.
+
+You can also reject all connections by setting `connector.metadata.action` to `reject`.
 
 !!! caution "Limitation"
 	If the data channel of the node uses the UDP protocol, such as QUIC, KCP, etc., this node can only be used for the first level of the forwarding chain.

@@ -310,22 +310,24 @@ chains:
         - name: hop-0
           nodes:
           - name: node-0
-            addr: :0
             interface: eth0
             connector:
               type: virtual
             dialer:
               type: virtual
           - name: node-1
-            addr: :0
             interface: eth1
             connector:
               type: virtual
+              # metadata:
+              #   action: reject
             dialer:
               type: virtual
 	```
 
 这里node-0和node-1为直连节点，当主机具有[多个网络出口](../tutorials/multi-homed.md)时，可以通过`interface`参数为每个节点指定不同的网络出口，从而达到网络出口级别的负载均衡。
+
+也可以通过设置`connector.metadata.action`为`reject`来拒绝所有连接。
 
 !!! caution "限制"
     如果节点的数据通道使用UDP协议，例如QUIC, KCP等，则此节点只能用于转发链第一层级。

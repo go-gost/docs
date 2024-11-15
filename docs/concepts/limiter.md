@@ -32,6 +32,8 @@ comments: true
         type: auto
       listener:
         type: tcp
+      metadata:
+        limiter.refreshInterval: 30s
     limiters:
     - name: limiter-0
       limits:
@@ -52,6 +54,9 @@ comments: true
 * 入站速率(Input)：服务接收数据的速率(每秒流量)，支持的单位有: B，KB，MB，GB，TB，例如 128KB，1MB，10GB。0或负值代表无限制。
 
 * 出站速率(Output)：服务发送数据的速率(每秒流量)，单位同入站速率。出站速率可选，0或负值代表无限制。
+
+`limiter.refreshInterval` (duration, default=30s)
+:    设置限制器插件同步配置间隔时长。
 
 ### 请求速率限制
 
@@ -480,6 +485,8 @@ services:
   handler:
     type: http
     limiter: limiter-0
+    metadata:
+      limiter.refreshInterval: 30s
   listener:
     type: tcp
 limiters:
