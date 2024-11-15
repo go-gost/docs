@@ -270,6 +270,30 @@ services:
 
 In addition to simple conditional filtering, request routing also integrates the powerful and flexible [rule-based routing](https://doc.traefik.io/traefik/routing/routers/) function in Traefik.
 
+The matching rule of the node can be set by the `matcher.rule` option. When the rule is set, `filter` will be ignored.
+
+```yaml hl_lines="15 19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: target-0
+      addr: 192.168.1.1:80
+      matcher:
+        rule: Host(`www.example.com`) || Host(`www.example.org`)
+    - name: target-1
+      addr: 192.168.1.2:80
+      matcher:
+        rule: Host(`*.example.com`)
+```
+
 #### Rule
 
 Currently supported rules are

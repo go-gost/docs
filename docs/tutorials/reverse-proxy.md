@@ -270,6 +270,30 @@ services:
 
 除了简单的条件过滤外，请求路由同时也集成了Traefik中强大和灵活的[基于规则路由](https://doc.traefik.io/traefik/routing/routers/)功能。
 
+通过`matcher.rule`选项设置节点的匹配规则，当设置了规则后，`filter`将会被忽略。
+
+```yaml hl_lines="15 19"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: target-0
+      addr: 192.168.1.1:80
+      matcher:
+        rule: Host(`www.example.com`) || Host(`www.example.org`)
+    - name: target-1
+      addr: 192.168.1.2:80
+      matcher:
+        rule: Host(`*.example.com`)
+```
+
 #### 规则
 
 目前支持的匹配规则列表
