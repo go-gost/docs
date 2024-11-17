@@ -268,7 +268,7 @@ services:
 
 ### 规则匹配
 
-除了简单的条件过滤外，请求路由同时也集成了Traefik中强大和灵活的[基于规则路由](https://doc.traefik.io/traefik/routing/routers/)功能。
+除了简单的条件过滤外，请求路由同时也集成了Traefik中更加灵活的[规则路由](https://doc.traefik.io/traefik/routing/routers/)功能。
 
 通过`matcher.rule`选项设置节点的匹配规则，当设置了规则后，`filter`将会被忽略。
 

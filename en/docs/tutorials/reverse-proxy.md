@@ -268,7 +268,7 @@ services:
 
 ### Rule Matching
 
-In addition to simple conditional filtering, request routing also integrates the powerful and flexible [rule-based routing](https://doc.traefik.io/traefik/routing/routers/) function in Traefik.
+In addition to simple conditional filtering, request routing also integrates the more flexible [rule-based routing](https://doc.traefik.io/traefik/routing/routers/) function in Traefik.
 
 The matching rule of the node can be set by the `matcher.rule` option. When the rule is set, `filter` will be ignored.
 
