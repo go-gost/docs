@@ -35,6 +35,8 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 
 	metrics:
 	  addr: :9000
+	  # unix domain socket
+	  # addr: unix:///var/run/gost.sock
 	  path: /metrics
 	  auth:
 	    username: user

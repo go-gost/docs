@@ -35,6 +35,8 @@ Use the `metrics` option to enable metrics, which is disabled by default.
 
 	metrics:
 	  addr: :9000
+	  # also support unix domain socket
+	  # addr: unix:///var/run/gost.sock
 	  path: /metrics
 	  auth:
 	    username: user

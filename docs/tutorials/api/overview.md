@@ -30,6 +30,8 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 		type: tcp
 	api:
 	  addr: :18080
+	  # unix domain socket
+	  # addr: unix:///var/run/gost.sock
 	  pathPrefix: /api
 	  accesslog: true
 	  auth:

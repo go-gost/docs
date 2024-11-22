@@ -388,14 +388,18 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         host: test.example.com
     - name: example-org
       addr: example.org:80
-      filter:
-        host: example.org
+      # filter:
+      #   host: example.org
+      matcher:
+        rule: Host(`example.org`)
       http:
         host: test.example.org:80
 ```
@@ -408,7 +412,7 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 ### 自定义请求头
 
-通过设置`http.header`选项可以自定义请求头部信息，如果所设置的头部字段已存在则会被覆盖。
+通过设置`http.requestHeader`选项可以自定义请求头部信息，如果所设置的头部字段已存在则会被覆盖。
 
 ```yaml hl_lines="16-20"
 services:
@@ -424,20 +428,24 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
-        header:
+        requestHeader:
           User-Agent: gost/3.0.0
           foo: bar
           bar: 123
         # host: test.example.com
     - name: example-org
       addr: example.org:80
-      filter:
-        host: example.org
+      # filter:
+      #   host: example.org
+      matcher:
+        rule: Host(`example.org`)
       http:
-        header:
+        requestHeader:
           User-Agent: curl/7.81.0
           foo: bar
           bar: baz
@@ -464,8 +472,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         responseHeader:
           foo: bar
@@ -492,8 +502,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         auth:
           username: user
@@ -504,7 +516,7 @@ services:
 
 ### URL路径重写
 
-通过设置`http.rewrite`选项定义URL路径重写规则。
+通过设置`http.rewriteURL`选项定义URL路径重写规则。
 
 ```yaml hl_lines="16-21"
 services:
@@ -520,20 +532,22 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
-        rewrite:
+        rewriteURL:
         - match: /api/login
           replacement: /user/login
         - match: /api/(.*)
           replacement: /$1
 ```
 
-`rewrite.match` (string)
+`rewriteURL.match` (string)
 :    指定路径匹配模式(支持正则表达式)。
 
-`rewrite.replacement` (string)
+`rewriteURL.replacement` (string)
 :    设置路径替换内容。
 
 `http://example.com/api/login`会被重写为`http://example.com/user/login`。
@@ -558,8 +572,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         rewriteBody:
         - match: foo
@@ -594,8 +610,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:443
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       tls:
         secure: true
         serverName: example.com
@@ -646,12 +664,16 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: .example.com
+      # filter:
+      #   host: .example.com
+      matcher:
+        rule: Host(`.example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: .example.org
+      # filter:
+      #   host: .example.org
+      matcher:
+        rule: Host(`.example.org`)
 ```
 
 ```bash
@@ -676,12 +698,16 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: .example.com
+      # filter:
+      #   host: .example.com
+      matcher:
+        rule: Host(`.example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: .example.org
+      # filter:
+      #   host: .example.org
+      matcher:
+        rule: Host(`.example.org`)
 ```
 
 ```bash

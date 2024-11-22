@@ -386,14 +386,18 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         host: test.example.com
     - name: example-org
       addr: example.org:80
-      filter:
-        host: example.org
+      # filter:
+      #   host: example.org
+      matcher:
+        rule: Host(`example.org`)
       http:
         host: test.example.org:80
 ```
@@ -406,7 +410,7 @@ When requesting http://example.com, the Host in the HTTP request header sent to 
 
 ### Custom Request Header
 
-The request header can be customized by setting the `http.header` option, if the header field already exists, it will be overwritten.
+The request header can be customized by setting the `http.requestHeader` option, if the header field already exists, it will be overwritten.
 
 ```yaml hl_lines="16-20"
 services:
@@ -422,20 +426,24 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
-        header:
+        requestHeader:
           User-Agent: gost/3.0.0
           foo: bar
           bar: 123
         # host: test.example.com
     - name: example-org
       addr: example.org:80
-      filter:
-        host: example.org
+      # filter:
+      #   host: example.org
+      matcher:
+        rule: Host(`example.org`)
       http:
-        header:
+        requestHeader:
           User-Agent: curl/7.81.0
           foo: bar
           bar: baz
@@ -462,8 +470,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         responseHeader:
           foo: bar
@@ -490,8 +500,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         auth:
           username: user
@@ -502,7 +514,7 @@ When requesting http://example.com directly, HTTP status code 401 will be return
 
 ### Rewrite URL Path
 
-Define URL path rewriting rules by setting the `http.rewrite` option. 
+Define URL path rewriting rules by setting the `http.rewriteURL` option. 
 
 ```yaml hl_lines="16-21"
 services:
@@ -518,20 +530,22 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
-        rewrite:
+        rewriteURL:
         - match: /api/login
           replacement: /user/login
         - match: /api/(.*)
           replacement: /$1
 ```
 
-`rewrite.match` (string)
+`rewriteURL.match` (string)
 :    specify path matching pattern (supports regular expression).
 
-`rewrite.replacement` (string)
+`rewriteURL.replacement` (string)
 :    set the path replacement content.
 
 `http://example.com/api/login` will be rewritten to `http://example.com/user/login`.
@@ -556,8 +570,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       http:
         rewriteBody:
         - match: foo
@@ -592,8 +608,10 @@ services:
     nodes:
     - name: example-com
       addr: example.com:443
-      filter:
-        host: example.com
+      # filter:
+      #   host: example.com
+      matcher:
+        rule: Host(`example.com`)
       tls:
         secure: true
         serverName: example.com
@@ -643,12 +661,16 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: .example.com
+      # filter:
+      #   host: .example.com
+      matcher:
+        rule: Host(`.example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: .example.org
+      # filter:
+      #   host: .example.org
+      matcher:
+        rule: Host(`.example.org`)
 ```
 
 ```bash
@@ -673,12 +695,16 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: .example.com
+      # filter:
+      #   host: .example.com
+      matcher:
+        rule: Host(`.example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: .example.org
+      # filter:
+      #   host: .example.org
+      matcher:
+        rule: Host(`.example.org`)
 ```
 
 ```bash

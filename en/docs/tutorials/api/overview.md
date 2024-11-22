@@ -8,13 +8,13 @@ GOST can use the RESTful API to interact with the GOST process by starting the W
 
 === "CLI"
 
-    ```sh
+    ```bash
 	gost -L http://:8080 -api :18080
 	```
 
 	or
 
-	```sh
+	```bash
 	gost -L http://:8080 -api "user:pass@:18080?pathPrefix=/api&accesslog=true"
 	```
 
@@ -30,6 +30,8 @@ GOST can use the RESTful API to interact with the GOST process by starting the W
 		type: tcp
 	api:
 	  addr: :18080
+	  # also support unix domain socket
+	  # addr: unix:///var/run/gost.sock
 	  pathPrefix: /api
 	  accesslog: true
 	  auth:
