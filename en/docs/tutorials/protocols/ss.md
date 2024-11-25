@@ -29,6 +29,8 @@ GOST's support for shadowsocks is based on the [shadowsocks/shadowsocks-go](http
         type: tcp
     ```
 
+!!! caution "Shadowsocks Handler" The Shadowsocks handler cannot use authenticator, and only supports setting single authentication information as encryption parameter.
+
 !!! tip "Delay Sending"
     By default, the shadowsocks protocol will wait for request data, and when it receives the request data, it will send the protocol header information to the server together with the request data. When the client option `nodelay` is set to `true`, the protocol header information will be sent to the server immediately without waiting for the user's request data. When the server connected through the proxy actively sends data to the client (such as FTP, VNC, MySQL), this option needs to be turned on to avoid abnormal connection.
 
