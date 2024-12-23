@@ -17,7 +17,7 @@ Bypass can be set on the service, the hop and the nodes of the forwarding chain 
     gost -L http://:8080?bypass=10.0.0.0/8 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
-    Use the `bypass` parameter to specify the requested target address matching rule list. The rules are IP, CIDR, domain name or domain name wildcard separated by commas.
+    Use the `bypass` parameter to specify the requested target address matching rule list. The rules are IP, IP range, CIDR, domain name or domain name wildcard separated by commas.
 
 === "File (YAML)"
 
@@ -52,8 +52,9 @@ Bypass can be set on the service, the hop and the nodes of the forwarding chain 
       - 10.0.0.0/8
     - name: bypass-1
       matchers:
-      - 172.10.0.0/16
       - 127.0.0.1
+      - 172.20.0.1-172.30.0.255
+      - 172.10.0.0/16
       - localhost
       - '*.example.com'
       - .example.org

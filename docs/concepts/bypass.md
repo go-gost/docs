@@ -20,7 +20,7 @@ comments: true
     gost -L http://:8080?bypass=10.0.0.0/8 -F http://192.168.1.1:8080?bypass=172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
-    通过`bypass`参数来指定请求的目标地址匹配规则列表，规则是以逗号分割的IP，CIDR，域名或域名通配符。
+    通过`bypass`参数来指定请求的目标地址匹配规则列表，规则是以逗号分割的IP，IP范围，CIDR，域名或域名通配符。
 
 === "配置文件"
 
@@ -56,8 +56,9 @@ comments: true
       - 10.0.0.0/8
     - name: bypass-1
       matchers:
-      - 172.10.0.0/16
       - 127.0.0.1
+      - 172.20.0.1-172.30.0.255
+      - 172.10.0.0/16
       - localhost
       - '*.example.com'
       - .example.org

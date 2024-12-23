@@ -99,6 +99,9 @@ In this example, when the traffic enters the entry point (port 80 of the server)
 
 When the hostname is `example.com`, the tunnel with the ID 4d21094e-b74c-4916-86c1-d9fa36ea677b is matched according to the rules in the Ingress. When the traffic reaches the client, it is forwarded by the rtcp service to the 192.168.1.1:80 service.
 
+!!! note "Traffic Limit"
+    Public entrypoint only supports receiving HTTP and TLS traffic with SNI information.
+
 !!! tip "High Availability"
     In order to improve the availability of a single tunnel, multiple clients can be run, and these clients use the same tunnel ID. When obtaining a connection from the tunnel, a weighted random mechanism will be used, with up to 3 failed retries.
 
