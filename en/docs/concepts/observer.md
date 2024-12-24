@@ -42,7 +42,7 @@ observers:
 
 When the status of the service changes, the status will be reported through the observer on the service. If the service has statistics enabled (`enableStats` option), connection and traffic statistics will also be reported.
 
-```yaml hl_lines="4 10 11"
+```yaml hl_lines="4 10-12"
 services:
 - name: service-0
   addr: ":8080"
@@ -53,7 +53,8 @@ services:
     type: tcp
   metadata:
     enableStats: true 
-    observePeriod: 5s
+    observer.period: 5s
+    observer.resetTraffic: false
 
 observers:
 - name: observer-0
@@ -65,8 +66,14 @@ observers:
       serverName: example.com
 ```
 
-`observePeriod` (duration, default=5s)
+`enableStats` (bool, default=false)
+:    Whether to report connection and traffic data.
+
+`observer.period` (duration, default=5s)
 :    Observer reporting period.
+
+`observer.resetTraffic` (bool, default=false)
+:    Whether to reset traffic data. After enabling, the traffic reported each time is incremental data.
 
 ## HTTP Plugin
 
@@ -136,12 +143,19 @@ curl -XPOST http://127.0.0.1:8000/observer \
 `stats.totalErrs` (uint64)
 :    total number of errors in service processing requests
 
+Response:
+```json
+{"ok": true}
+```
+
+!!! note "Retry Mechanism"
+    When the report fails, that is, the plugin service does not return a response with `ok` equal to `true`, the observer will re-upload the failed event next time until it succeeds.
 
 ## Observer In Service Handler
 
 For proxy services that support authentication (HTTP, HTTP2, SOCKS4, SOCKS5, Relay), the observer is also available to Handler.
 
-```yaml hl_lines="6"
+```yaml hl_lines="6 8 9"
 services:
 - name: service-0
   addr: ":8080"
@@ -149,7 +163,8 @@ services:
     type: http
     observer: observer-0
     metadata:
-      observePeriod: 5s
+      observer.period: 5s
+      observer.resetTraffic: false
   listener:
     type: tcp
 
@@ -159,8 +174,11 @@ observers:
     addr: 127.0.0.1:8000
 ```
 
-`observePeriod` (duration, default=5s)
+`observer.period` (duration, default=5s)
 :    Observer reporting period.
+
+`observer.resetTraffic` (bool, default=false)
+:    Whether to reset traffic data. After enabling, the traffic reported each time is incremental data.
 
 ### Observer Based On Client ID
 

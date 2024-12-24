@@ -40,7 +40,7 @@ observers:
 
 当服务的状态变化时会通过服务上的观测器上报状态，如果服务开启了统计(`enableStats`选项)，同时也会上报连接和流量统计信息。
 
-```yaml hl_lines="4 10 11"
+```yaml hl_lines="4 10-12"
 services:
 - name: service-0
   addr: ":8080"
@@ -51,7 +51,8 @@ services:
     type: tcp
   metadata:
     enableStats: true # 开启统计
-    observePeriod: 5s
+    observer.period: 5s
+    observer.resetTraffic: false
 
 observers:
 - name: observer-0
@@ -66,8 +67,11 @@ observers:
 `enableStats` (bool, default=false)
 :    是否上报连接和流量数据。
 
-`observePeriod` (duration, default=5s)
+`observer.period` (duration, default=5s)
 :    观测器上报周期。
+
+`observer.resetTraffic` (bool, default=false)
+:    是否重置流量数据，开启后每次上报的流量为增量数据。
 
 ## HTTP插件
 
@@ -110,6 +114,11 @@ curl -XPOST http://127.0.0.1:8000/observer \
 `status.msg` (string)
 :    服务状态说明
 
+插件响应
+```json
+{"ok": true}
+```
+
 **上报统计信息**
 
 单个服务会周期性(5秒)通过观测器上报统计信息，当服务的统计信息无更新时(无任何连接或流量变化)停止上报。
@@ -137,12 +146,19 @@ curl -XPOST http://127.0.0.1:8000/observer \
 `stats.totalErrs` (uint64)
 :    服务处理请求的总错误数
 
+插件响应
+```json
+{"ok": true}
+```
+
+!!! note "重传机制"
+    当上报失败，即插件服务未返回`ok`为`true`的响应时，观测器下一次会重新上传失败的事件，直到成功为止。
 
 ## 处理器(Handler)上的观测器
 
 对于支持认证的处理器(HTTP，HTTP2，SOCKS4，SOCKS5，Relay，Tunnel)，观测器也可以用在这些类型的处理器上。
 
-```yaml hl_lines="6 8"
+```yaml hl_lines="6 8 9"
 services:
 - name: service-0
   addr: ":8080"
@@ -150,7 +166,8 @@ services:
     type: http
     observer: observer-0
     metadata:
-      observePeriod: 5s
+      observer.period: 5s
+      observer.resetTraffic: false
   listener:
     type: tcp
 
@@ -160,9 +177,11 @@ observers:
     addr: 127.0.0.1:8000
 ```
 
-`observePeriod` (duration, default=5s)
+`observer.period` (duration, default=5s)
 :    观测器上报周期。
 
+`observer.resetTraffic` (bool, default=false)
+:    是否重置流量数据，开启后每次上报的流量为增量数据。
 
 ### 基于用户标识的流量统计
 

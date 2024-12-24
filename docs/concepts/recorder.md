@@ -285,6 +285,7 @@ recorders:
 curl -XPOST http://127.0.0.1:8000/recorder -d '{"data":"aGVsbG8gd29ybGQ="}'
 ```
 
+插件响应
 ```json
 {"ok":true}
 ```
