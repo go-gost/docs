@@ -158,6 +158,7 @@ nav:
       - SSH: tutorials/protocols/ssh.md
       - MTCP: tutorials/protocols/mtcp.md
       - PHT: tutorials/protocols/pht.md
+      - Obfs: tutorials/protocols/obfs.md
     - WebAPI:
       - 概述: tutorials/api/overview.md
       - 动态配置: tutorials/api/config.md

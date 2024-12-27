@@ -477,11 +477,13 @@ The 192.168.1.2:22 service here can be the standard SSH service of the system it
 
 The port range format is supported in command line mode.
 
+### Many-to-One
+
 ```bash
 gost -L tcp://:8000-8003/192.168.1.1:8000-8003
 ```
 
-It is equivalent to:
+is equivalent to:
 
 ```yaml
 services:
@@ -527,6 +529,61 @@ services:
           addr: 192.168.1.1:8003
 ```
 
+### Many-to-Many
+
+Many-to-many forwarding will map one-to-one in order according to the defined port range. If the target port range is larger than the listening port range, the excess will be ignored.
+
+In the following example, ports 8000-8003 will be mapped to 192.168.1.1:8000-8003 in order, while 192.168.1.1:8004-8010 will be ignored.
+
+```bash
+gost -L tcp://:8000-8003/192.168.1.1:8000-8010
+```
+
+is equivalent to:
+
+```yaml
+services:
+  - name: service-0
+    addr: :8000
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-0
+          addr: 192.168.1.1:8000
+  - name: service-1
+    addr: :8001
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-1
+          addr: 192.168.1.1:8001
+  - name: service-2
+    addr: :8002
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-2
+          addr: 192.168.1.1:8002
+  - name: service-3
+    addr: :8003
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-3
+          addr: 192.168.1.1:8003
+```
 ## Server-side Forwarding
 
 The above forwarding method can be regarded as client forwarding, and the client controls the forwarding target address. The target address can also be specified by the server.

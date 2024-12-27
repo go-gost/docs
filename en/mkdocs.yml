@@ -130,6 +130,7 @@ nav:
       - SSH: tutorials/protocols/ssh.md
       - MTCP: tutorials/protocols/mtcp.md
       - PHT: tutorials/protocols/pht.md
+      - Obfs: tutorials/protocols/obfs.md
     - WebAPI:
       - Overview: tutorials/api/overview.md
       - Dynamic Configuration: tutorials/api/config.md

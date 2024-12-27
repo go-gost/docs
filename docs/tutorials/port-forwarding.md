@@ -477,8 +477,66 @@ TCP远程端口转发可以借助于标准SSH协议的远程端口转发功能�
 
 命令行模式下支持使用端口范围格式。
 
+### 多对一转发
+
 ```bash
-gost -L tcp://:8000-8003/192.168.1.1:8000-8003
+gost -L tcp://:8000-8003/192.168.1.1:8000
+```
+
+等价于
+
+```yaml
+services:
+  - name: service-0
+    addr: :8000
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-0
+          addr: 192.168.1.1:8000
+  - name: service-1
+    addr: :8001
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-0
+          addr: 192.168.1.1:8000
+  - name: service-2
+    addr: :8002
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-0
+          addr: 192.168.1.1:8000
+  - name: service-3
+    addr: :8003
+    handler:
+      type: tcp
+    listener:
+      type: tcp
+    forwarder:
+      nodes:
+        - name: target-0
+          addr: 192.168.1.1:8000
+```
+
+### 多对多转发
+
+多对多转发会根据定义的端口范围按顺序进行一对一映射。如果目标端口范围大于监听端口范围，则多余部分会被忽略。
+
+在下面的例子中，8000-8003端口会按顺序依次映射到192.168.1.1:8000-8003，而192.168.1.1:8004-8010会被忽略。
+
+```bash
+gost -L tcp://:8000-8003/192.168.1.1:8000-8010
 ```
 
 等价于
