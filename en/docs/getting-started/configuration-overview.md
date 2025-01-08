@@ -141,6 +141,10 @@ The corresponding configuration file:
     * The authentication `gost:gost` is converted to `connector.auth`.
 	* The option `foo=bar` is converted to `connector.metadata` and `dialer.metadata`
 
+## Hot Reload
+
+The configuration can be reloaded by sending `SIGHUP` signal to the process. If there is an error in the configuration parsing, it will not be applied.
+
 ## System Service
 
 GOST supports running as a system service

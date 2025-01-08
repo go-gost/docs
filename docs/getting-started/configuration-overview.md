@@ -64,6 +64,7 @@ gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.16
 			metadata:
 			  bar: baz
 	```
+
 === "json格式"
 
 	```json
@@ -141,9 +142,13 @@ gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.16
     * 认证信息`gost:gost`部分被转换为`connector.auth`属性。
 	* 参数选项部分`foo=bar`被转换为`connector.metadata`和`dialer.metadata`
 
+## 热加载
+
+通过发送`SIGHUP`信号给进程可以重载配置，当配置解析出错时将不会被应用。
+
 ## 系统服务
 
-GOST支持以系统服务的方式运行
+GOST支持以系统服务的方式运行。
 
 ### Windows
 
