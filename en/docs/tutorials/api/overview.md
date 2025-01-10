@@ -6,6 +6,16 @@ comments: true
 
 GOST can use the RESTful API to interact with the GOST process by starting the Web API service.
 
+## Start API Service
+
+The API service supports two modes: global service and normal service.
+
+When using global service and reloading configuration using the web API, the service will not be affected.
+
+### Global Service
+
+Define the API service via the command line `-api` or the `api` object in the configuration file.
+
 === "CLI"
 
     ```bash
@@ -44,7 +54,7 @@ You can also start the API service only, and then dynamically configure services
 
 === "CLI"
 
-    ```sh
+    ```bash
 	gost -api :18080
 	```
 
@@ -60,6 +70,35 @@ You can also start the API service only, and then dynamically configure services
 		password: pass
 	  auther: auther-0
 	```
+
+### Normal Service
+
+When running as a normal service, you can use all the functions supported by service.
+
+=== "CLI"
+
+    ```bash
+	gost -L "api+tls://user:pass@:18080?pathPrefix=/api&accessLog=true"
+	```
+
+=== "File (YAML)"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":18080"
+	  handler:
+		type: api
+		auth:
+		  username: user
+		  password: pass
+		metadata:
+		  pathPrefix: /api
+		  accessLog: true
+	  listener:
+		type: tls
+	```
+
 ## Path Prefix
 
 The URL path prefix can be set via the `pathPrefix` property.

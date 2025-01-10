@@ -4,7 +4,17 @@ comments: true
 
 # Web API
 
-GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
+GOST可以通过web API服务使用RESTful API和GOST进程进行交互。
+
+## 开启服务
+
+API服务支持两种运行方式：全局服务和普通服务。
+
+当使用全局服务，采用web API方式进行配置重载时，服务将不受影响。
+
+### 全局服务
+
+通过命令行`-api`或配置文件中的`api`对象来定义API服务。
 
 === "命令行"
 
@@ -44,7 +54,7 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 
 === "命令行"
 
-    ```sh
+    ```bash
 	gost -api :18080
 	```
 
@@ -59,6 +69,34 @@ GOST可以通过开启Web API服务使用RESTful API和GOST进程进行交互。
 	    username: user
 		password: pass
 	  auther: auther-0
+	```
+
+### 普通服务
+
+采用普通服务运行时，可以使用服务所支持的所有功能。
+
+=== "命令行"
+
+    ```bash
+	gost -L "api+tls://user:pass@:18080?pathPrefix=/api&accessLog=true"
+	```
+
+=== "配置文件"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":18080"
+	  handler:
+		type: api
+		auth:
+		  username: user
+		  password: pass
+		metadata:
+		  pathPrefix: /api
+		  accessLog: true
+	  listener:
+		type: tls
 	```
 
 ## 路径前缀

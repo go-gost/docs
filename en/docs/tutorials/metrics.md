@@ -6,9 +6,15 @@ comments: true
 
 GOST internally provides monitoring data through the [Prometheus](https://prometheus.io/) metrics.
 
-## Enable Metrics
+## Start Metrics Service
 
-Use the `metrics` option to enable metrics, which is disabled by default.
+The metrics service supports two modes: global service and normal service.
+
+When using global service and reloading configuration using the web API, the service will not be affected.
+
+### Global Service
+
+Define the metrics service via the command line `-metrics` or the `metrics` object in the configuration file.
 
 === "CLI"
 
@@ -50,7 +56,34 @@ Use the `metrics` option to enable metrics, which is disabled by default.
 	`metrics.path` (string, default=/metrics)
 	:    API path
 
-### Authentication
+### Normal Service
+
+When running as a normal service, you can use all the functions supported by service.
+
+=== "CLI"
+
+    ```bash
+	gost -L "metrics://user:pass@:18080?path=/metrics"
+	```
+
+=== "File (YAML)"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8080"
+	  handler:
+		type: metrics
+		auth:
+		  username: user
+		  password: pass
+		metadata:
+		  path: /metrics
+	  listener:
+		type: tcp
+	```
+
+## Authentication
 
 Authentication uses [HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication).
 

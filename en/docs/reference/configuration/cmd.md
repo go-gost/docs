@@ -25,25 +25,31 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tls` - 等价与`auto+tls`，处理器auto与监听器tls的组合
 
 !!! example "示例"
-	```
+
+	```bash
 	gost -L http://:8080
 	```
-	```
+
+	```bash
 	gost -L http://:8080 -L socks5://:1080?foo=bar
 	```
-	```
+
+	```bash
 	gost -L http+tls://gost:gost@:8443
 	```
-	```
+
+	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
-	```
+
+	```bash
 	gost -L tls://:8443
 	```
 
 !!! tip "转发地址列表"
     端口转发模式支持转发目标地址列表形式：
-	```
+
+	```bash
 	gost -L tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080
 	```
 
@@ -51,7 +57,7 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 
 此参数值为类URL格式(方括号中的内容可以省略):
 
-```
+```bash
 [scheme://][username:password@host]:port[?key1=value1&key2=value2]
 ```
 
@@ -63,13 +69,15 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tls` - 等价与`http+tls`
 
 !!! example
-	```
+
+	```bash
     gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080 -F socks5+tls://192.168.1.2:1080?foo=bar
 	```
 
 !!! tip "节点组"
     也可以通过设置地址列表构成节点组：
-	```
+
+	```bash
 	gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080,192.168.1.2:8080
 	```
 
@@ -77,7 +85,8 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 
 !!! example
     使用配置文件`gost.yml`
-	```
+
+	```bash
     gost -C gost.yml
 	```
 
@@ -85,45 +94,60 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 
 !!! example
 	输出yaml格式配置
-	```
+
+	```bash
 	gost -L http://:8080 -O yaml
 	```
 
 	输出json格式配置
-	```
+
+	```bash
     gost -L http://:8080 -O json
 	```
 
 	将json格式配置转成yaml格式
-	```
+
+	```bash
 	gost -C gost.json -O yaml
 	```
 
 > **`-D`** - 开启Debug模式，更详细的日志输出。
 
 !!! example
-	```
+
+	```bash
 	gost -L http://:8080 -D
+	```
+
+> **`-DD` - 开启Trace模式，比Debug模式输出更详细的日志信息。
+
+!!! example
+
+	```bash
+	gost -L http://:8080 -DD
 	```
 
 > **`-V`** - 查看版本，显示当前运行的GOST版本号。
 
 !!! example
-    ```
+
+    ```bash
 	gost -V
 	```
 
 > **`-api`** - 指定WebAPI地址。
 
 !!! example
-	```
+
+	```bash
 	gost -L http://:8080 -api :18080
 	```
 
 > **`-metrics`** - 指定prometheus metrics API地址。
 
 !!! example
-    ```
+
+    ```bash
 	gost -L http://:8080 -metrics :9000
 	```
 
@@ -131,12 +155,14 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
     Zsh in macOS does not support `?` and `&`, you have to use `""` to quote them,otherwise you'll get warnings in Terminal: "zsh: no matches found: ..."。
 
 === "Bash"
-    ```
+
+    ```bash
 	gost -L http://:8080 -L socks5://:1080?foo=bar
 	```
 
 === "Zsh"
-    ```
+
+    ```bash
 	gost -L http://:8080 -L "socks5://:1080?foo=bar"
 	```
 

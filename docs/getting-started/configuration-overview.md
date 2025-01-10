@@ -142,9 +142,27 @@ gost -L http://gost:gost@localhost:8080?foo=bar -F socks5+tls://gost:gost@192.16
     * 认证信息`gost:gost`部分被转换为`connector.auth`属性。
 	* 参数选项部分`foo=bar`被转换为`connector.metadata`和`dialer.metadata`
 
+## 环境变量
+
+GOST支持以下环境变量
+
+* GOST_LOGGER_LEVEL - 日志级别
+* GOST_API - Web API服务地址
+* GOST_METRICS - Metrics服务地址
+* GOST_PROFILING - Profiling服务地址
+
 ## 热加载
 
-通过发送`SIGHUP`信号给进程可以重载配置，当配置解析出错时将不会被应用。
+通过发送`SIGHUP`信号给进程可以重载整个配置，当配置解析出错时将不会被应用。
+
+也可以通过[web API](../tutorials/api/overview.md)的方式发送HTTP POST请求到`/config/reload`来重载配置。这种方式的重载将会忽略api，metrics和profiling三个全局服务。
+
+!!! note "配置优先级"
+    当同时使用配置文件，命令行参数和环境变量时，优先级为：命令行参数 > 环境变量 > 配置文件。优先级高的配置会覆盖相应的优先级低的配置。
+	
+	当重载配置时，如果命令行参数或环境变量中的相应设置在配置文件中被修改或删除则不受影响。
+
+	例如，如果通过命令行参数开启Web API服务`gost -C gost.yaml -api :18080`，当在gost.yaml中修改或删除`api`配置并重载，则api服务仍然会运行在:18080上。
 
 ## 系统服务
 

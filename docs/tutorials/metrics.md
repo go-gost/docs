@@ -6,9 +6,15 @@ comments: true
 
 GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供监控数据。
 
-## 开启监控
+## 开启服务
 
-通过`metrics`参数来开启监控指标记录，默认不开启。
+Metrics服务支持两种运行方式：全局服务和普通服务。
+
+当使用全局服务，采用web API方式进行配置重载时，服务将不受影响。
+
+### 全局服务
+
+通过命令行`-metrics`或配置文件中的`metrics`对象来定义metrics服务。
 
 === "命令行"
 
@@ -50,7 +56,34 @@ GOST内部通过[Prometheus](https://prometheus.io/)的指标(Metrics)来提供�
 	`metrics.path` (string, default=/metrics)
 	:    API路径
 
-### 身份认证
+### 普通服务
+
+采用普通服务运行时，可以使用服务所支持的所有功能。
+
+=== "命令行"
+
+    ```bash
+	gost -L "metrics://user:pass@:18080?path=/metrics"
+	```
+
+=== "配置文件"
+
+    ```yaml
+	services:
+	- name: service-0
+	  addr: ":8080"
+	  handler:
+		type: metrics
+		auth:
+		  username: user
+		  password: pass
+		metadata:
+		  path: /metrics
+	  listener:
+		type: tcp
+	```
+
+## 身份认证
 
 身份认证采用[HTTP Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication)方式。
 

@@ -25,6 +25,7 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tls` - 等价与`auto+tls`，处理器auto与监听器tls的组合
 
 !!! example "示例"
+
 	```bash
 	gost -L http://:8080
 	```
@@ -47,6 +48,7 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 
 !!! tip "转发地址列表"
     端口转发模式支持转发目标地址列表形式：
+
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80,192.168.1.2:80,192.168.1.3:8080
 	```
@@ -67,6 +69,7 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 	   * `tls` - 等价与`http+tls`
 
 !!! example
+
 	```bash
     gost -L http://:8080 -F http://gost:gost@192.168.1.1:8080 -F socks5+tls://192.168.1.2:1080?foo=bar
 	```
@@ -120,6 +123,14 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
 
 	```bash
 	gost -L http://:8080 -D
+	```
+
+> **`-DD` - 开启Trace模式，比Debug模式输出更详细的日志信息。
+
+!!! example
+
+	```bash
+	gost -L http://:8080 -DD
 	```
 
 > **`-V`** - 查看版本，显示当前运行的GOST版本号。

@@ -131,7 +131,7 @@ The corresponding configuration file:
     * The scheme will be parsed as `handler` and `listener`, for example `http` will be converted to http handler and tcp listener.
 	* The `localhost:8080` corresponds to the field `addr` of the service.
     * The authentication `gost:gost` is converted to `handler.auth`.
-	* The option `foo=bar` is converted to `handler.metadata`和`listener.metadata`.
+	* The option `foo=bar` is converted to `handler.metadata` and `listener.metadata`.
 	* If a forwarding chain exists, it is referenced by `handler.chain` (via the `name` field).
 
 - If there are one or more `-F` parameters, a forwarding chain is generated in the `chains` list, a `-F` corresponds to an item in the `hops` list of the forwarding chain, and the `-F` parameters are converted in order to the nodes in the corresponding hop.
@@ -141,9 +141,27 @@ The corresponding configuration file:
     * The authentication `gost:gost` is converted to `connector.auth`.
 	* The option `foo=bar` is converted to `connector.metadata` and `dialer.metadata`
 
+## Environment Variables
+
+GOST supports the following environment variables:
+
+* GOST_LOGGER_LEVEL - log level.
+* GOST_API - Web API service address.
+* GOST_METRICS - Metrics service address.
+* GOST_PROFILING - Profiling service address.
+
 ## Hot Reload
 
 The configuration can be reloaded by sending `SIGHUP` signal to the process. If there is an error in the configuration parsing, it will not be applied.
+
+You can also reload the configuration by sending an HTTP POST request to `/config/reload` via the [web API](../tutorials/api/overview.md). This method of reloading will ignore the three global services: api, metrics and profiling.
+
+!!! note "Configuration Priority"
+	When using configuration files, command line parameters, and environment variables at the same time, the priority is: command line parameters > environment variables > configuration files. A configuration with a higher priority will override the corresponding configuration with a lower priority.
+	
+	When reloading the configuration, if the corresponding settings in the command line parameters or environment variables are modified or deleted in the configuration file, they will not be affected.
+
+	For example, if you start the Web API service through the command line parameter `gost -C gost.yaml -api :18080`, when you modify or delete the `api` configuration in gost.yaml and reload it, the api service will still run on :18080.
 
 ## System Service
 
