@@ -36,7 +36,123 @@ comments: true
 当一个服务运行后，监听器会根据服务的配置监听在指定的端口并使用指定的协议进行通讯。收到正确的数据后，监听器建立一个数据通道连接，将此连接交给处理器使用。处理器按照指定的协议进行数据通讯，收到客户端的请求后，获取到目标地址，如果使用了转发器，则使用转发器中指定的目标地址，再使用路由器将请求发送到此目标主机。
 
 !!! info "路由器"
-	路由器是处理器内部的一个抽象模块，其内部包含了转发链，域名解析器，主机映射器等，用于服务和目标主机之间的请求路由。
+    路由器是处理器内部的一个抽象模块，其内部包含了转发链，域名解析器，主机映射器等，用于服务和目标主机之间的请求路由。
+
+## 服务状态与统计信息
+
+通过[web API](../tutorials/api/overview.md)的方式查看服务配置时，每个服务的配置中会在`status`字段记录服务的状态。
+
+```json hl_lines="12-29"
+
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": ":8080",
+      "handler": {
+        "type": "auto"
+      },
+      "listener": {
+        "type": "tcp"
+      },
+      "status": {
+        "createTime": 1736657921,
+        "state": "ready",
+        "events": [
+          {
+            "time": 1736657921,
+            "msg": "service service-0 is running"
+          },
+          {
+            "time": 1736657921,
+            "msg": "service service-0 is ready"
+          },
+          {
+            "time": 1736657921,
+            "msg": "service service-0 is listening on [::]:8080"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+```
+
+`status.createTime` (int64)
+:    服务创建时间(unix时间戳)。
+
+`status.state` (string)
+:    服务状态：`running` - 服务创建并运行，`ready` - 服务已就绪，`failed` - 服务运行失败，`closed` - 服务已关闭。
+
+`status.events` (string)
+:    服务状态表。
+
+如果服务通过`enableStats`选项开启了统计，则在`status.stats`中会记录此服务的统计信息。
+
+```json hl_lines="13 32-38"
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": ":8080",
+      "handler": {
+        "type": "auto",
+      },
+      "listener": {
+        "type": "tcp",
+      },
+      "metadata": {
+        "enableStats": "true"
+      },
+      "status": {
+        "createTime": 1736658090,
+        "state": "ready",
+        "events": [
+          {
+            "time": 1736658090,
+            "msg": "service service-0 is running"
+          },
+          {
+            "time": 1736658090,
+            "msg": "service service-0 is ready"
+          },
+          {
+            "time": 1736658090,
+            "msg": "service service-0 is listening on [::]:8080"
+          }
+        ],
+        "stats": {
+          "totalConns": 4,
+          "currentConns": 0,
+          "totalErrs": 0,
+          "inputBytes": 3770,
+          "outputBytes": 82953
+        }
+      }
+    }
+  ]
+}
+```
+
+`stats.totalConns` (uint64)
+:    服务处理的总连接数。
+
+`stats.currentConns` (uint64)
+:    服务当前正在处理(未完成)的连接数。
+
+`stats.inputBytes` (uint64)
+:    服务接收的数据总字节数。
+
+`stats.outputBytes` (uint64)
+:    服务发送的数据总字节数。
+
+`stats.totalErrs` (uint64)
+:    服务处理请求的总错误数。
+
+!!! tip "观测器"
+
+    如果服务上使用了[观测器](observer.md)，此服务的状态和统计信息也会通过观测器上报给插件。
 
 ## 忽略转发链
 

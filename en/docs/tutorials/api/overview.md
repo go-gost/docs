@@ -19,57 +19,57 @@ Define the API service via the command line `-api` or the `api` object in the co
 === "CLI"
 
     ```bash
-	gost -L http://:8080 -api :18080
-	```
+    gost -L http://:8080 -api :18080
+    ```
 
-	or
+    or
 
-	```bash
-	gost -L http://:8080 -api "user:pass@:18080?pathPrefix=/api&accesslog=true"
-	```
+    ```bash
+    gost -L http://:8080 -api "user:pass@:18080?pathPrefix=/api&accesslog=true"
+    ```
 
 === "File (YAML)"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":8080"
-	  handler:
-		type: http
-	  listener:
-		type: tcp
-	api:
-	  addr: :18080
-	  # also support unix domain socket
-	  # addr: unix:///var/run/gost.sock
-	  pathPrefix: /api
-	  accesslog: true
-	  auth:
-		username: user
-		password: pass
-	  auther: auther-0
-	```
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+      listener:
+        type: tcp
+    api:
+      addr: :18080
+      # also support unix domain socket
+      # addr: unix:///var/run/gost.sock
+      pathPrefix: /api
+      accesslog: true
+      auth:
+        username: user
+        password: pass
+      auther: auther-0
+    ```
 
 You can also start the API service only, and then dynamically configure services and other components through the API.
 
 === "CLI"
 
     ```bash
-	gost -api :18080
-	```
+    gost -api :18080
+    ```
 
 === "File (YAML)"
 
     ```yaml
-	api:
-	  addr: :18080
-	  pathPrefix: /api
-	  accesslog: true
-	  auth:
-	    username: user
-		password: pass
-	  auther: auther-0
-	```
+    api:
+      addr: :18080
+      pathPrefix: /api
+      accesslog: true
+      auth:
+        username: user
+        password: pass
+      auther: auther-0
+    ```
 
 ### Normal Service
 
@@ -78,26 +78,26 @@ When running as a normal service, you can use all the functions supported by ser
 === "CLI"
 
     ```bash
-	gost -L "api+tls://user:pass@:18080?pathPrefix=/api&accessLog=true"
-	```
+    gost -L "api+tls://user:pass@:18080?pathPrefix=/api&accessLog=true"
+    ```
 
 === "File (YAML)"
 
     ```yaml
-	services:
-	- name: service-0
-	  addr: ":18080"
-	  handler:
-		type: api
-		auth:
-		  username: user
-		  password: pass
-		metadata:
-		  pathPrefix: /api
-		  accessLog: true
-	  listener:
-		type: tls
-	```
+    services:
+    - name: service-0
+      addr: ":18080"
+      handler:
+        type: api
+        auth:
+          username: user
+          password: pass
+        metadata:
+          pathPrefix: /api
+          accessLog: true
+      listener:
+        type: tls
+    ```
 
 ## Path Prefix
 
@@ -118,8 +118,8 @@ Authentication information can be set through the `auth` or `auther` options. If
 === "CLI"
 
     ```sh
-	gost -api user:pass@:18080
-	```
+    gost -api user:pass@:18080
+    ```
 
 === "File (YAML)"
 
@@ -139,4 +139,4 @@ You can use [online environment](https://api.gost.run/config) to test, or try it
 The GOST program has built-in swagger API documentation. If the Web API service is enabled locally, you can also use [https://api.gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml](https://api.gost.run/swagger-ui/?url=http://localhost:18080/docs/swagger.yaml) to try to configure the local service (this assumes that the local Web API service is running on port 18080).
 
 !!! note "Switch Scheme"
-	The default scheme in SwaggerUI is HTTPS. If you want to test local services, you need to manually switch to HTTP.
+    The default scheme in SwaggerUI is HTTPS. If you want to test local services, you need to manually switch to HTTP.

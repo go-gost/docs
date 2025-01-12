@@ -39,6 +39,122 @@ When a service is running, the listener will listen on the specified port accord
 !!! tip "Router"
     Router is an abstract module inside the handler, which contains the forwarding chain, resolver, host mapper, etc., for request routing between the service and the target host.
 
+## Service Status and Stats
+
+When viewing the service configuration through the [web API](../tutorials/api/overview.md), the status of each service is recorded in the `status` field in the configuration of the service.
+
+```json hl_lines="12-29"
+
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": ":8080",
+      "handler": {
+        "type": "auto"
+      },
+      "listener": {
+        "type": "tcp"
+      },
+      "status": {
+        "createTime": 1736657921,
+        "state": "ready",
+        "events": [
+          {
+            "time": 1736657921,
+            "msg": "service service-0 is running"
+          },
+          {
+            "time": 1736657921,
+            "msg": "service service-0 is ready"
+          },
+          {
+            "time": 1736657921,
+            "msg": "service service-0 is listening on [::]:8080"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+```
+
+`status.createTime` (int64)
+:    Service creation time (Unix timestamp).
+
+`status.state` (string)
+:    Status of service: `running`, `ready`, `failed`, `closed`.
+
+`status.events` (string)
+:    List of service status.
+
+
+If stats are enabled for a service via the `enableStats` option, stats for this service will be recorded in `status.stats`.
+
+```json hl_lines="13 32-38"
+{
+  "services": [
+    {
+      "name": "service-0",
+      "addr": ":8080",
+      "handler": {
+        "type": "auto",
+      },
+      "listener": {
+        "type": "tcp",
+      },
+      "metadata": {
+        "enableStats": "true"
+      },
+      "status": {
+        "createTime": 1736658090,
+        "state": "ready",
+        "events": [
+          {
+            "time": 1736658090,
+            "msg": "service service-0 is running"
+          },
+          {
+            "time": 1736658090,
+            "msg": "service service-0 is ready"
+          },
+          {
+            "time": 1736658090,
+            "msg": "service service-0 is listening on [::]:8080"
+          }
+        ],
+        "stats": {
+          "totalConns": 4,
+          "currentConns": 0,
+          "totalErrs": 0,
+          "inputBytes": 3770,
+          "outputBytes": 82953
+        }
+      }
+    }
+  ]
+}
+```
+
+`stats.totalConns` (uint64)
+:    Total number of connections handled by the service
+
+`stats.currentConns` (uint64)
+:    The number of current pending connections of the service
+
+`stats.inputBytes` (uint64)
+:    Total number of bytes of data received by the service
+
+`stats.outputBytes` (uint64)
+:    Total number of bytes of data sent by the service
+
+`stats.totalErrs` (uint64)
+:    total number of errors in service processing requests
+
+!!! tip "Observer"
+    If an observer is used on the service, the status and stats of the service will also be reported to the plugin through the observer.
+
 ## Ignore Chain
 
 In command line mode, if there is a forwarding chain, all services will use this forwarding chain by default. The `ignoreChain` option allows specific services not to use the forwarding chain.

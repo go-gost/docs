@@ -91,7 +91,7 @@ observers:
 
 ### Example
 
-**Report Service Status**
+#### Report Service Status
 
 ```bash
 curl -XPOST http://127.0.0.1:8000/observer \
@@ -116,7 +116,7 @@ curl -XPOST http://127.0.0.1:8000/observer \
 `status.msg` (string)
 :    description of status
 
-**Report Statistics**
+#### Report Statistic*
 
 A single service will report statistics through the observer periodically (5 seconds), and stop reporting when the service's statistics is not updated (without any connection or traffic changes).
 
@@ -144,6 +144,7 @@ curl -XPOST http://127.0.0.1:8000/observer \
 :    total number of errors in service processing requests
 
 Response:
+
 ```json
 {"ok": true}
 ```
