@@ -34,6 +34,7 @@ comments: true
         type: tcp
       metadata:
         limiter.refreshInterval: 30s
+        limiter.scope: service
     limiters:
     - name: limiter-0
       limits:
@@ -57,6 +58,9 @@ comments: true
 
 `limiter.refreshInterval` (duration, default=30s)
 :    设置限制器插件同步配置间隔时长。
+
+`limiter.scope` (string)
+:    设置限制器插件请求作用域。 `service` - 仅请求服务级别，`conn` - 仅请求连接级别。默认(不设置或为空)同时请求服务级别和连接级别。
 
 ### 请求速率限制
 
@@ -381,6 +385,7 @@ comments: true
 
 `timeout` (duration, default=0)
 :    请求超时时长
+
 ## 优先级
 
 当同时配置多个数据源时，优先级从高到低为: HTTP，redis，文件，内联。如果在不同数据源中存在相同的作用域，则优先级高的会覆盖优先级低的配置。

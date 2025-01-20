@@ -34,6 +34,7 @@ This type of limiter includes three levels: service, connection and IP, the thre
         type: tcp
       metadata:
         limiter.refreshInterval: 30s
+        limiter.scope: service
     limiters:
     - name: limiter-0
       limits:
@@ -57,6 +58,9 @@ A list of configurations is specified via the `limits` option, each configuratio
 
 `limiter.refreshInterval` (duration, default=30s)
 :    Limiter plugin synchronization configuration interval.
+
+`limiter.scope` (string)
+:    Limiter plugin request scope. `service` - service level only, `conn` - connection level only. By default (not set or empty) both service level and connection level are requested.
 
 ### Request Rate Limiter
 
