@@ -58,6 +58,8 @@ Define the metrics service via the command line `-metrics` or the `metrics` obje
 
 ### Normal Service
 
+:material-tag: 3.1.0
+
 When running as a normal service, you can use all the functions supported by service.
 
 === "CLI"

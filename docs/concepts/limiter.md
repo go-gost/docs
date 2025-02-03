@@ -57,10 +57,14 @@ comments: true
 * 出站速率(Output)：服务发送数据的速率(每秒流量)，单位同入站速率。出站速率可选，0或负值代表无限制。
 
 `limiter.refreshInterval` (duration, default=30s)
+
 :    设置限制器插件同步配置间隔时长。
 
-`limiter.scope` (string) :material-tag: 3.1.0
-:    设置限制器插件请求作用域。 `service` - 仅请求服务级别，`conn` - 仅请求连接级别。默认(不设置或为空)同时请求服务级别和连接级别。
+`limiter.scope` (string)
+
+:    :material-tag: 3.1.0
+
+     设置限制器插件请求作用域。 `service` - 仅请求服务级别，`conn` - 仅请求连接级别。默认(不设置或为空)同时请求服务级别和连接级别。
 
 ### 请求速率限制
 

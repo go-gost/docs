@@ -73,6 +73,8 @@ You can also start the API service only, and then dynamically configure services
 
 ### Normal Service
 
+:material-tag: 3.1.0
+
 When running as a normal service, you can use all the functions supported by service.
 
 === "CLI"

@@ -57,10 +57,14 @@ A list of configurations is specified via the `limits` option, each configuratio
 * Output: The rate at which the service sends data (per second), in the same unit as the input rate. The output rate is optional, zero, negative value or not set means unlimited.
 
 `limiter.refreshInterval` (duration, default=30s)
+
 :    Limiter plugin synchronization configuration interval.
 
 `limiter.scope` (string)
-:    Limiter plugin request scope. `service` - service level only, `conn` - connection level only. By default (not set or empty) both service level and connection level are requested.
+
+:    :material-tag: 3.1.0
+    
+     Limiter plugin request scope. `service` - service level only, `conn` - connection level only. By default (not set or empty) both service level and connection level are requested.
 
 ### Request Rate Limiter
 
