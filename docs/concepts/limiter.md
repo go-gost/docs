@@ -59,7 +59,7 @@ comments: true
 `limiter.refreshInterval` (duration, default=30s)
 :    设置限制器插件同步配置间隔时长。
 
-`limiter.scope` (string)
+`limiter.scope` (string) :material-tag: 3.1.0
 :    设置限制器插件请求作用域。 `service` - 仅请求服务级别，`conn` - 仅请求连接级别。默认(不设置或为空)同时请求服务级别和连接级别。
 
 ### 请求速率限制

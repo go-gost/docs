@@ -153,6 +153,8 @@ GOST支持以下环境变量
 
 ## 热加载
 
+:material-tag: 3.1.0
+
 通过发送`SIGHUP`信号给进程可以重载整个配置，当配置解析出错时将不会被应用。
 
 也可以通过[web API](../tutorials/api/overview.md)的方式发送HTTP POST请求到`/config/reload`来重载配置。这种方式的重载将会忽略api，metrics和profiling三个全局服务。
