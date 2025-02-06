@@ -2,7 +2,7 @@
 
 Name: `ss`
 
-状态： Stable
+Status： Stable
 
 SS处理器使用Shadowsocks协议进行数据交互，接收并处理客户端请求。
 

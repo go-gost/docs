@@ -2,7 +2,7 @@
 
 Name: `sshd`
 
-状态： GA
+Status： GA
 
 sshd处理器使用SSH协议进行数据交互，接收并处理客户端请求。
 

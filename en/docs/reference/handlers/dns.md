@@ -2,7 +2,7 @@
 
 Name: `dns`
 
-状态： GA
+Status： GA
 
 DNS处理器使用接收DNS查询请求并返回DNS查询结果。
 

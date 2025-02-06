@@ -2,7 +2,7 @@
 
 Name: `tun`
 
-状态： GA
+Status： GA
 
 === "命令行"
 

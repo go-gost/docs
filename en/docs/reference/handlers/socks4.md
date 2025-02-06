@@ -2,7 +2,7 @@
 
 Name: `socks4`
 
-状态： GA
+Status： GA
 
 SOCKS4处理器使用标准SOCKSv4代理协议(同时兼容SOCKS4A协议)进行数据交互，接收并处理客户端请求。
 

@@ -2,7 +2,7 @@
 
 Name: `ssu`
 
-状态： Stable
+Status： Stable
 
 ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UDP数据。
 

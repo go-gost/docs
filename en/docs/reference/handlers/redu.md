@@ -2,7 +2,7 @@
 
 Name: `redu`
 
-状态： GA
+Status： GA
 
 REDU处理器用于构建基于tproxy的UDP透明代理。
 
