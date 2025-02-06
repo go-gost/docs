@@ -1,6 +1,6 @@
 # Shadowsocks UDP Relay
 
-名称: `ssu`
+Name: `ssu`
 
 状态： Stable
 

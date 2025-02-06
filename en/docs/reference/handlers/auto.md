@@ -1,6 +1,6 @@
 # Auto
 
-名称: `auto`
+Name: `auto`
 
 状态： Stable
 

@@ -1,6 +1,6 @@
 # SOCKSv4(a)
 
-名称: `socks4`
+Name: `socks4`
 
 状态： GA
 

@@ -1,6 +1,6 @@
 # DNS
 
-名称: `dns`
+Name: `dns`
 
 状态： GA
 

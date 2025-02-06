@@ -1,6 +1,6 @@
 # HTTP2
 
-名称: `http2`
+Name: `http2`
 
 状态： GA
 

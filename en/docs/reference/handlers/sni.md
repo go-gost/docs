@@ -1,6 +1,6 @@
 # SNI
 
-名称: `sni`
+Name: `sni`
 
 状态： GA
 

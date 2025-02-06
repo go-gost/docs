@@ -1,6 +1,6 @@
 # UDP透明代理
 
-名称: `redu`
+Name: `redu`
 
 状态： GA
 

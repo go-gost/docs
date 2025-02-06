@@ -1,6 +1,6 @@
 # UDP端口转发
 
-名称: `udp`
+Name: `udp`
 
 状态： Stable
 

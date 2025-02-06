@@ -1,6 +1,6 @@
 # SOCKSv5
 
-名称: `socks`, `socks5`
+Name: `socks`, `socks5`
 
 状态： Stable
 
