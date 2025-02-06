@@ -2,7 +2,7 @@
 
 Name: `http`
 
-状态： Stable
+Status： Stable
 
 HTTP处理器使用标准HTTP代理协议进行数据交互，接收并处理客户端的HTTP请求。
 

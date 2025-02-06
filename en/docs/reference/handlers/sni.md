@@ -2,7 +2,7 @@
 
 Name: `sni`
 
-状态： GA
+Status： GA
 
 === "命令行"
     ```

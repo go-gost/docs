@@ -2,7 +2,7 @@
 
 Name: `red`, `redir`, `redirect`
 
-状态： GA
+Status： GA
 
 RED处理器用于构建TCP透明代理。
 

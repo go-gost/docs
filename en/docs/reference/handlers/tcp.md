@@ -2,7 +2,7 @@
 
 Name: `tcp`
 
-状态： Stable
+Status： Stable
 
 TCP处理器仅做纯TCP数据转发工作。根据服务中的转发器配置，将数据转发给指定的目标主机。
 

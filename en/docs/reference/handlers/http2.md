@@ -2,7 +2,7 @@
 
 Name: `http2`
 
-状态： GA
+Status： GA
 
 HTTP2处理器使用HTTP2协议进行数据交互，接收并处理客户端请求。
 

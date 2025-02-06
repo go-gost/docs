@@ -2,7 +2,7 @@
 
 器Name: `rtcp`
 
-状态： Stable
+Status： Stable
 
 RTCP处理器根据服务中的转发器配置，将数据转发给指定的目标主机。
 

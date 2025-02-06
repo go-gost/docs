@@ -2,7 +2,7 @@
 
 Name: `relay`
 
-状态： GA
+Status： GA
 
 Relay处理器使用GOST Relay协议进行数据交互，接收并处理客户端请求。
 
