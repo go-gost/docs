@@ -1,16 +1,16 @@
 # UDP透明代理
 
-名称: `redu`
+Name: `redu`
 
-状态： GA
+Status： GA
 
 REDU处理器用于构建基于tproxy的UDP透明代理。
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L redu://:8080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0

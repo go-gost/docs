@@ -1,14 +1,14 @@
 # SNI
 
-名称: `sni`
+Name: `sni`
 
-状态： GA
+Status： GA
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L sni://:8080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0

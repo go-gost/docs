@@ -1,8 +1,8 @@
 # Shadowsocks
 
-名称: `ss`
+Name: `ss`
 
-状态： Stable
+Status： Stable
 
 SS处理器使用Shadowsocks协议进行数据交互，接收并处理客户端请求。
 
@@ -11,11 +11,11 @@ GOST对shadowsocks的支持是基于[shadowsocks/shadowsocks-go](https://github.
 !!! tip "可选加密"
     Shadowsocks的加密是可选的，当不设置加密信息时，采用明文传输。
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L ss://AEAD_CHACHA20_POLY1305:123456@:8338
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
