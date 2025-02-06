@@ -6,11 +6,11 @@ Status： GA
 
 HTTP2处理器使用HTTP2协议进行数据交互，接收并处理客户端请求。
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L http2://:8443
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0

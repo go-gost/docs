@@ -4,11 +4,11 @@ Name: `tap`
 
 Status： GA
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L tap://:8421?net=192.168.123.2/24
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0

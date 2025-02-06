@@ -9,11 +9,11 @@ sshd处理器使用SSH协议进行数据交互，接收并处理客户端请求�
 !!! note "认证信息"
     在这里的认证信息是设置在sshd监听器上。
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L sshd://gost:gost@:2222
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
