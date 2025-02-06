@@ -1,6 +1,6 @@
 # TUN
 
-名称: `tun`
+Name: `tun`
 
 状态： GA
 

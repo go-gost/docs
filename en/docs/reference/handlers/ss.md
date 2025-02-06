@@ -1,6 +1,6 @@
 # Shadowsocks
 
-名称: `ss`
+Name: `ss`
 
 状态： Stable
 

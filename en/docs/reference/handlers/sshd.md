@@ -1,6 +1,6 @@
 # SSHD
 
-名称: `sshd`
+Name: `sshd`
 
 状态： GA
 

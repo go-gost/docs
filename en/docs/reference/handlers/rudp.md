@@ -1,6 +1,6 @@
 # UDP远程端口转发
 
-名称: `rudp`
+Name: `rudp`
 
 状态： Stable
 

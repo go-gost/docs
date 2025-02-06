@@ -1,6 +1,6 @@
 # TCP端口转发
 
-名称: `tcp`
+Name: `tcp`
 
 状态： Stable
 

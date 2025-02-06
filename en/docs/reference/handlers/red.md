@@ -1,6 +1,6 @@
 # TCP Redirect
 
-名称: `red`, `redir`, `redirect`
+Name: `red`, `redir`, `redirect`
 
 状态： GA
 
