@@ -6,13 +6,13 @@ Status： Stable
 
 TCP处理器仅做纯TCP数据转发工作。根据服务中的转发器配置，将数据转发给指定的目标主机。
 
-=== "命令行"
+=== "CLI"
 
 	```bash
 	gost -L tcp://:8080/192.168.1.1:80
 	```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
 	services:

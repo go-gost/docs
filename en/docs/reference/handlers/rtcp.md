@@ -6,11 +6,11 @@ Status： Stable
 
 RTCP处理器根据服务中的转发器配置，将数据转发给指定的目标主机。
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L rtcp://:2222/:22
 	```
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
 	services:

@@ -4,13 +4,13 @@ Name: `tun`
 
 Status： GA
 
-=== "命令行"
+=== "CLI"
 
     ```
 	gost -L tun://:8421?net=192.168.123.2/24
 	```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
 	services:

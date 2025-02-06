@@ -9,7 +9,7 @@ ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UD
 !!! tip "默认监听器"
     当不指定监听器时，SSU处理器默认使用UDP作为监听器。当然你也可以指定其他兼容类型的监听器(例如TCP, TLS等)。
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L ssu://AEAD_CHACHA20_POLY1305:123456@:8338
 	```
@@ -17,7 +17,7 @@ ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UD
 	```
 	gost -L ssu+udp://AEAD_CHACHA20_POLY1305:123456@:8338
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0

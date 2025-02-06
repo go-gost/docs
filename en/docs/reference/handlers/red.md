@@ -6,11 +6,11 @@ Status： GA
 
 RED处理器用于构建TCP透明代理。
 
-=== "命令行"
+=== "CLI"
 	```bash
 	gost -L red://:8080
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0

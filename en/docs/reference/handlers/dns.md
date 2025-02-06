@@ -6,11 +6,11 @@ Status： GA
 
 DNS处理器使用接收DNS查询请求并返回DNS查询结果。
 
-=== "命令行"
+=== "CLI"
     ```
 	gost -L dns://:10053?dns=1.1.1.1:53
 	```
-=== "配置文件"
+=== "File (YAML)"
     ```yaml
 	services:
 	- name: service-0
