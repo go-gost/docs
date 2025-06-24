@@ -13,7 +13,7 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 
 如果不需要多用户认证，则可以通过直接设置单认证信息来进行单用户认证。
 
-### 服务端
+**服务端**
 
 === "命令行"
 
@@ -48,7 +48,7 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 
     服务的处理器或监听器上通过`auth`属性设置单认证信息。
 
-### 客户端
+**客户端**
 
 === "命令行"
 
@@ -89,7 +89,49 @@ GOST中可以通过设置单认证信息或认证器进行简单的身份认证�
 		  dialer:
 		    type: tcp
 	```
+
 	节点的连接器或拨号器上通过`auth`属性设置单认证信息。
+
+### 从文件加载
+
+客户端也可以通过`auth.file`选项指定文件路径，从文件中加载认证信息。
+
+=== "配置文件"
+
+    ```yaml hl_lines="18 19"
+	services:
+	- name: service-0
+	  addr: ":8080"
+	  handler:
+		type: http
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :1080
+		  connector:
+			type: socks5
+			auth:
+			  file: /path/to/auth/file
+		  dialer:
+		    type: tcp
+	```
+
+文件格式为按行分割的认证信息，每一行认证信息为用空格分割的user-pass对，以`#`开始的行为注释行。
+
+```text
+# username password
+
+user1 pass1
+```
+
+如果有多行认证信息，则只会使用第一个。
+
 
 ## 认证器
 

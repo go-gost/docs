@@ -2,15 +2,15 @@
 comments: true
 ---
 
-# 基于路由隧道的TUN组网方案
+# TUN Networking Solution Based On Routing Tunnel
 
-在前一篇[TUN/TAP设备](tuntap.md)教程中，采用客户端/服务器架构，基于UDP通讯的方式实现了简单的组网方案。这种模式下，服务端充当了多个客户端之间的数据路由角色。本篇中将使用更加通用且灵活的路由隧道来实现数据路由功能。
+In the previous [TUN/TAP device](tuntap.md) tutorial, a simple networking solution was implemented using a client/server architecture based on UDP communication. In this mode, the server acts as a data router between multiple clients. In this tutorial, a more general and flexible routing tunnel will be used to implement data routing.
 
-## 路由隧道
+## Routing Tunnel
 
-路由隧道是用来进行数据路由的隧道服务，目前支持IP数据包路由，用来支持TUN设备组网。
+Routing tunnel is a tunnel service used for data routing. It currently supports IP packet routing and is used to support TUN device networking.
 
-**服务端**
+**Server**
 
 ```yaml
 services:
@@ -35,18 +35,18 @@ routers:
         gateway: host-2
 ```
 
-路由隧道服务通过[路由器](../concepts/router.md)来定义数据的路由规则，发往192.168.123.1和192.168.100.0/24的数据被路由到主机host-1，发往192.168.123.2和192.168.200.0/24的数据被路由到主机host-2。
+The routing tunnel service defines data routing rules through a [router](../concepts/router.md). Data sent to 192.168.123.1 and 192.168.100.0/24 is routed to host host-1, and data sent to 192.168.123.2 and 192.168.200.0/24 is routed to host host-2.
 
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "tun:///host-1?net=192.168.123.1/24" -F "router://server_ip:8443"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -75,13 +75,13 @@ routers:
             type: tcp
     ```
 
-客户端设置主机名为host-1，并通报给路由隧道。
+The client sets the host name to host-1 and reports it to the routing tunnel.
 
-## 路由命名空间
+## Routing Namespace
 
-与网络命名空间的概念类似，路由隧道也支持命名空间，不同命名空间中的数据和路由规则相互隔离互不影响。
+Similar to the concept of network namespace, routing tunnels also support namespaces. Data and routing rules in different namespaces are isolated from each other and do not affect each other.
 
-**服务端**
+**Server**
 
 ```yaml
 services:
@@ -121,17 +121,17 @@ routers:
       addr: http://127.0.0.1:8000
 ```
 
-服务端定义多组路由器，每个路由器通过`name`指定唯一ID，客户端通过此ID来选择所使用的路由规则。同时也可以定义一个默认的路由器(router-0)，当客户端指定的路由器不存在时，则使用此默认路由器。
+The server defines multiple groups of routers, each of which is assigned a unique ID by `name`. The client uses this ID to select the routing rule to use. A default router (router-0) can also be defined. When the router specified by the client does not exist, this default router is used.
 
-**客户端**
+**Client**
 
-=== "命令行"
+=== "CLI"
 
     ```bash
     gost -L "tun:///host-1?net=192.168.123.1/24" -F "router://server_ip:8443?router.id=e87f56dd-fd57-4921-9ab8-a0847662daae"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="24"
     services:
@@ -162,13 +162,13 @@ routers:
             type: tcp
     ```
 
-客户端通过`router.id`选项指定所使用的路由表。
+The client specifies the routing table to use via `router.id` option.
 
 ## Ingress
 
-路由隧道可以使用[Ingress](../concepts/ingress.md)来限制客户端的接入。
+Routing tunnels can use [Ingress](../concepts/ingress.md) to restrict client access.
 
-**服务端**
+**Server**
 
 ```yaml
 services:
@@ -221,4 +221,4 @@ routers:
       addr: http://127.0.0.1:8000
 ```
 
-Ingress中的规则为主机名到路由表的限定条件。例如主机host-1-ns1和host-2-ns1被限定为只能只用路由表e87f56dd-fd57-4921-9ab8-a0847662daae，主机host-1-ns2和host-2-ns2被限定为只能使用路由表ef502590-c5f4-437e-a81f-fe4083505075。
+The rules in Ingress are the restrictions on host names to routing tables. For example, hosts `host-1-ns1` and `host-2-ns1` are restricted to use only routing table e87f56dd-fd57-4921-9ab8-a0847662daae, and hosts `host-1-ns2` and `host-2-ns2` are restricted to use only routing table ef502590-c5f4-437e-a81f-fe4083505075.

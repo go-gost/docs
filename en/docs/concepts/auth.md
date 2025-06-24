@@ -13,7 +13,7 @@ Authentication can be performed by setting single authentication information or 
 
 If multi-user authentication is not required, single-user authentication can be performed by directly setting the single authentication information.
 
-### Server
+**Server**
 
 === "CLI"
 
@@ -50,7 +50,7 @@ If multi-user authentication is not required, single-user authentication can be 
 
 	Single authentication information is set via the `auth` property on the service's handler or listener.
 
-### Client
+**Client**
 
 === "CLI"
 
@@ -94,6 +94,47 @@ If multi-user authentication is not required, single-user authentication can be 
 	```
 
 	Single authentication information is set via the `auth` property on the node's connector or dialer.
+
+### Loading From File
+
+Client can also specify the file path through the `auth.file` option and load the authentication information from the file.
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="18 19"
+	services:
+	- name: service-0
+	  addr: ":8080"
+	  handler:
+		type: http
+		chain: chain-0
+	  listener:
+		type: tcp
+	chains:
+	- name: chain-0
+	  hops:
+	  - name: hop-0
+		nodes:
+		- name: node-0
+		  addr: :1080
+		  connector:
+			type: socks5
+			auth:
+			  file: /path/to/auth/file
+		  dialer:
+		    type: tcp
+	```
+
+The file format is the authentication information separated by lines, each line of authentication information is a user-pass pair separated by spaces, and the lines starting with `#` are commented out.
+
+
+```text
+# username password
+
+user1 pass1
+```
+
+If there are multiple lines of authentication information, only the first one will be used.
 
 ## Authenticator
 
