@@ -97,6 +97,8 @@ If multi-user authentication is not required, single-user authentication can be 
 
 ### Loading From File
 
+:material-tag: 3.1.0
+
 Client can also specify the file path through the `auth.file` option and load the authentication information from the file.
 
 === "File (YAML)"

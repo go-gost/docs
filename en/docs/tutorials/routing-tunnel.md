@@ -4,6 +4,8 @@ comments: true
 
 # TUN Networking Solution Based On Routing Tunnel
 
+:material-tag: 3.1.0
+
 In the previous [TUN/TAP device](tuntap.md) tutorial, a simple networking solution was implemented using a client/server architecture based on UDP communication. In this mode, the server acts as a data router between multiple clients. In this tutorial, a more general and flexible routing tunnel will be used to implement data routing.
 
 ## Routing Tunnel
