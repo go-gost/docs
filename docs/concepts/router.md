@@ -8,9 +8,9 @@ comments: true
     路由器支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 !!! note "使用限制"
-    路由器目前仅在[TUN设备](../tutorials/tuntap.md)中使用。
+    路由器目前仅在[TUN设备](../tutorials/tuntap.md)和[路由隧道](../tutorials/routing-tunnel.md)中使用。
 
-路由器由路由表组成，每个路由项为目标网络(Network)到网关(Gateway)的映射，在TUN设备中通过路由器实现流量的路由。
+路由器由路由表组成，每个路由项为目标网络(dst)到网关(gateway)的映射。
 
 ## 数据源
 
@@ -24,9 +24,11 @@ comments: true
 routers:
 - name: router-0
   routes:
-  - net: 192.168.1.0/24
+  - dst: 10.0.0.1
+    gateway: 192.168.123.1
+  - dst: 192.168.1.0/24
     gateway: 192.168.123.2
-  - net: 172.10.0.0/16
+  - dst: 172.10.0.0/16
     gateway: 192.168.123.3
 ```
 
@@ -44,8 +46,9 @@ routers:
 文件格式为按行分割的映射项，每一行为用空格分割的net-gateway对，以`#`开始的部分为注释信息。
 
 ```text
-# net gateway
+# dst gateway
 
+10.0.0.1  192.168.123.1
 192.168.1.0/24  192.168.123.2
 172.10.0.0/16  192.168.123.3
 ```
@@ -88,10 +91,12 @@ routers:
 
 ```redis
 > HGETALL gost:routers:router-0
-1) "192.168.1.0/24"
-2) "192.168.123.2"
-3) "172.10.0.0/16"
-4) "192.168.123.3"
+1) "10.0.0.1"
+2) "192.168.123.1"
+3) "192.168.1.0/24"
+4) "192.168.123.2"
+5) "172.10.0.0/16"
+6) "192.168.123.3"
 ```
 
 ### HTTP
@@ -173,9 +178,15 @@ routers:
 #### 请求示例
 
 ```bash
-curl -XGET http://127.0.0.1:8000/router?dst=192.168.1.2
+curl -XGET "http://127.0.0.1:8000/router?dst=192.168.1.2&id=1b564300-a2c5-406d-af0c-b7bdb039b0e3"
 ```
 
+`dst` (string, required)
+:    目标地址
+
+`id` (UUID, optional)
+:    可选的路由ID，仅在使用[路由隧道](../tutorials/routing-tunnel.md)时有效。
+
 ```json
-{"net":"192.168.1.0/24","gateway":"192.168.123.2"}
+{"dst":"192.168.1.0/24","gateway":"192.168.123.2"}
 ```

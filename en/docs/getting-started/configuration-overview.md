@@ -152,6 +152,8 @@ GOST supports the following environment variables:
 
 ## Hot Reload
 
+:material-tag: 3.1.0
+
 The configuration can be reloaded by sending `SIGHUP` signal to the process. If there is an error in the configuration parsing, it will not be applied.
 
 You can also reload the configuration by sending an HTTP POST request to `/config/reload` via the [web API](../tutorials/api/overview.md). This method of reloading will ignore the three global services: api, metrics and profiling.

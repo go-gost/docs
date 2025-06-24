@@ -83,7 +83,7 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
-copyright: Copyright &copy; 2015 - 2024 GOST
+copyright: Copyright &copy; 2015 - 2025 GOST
 
 nav:
   - Welcome: index.md
@@ -148,6 +148,7 @@ nav:
     - Transparent Proxy: tutorials/redirect.md
     - Multi-homed Host: tutorials/multi-homed.md
     - TUN/TAP Device: tutorials/tuntap.md
+    - Routing Tunnel: tutorials/routing-tunnel.md
     - Network Namespace: tutorials/netns.md
     - ICMP Tunnel: tutorials/icmp.md
     - Unix Domain Socket Redirector: tutorials/unix.md

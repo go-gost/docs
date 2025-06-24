@@ -111,7 +111,7 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 
-copyright: Copyright &copy; 2015 - 2024 GOST
+copyright: Copyright &copy; 2015 - 2025 GOST
 
 nav:
   - 主页: index.md
@@ -176,6 +176,7 @@ nav:
     - 透明代理: tutorials/redirect.md
     - 多网络接口: tutorials/multi-homed.md
     - TUN/TAP设备: tutorials/tuntap.md
+    - 路由隧道: tutorials/routing-tunnel.md
     - 网络命名空间: tutorials/netns.md
     - ICMP通道: tutorials/icmp.md
     - Unix域套接字重定向: tutorials/unix.md

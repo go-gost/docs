@@ -8,11 +8,15 @@ comments: true
     Ingress支持通过[Web API](../tutorials/api/overview.md)进行动态配置。
 
 !!! note "使用限制"
-    Ingress目前仅在[反向代理隧道](../tutorials/reverse-proxy-tunnel.md)中使用。
+    Ingress目前仅在[反向代理隧道](../tutorials/reverse-proxy-tunnel.md)和[路由隧道](../tutorials/routing-tunnel.md)中使用。
 
-Ingress由一组规则组成，每个规则为主机名(Hostname)到服务端点(Endpoint)的映射，在反向代理中通过Ingress对入口点(EntryPoint)流量进行路由和负载均衡。
+Ingress由一组规则组成，每个规则为主机名(Hostname)到端点(Endpoint)的映射。
 
-规则中的主机名也支持域名通配符，服务端点必须是一个合法的UUID。
+在反向代理隧道中通过Ingress对入口点(EntryPoint)流量进行路由和负载均衡。
+
+在路由隧道中通过Ingress为不同主机指定不同的路由规则(路由命名空间)。
+
+规则中的主机名也支持域名通配符，端点必须是一个合法的UUID。
 
 ## 域名通配符
 

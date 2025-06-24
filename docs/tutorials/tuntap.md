@@ -16,7 +16,7 @@ TUN的实现依赖于[wireguard-go](https://git.zx2c4.com/wireguard-go)。
 ### 使用说明
 
 ```bash
-gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1420&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
 `local_ip:port` (string, required)
@@ -31,7 +31,7 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `name` (string)
 :    指定TUN设备的名字，默认值为系统预设。
 
-`mtu` (int, default=1350)
+`mtu` (int, default=1420)
 :    设置TUN设备的MTU值。
 
 `gw` (string)
@@ -46,9 +46,6 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 `peer` (string)
 :    对端IP地址，仅MacOS系统有效
 
-`buffersize` (int)
-:    数据读缓存区大小，默认1500字节
-
 `keepalive` (bool)
 :    开启心跳，仅客户端有效
 
@@ -60,6 +57,11 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
 
 `p2p` (bool)
 :    点对点隧道，当开启后路由将被忽略，仅服务端有效
+
+`dns` (string)
+:    :material-tag: 3.1.0 
+
+     设置tun接口的DNS服务器(Windows，Linux)
 
 ### 使用示例
 
@@ -79,14 +81,13 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
       addr: :8421
       handler:
         type: tun
-        metadata:
-          bufferSize: 1500
       listener:
         type: tun
         metadata:
           name: tun0
           net: 192.168.123.1/24
-          mtu: 1350
+          mtu: 1420
+          dns: 192.168.1.1,192.168.100.1
     ```
 
 **客户端**
@@ -112,7 +113,6 @@ gost -L="tun://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&m
       handler:
         type: tun
         metadata:
-          bufferSize: 1500
           keepAlive: true
           ttl: 10s
       listener:
@@ -199,9 +199,9 @@ services:
 routers:
 - name: router-0
   routes:
-  - net: 172.10.0.0/16
+  - dst: 172.10.0.0/16
     gateway: 192.168.123.2
-  - net: 192.168.1.0/24
+  - dst: 192.168.1.0/24
     gateway: 192.168.123.3
 ```
 
@@ -251,7 +251,6 @@ authers:
       handler:
         type: tun
         metadata:
-          bufferSize: 1500
           keepAlive: true
           ttl: 10s
           passphrase: "userpass1"
@@ -339,7 +338,7 @@ authers:
 
 ```
 $ ip addr show tun0
-2: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1350 qdisc pfifo_fast state UNKNOWN group default qlen 500
+2: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1420 qdisc pfifo_fast state UNKNOWN group default qlen 500
     link/none 
     inet 192.168.123.2/24 scope global tun0
        valid_lft forever preferred_lft forever
@@ -415,7 +414,7 @@ TAP的实现依赖于[songgao/water](https://github.com/songgao/water)库。
 ### 使用说明
 
 ```bash
-gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1420&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
 `local_ip:port` (string, required)
@@ -430,7 +429,7 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
 `name` (string)
 :    指定TAP设备的名字，默认值为系统预设。
 
-`mtu` (int, default=1350)
+`mtu` (int, default=1420)
 :    设置TAP设备的MTU值。
 
 `gw` (string)
@@ -441,10 +440,6 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
 
 `routes` (list)
 :    特定网关路由列表，列表每一项为空格分割的CIDR地址和网关，例如：`10.100.0.0/16 192.168.123.2`
-
-`buffersize` (int)
-:    数据读缓存区大小，默认1500字节
-
 
 ### 使用示例
 
@@ -464,14 +459,12 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
       addr: :8421
       handler:
         type: tap
-        metadata:
-          bufferSize: 1500
       listener:
         type: tap
         metadata:
           name: tap0
           net: 192.168.123.1/24
-          mtu: 1350
+          mtu: 1420
     ```
 
 **客户端**
@@ -490,8 +483,6 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
       addr: :0
       handler:
         type: tap
-        metadata:
-          bufferSize: 1500
       listener:
         type: tap
         metadata:

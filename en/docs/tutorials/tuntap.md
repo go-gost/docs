@@ -14,7 +14,7 @@ TUN is based on [wireguard-go](https://git.zx2c4.com/wireguard-go).
 ### Usage
 
 ```bash
-gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tun0&mtu=1420&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
 `local_ip:port` (string, required)
@@ -29,7 +29,7 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `name` (string)
 :    TUN device name.
 
-`mtu` (int, default=1350)
+`mtu` (int, default=1420)
 :    MTU for TUN device.
 
 `gw` (string)
@@ -44,9 +44,6 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 `peer` (string)
 :    Peer IP address，MacOS only
 
-`buffersize` (int, default=1500)
-:    read buffer size in byte.
-
 `keepalive` (bool, default=false)
 :    enable keepalive, valid for client.
 
@@ -58,6 +55,11 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
 
 `p2p` (bool)
 :    Point-to-point tunnel, when enabled, routing will be ignored. Only valid for server.
+
+`dns` (string)
+:    :material-tag: 3.1.0 
+
+     Set DNS servers for TUN interface (Windows，Linux).
 
 ### Example
 
@@ -77,15 +79,15 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
       addr: :8421
       handler:
         type: tun
-        metadata:
-          bufferSize: 1500
       listener:
         type: tun
         metadata:
           name: tun0
           net: 192.168.123.1/24
-          mtu: 1350
+          mtu: 1420
+          dns: 192.168.1.1,192.168.100.1
     ```
+
 **Client**
 
 === "CLI (Linux/Windows)"
@@ -109,7 +111,6 @@ gost -L="tun://[method:password@][local_ip]:port[/remote_ip:port]?net=192.168.12
       handler:
         type: tun
         metadata:
-          bufferSize: 1500
           keepAlive: true
           ttl: 10s
       listener:
@@ -178,9 +179,9 @@ services:
 routers:
 - name: router-0
   routes:
-  - net: 172.10.0.0/16
+  - dst: 172.10.0.0/16
     gateway: 192.168.123.2
-  - net: 192.168.1.0/24
+  - dst: 192.168.1.0/24
     gateway: 192.168.123.3
 ```
 
@@ -231,7 +232,6 @@ The username of the auther is the IP assigned to the client.
       handler:
         type: tun
         metadata:
-          bufferSize: 1500
           keepAlive: true
           ttl: 10s
           passphrase: "userpass1"
@@ -318,7 +318,7 @@ When no error occurred, you can use the `ip addr` command to inspect the created
 
 ```
 $ ip addr show tun0
-2: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1350 qdisc pfifo_fast state UNKNOWN group default qlen 500
+2: tun0: <POINTOPOINT,MULTICAST,NOARP,UP,LOWER_UP> mtu 1420 qdisc pfifo_fast state UNKNOWN group default qlen 500
     link/none 
     inet 192.168.123.2/24 scope global tun0
        valid_lft forever preferred_lft forever
@@ -392,7 +392,7 @@ TAP is based on [songgao/water](https://github.com/songgao/water).
 ### Usage
 
 ```bash
-gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1350&route=10.100.0.0/16&gw=192.168.123.1"
+gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&mtu=1420&route=10.100.0.0/16&gw=192.168.123.1"
 ```
 
 `local_ip:port` (string, required)
@@ -407,7 +407,7 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
 `name` (string)
 :    TAP device name.
 
-`mtu` (int, default=1350)
+`mtu` (int, default=1420)
 :    MTU for TAP device.
 
 `gw` (string)
@@ -418,9 +418,6 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
 
 `routes` (list)
 :    Gateway-specific routing, Each entry in the list is a space-separated CIDR address and gateway, such as `10.100.0.0/16 192.168.123.2`
-
-`buffersize` (int, default=1500)
-:    read buffer size in byte.
 
 ### Example
 
@@ -440,14 +437,12 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
       addr: :8421
       handler:
         type: tap
-        metadata:
-          bufferSize: 1500
       listener:
         type: tap
         metadata:
           name: tap0 
           net: 192.168.123.1/24
-          mtu: 1350
+          mtu: 1420
     ```
 
 **Client**
@@ -466,8 +461,6 @@ gost -L="tap://[local_ip]:port[/remote_ip:port]?net=192.168.123.2/24&name=tap0&m
       addr: :8421
       handler:
         type: tap
-        metadata:
-          bufferSize: 1500
       listener:
         type: tap
         metadata:

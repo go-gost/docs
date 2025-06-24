@@ -8,9 +8,9 @@ comments: true
     Router supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 !!! note "Limitation"
-    Router currently can only be used in [TUN device](../tutorials/tuntap.md).
+    Router currently can only be used in [TUN device](../tutorials/tuntap.md) and [routing tunnel](../tutorials/routing-tunnel.md).
 
-A router is composed of a routing table. Each routing item is a mapping from the target network to the gateway. Traffic is routed through the router in the TUN device.
+A router is composed of a routing table. Each routing item is a mapping from the target network to the gateway.
 
 ## Data Source
 
@@ -24,9 +24,11 @@ An inline data source means setting the data directly in the configuration file 
 routers:
 - name: router-0
   routes:
-  - net: 192.168.1.0/24
+  - dst: 10.0.0.1
+    gateway: 192.168.123.1
+  - dst: 192.168.1.0/24
     gateway: 192.168.123.2
-  - net: 172.10.0.0/16
+  - dst: 172.10.0.0/16
     gateway: 192.168.123.3
 ```
 
@@ -44,8 +46,9 @@ routers:
 The file format is mapping items separated by lines, each line is an net-gateway pair separated by spaces, and the part starting with `#` is the comment information.
 
 ```text
-# net gateway
+# dst gateway
 
+10.0.0.1  192.168.123.1
 192.168.1.0/24  192.168.123.2
 172.10.0.0/16  192.168.123.3
 ```
@@ -86,10 +89,12 @@ routers:
 
 ```redis
 > HGETALL gost:routers:router-0
-1) "192.168.1.0/24"
-2) "192.168.123.2"
-3) "172.10.0.0/16"
-4) "192.168.123.3"
+1) "10.0.0.1"
+2) "192.168.123.1"
+3) "192.168.1.0/24"
+4) "192.168.123.2"
+5) "172.10.0.0/16"
+6) "192.168.123.3"
 ```
 
 ### HTTP
@@ -171,9 +176,15 @@ routers:
 #### Example
 
 ```bash
-curl -XGET http://127.0.0.1:8000/router?dst=192.168.1.2
+curl -XGET "http://127.0.0.1:8000/router?dst=192.168.1.2&id=1b564300-a2c5-406d-af0c-b7bdb039b0e3"
 ```
 
+`dst` (string, required)
+:    destination address.
+
+`id` (UUID, optional)
+:    Optional router ID, only valid when using [routing tunnel](../tutorials/routing-tunnel.md).
+
 ```json
-{"net":"192.168.1.0/24","gateway":"192.168.123.2"}
+{"dst":"192.168.1.0/24","gateway":"192.168.123.2"}
 ```

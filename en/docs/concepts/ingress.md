@@ -8,11 +8,15 @@ comments: true
     Ingress supports dynamic configuration via [Web API](../tutorials/api/overview.md).
 
 !!! note "Limitation"
-    Ingress currently can only be used in [reverse proxy tunnel](../tutorials/reverse-proxy-tunnel.md).
+    Ingress currently can only be used in [reverse proxy tunnel](../tutorials/reverse-proxy-tunnel.md) and [routing tunnel](../tutorials/routing-tunnel.md).
 
-Ingress consists of a set of rules, each rule is a mapping from a hostname to a service endpoint, and the entry point traffic is routed and load-balanced through Ingress in the reverse proxy.
+Ingress consists of a set of rules, each rule is a mapping from a hostname to an endpoint. 
 
-The hostname in the rule also supports domain name wildcards, and the service endpoint must be a legal UUID.
+In the reverse proxy tunnel, the entry point traffic is routed and load-balanced through Ingress.
+
+In the routing tunnel, different routing rules (routing namespaces) are specified for different hosts through Ingress.
+
+The hostname in the rule also supports domain name wildcards, and the endpoint must be a legal UUID.
 
 ## Wildcard Hostname
 
