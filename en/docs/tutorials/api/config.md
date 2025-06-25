@@ -31,6 +31,26 @@ curl -X POST https://gost.run/play/webapi/config?format=yaml
 
 Services can be dynamically configured through Web API.
 
+### Service List
+
+:material-tag: 3.1.0
+
+Get service list.
+
+```sh
+curl https://gost.run/play/webapi/config/services 
+```
+
+### Get Single Service
+
+:material-tag: 3.1.0
+
+Get service `service-0`.
+
+```sh
+curl https://gost.run/play/webapi/config/services/service-0
+```
+
 ### Create a New Service
 
 Adding a new service will not affect the existing service. If the configuration is successful, the service will take effect immediately.

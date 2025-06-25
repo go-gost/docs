@@ -6,6 +6,9 @@ comments: true
 
 GOST's support for shadowsocks is based on the [shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go) and [shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2) libraries.
 
+!!! note
+    Starting from version 3.1.0, the [shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go) library has been removed, and the encryption algorithms it supports have also been removed.
+
 ## Standard Proxy
 
 === "CLI"

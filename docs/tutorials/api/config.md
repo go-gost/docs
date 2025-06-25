@@ -31,6 +31,26 @@ curl -X POST https://gost.run/play/webapi/config?format=yaml
 
 通过Web API可以动态对服务进行配置。
 
+### 服务列表
+
+:material-tag: 3.1.0
+
+获取服务列表。
+
+```sh
+curl https://gost.run/play/webapi/config/services 
+```
+
+### 单个服务
+
+:material-tag: 3.1.0
+
+获取服务`service-0`详情。
+
+```sh
+curl https://gost.run/play/webapi/config/services/service-0
+```
+
 ### 新建服务
 
 添加一个新的服务不会对现有服务造成影响，如果配置成功则服务立即生效。

@@ -6,6 +6,9 @@ comments: true
 
 GOST对shadowsocks的支持基于[shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go)和[shadowsocks/go-shadowsocks2](https://github.com/shadowsocks/go-shadowsocks2)库。
 
+!!! note
+    从3.1.0版本开始，移除了[shadowsocks/shadowsocks-go](https://github.com/shadowsocks/shadowsocks-go)库，其所支持的加密算法也一并移除。
+
 ## 标准shadowsocks代理
 
 === "命令行"
