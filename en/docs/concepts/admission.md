@@ -71,7 +71,7 @@ Similar to the bypass, the admission controller can also set the blacklist or wh
       - 192.168.0.0/16
     ```
 
-    Enable blacklist mode in `admissions` by setting the `whitelist` property to `true`.
+    Enable whitelist mode in `admissions` by setting the `whitelist` property to `true`.
 
 ## Admission Control Group
 
