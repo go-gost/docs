@@ -90,10 +90,16 @@ scheme://[bind_address]:port/[host]:hostport[?key1=value1&key2=value2]
     gost -C gost.yml
 	```
 
-	或直接使用JSON格式的配置内容
+	直接使用JSON格式的配置内容
 
 	```bash
 	gost -C '{"api":{"addr":":8080"}}'
+	```
+
+	从标准输入(stdin)中读取配置
+
+	```bash
+	gost -C - < gost.yml
 	```
 
 > **`-O`** - 指定配置输出格式，目前支持yaml或json。

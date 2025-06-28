@@ -90,6 +90,18 @@ This parameter value is in URL-like format (the content in square brackets can b
     gost -C gost.yml
     ```
 
+    Inline:
+
+	```bash
+	gost -C '{"api":{"addr":":8080"}}'
+	```
+
+	Read from stdin:
+
+	```bash
+	gost -C - < gost.yml
+	```
+
 > **`-O`** - Specify the configuration output format, currently supports `yaml` or `json`.
 
 !!! example
