@@ -281,4 +281,4 @@ curl -XPOST http://127.0.0.1:8000/resolver -d '{"network": "ip4", "host":"exampl
 :    用户身份标识，此信息由认证器生成。
 
 `ips` ([]string)
-:    IP地址列表
+:    IP地址列表。

@@ -498,12 +498,24 @@ bypasses:
 #### 请求示例
 
 ```bash
-curl -XPOST http://127.0.0.1:8000/bypass -d '{"addr": "example.com:80", "client": "gost"}'
+curl -XPOST http://127.0.0.1:8000/bypass -d '{"network":"tcp","addr":"example.com:80","path":"/index.html","client": "gost"}'
 ```
 
 ```json
 {"ok": true}
 ```
+
+`network` (string)
+:    网络类型。
+
+`addr` (string)
+:    目标地址。
+
+`host` (string)
+:    目标主机名。
+
+`path` (string)
+:    HTTP请求路径。
 
 `client` (string)
 :    用户身份标识，此信息由认证器生成。

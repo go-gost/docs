@@ -251,6 +251,9 @@ admissions:
 curl -XPOST http://127.0.0.1:8000/admission -d '{"addr": "example.com"}'
 ```
 
+`addr` (string, required)
+:    client address.
+
 ```json
 {"ok": true}
 ```

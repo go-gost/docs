@@ -9,7 +9,7 @@ Hosts that have more than one network interface usually have one Internet Protoc
 When a host is multi-homed host, different network exits can be specified for routes of different services as required.
 
 !!! note "Limitation"
-	Multiple network interface configurations are only supported on Linux systems.
+	Multiple network interface configurations are only supported on Linux/Windows/Darwin systems.
 
 ## `interface` Option
 

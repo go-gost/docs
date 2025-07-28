@@ -333,13 +333,19 @@ curl -XPOST http://127.0.0.1:8000/hop -d '{"network":"tcp","addr":"example.com:8
 ```
 
 `network` (string)
-:    网络类型: `tcp`, `udp`
+:    网络类型: `tcp`, `udp`。
 
 `addr` (string)
-:    目标访问地址
+:    目标访问地址。
+
+`host` (string)
+:    目标主机名。
+
+`path` (string)
+:    HTTP请求路径。
 
 `src` (string)
-:    客户端地址
+:    客户端地址。
 
 `client` (string)
 :    用户身份标识，此信息由认证器生成。

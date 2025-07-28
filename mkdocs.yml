@@ -177,6 +177,7 @@ nav:
     - 多网络接口: tutorials/multi-homed.md
     - TUN/TAP设备: tutorials/tuntap.md
     - 路由隧道: tutorials/routing-tunnel.md
+    - TUNGO - TUN2SOCKS: tutorials/tungo.md
     - 网络命名空间: tutorials/netns.md
     - ICMP通道: tutorials/icmp.md
     - Unix域套接字重定向: tutorials/unix.md

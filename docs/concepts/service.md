@@ -174,9 +174,9 @@ gost -L http://:8080 -- -L http://:8000 -- -L socks://:1080 -F http://:8000
 
 以上命令会将启动三个进程分别对应三个服务，其中的转发链仅由1080端口的服务使用。
 
-## 执行命令(Linux)
+## 执行命令
 
-在Linux下，通过`preUp`，`postUp`，`preDown`，`postDown`选项可以在服务启动或停止前后执行额外的命令。
+通过`preUp`，`postUp`，`preDown`，`postDown`选项可以在服务启动或停止前后执行额外的命令。
 
 ```yaml
 services:

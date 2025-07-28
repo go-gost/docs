@@ -175,7 +175,7 @@ gost -L http://:8080 -- -L http://:8000 -- -L socks://:1080 -F http://:8000
 
 The above command will start three processes corresponding to three services, and the forwarding chain is only used by the service on port 1080.
 
-## Execute Commands (Linux Only)
+## Execute Commands
 
 the `preUp`, `postUp`, `preDown`, `postDown` options can be used to execute additional commands before and after the service starts or stops.
 

@@ -253,8 +253,11 @@ admissions:
 #### 请求示例
 
 ```bash
-curl -XPOST http://127.0.0.1:8000/admission -d '{"addr": "example.com"}'
+curl -XPOST http://127.0.0.1:8000/admission -d '{"addr": "192.168.1.1"}'
 ```
+
+`addr` (string, required)
+:    客户端地址。
 
 ```json
 {"ok": true}
