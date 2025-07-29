@@ -149,6 +149,7 @@ nav:
     - Multi-homed Host: tutorials/multi-homed.md
     - TUN/TAP Device: tutorials/tuntap.md
     - Routing Tunnel: tutorials/routing-tunnel.md
+    - TUNGO - TUN2SOCKS: tutorials/tungo.md
     - Network Namespace: tutorials/netns.md
     - ICMP Tunnel: tutorials/icmp.md
     - Unix Domain Socket Redirector: tutorials/unix.md

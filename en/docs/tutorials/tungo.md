@@ -6,44 +6,44 @@ comments: true
 
 :material-tag: 3.2.0
 
-GOST对tun2socks的支持依赖于[xjasonlyu/tun2socks](https://github.com/xjasonlyu/tun2socks)库。
+GOST support for tun2socks depends on the [xjasonlyu/tun2socks](https://github.com/xjasonlyu/tun2socks) library.
 
-在之前的TUN相关教程中([TUN/TAP设备](tuntap.md)和[路由隧道](routing-tunnel.md))TUN是被用来建立点对点隧道，通过TUN设备接收到网络层IP数据包，一般不会对数据包再做处理，直接通过隧道透传到对端从而实现组网功能。
+In the previous TUN related tutorials([TUN/TAP Device](tuntap.md) and [Routing Tunnel](routing-tunnel.md)), TUN is used to establish a point-to-point tunnel. The network layer IP packets are received through the TUN device, then the packets are not processed again and are directly transmitted to the other end through the tunnel.
 
-而tun2socks则在TUN设备之上又完整的实现了网络协议栈，对接收到的IP数据包又通过协议栈处理，最终解析出传输层TCP/UDP数据包。从使用角度上讲，tun2socks与[透明代理](redirect.md)的功能类似，但通用性和使用便利性上要比后者好很多。
+Tun2socks fully implements the network protocol stack on top of the TUN device, so that the received IP packets are processed through the protocol stack and finally the transport layer TCP/UDP data are parsed, so that more control can be exercised over the data. From the perspective of usage, tun2socks has similar functions to [transparent proxy](redirect.md), but it is much more versatile and easier to use than the latter.
 
-!!! note "系统限制"
-    TUNGO目前支持Linux，Windows，MacOS系统。
+!!! note "Limitation"
+    TUNGO currently supports Linux, Windows, and MacOS systems.
 
-!!! note "Windows系统"
-    Windows需要下载[wintun](https://www.wintun.net/)。
+!!! note "Windows"
+    You need to download a platform-specific `wintun.dll` file from [wintun](https://www.wintun.net/), and put it side-by-side with gost.
 
 ## TUNGO - TUN2SOCKS for GOST
 
-GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST现有的功能模块，例如转发链，流量嗅探，分流等可以对流量做更精准的控制。
+The tun2socks module in GOST is called TUNGO. Based on the original tun2socks, it uses the existing functional modules of GOST, such as chain, traffic sniffing, and bypass, to control the traffic more accurately.
 
-这里假设系统的主网络接口为`eth0`，网关为192.168.1.1。
+Here it is assumed that the system's primary network interface is `eth0` and the default gateway is 192.168.1.1.
 
 ### Linux
 
-=== "命令行"
+=== "CLI"
 
     ```sh
     gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1" -F "relay+wss://SERVER_IP:443?interface=eth0"
     ```
     
-    更新路由表：
+    Update routing table:
 
     ```sh
-    # 删除默认网关
+    # Delete the default route
     ip route delete default
-    # 将eth0设为备用网关
+    # Set eth0 as the backup gateway
     ip route add default via 192.168.1.1 dev eth0 metric 10
-    # 将tungo设为主网关。如果eht0的metric大于1，则以上两条命令可以不执行。
+    # Set tungo as the primary gateway. If the metric of eht0 is greater than 1, the above two commands can be ignored.
     ip route add default via 192.168.123.1 dev tungo metric 1
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -53,7 +53,7 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
         type: tungo
         chain: chain-0
         metadata:
-          udpTimeout: 30s   # UDP会话超时时长
+          udpTimeout: 30s   # UDP session timeout
       listener:
         type: tungo
         metadata:
@@ -62,7 +62,7 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
           mtu: 1420      # default mtu is 1420
           dns: 1.1.1.1   # dns server
       metadata:
-        postUp:   # 通过service的postUp自动更新路由表
+        postUp:   # Automatically update the routing table through service postUp
         - ip route delete default
         - ip route add default via 192.168.123.1 dev tungo metric 1
         - ip route add default via 192.168.1.1 dev eth0 metric 10
@@ -84,19 +84,19 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
 
 ### Windows
 
-=== "命令行"
+=== "CLI"
 
     ```sh
     gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1" -F "relay+wss://SERVER_IP:443?interface=eth0"
     ```
     
-    更新路由表：
+    Update routing table:
 
     ```sh
     netsh interface ipv4 add route 0.0.0.0/0 tungo 192.168.123.1 metric=1
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -106,7 +106,7 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
         type: tungo
         chain: chain-0
         metadata:
-          udpTimeout: 30s   # UDP会话超时时长
+          udpTimeout: 30s   # UDP session timeout
       listener:
         type: tungo
         metadata:
@@ -115,7 +115,7 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
           mtu: 1420      # default mtu is 1420
           dns: 1.1.1.1   # dns server
       metadata:
-        postUp: # 通过service的postUp自动更新路由表
+        postUp:   # Automatically update the routing table through service postUp
         - netsh interface ipv4 add route 0.0.0.0/0 tungo 192.168.123.1 metric=1
 
     chains:
@@ -135,13 +135,13 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
 
 ### MacOS
 
-=== "命令行"
+=== "CLI"
 
     ```sh
     gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&route=1.0.0.0/8,2.0.0.0/8" -F "relay+wss://SERVER_IP:443?interface=eth0"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml
     services:
@@ -151,7 +151,7 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
         type: tungo
         chain: chain-0
         metadata:
-          udpTimeout: 30s   # UDP会话超时时长
+          udpTimeout: 30s   # UDP session timeout
       listener:
         type: tungo
         metadata:
@@ -160,7 +160,7 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
           mtu: 1420      # default mtu is 1420
           dns: 1.1.1.1   # dns server
       metadata:
-        postUp: # 通过service的postUp自动更新路由表
+        postUp:   # Automatically update the routing table through service postUp
         - route add -net 1.0.0.0/8 192.168.123.1
         - route add -net 2.0.0.0/8 192.168.123.1
 
@@ -179,18 +179,17 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
             type: wss
     ```
 
-## 流量嗅探与分流
+## Traffic Sniffing and Bypass
 
-与[透明代理](redirect.md)类似，tungo处理的数据包为原始TCP/UDP数据，如果需要对流量做分流，转发或代理会比较麻烦。通过组合使用[流量嗅探](sniffing.md)和[分流器](../concepts/bypass.md)功能，可以更方便的对流量做处理。
+Similar to [transparent proxy](redirect.md), tungo processes raw TCP/UDP data. By combining [traffic sniffing](sniffing.md) and [bypass](../concepts/bypass.md) functions, you can process the traffic more conveniently.
 
-
-=== "命令行"
+=== "CLI"
 
     ```sh
     gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1&interface=eth0&sniffing=true" -F "relay+wss://SERVER_IP:443?interface=eth0&bypass=example.com"
     ```
 
-=== "配置文件"
+=== "File (YAML)"
 
     ```yaml hl_lines="8-11 20 26 28"
     services:
@@ -235,4 +234,4 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
       - example.com
     ```
 
-通过`sniffing`选项开启流量嗅探，目前支持对HTTP，TLS，DNS(sniffing.udp=true)流量的嗅探。通过设置bypass，对于example.com的请求会直接通过service中`metadata.interface`选项所指定的接口`eth0`发出，其他流量则使用转发链进行转发。
+Traffic sniffing is enabled through `sniffing` option. Currently, it supports sniffing of HTTP, TLS, and DNS (sniffing.udp=true) traffic. By setting bypass, requests to example.com will be sent directly through the interface `eth0` specified by the service option `metadata.interface`, and other traffic will be forwarded using the forwarding chain.
