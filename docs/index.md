@@ -11,7 +11,7 @@
 - [x] 反向代理和隧道
 - [x] TCP/UDP透明代理
 - [x] DNS解析和代理
-- [x] TUN/TAP设备
+- [x] TUN/TAP设备与TUN2SOCKS
 - [x] 负载均衡
 - [x] 路由控制
 - [x] 限速限流

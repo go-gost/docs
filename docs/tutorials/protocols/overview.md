@@ -83,6 +83,12 @@ comments: true
 `tap`
 :    [TAP设备](../tuntap.md)
 
+`router`
+:    [路由隧道](../routing-tunnel.md)
+
+`tungo`
+:    [TUN2SOCKS](../tungo.md)
+
 `forward`
 :    [服务端转发](../port-forwarding.md#_7)
 

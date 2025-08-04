@@ -11,7 +11,7 @@
 - [x] Reverse Proxy and Tunnel
 - [x] TCP/UDP transparent proxy
 - [x] DNS resolver and proxy
-- [x] TUN/TAP device
+- [x] TUN/TAP device and TUN2SOCKS
 - [x] Load balancing
 - [x] Routing control
 - [x] Rate Limiting
