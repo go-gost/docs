@@ -40,7 +40,9 @@ Here it is assumed that the system's primary network interface is `eth0` and the
     # Set eth0 as the backup gateway
     ip route add default via 192.168.1.1 dev eth0 metric 10
     # Set tungo as the primary gateway. If the metric of eht0 is greater than 1, the above two commands can be ignored.
-    ip route add default via 192.168.123.1 dev tungo metric 1
+    ip route add default dev tungo metric 1
+    # IPv6
+    # ip -6 route add default dev tungo metric 1
     ```
 
 === "File (YAML)"
@@ -64,8 +66,9 @@ Here it is assumed that the system's primary network interface is `eth0` and the
       metadata:
         postUp:   # Automatically update the routing table through service postUp
         - ip route delete default
-        - ip route add default via 192.168.123.1 dev tungo metric 1
         - ip route add default via 192.168.1.1 dev eth0 metric 10
+        - ip route add default dev tungo metric 1
+        # - ip -6 route add default dev tungo metric 1
 
     chains:
     - name: chain-0

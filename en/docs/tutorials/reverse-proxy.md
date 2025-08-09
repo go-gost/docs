@@ -637,6 +637,33 @@ services:
 `tls.options.cipherSuites` (list)
 :    Cipher Suites, See [Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants) for more information.
 
+## Empty Node
+
+:material-tag: 3.2.3
+
+When the address of a node is empty, this node is called an empty node. In the reverse proxy mode, empty node has some special behaviors.
+
+```yaml
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: sni
+      # addr is empty
+      matcher:
+        rule: Host(`example.com`)
+```
+
+If the selected node in the forwarder is an empty node, the address of the node will be set to the sniffed hostname. At this time, the reverse proxy is equivalent to an SNI proxy and will dynamically connect to the corresponding target address based on the request information.
+
+
 ## Forwarding Tunnel
 
 In addition to the original TCP data tunnel can be used as port forwarding, other tunnels can also be used as port forwarding services.

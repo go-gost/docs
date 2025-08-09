@@ -125,6 +125,7 @@ nav:
     - 服务: concepts/service.md
     - 转发链: concepts/chain.md
     - 跳跃点: concepts/hop.md
+    - 转发器: concepts/forwarder.md
     - 选择器: concepts/selector.md
     - 认证: concepts/auth.md
     - 分流: concepts/bypass.md

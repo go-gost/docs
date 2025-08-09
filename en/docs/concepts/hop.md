@@ -96,34 +96,8 @@ hops:
 
 The hops defined in `hops` are referenced by `name` in the chain.
 
-### Forwarder
-
-Hops can also be used in forwarder through reference mode.
-
-```yaml hl_lines="9"
-services:
-- name: service-0
-  addr: ":8080"
-  handler:
-    type: tcp 
-  listener:
-    type: tcp
-  forwarder:
-    hop: hop-0
-
-hops:
-- name: hop-0
-  nodes:
-  - name: target-0
-    addr: 192.168.1.1:8080
-  - name: target-1
-    addr: 192.168.1.2:8080
-```
-
-
 !!! note "Mode Switch"
     When using inline mode, if no node is defined or plugin is not used in the hop, it will automatically switch to reference mode.
-
 
 ## Data Source
 

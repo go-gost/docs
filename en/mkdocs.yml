@@ -97,6 +97,7 @@ nav:
     - Service: concepts/service.md
     - Chain: concepts/chain.md
     - Hop: concepts/hop.md
+    - Forwarder: concepts/forwarder.md
     - Selector: concepts/selector.md
     - Authentication: concepts/auth.md
     - Bypass: concepts/bypass.md

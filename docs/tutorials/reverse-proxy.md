@@ -60,7 +60,7 @@ services:
       #   host: example.org
       #   path: /
       matcher:
-        rule: Host(`example.org`) && PathPrefix(`/`)
+        rule: Host(`example.org`) && Pathprefix(`/`)
 ```
 
 通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`filter`或`matcher.rule`选项对节点设置路由条件或规则。
@@ -638,6 +638,32 @@ services:
 
 `tls.options.cipherSuites` (list)
 :    加密套件，可选值参考[Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants)。
+
+## 空节点
+
+:material-tag: 3.2.3
+
+当节点的地址为空时此节点被称为空节点。在反向代理模式中空节点有一些特殊的行为。
+
+```yaml
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: sni
+      # addr is empty
+      matcher:
+        rule: Host(`example.com`)
+```
+
+如果转发器中选中的节点是一个空节点，则节点的地址会被设置为嗅探到的主机名，此时的反向代理相当于一个SNI代理，会根据请求信息动态连接到相应的目标地址。
 
 
 ## 转发通道

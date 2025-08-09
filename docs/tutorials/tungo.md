@@ -29,7 +29,8 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
 === "命令行"
 
     ```sh
-    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1" -F "relay+wss://SERVER_IP:443?interface=eth0"
+    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1" \
+         -F "relay+wss://SERVER_IP:443?interface=eth0"
     ```
     
     更新路由表：
@@ -40,7 +41,9 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
     # 将eth0设为备用网关
     ip route add default via 192.168.1.1 dev eth0 metric 10
     # 将tungo设为主网关。如果eht0的metric大于1，则以上两条命令可以不执行。
-    ip route add default via 192.168.123.1 dev tungo metric 1
+    ip route add default dev tungo metric 1
+    # IPv6
+    # ip -6 route add default dev tungo metric 1
     ```
 
 === "配置文件"
@@ -64,8 +67,9 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
       metadata:
         postUp:   # 通过service的postUp自动更新路由表
         - ip route delete default
-        - ip route add default via 192.168.123.1 dev tungo metric 1
         - ip route add default via 192.168.1.1 dev eth0 metric 10
+        - ip route add default dev tungo metric 1
+        # - ip -6 route add default dev tungo metric 1
 
     chains:
     - name: chain-0
@@ -87,7 +91,8 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
 === "命令行"
 
     ```sh
-    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1" -F "relay+wss://SERVER_IP:443?interface=eth0"
+    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1" \
+         -F "relay+wss://SERVER_IP:443?interface=eth0"
     ```
     
     更新路由表：
@@ -138,7 +143,8 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
 === "命令行"
 
     ```sh
-    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&route=1.0.0.0/8,2.0.0.0/8" -F "relay+wss://SERVER_IP:443?interface=eth0"
+    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&route=1.0.0.0/8,2.0.0.0/8" \
+         -F "relay+wss://SERVER_IP:443?interface=eth0"
     ```
 
 === "配置文件"
@@ -187,7 +193,8 @@ GOST中的tun2socks模块称为TUNGO，在原tun2socks基础之上，利用GOST�
 === "命令行"
 
     ```sh
-    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1&interface=eth0&sniffing=true" -F "relay+wss://SERVER_IP:443?interface=eth0&bypass=example.com"
+    gost -L "tungo://:0?name=tungo&net=192.168.123.1/24&mtu=1420&dns=1.1.1.1&interface=eth0&sniffing=true" \
+         -F "relay+wss://SERVER_IP:443?interface=eth0&bypass=example.com"
     ```
 
 === "配置文件"
