@@ -314,6 +314,9 @@ Currently supported rules are
 | ```HeaderRegexp(`key`, `regexp`)```     | The header for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
 | ```ClientIP(`ip`)```                    | The requests client IP match `ip`. The format of `ip` is IPv4, IPv6 or CIDR.                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
 | ```Proto(`proto`)```                    | Match the protocol，equivalent to `filter.protocol`.                                  | ```Proto(`http`)```                                 |
+| ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> Match the admission name, apply admission filtering to client IP.     | ```Admission(`admission-0`)```                                 |
+| ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> Match bypass name and apply bypass filtering to the target host name.      | ```Bypass(`bypass-0`)```                                 |
+
 
 !!! important "Regexp Syntax"
     Matchers that accept a regexp as their value use a [Go](https://golang.org/pkg/regexp/) flavored syntax.

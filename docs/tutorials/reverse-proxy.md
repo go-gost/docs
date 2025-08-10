@@ -314,6 +314,8 @@ services:
 | ```HeaderRegexp(`key`, `regexp`)```     | HTTP请求的Header中包含`key`,对应的值匹配正则表达式`regexp`。              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
 | ```ClientIP(`ip`)```                    | 请求的客户端IP匹配`ip`，`ip`格式为IPv4，IPv6或CIDR。                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
 | ```Proto(`proto`)```                    | 匹配协议类型，等效于`filter.protocol`。                                  | ```Proto(`http`)```                                 |
+| ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> 匹配准入控制器名称，对客户端IP应用准入控制器过滤。     | ```Admission(`admission-0`)```                                 |
+| ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> 匹配分流器名称，对目标主机名应用分流器过滤。      | ```Bypass(`bypass-0`)```                                 |
 
 !!! important "正则表达式"
 
