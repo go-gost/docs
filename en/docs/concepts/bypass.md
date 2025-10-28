@@ -79,7 +79,7 @@ Bypass can also be set to whitelist mode, as opposed to blacklist, data forward 
     gost -L http://:8080 -F http://192.168.1.1:8080?bypass=~172.10.0.0/16,127.0.0.1,localhost,*.example.com,.example.org
     ```
 
-    Set the bypass to blacklist mode by adding the `~` prefix to the `bypass` opiton.
+    Set the bypass to whitelist mode by adding the `~` prefix to the `bypass` opiton.
 
 === "File (YAML)"
 
@@ -116,7 +116,7 @@ Bypass can also be set to whitelist mode, as opposed to blacklist, data forward 
       - .example.org
     ```
 
-    Enable blacklist mode in `bypasses` by setting the `whitelist` property to `true`.
+    Enable whitelist mode in `bypasses` by setting the `whitelist` property to `true`.
 
 ## Bypass Group
 
