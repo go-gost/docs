@@ -97,6 +97,7 @@ nav:
     - Service: concepts/service.md
     - Chain: concepts/chain.md
     - Hop: concepts/hop.md
+    - Forwarder: concepts/forwarder.md
     - Selector: concepts/selector.md
     - Authentication: concepts/auth.md
     - Bypass: concepts/bypass.md
@@ -149,6 +150,7 @@ nav:
     - Multi-homed Host: tutorials/multi-homed.md
     - TUN/TAP Device: tutorials/tuntap.md
     - Routing Tunnel: tutorials/routing-tunnel.md
+    - TUNGO - TUN2SOCKS: tutorials/tungo.md
     - Network Namespace: tutorials/netns.md
     - ICMP Tunnel: tutorials/icmp.md
     - Unix Domain Socket Redirector: tutorials/unix.md

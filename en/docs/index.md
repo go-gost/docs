@@ -11,7 +11,7 @@
 - [x] Reverse Proxy and Tunnel
 - [x] TCP/UDP transparent proxy
 - [x] DNS resolver and proxy
-- [x] TUN/TAP device
+- [x] TUN/TAP device and TUN2SOCKS
 - [x] Load balancing
 - [x] Routing control
 - [x] Rate Limiting
@@ -80,7 +80,7 @@ docker run --rm gogost/gost -V
 
 ### Shadowsocks Android Plugin
 
-[xausky/ShadowsocksGostPlugin](https://github.com/xausky/ShadowsocksGostPlugin)
+[hamid-nazari/ShadowsocksGostPlugin](https://github.com/hamid-nazari/ShadowsocksGostPlugin)
 
 ## Support
 

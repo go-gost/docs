@@ -96,30 +96,6 @@ hops:
 
 在chain中通过`name`来引用`hops`中定义的跳跃点。
 
-### 转发器
-
-转发器中同样也可以通过`forwarder.hop`来引用跳跃点。
-
-```yaml hl_lines="9"
-services:
-- name: service-0
-  addr: ":8080"
-  handler:
-    type: tcp 
-  listener:
-    type: tcp
-  forwarder:
-    hop: hop-0
-
-hops:
-- name: hop-0
-  nodes:
-  - name: target-0
-    addr: 192.168.1.1:8080
-  - name: target-1
-    addr: 192.168.1.2:8080
-```
-
 !!! note "模式切换"
 
     当使用内联模式时，如果跳跃点中未定义节点或未使用插件则会自动切换到引用模式。
@@ -333,13 +309,19 @@ curl -XPOST http://127.0.0.1:8000/hop -d '{"network":"tcp","addr":"example.com:8
 ```
 
 `network` (string)
-:    网络类型: `tcp`, `udp`
+:    网络类型: `tcp`, `udp`。
 
 `addr` (string)
-:    目标访问地址
+:    目标访问地址。
+
+`host` (string)
+:    目标主机名。
+
+`path` (string)
+:    HTTP请求路径。
 
 `src` (string)
-:    客户端地址
+:    客户端地址。
 
 `client` (string)
 :    用户身份标识，此信息由认证器生成。

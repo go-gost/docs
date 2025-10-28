@@ -82,6 +82,12 @@ The data channel is used to carry proxy or forward protocol data. Currently supp
 `tap`
 :    [TAP Device](../tuntap.md)
 
+`router`
+:    [Routing Tunnel](../routing-tunnel.md)
+
+`tungo`
+:    [TUN2SOCKS](../tungo.md)
+
 `forward`
 :    [Server-Side Forwarding](../port-forwarding.md#_7)
 

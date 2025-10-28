@@ -17,7 +17,7 @@ Sometimes we may need to conduct further analysis of the traffic, so that we can
 Traffic sniffing refers to the analysis of the transferred traffic, generally matching the protocol of the client's first request data. In most cases, it checks whether it is an HTTP or TLS request. If the conditions are met, the subsequent data interaction will be parsed according to a specific protocol, so that the specific communication content can be obtained.
 
 
-Most proxy and forwarding services in GOST support traffic sniffing. Traffic sniffing needs to be combined with a [recorder](../concepts/recorder.md) plugin, and the service will report the sniffed content in real time through the recorder.
+Most proxy and forwarding services in GOST support traffic sniffing. Traffic sniffing can be used in conjunction with [recorder](../concepts/recorder.md) plugin, and the service will report the sniffed content in real time through the recorder.
 
 For example, the following is an HTTP proxy service with traffic sniffing enabled. After the proxy negotiation phase is over, it will further check the traffic and try to sniff out HTTP or TLS traffic.
 

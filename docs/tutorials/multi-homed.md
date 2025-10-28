@@ -7,7 +7,7 @@ comments: true
 当主机具有多个网络接口(Multi-homed host)时，可以根据需要对不同服务的路由指定不同的网络出口。
 
 !!! note "系统限制"
-    多网络接口配置仅支持Linux系统。
+    多网络接口配置仅支持Linux/Windows/Darwin系统。
 
 ## `interface`选项
 

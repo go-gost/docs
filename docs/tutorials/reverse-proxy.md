@@ -60,7 +60,7 @@ services:
       #   host: example.org
       #   path: /
       matcher:
-        rule: Host(`example.org`) && PathPrefix(`/`)
+        rule: Host(`example.org`) && Pathprefix(`/`)
 ```
 
 通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`filter`或`matcher.rule`选项对节点设置路由条件或规则。
@@ -314,6 +314,8 @@ services:
 | ```HeaderRegexp(`key`, `regexp`)```     | HTTP请求的Header中包含`key`,对应的值匹配正则表达式`regexp`。              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
 | ```ClientIP(`ip`)```                    | 请求的客户端IP匹配`ip`，`ip`格式为IPv4，IPv6或CIDR。                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
 | ```Proto(`proto`)```                    | 匹配协议类型，等效于`filter.protocol`。                                  | ```Proto(`http`)```                                 |
+| ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> 匹配准入控制器名称，对客户端IP应用准入控制器过滤。     | ```Admission(`admission-0`)```                                 |
+| ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> 匹配分流器名称，对目标主机名应用分流器过滤。      | ```Bypass(`bypass-0`)```                                 |
 
 !!! important "正则表达式"
 
@@ -638,6 +640,32 @@ services:
 
 `tls.options.cipherSuites` (list)
 :    加密套件，可选值参考[Cipher Suites](https://pkg.go.dev/crypto/tls#pkg-constants)。
+
+## 空节点
+
+:material-tag: 3.2.3
+
+当节点的地址为空时此节点被称为空节点。在反向代理模式中空节点有一些特殊的行为。
+
+```yaml
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: sni
+      # addr is empty
+      matcher:
+        rule: Host(`example.com`)
+```
+
+如果转发器中选中的节点是一个空节点，则节点的地址会被设置为嗅探到的主机名，此时的反向代理相当于一个SNI代理，会根据请求信息动态连接到相应的目标地址。
 
 
 ## 转发通道

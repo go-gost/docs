@@ -60,7 +60,7 @@ comments: true
 		  addr: 192.168.1.1:80
 		- name: target-1
 		  addr: 192.168.1.2:80
-		- name: target-1
+		- name: target-2
 		  addr: 192.168.1.3:8080
 		selector:
           strategy: round
