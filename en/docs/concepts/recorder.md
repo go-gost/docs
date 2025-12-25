@@ -32,7 +32,7 @@ recorders:
 
 ## Recorder Types
 
-Currently supported recorder types are: file, TCP servie, HTTP service, redis.
+Currently supported recorder types are: file, TCP service, HTTP service, redis.
 
 ### File
 
