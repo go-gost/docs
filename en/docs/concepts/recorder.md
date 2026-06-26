@@ -182,10 +182,10 @@ All destination addresses that failed to establish a connection
 
 #### recorder.service.handler
 
-The handler records the information of each request in JSON format
+The handler records the information of each request in JSON format. When the service is configured with [labels](../concepts/service.md#labels), the record output will include a `labels` field.
 
 ```json
-{"service":"service-0","network":"tcp",
+{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp",
 "remote":"[::1]:37808","local":"[::1]:8080",
 "host":":18000",
 "err":"dial tcp :18000: connect: connection refused",

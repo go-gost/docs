@@ -197,3 +197,30 @@ services:
   listener:
     type: tcp
 ```
+
+## Labels
+
+The `labels` option sets static key-value labels on a service, which are automatically attached to the service's [recorder](recorder.md) output and logs. This is useful for telemetry attribution — for example, tagging records with tenant, account, or region information.
+
+```yaml
+services:
+- name: service-0
+  addr: :8080
+  metadata:
+    labels:
+      tenant: acme
+      region: eu
+  handler:
+    type: http
+  listener:
+    type: tcp
+```
+
+With labels configured, the recorder output gains a `labels` field:
+
+```json
+{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp","remote":"[::1]:37808",...}
+```
+
+`labels` (map[string]string)
+:    Static key-value pairs attached to the service's records and logs. When not set, the labels field is omitted from records.

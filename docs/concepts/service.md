@@ -196,3 +196,30 @@ services:
   listener:
     type: tcp
 ```
+
+## 标签 {#labels}
+
+通过`labels`选项可以为服务设置静态键值标签，标签会自动附加到服务的[记录器](recorder.md)输出和日志中。此功能可用于遥测归属标记 — 例如使用租户、账户或区域信息对记录进行标记。
+
+```yaml
+services:
+- name: service-0
+  addr: :8080
+  metadata:
+    labels:
+      tenant: acme
+      region: eu
+  handler:
+    type: http
+  listener:
+    type: tcp
+```
+
+配置标签后，记录器输出会包含`labels`字段：
+
+```json
+{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp","remote":"[::1]:37808",...}
+```
+
+`labels` (map[string]string)
+:    附加到服务记录和日志中的静态键值对。未设置时，记录中将省略此字段。
