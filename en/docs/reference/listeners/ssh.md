@@ -72,7 +72,7 @@ SSH监听器支持简单用户名/密码认证和公钥认证。
 :    单个连接的数据流队大小
 
 `privateKeyFile` (string)
-:    证书私钥文件，如果未指定则使用全局默认TLS证书私钥
+:    Private key file path. Supports `~` prefix for home directory expansion (e.g., `~/.ssh/id_rsa`). Uses global default TLS private key if not specified
 
 `passphrase` (string)
 :    证书密码

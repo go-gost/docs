@@ -106,7 +106,7 @@ SSH拨号器支持简单用户名/密码认证和公钥认证。
 ## 参数列表
 
 `privateKeyFile` (string)
-:    证书私钥文件
+:    证书私钥文件。路径支持`~`前缀进行家目录扩展（例如`~/.ssh/id_rsa`）
 
 `passphrase` (string)
 :    证书密码
