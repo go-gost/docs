@@ -332,6 +332,32 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 		  addr: 192.168.1.3:53
 	```
 
+### Unix Domain Socket
+
+=== "CLI"
+
+    ```bash
+    gost -L runix://./app.sock/var/run/remote.sock
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: "./app.sock"
+      handler:
+        type: runix
+      listener:
+        type: runix
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: /var/run/remote.sock
+    ```
+
+Map the local Unix domain socket `./app.sock` to the remote `/var/run/remote.sock`. All data to the local Unix domain socket will be forwarded to the remote Unix domain socket.
+
 !!! note 
 	Remote port forwarding is no different from local port forwarding without the use of forwarding chains.
 
