@@ -4,7 +4,12 @@ Name: `masque`
 
 Status: Alpha
 
-The MASQUE handler implements RFC 9298 (Proxying UDP in HTTP) and RFC 9297 (HTTP Datagrams), forwarding UDP data over HTTP/3 Extended CONNECT (CONNECT-UDP).
+The MASQUE handler implements RFC 9298 (Proxying UDP in HTTP) and RFC 9297 (HTTP Datagrams), supporting two forwarding modes:
+
+- **CONNECT-UDP**: Proxies UDP datagrams via HTTP/3 Extended CONNECT (RFC 9298).
+- **CONNECT-TCP**: Tunnels TCP connections over HTTP/3 streams (standard CONNECT).
+
+The handler automatically dispatches to the appropriate mode based on the request's `:protocol` pseudo-header.
 
 !!! tip "Default Listener"
     When no listener is specified, the MASQUE handler uses HTTP/3 as the default listener. Since MASQUE relies on HTTP/3 datagrams, the listener must have `enableDatagrams` enabled.
@@ -31,7 +36,7 @@ The MASQUE handler implements RFC 9298 (Proxying UDP in HTTP) and RFC 9297 (HTTP
 	```
 
 !!! note "Limitations"
-    The MASQUE handler must be used with the [HTTP/3 listener](/reference/listeners/http3/) with `enableDatagrams` enabled. This protocol only supports UDP forwarding.
+    The MASQUE handler must be used with the [HTTP/3 listener](/reference/listeners/http3/). CONNECT-UDP mode requires the listener to have `enableDatagrams` enabled.
 
 ## Parameters
 
@@ -55,5 +60,8 @@ The MASQUE handler implements RFC 9298 (Proxying UDP in HTTP) and RFC 9297 (HTTP
 
 `limiter.cleanupInterval` (duration)
 :    Limiter cleanup interval.
+
+`idleTimeout` (duration)
+:    TCP connection idle timeout. When no data is transferred on the bidirectional TCP relay within this duration, the connection is closed. Can be specified via `idleTimeout` or `readTimeout`.
 
 For TLS configuration, refer to [TLS Configuration](/tutorials/tls/).

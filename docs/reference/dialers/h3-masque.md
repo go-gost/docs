@@ -4,12 +4,12 @@
 
 状态： Alpha
 
-H3-MASQUE拨号器使用QUIC协议建立HTTP/3连接，并通过HTTP/3的数据报(Datagram)功能进行UDP数据转发。
+H3-MASQUE拨号器使用QUIC协议建立HTTP/3连接，支持通过HTTP/3的数据报(Datagram)功能进行UDP数据转发（RFC 9298 CONNECT-UDP），以及通过HTTP/3 Stream进行TCP流数据转发。
 
 H3-MASQUE拨号器支持多路复用，通过连接池复用QUIC连接以提升性能。
 
 !!! note "限制"
-    H3-MASQUE拨号器只能与[MASQUE连接器](/reference/connectors/masque/)一起使用，构建基于MASQUE协议(RFC 9298)的UDP代理服务。
+    H3-MASQUE拨号器只能与[MASQUE连接器](/reference/connectors/masque/)一起使用，构建基于MASQUE协议的UDP/TCP代理服务。
 
 === "命令行"
     ```

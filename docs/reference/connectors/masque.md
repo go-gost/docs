@@ -4,10 +4,10 @@
 
 状态： Alpha
 
-MASQUE连接器使用MASQUE协议(RFC 9298 CONNECT-UDP)进行UDP数据转发。此连接器仅支持UDP，且必须与[H3-MASQUE拨号器](/reference/dialers/h3-masque/)一起使用。
+MASQUE连接器使用MASQUE协议进行数据转发，支持通过CONNECT-UDP (RFC 9298)转发UDP数据，以及通过标准CONNECT转发TCP数据。此连接器必须与[H3-MASQUE拨号器](/reference/dialers/h3-masque/)一起使用。
 
 !!! note "限制"
-    MASQUE连接器只能与[H3-MASQUE拨号器](/reference/dialers/h3-masque/)一起使用，构建基于MASQUE协议(RFC 9298)的UDP代理服务。
+    MASQUE连接器只能与[H3-MASQUE拨号器](/reference/dialers/h3-masque/)一起使用，构建基于MASQUE协议的UDP/TCP代理服务。
 
 === "命令行"
     ```

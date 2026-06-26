@@ -4,10 +4,10 @@ Name: `masque`
 
 Status: Alpha
 
-The MASQUE connector uses the MASQUE protocol (RFC 9298 CONNECT-UDP) for UDP data forwarding. This connector only supports UDP and must be used together with the [H3-MASQUE dialer](/reference/dialers/h3-masque/).
+The MASQUE connector uses the MASQUE protocol for data forwarding, supporting both UDP via CONNECT-UDP (RFC 9298) and TCP via standard CONNECT. This connector must be used together with the [H3-MASQUE dialer](/reference/dialers/h3-masque/).
 
 !!! note "Limitations"
-    The MASQUE connector must be used together with the [H3-MASQUE dialer](/reference/dialers/h3-masque/) to build a UDP proxy service based on the MASQUE protocol (RFC 9298).
+    The MASQUE connector must be used together with the [H3-MASQUE dialer](/reference/dialers/h3-masque/) to build a UDP/TCP proxy service based on the MASQUE protocol.
 
 === "CLI"
     ```

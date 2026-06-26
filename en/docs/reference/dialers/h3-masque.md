@@ -4,12 +4,12 @@ Name: `h3-masque`
 
 Status: Alpha
 
-The H3-MASQUE dialer establishes HTTP/3 connections over QUIC and uses HTTP/3 datagrams for UDP data forwarding.
+The H3-MASQUE dialer establishes HTTP/3 connections over QUIC and supports both UDP data forwarding via HTTP/3 datagrams (RFC 9298 CONNECT-UDP) and TCP stream forwarding via HTTP/3 streams.
 
 The H3-MASQUE dialer supports multiplexing, reusing QUIC connections through a connection pool for improved performance.
 
 !!! note "Limitations"
-    The H3-MASQUE dialer must be used together with the [MASQUE connector](/reference/connectors/masque/) to build a UDP proxy service based on the MASQUE protocol (RFC 9298).
+    The H3-MASQUE dialer must be used together with the [MASQUE connector](/reference/connectors/masque/) to build a UDP/TCP proxy service based on the MASQUE protocol.
 
 === "CLI"
     ```

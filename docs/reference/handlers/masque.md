@@ -4,7 +4,12 @@
 
 状态： Alpha
 
-MASQUE处理器基于RFC 9298 (Proxying UDP in HTTP) 和 RFC 9297 (HTTP Datagrams) 协议，通过HTTP/3的扩展CONNECT方法(CONNECT-UDP)转发UDP数据。
+MASQUE处理器基于RFC 9298 (Proxying UDP in HTTP) 和 RFC 9297 (HTTP Datagrams) 协议，支持两种转发模式：
+
+- **CONNECT-UDP**：通过HTTP/3的扩展CONNECT方法转发UDP数据（RFC 9298）。
+- **CONNECT-TCP**：通过HTTP/3 Stream进行标准TCP隧道转发。
+
+处理器根据请求的`:protocol`伪头部自动选择转发模式。
 
 !!! tip "默认监听器"
     当不指定监听器时，MASQUE处理器默认使用HTTP/3作为监听器。由于MASQUE协议依赖HTTP/3的数据报(Datagram)功能，监听器需要开启`enableDatagrams`选项。
@@ -31,7 +36,7 @@ MASQUE处理器基于RFC 9298 (Proxying UDP in HTTP) 和 RFC 9297 (HTTP Datagram
 	```
 
 !!! note "限制"
-    MASQUE处理器只能与[HTTP/3监听器](/reference/listeners/http3/)一起使用，且监听器必须开启`enableDatagrams`选项。此协议仅支持UDP转发。
+    MASQUE处理器只能与[HTTP/3监听器](/reference/listeners/http3/)一起使用。CONNECT-UDP模式需要监听器开启`enableDatagrams`选项。
 
 ## 参数列表
 
@@ -55,5 +60,8 @@ MASQUE处理器基于RFC 9298 (Proxying UDP in HTTP) 和 RFC 9297 (HTTP Datagram
 
 `limiter.cleanupInterval` (duration)
 :    限流器清理间隔。
+
+`idleTimeout` (duration)
+:    TCP连接空闲超时。当TCP双向转发在此时长内无数据传输时，连接将被关闭。可通过`idleTimeout`或`readTimeout`指定。
 
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。
