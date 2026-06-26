@@ -145,6 +145,127 @@ A list of configurations is specified via the `limits` option, each configuratio
 
 * Limit: Max connections limit value.
 
+### Quota Limiter
+
+:material-tag: 3.3.0
+
+The quota limiter is a cumulative traffic-volume limiter that limits total bytes within a time window (`startsAt` to `expiresAt`). Unlike the bandwidth limiter, the quota limiter tracks accumulated byte counts. Once the cumulative traffic reaches the configured threshold (`limit`), any service using this quota will be stopped until the next window starts.
+
+Multiple services can reference the same quota name; they will share a single quota counter.
+
+=== "CLI"
+
+    ```bash
+    gost -L ":8080?quotas=quota-0"
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="4 14"
+    services:
+    - name: service-0
+      addr: ":8080"
+      quotas:
+      - quota-0
+      handler:
+        type: auto
+      listener:
+        type: tcp
+    quotas:
+    - name: quota-0
+      limit: 10GB
+      startsAt: "2025-01-01T00:00:00Z"
+      expiresAt: "2025-02-01T00:00:00Z"
+      direction: total
+      flush: 30s
+      store:
+        type: file
+        file: /path/to/quota.json
+    ```
+
+The service-level quota is set through `quotas` on the command line.
+
+Use the `quotas` parameter in the configuration file to use the specified quota by referencing the quota name (`quotas.name`).
+
+`name` (string, required)
+:    Quota name.
+
+`limit` (string)
+:    Traffic limit value. Supported units are: B, KB, MB, GB, TB, such as 128KB, 1MB, 10GB. Zero or unset means unlimited.
+
+`startsAt` (string, RFC3339)
+:    Quota start time in RFC3339 format, e.g. `"2025-01-01T00:00:00Z"`. Unset means no start-time restriction.
+
+`expiresAt` (string, RFC3339)
+:    Quota expiration time in RFC3339 format. Unset means never expires.
+
+`direction` (string, default=total)
+:    Traffic direction to count. `total` - total traffic (in + out), `in` - inbound only, `out` - outbound only.
+
+`flush` (duration, default=10s)
+:    Persistence flush interval. Quota usage is periodically flushed to the store.
+
+`store` (object)
+:    Persistence store configuration. Defaults to file storage (`gost-quota.json`).
+
+#### Store Configuration
+
+##### File Store
+
+By default, file-based storage is used. Quota data is persisted to a local file.
+
+```yaml
+quotas:
+- name: quota-0
+  store:
+    type: file
+    file: /path/to/quota.json
+```
+
+`store.type` (string, default=file)
+:    Store type: `file` or `redis`.
+
+`store.file` (string, default=gost-quota.json)
+:    File path.
+
+##### Redis Store
+
+:material-tag: 3.5.0
+
+Use Redis to persist quota data.
+
+```yaml
+quotas:
+- name: quota-0
+  store:
+    type: redis
+    redis:
+      addr: 127.0.0.1:6379
+      db: 1
+      username: user
+      password: 123456
+      key: gost:quotas:quota-0
+```
+
+`store.redis.addr` (string, required)
+:    Redis server address.
+
+`store.redis.db` (int, default=0)
+:    Database name.
+
+`store.redis.username` (string)
+:    Username.
+
+`store.redis.password` (string)
+:    Password.
+
+`store.redis.key` (string, required)
+:    Redis key for storing quota data.
+
+#### Web API
+
+The quota limiter supports dynamic configuration via [Web API](../tutorials/api/config.md#quota-limiter), including: list quotas, get a single quota, create/update/delete quotas, and reset the quota counter.
+
 ## Data Source
 
 The limiter can configure multiple data sources, currently supported data sources are: inline, file, redis.

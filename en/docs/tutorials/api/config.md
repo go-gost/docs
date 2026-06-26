@@ -4,7 +4,7 @@ comments: true
 
 # Dynamic configuration
 
-GOST can be dynamically configured through Web API. The objects that support dynamic configuration are: service, chain, auther, bypass, admission controller, resolver, hosts. Configuration changes take effect immediately.
+GOST can be dynamically configured through Web API. The objects that support dynamic configuration are: service, chain, auther, bypass, admission controller, resolver, hosts, quota. Configuration changes take effect immediately.
 
 For detailed description, please refer to the online [API documentation](https://api.gost.run/swagger-ui/?url=/docs/swagger.yaml).
 
@@ -108,4 +108,76 @@ curl -X PUT https://gost.run/play/webapi/config/chains/chain-0 -d \
 
 ```bash
 curl -X DELETE https://gost.run/play/webapi/config/chains/chain-0 
+```
+
+## Quota Limiter
+
+:material-tag: 3.3.0
+
+The quota limiter limits cumulative traffic volume for services and can be dynamically configured via the Web API.
+
+### Quota List
+
+```sh
+curl https://gost.run/play/webapi/config/quotas 
+```
+
+```json
+{
+  "code": 200,
+  "data": {
+    "count": 1,
+    "list": [
+      {
+        "name": "quota-0",
+        "limit": "10GB",
+        "startsAt": "2025-01-01T00:00:00Z",
+        "expiresAt": "2025-02-01T00:00:00Z",
+        "direction": "total",
+        "status": {
+          "used": 1048576,
+          "limit": 10737418240,
+          "active": true,
+          "blocked": false
+        }
+      }
+    ]
+  }
+}
+```
+
+### Get Single Quota
+
+Get quota `quota-0`.
+
+```sh
+curl https://gost.run/play/webapi/config/quotas/quota-0
+```
+
+### Create Quota
+
+```sh
+curl -X POST https://gost.run/play/webapi/config/quotas -d \
+'{"name":"quota-0","limit":"10GB","startsAt":"2025-01-01T00:00:00Z","expiresAt":"2025-02-01T00:00:00Z","direction":"total","flush":"30s"}'
+```
+
+### Update Quota
+
+```sh
+curl -X PUT https://gost.run/play/webapi/config/quotas/quota-0 -d \
+'{"name":"quota-0","limit":"20GB","startsAt":"2025-01-01T00:00:00Z","expiresAt":"2025-03-01T00:00:00Z","direction":"total"}'
+```
+
+### Delete Quota
+
+```sh
+curl -X DELETE https://gost.run/play/webapi/config/quotas/quota-0 
+```
+
+### Reset Quota
+
+Reset the quota counter, clearing the used traffic to zero.
+
+```sh
+curl -X POST https://gost.run/play/webapi/config/quotas/quota-0/reset
 ```

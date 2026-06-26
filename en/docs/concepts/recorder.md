@@ -182,18 +182,7 @@ All destination addresses that failed to establish a connection
 
 #### recorder.service.handler
 
-The handler records the information of each request in JSON format. When the service is configured with [labels](../concepts/service.md#labels), the record output will include a `labels` field.
-
-```json
-{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp",
-"remote":"[::1]:37808","local":"[::1]:8080",
-"host":":18000",
-"err":"dial tcp :18000: connect: connection refused",
-"time":"2024-09-14T09:53:13.281723394+08:00",
-"duration":1430855,
-"sid":"crk2fcqohhhpjksr2sgg"
-}
-```
+The handler records the information of each request in JSON format. 
 
 For handlers that can handle HTTP traffic, HTTP request and response will be additionally recorded in the `http` field
 
@@ -235,6 +224,21 @@ The DNS handler will record DNS request and response information in the `dns` fi
 "time":"2024-09-14T10:10:22.82722339+08:00",
 "duration":2409303,
 "sid":"crk2ig2ohhhpjksr2shg"
+}
+```
+
+:material-tag: 3.3.0
+
+When the service is configured with [labels](../concepts/service.md#labels), the record output will include a `labels` field.
+
+```json
+{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp",
+"remote":"[::1]:37808","local":"[::1]:8080",
+"host":":18000",
+"err":"dial tcp :18000: connect: connection refused",
+"time":"2024-09-14T09:53:13.281723394+08:00",
+"duration":1430855,
+"sid":"crk2fcqohhhpjksr2sgg"
 }
 ```
 

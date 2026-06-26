@@ -371,6 +371,8 @@ Specify the hash type as `host` with the `hash` option.
 
 ## Race Strategy
 
+:material-tag: 3.3.0
+
 The race strategy (`parallel`) concurrently dials all nodes in the node group and uses the first successfully established connection, closing the remaining ones. This strategy is ideal for latency-sensitive scenarios, automatically selecting the fastest-responding node.
 
 ```yaml hl_lines="14 15 16"

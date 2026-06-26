@@ -4,7 +4,7 @@ comments: true
 
 # 动态配置
 
-GOST可以通过Web API来进行动态配置，支持动态配置的对象有：服务(Service)，转发链(Chain)，认证器(Auther)，分流器(Bypass)，准入控制器(Admission)，域名解析器(Resolver)，域名IP映射器(Hosts)，限速器(Limiter)。配置变更会立即生效。
+GOST可以通过Web API来进行动态配置，支持动态配置的对象有：服务(Service)，转发链(Chain)，认证器(Auther)，分流器(Bypass)，准入控制器(Admission)，域名解析器(Resolver)，域名IP映射器(Hosts)，限速器(Limiter)，配额(Quota)。配置变更会立即生效。
 
 详细的接口说明请参考[在线API文档](https://api.gost.run/swagger-ui/?url=/docs/swagger.yaml)。
 
@@ -108,4 +108,76 @@ curl -X PUT https://gost.run/play/webapi/config/chains/chain-0 -d \
 
 ```sh
 curl -X DELETE https://gost.run/play/webapi/config/chains/chain-0 
+```
+
+## 配额(Quota)
+
+:material-tag: 3.3.0
+
+配额限制器用于对服务的累计流量进行限制，可以通过Web API进行动态配置。
+
+### 配额列表
+
+```sh
+curl https://gost.run/play/webapi/config/quotas 
+```
+
+```json
+{
+  "code": 200,
+  "data": {
+    "count": 1,
+    "list": [
+      {
+        "name": "quota-0",
+        "limit": "10GB",
+        "startsAt": "2025-01-01T00:00:00Z",
+        "expiresAt": "2025-02-01T00:00:00Z",
+        "direction": "total",
+        "status": {
+          "used": 1048576,
+          "limit": 10737418240,
+          "active": true,
+          "blocked": false
+        }
+      }
+    ]
+  }
+}
+```
+
+### 获取单个配额
+
+获取配额 `quota-0`。
+
+```sh
+curl https://gost.run/play/webapi/config/quotas/quota-0
+```
+
+### 创建配额
+
+```sh
+curl -X POST https://gost.run/play/webapi/config/quotas -d \
+'{"name":"quota-0","limit":"10GB","startsAt":"2025-01-01T00:00:00Z","expiresAt":"2025-02-01T00:00:00Z","direction":"total","flush":"30s"}'
+```
+
+### 更新配额
+
+```sh
+curl -X PUT https://gost.run/play/webapi/config/quotas/quota-0 -d \
+'{"name":"quota-0","limit":"20GB","startsAt":"2025-01-01T00:00:00Z","expiresAt":"2025-03-01T00:00:00Z","direction":"total"}'
+```
+
+### 删除配额
+
+```sh
+curl -X DELETE https://gost.run/play/webapi/config/quotas/quota-0 
+```
+
+### 重置配额
+
+重置配额计数器，将已用流量清零。
+
+```sh
+curl -X POST https://gost.run/play/webapi/config/quotas/quota-0/reset
 ```

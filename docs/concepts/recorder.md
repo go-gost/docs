@@ -186,18 +186,7 @@ services:
 !!! tip "Blog"
     关于处理器上的记录器更详细的使用示例可以参考这篇[博文](https://gost.run/blog/2024/log/)。
 
-处理器以JSON格式记录每次请求处理的相关信息。当服务配置了[标签](../concepts/service.md#labels)后，记录输出中会包含`labels`字段。
-
-```json
-{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp",
-"remote":"[::1]:37808","local":"[::1]:8080",
-"host":":18000",
-"err":"dial tcp :18000: connect: connection refused",
-"time":"2024-09-14T09:53:13.281723394+08:00",
-"duration":1430855,
-"sid":"crk2fcqohhhpjksr2sgg"
-}
-```
+处理器以JSON格式记录每次请求处理的相关信息。
 
 对于能够处理HTTP流量的处理器，会在`http`字段中额外记录HTTP请求和响应信息
 
@@ -239,6 +228,21 @@ services:
 "time":"2024-09-14T10:10:22.82722339+08:00",
 "duration":2409303,
 "sid":"crk2ig2ohhhpjksr2shg"
+```
+
+:material-tag: 3.3.0
+
+当服务配置了[标签](../concepts/service.md#labels)后，记录输出中会包含`labels`字段。
+
+```json
+{"service":"service-0","labels":{"tenant":"acme","region":"eu"},"network":"tcp",
+"remote":"[::1]:37808","local":"[::1]:8080",
+"host":":18000",
+"err":"dial tcp :18000: connect: connection refused",
+"time":"2024-09-14T09:53:13.281723394+08:00",
+"duration":1430855,
+"sid":"crk2fcqohhhpjksr2sgg"
+}
 ```
 
 #### recorder.service.handler.serial

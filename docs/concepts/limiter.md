@@ -145,6 +145,127 @@ comments: true
 
 * 最大连接数(Limit)：最大并发连接数值。
 
+### 流量配额限制
+
+:material-tag: 3.3.0
+
+流量配额限制器是一种累计流量限制器，用来对一个时间窗口(`startsAt`到`expiresAt`)内的总流量进行限制。与流量速率限制器不同，配额限制器统计的是累计字节数，一旦累计流量达到设定的阈值(`limit`)，使用此配额的服务将被停止，直到进入下一个时间窗口。
+
+多个服务可以引用同一个配额名称，它们将共享同一个配额计数器。
+
+=== "命令行"
+
+    ```bash
+    gost -L ":8080?quotas=quota-0"
+    ```
+
+=== "配置文件"
+
+    ```yaml hl_lines="4 14"
+    services:
+    - name: service-0
+      addr: ":8080"
+      quotas:
+      - quota-0
+      handler:
+        type: auto
+      listener:
+        type: tcp
+    quotas:
+    - name: quota-0
+      limit: 10GB
+      startsAt: "2025-01-01T00:00:00Z"
+      expiresAt: "2025-02-01T00:00:00Z"
+      direction: total
+      flush: 30s
+      store:
+        type: file
+        file: /path/to/quota.json
+    ```
+
+命令行中通过`quotas`来指定服务所使用的配额限制器。
+
+配置文件中使用`quotas`参数通过引用配额名称(`quotas.name`)来使用指定的配额限制器。
+
+`name` (string, required)
+:    配额名称。
+
+`limit` (string)
+:    流量限制值，支持的单位有: B, KB, MB, GB, TB，例如 128KB, 1MB, 10GB。0或未设置代表无限制。
+
+`startsAt` (string, RFC3339)
+:    配额起始时间，RFC3339格式，例如 `"2025-01-01T00:00:00Z"`。未设置代表不限制起始时间。
+
+`expiresAt` (string, RFC3339)
+:    配额到期时间，RFC3339格式。未设置代表永不过期。
+
+`direction` (string, default=total)
+:    流量统计方向。`total` - 总流量(入站+出站)，`in` - 仅入站流量，`out` - 仅出站流量。
+
+`flush` (duration, default=10s)
+:    持久化存储间隔时长，配额使用量会定期刷新到存储中。
+
+`store` (object)
+:    持久化存储配置。默认使用文件存储(`gost-quota.json`)。
+
+#### 存储配置
+
+##### 文件存储
+
+默认使用文件存储，配额数据保存在本地文件中。
+
+```yaml
+quotas:
+- name: quota-0
+  store:
+    type: file
+    file: /path/to/quota.json
+```
+
+`store.type` (string, default=file)
+:    存储类型，`file`或`redis`。
+
+`store.file` (string, default=gost-quota.json)
+:    文件路径。
+
+##### Redis存储
+
+:material-tag: 3.3.0
+
+使用Redis存储配额数据，支持持久化到Redis服务中。
+
+```yaml
+quotas:
+- name: quota-0
+  store:
+    type: redis
+    redis:
+      addr: 127.0.0.1:6379
+      db: 1
+      username: user
+      password: 123456
+      key: gost:quotas:quota-0
+```
+
+`store.redis.addr` (string, required)
+:    Redis服务地址。
+
+`store.redis.db` (int, default=0)
+:    数据库名。
+
+`store.redis.username` (string)
+:    用户名。
+
+`store.redis.password` (string)
+:    密码。
+
+`store.redis.key` (string, required)
+:    Redis key，用于存储配额数据。
+
+#### Web API
+
+配额限制器支持通过[Web API](../tutorials/api/config.md#_5)进行动态配置，支持以下操作：查看配额列表，获取单个配额详情，创建、更新、删除配额，以及重置配额计数器。
+
 ## 数据源
 
 限制器可以配置多个数据源，目前支持的数据源有：内联，文件，redis。

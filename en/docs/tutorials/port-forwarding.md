@@ -334,6 +334,8 @@ Map the local TCP port 8080 to port 80 of 192.168.1.1, and all data to the local
 
 ### Unix Domain Socket
 
+:material-tag: 3.3.0
+
 === "CLI"
 
     ```bash

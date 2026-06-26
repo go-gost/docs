@@ -200,6 +200,8 @@ services:
 
 ## Labels
 
+:material-tag: 3.3.0
+
 The `labels` option sets static key-value labels on a service, which are automatically attached to the service's [recorder](recorder.md) output and logs. This is useful for telemetry attribution — for example, tagging records with tenant, account, or region information.
 
 ```yaml
