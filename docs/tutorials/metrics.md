@@ -142,6 +142,8 @@ Metrics服务支持两种运行方式：全局服务和普通服务。
 
 	gost_service_transfer_output_bytes_total{host="host-0",service="service-0"} 7327
 
+		gost_recorder_records_total{host="host-0",recorder="recorder-0"} 5
+
 	gost_services{host="host-0"} 1
 	```
 
@@ -170,6 +172,9 @@ Metrics服务支持两种运行方式：全局服务和普通服务。
 
 `gost_chain_errors_total` (type=counter)
 :    转发链本身建立连接失败数
+
+`gost_recorder_records_total` :material-tag: 3.2.0 (type=counter)
+:    记录器写入的总记录数。标签：`host`, `recorder`
 
 ## Prometheus
 

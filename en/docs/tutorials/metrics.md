@@ -142,6 +142,8 @@ After enabling, you can view the metrics data through the `http://localhost:9000
 
 	gost_service_transfer_output_bytes_total{host="host-0",service="service-0"} 7327
 
+		gost_recorder_records_total{host="host-0",recorder="recorder-0"} 5
+
 	gost_services{host="host-0"} 1
 	```
 
@@ -170,6 +172,9 @@ After enabling, you can view the metrics data through the `http://localhost:9000
 
 `gost_chain_errors_total` (type=counter)
 :    Total chain connection errors
+
+`gost_recorder_records_total` :material-tag: 3.2.0 (type=counter)
+:    Total records written by recorder. Labels: `host`, `recorder`
 
 ## Prometheus
 
