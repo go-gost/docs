@@ -72,6 +72,46 @@ PHT通道由三部分组成：
 !!! note "路径匹配验证"
     仅当客户端和服务端设定的path参数相同时，连接才能成功建立。
 
+## 自定义请求头
+
+通过`header`选项可以设置自定义HTTP请求头部，在客户端与服务端建立PHT通道时，这些自定义头部会被自动添加到授权、发送和接收请求中。
+
+此功能可用于基于头部认证的系统（例如Cloudflare Access），通过在请求中添加认证令牌实现身份验证。
+
+=== "命令行"
+
+    ```bash
+    gost -L :8080 -F "http+pht://:8443?header.ServiceToken=eyJhbGciOi..."
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8443
+          connector:
+            type: http
+          dialer:
+            type: pht
+            metadata:
+              header:
+                ServiceToken: "eyJhbGciOi..."
+                X-Custom-Header: "value"
+    ```
+
 ## 代理协议
 
 PHT数据通道可以与各种代理协议组合使用。

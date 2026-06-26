@@ -43,3 +43,9 @@ PHT拨号器使用HTTP协议与服务建立数据通道。
 
 `pullPath` (string, default=/pull)
 :   数据接收URI
+
+`host` (string)
+:    指定HTTP请求`Host`头部字段值
+
+`header` (map)
+:    自定义HTTP请求头部，可用于基于头部认证的系统（例如Cloudflare Access）

@@ -72,6 +72,46 @@ The PHT channel consists of three parts:
 !!! note "Path Matching Verification"
     The connection can be successfully established only when the options set by the client and the server are the same.
 
+## Custom Request Headers
+
+The `header` option allows setting custom HTTP request headers. When establishing a PHT channel between client and server, these custom headers are automatically added to authorize, push, and pull requests.
+
+This feature can be used with header-based authentication systems (e.g., Cloudflare Access), enabling authentication by including tokens in requests.
+
+=== "CLI"
+
+    ```bash
+    gost -L :8080 -F "http+pht://:8443?header.ServiceToken=eyJhbGciOi..."
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: :8443
+          connector:
+            type: http
+          dialer:
+            type: pht
+            metadata:
+              header:
+                ServiceToken: "eyJhbGciOi..."
+                X-Custom-Header: "value"
+    ```
+
 ## Proxy
 
 PHT tunnel can be used in combination with various proxy protocols.
