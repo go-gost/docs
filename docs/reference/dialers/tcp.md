@@ -42,5 +42,15 @@ TCP拨号器使用TCP建立数据通道。
 
 ## 参数列表
 
-无
+`keepalive` (bool, default=false):
+:    启用TCP保活探测。当对端静默断开（如网络分区、主机崩溃）而未发送TCP RST或FIN时，操作系统级别的TCP keep-alive机制能够检测到死连接并关闭，防止静默断开的连接导致资源泄漏。设置为`true`启用。
+
+`keepalive.idle` (time.Duration):
+:    发送第一个保活探测前的空闲时间。对应Linux上的`TCP_KEEPIDLE`。仅在`keepalive`为`true`时有效。
+
+`keepalive.interval` (time.Duration):
+:    连续保活探测之间的时间间隔。对应Linux上的`TCP_KEEPINTVL`。仅在`keepalive`为`true`时有效。
+
+`keepalive.count` (int):
+:    连接被判定为断开前未确认的保活探测次数。对应Linux上的`TCP_KEEPCNT`。仅在`keepalive`为`true`时有效。
 

@@ -42,5 +42,15 @@ TCP拨号器使用TCP建立数据通道。
 
 ## 参数列表
 
-无
+`keepalive` (bool, default=false):
+:    Enable TCP keep-alive probes on the dialed connection. When enabled, the OS-level TCP keep-alive mechanism detects genuinely dead peers that disappear without sending a TCP RST or FIN, preventing resource leaks from silently-broken connections. Set to `true` to enable.
+
+`keepalive.idle` (time.Duration):
+:    The idle time before the first keep-alive probe is sent. Equivalent to `TCP_KEEPIDLE` on Linux. Only effective when `keepalive` is `true`.
+
+`keepalive.interval` (time.Duration):
+:    The interval between successive keep-alive probes. Equivalent to `TCP_KEEPINTVL` on Linux. Only effective when `keepalive` is `true`.
+
+`keepalive.count` (int):
+:    The number of unacknowledged keep-alive probes before the connection is declared dead. Equivalent to `TCP_KEEPCNT` on Linux. Only effective when `keepalive` is `true`.
 
