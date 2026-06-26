@@ -100,6 +100,7 @@ SSH拨号器支持简单用户名/密码认证和公钥认证。
 		      privateKeyFile: /path/to/privateKeyFile
 			  # optional passphrase for privateKeyFile
 			  # passphrase: pass
+			  # passphraseFromKeyring: true  # 从系统密钥环读取密码
     ```
 
 ## 参数列表
@@ -109,3 +110,6 @@ SSH拨号器支持简单用户名/密码认证和公钥认证。
 
 `passphrase` (string)
 :    证书密码
+
+`passphraseFromKeyring` (bool, default=false)
+:    从系统密钥环中读取证书密码。启用此选项后，`passphrase`参数将被忽略，GOST会通过密钥环读取`SSH <privateKeyFile>`对应的密码

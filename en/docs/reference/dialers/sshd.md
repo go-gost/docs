@@ -99,6 +99,9 @@ SSH拨号器支持简单用户名/密码认证和公钥认证。
 `passphrase` (string)
 :    证书密码
 
+`passphraseFromKeyring` (bool, default=false)
+:    Read the passphrase from the system keyring instead of specifying it in config. When enabled, the `passphrase` parameter is ignored, and GOST retrieves the secret via `SSH <privateKeyFile>` from the system keyring
+
 `authorizedKeys` (string)
 :    客户端公钥列表文件
 
