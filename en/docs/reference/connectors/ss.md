@@ -37,6 +37,29 @@ SS连接器使用Shadowsocks协议进行数据交互。
 			type: tcp
 	```
 
+!!! note "`none` / `dummy` Cipher Mode (v3.3.0+)"
+    GOST supports `none` and `dummy` cipher modes (case-insensitive) for debugging, testing, and compatibility. This mode uses the standard SS AEAD wire framing (2-byte length prefix + salt + target address) without actual encryption.
+
+    === "CLI"
+        ```
+        gost -L ":8080" -F "ss://none@proxy.example.com:8338"
+        ```
+        ```
+        gost -L ":8080" -F "ssu://none@proxy.example.com:8338"
+        ```
+
+    === "File (YAML)"
+        ```yaml
+        connector:
+          type: ss
+          auth:
+            username: none
+            password: ""
+        ```
+
+    !!! warning "Security"
+        The `none` / `dummy` mode provides zero confidentiality or integrity protection. It is intended for debugging and testing only — never use it in production.
+
 ## 参数列表
 
 `nodelay` (bool, default=false)

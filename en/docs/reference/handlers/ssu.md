@@ -36,5 +36,26 @@ ssu处理器使用Shadowsocks UDP转发协议进行数据交互，用于转发UD
 `bufferSize` (int, default=1500)
 :    UDP数据缓冲大小
 
+!!! note "`none` / `dummy` Cipher Mode (v3.3.0+)"
+    GOST supports `none` and `dummy` cipher modes (case-insensitive) for debugging, testing, and compatibility. This mode uses the standard SS AEAD wire framing (2-byte length prefix + salt + target address) without actual UDP data encryption.
+
+    === "CLI"
+        ```
+        gost -L "ssu://none@:8338"
+        ```
+        ```
+        gost -L ":8080" -F "ssu://none@proxy.example.com:8338"
+        ```
+
+    === "File (YAML)"
+        ```yaml
+        auth:
+          username: none
+          password: ""
+        ```
+
+    !!! warning "Security"
+        The `none` / `dummy` mode provides zero confidentiality or integrity protection. It is intended for debugging and testing only — never use it in production.
+
 !!! note "认证信息"
     SSU理器只能使用单认证信息方式设置加密信息，不能支持认证器。

@@ -44,6 +44,26 @@ ssu连接器使用Shadowsocks UDP转发协议进行数据交互。
 			type: udp
 	```
 
+!!! note "`none` / `dummy` Cipher Mode (v3.3.0+)"
+    GOST supports `none` and `dummy` cipher modes (case-insensitive) for debugging, testing, and compatibility. This mode uses the standard SS AEAD wire framing (2-byte length prefix + salt + target address) without actual UDP data encryption.
+
+    === "CLI"
+        ```
+        gost -L ":8080" -F "ssu://none@proxy.example.com:8338"
+        ```
+
+    === "File (YAML)"
+        ```yaml
+        connector:
+          type: ssu
+          auth:
+            username: none
+            password: ""
+        ```
+
+    !!! warning "Security"
+        The `none` / `dummy` mode provides zero confidentiality or integrity protection. It is intended for debugging and testing only — never use it in production.
+
 ## 参数列表
 
 `bufferSize` (int, default=1500)
