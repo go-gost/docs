@@ -587,4 +587,70 @@ curl -XPOST http://127.0.0.1:8000/bypass -d '{"network":"tcp","addr":"example.co
     The GOST internal Bypass does not handle the logic for specific clients. If you need to implement this function, you can use an Authenticator and a Bypass plugin in combination. 
     
     The Authenticator returns the client ID after successful authentication. GOST will pass this client ID information to the Bypass plugin service again, and the Bypass plugin server can implement different strategies based on the client ID.
-    
+
+
+## Geo IP Bypass
+
+:material-tag: 3.3.0
+
+GOST's built-in bypass supports both IP CIDR and domain matching, but the two are independent — domain rules only match against domain names and will not resolve domain names to IP addresses for CIDR matching. In other words, when you configure `203.0.113.0/24` as a CIDR rule, even if `example.com` resolves to `203.0.113.1`, GOST will not bypass `example.com`.
+
+[gost-geo-plugin](https://github.com/go-gost/gost-geo-plugin) is a gRPC-based bypass plugin specifically designed to address this limitation. It features a built-in high-performance IP trie that matches DNS-resolved IP addresses against CIDR rules, enabling fine-grained Geo/ASN routing similar to a routing table.
+
+### Running the Plugin
+
+gost-geo-plugin requires a CIDR list file, with one CIDR per line:
+
+```txt
+192.0.2.0/24
+198.51.100.0/24
+203.0.113.0/24
+233.252.0.0/24
+2001:db8::/32
+3fff::/20
+```
+
+The CIDR list can be loaded from a local file or a URL:
+
+```bash
+# Load from local file
+gost-geo-plugin --list-file /path/to/geoip.txt --listen-addr 127.0.0.1:8000
+
+# Load from URL (supports HTTP/HTTPS)
+gost-geo-plugin --list-url https://example.com/geoip.txt --listen-addr 127.0.0.1:8000
+```
+
+Optional flags:
+
+- `--prefer-ipv6` — Prefer IPv6 addresses for matching.
+- `--port` — Plugin server port, default 8000.
+- `--refresh` — CIDR list refresh interval, e.g., `24h`. Disabled by default.
+
+### Configuring the Bypass
+
+After the plugin is running, configure GOST to use it as a plugin bypass:
+
+```yaml
+bypasses:
+- name: bypass-geo
+  whitelist: true
+  plugin:
+    type: grpc
+    addr: 127.0.0.1:8000
+```
+
+```yaml
+services:
+- name: service-0
+  addr: ":8080"
+  bypass: bypass-geo
+  handler:
+    type: http
+  listener:
+    type: tcp
+```
+
+With this configuration, all proxy traffic through GOST will first be checked by gost-geo-plugin, which resolves domain names to IP addresses and matches them against the CIDR list. Traffic with IP addresses matching the whitelist rules will be bypassed accordingly.
+
+!!! tip "Combining with Local Bypass Rules"
+    gost-geo-plugin only resolves domains to IPs for CIDR matching — the actual bypass decision is still made by GOST's bypass controller. You can combine domain-based rules with Geo IP rules using [Bypass Groups](#bypass-group) to implement more flexible traffic control strategies.

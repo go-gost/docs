@@ -15,6 +15,10 @@ Using gRPC/HTTP communication instead of dynamic link library has the following 
 
 The modules that currently support plugin are: [Hop](hop.md), [Admission](admission.md), [Authenticator](auth.md), [Bypass](bypass.md), [Traffic Limiter](limiter.md), [Host Mapper](hosts.md), [Resolver](resolver.md), [Ingress](ingress.md), [Router](router.md), [Service Discovery](sd.md), [Recorder](recorder.md), [Observer](observer.md).
 
+### Ready-Made Plugins
+
+- [gost-geo-plugin](https://github.com/go-gost/gost-geo-plugin) — A CIDR-based Geo IP bypass plugin with a built-in high-performance IP trie. Supports matching DNS-resolved IP addresses against CIDR rules for Geo/ASN routing. See [Bypass - Geo IP Bypass](bypass.md#geo-ip-bypass).
+
 ## Plugin Usage
 
 Taking the authenticator as an example, after configuring the authenticator to use the plugin service, all authentication requests will be forwarded to the plugin server for processing.

@@ -598,3 +598,69 @@ curl -XPOST http://127.0.0.1:8000/bypass -d '{"network":"tcp","addr":"example.co
     GOST内部的分流器逻辑未处理针对特定用户的分流逻辑，如果需要实现此功能需要组合使用认证器和分流器插件。
     
     认证器在认证成功后返回用户标识，GOST会将此用户标识信息再次传递给分流器插件服务，分流器插件服务就可以根据用户标识来做不同的分流策略。
+
+## Geo IP 分流
+
+:material-tag: 3.3.0
+
+GOST内置的分流器同时支持IP CIDR和域名规则匹配，但两者是相互独立的 — 域名规则仅匹配域名本身，不会先解析域名的IP再与CIDR进行匹配。也就是说，当配置了`203.0.113.0/24`的CIDR规则时，即使`example.com`解析到了`203.0.113.1`，GOST也不会对`example.com`进行分流。
+
+[gost-geo-plugin](https://github.com/go-gost/gost-geo-plugin) 是一个基于gRPC的分流器插件，专门用于解决此问题。它内置了高性能IP Trie，可以对DNS解析后的IP地址进行CIDR匹配，从而实现类似路由表的精细化Geo/ASN分流。
+
+### 运行插件
+
+gost-geo-plugin需要一个CIDR列表文件，每行一个CIDR：
+
+```txt
+192.0.2.0/24
+198.51.100.0/24
+203.0.113.0/24
+233.252.0.0/24
+2001:db8::/32
+3fff::/20
+```
+
+可以通过本地文件或URL两种方式加载CIDR列表：
+
+```bash
+# 从本地文件加载
+gost-geo-plugin --list-file /path/to/geoip.txt --listen-addr 127.0.0.1:8000
+
+# 从URL加载（支持HTTP/HTTPS）
+gost-geo-plugin --list-url https://example.com/geoip.txt --listen-addr 127.0.0.1:8000
+```
+
+可选参数：
+
+- `--prefer-ipv6` — 优先使用IPv6地址进行匹配。
+- `--port` — 插件服务端口，默认8000。
+- `--refresh` — CIDR列表刷新间隔，例如`24h`，默认不自动刷新。
+
+### 配置分流器
+
+插件启动后，在GOST的配置中使用插件类型的分流器即可：
+
+```yaml
+bypasses:
+- name: bypass-geo
+  whitelist: true
+  plugin:
+    type: grpc
+    addr: 127.0.0.1:8000
+```
+
+```yaml
+services:
+- name: service-0
+  addr: ":8080"
+  bypass: bypass-geo
+  handler:
+    type: http
+  listener:
+    type: tcp
+```
+
+这样，所有经过GOST代理的请求都会先通过gost-geo-plugin进行IP查询和CIDR匹配，匹配白名单规则的IP地址对应的流量将被分流处理。
+
+!!! tip "与本地分流规则组合"
+    gost-geo-plugin只是将域名解析为IP后再进行CIDR匹配，实际的分流决策仍由GOST的分流器完成。你可以通过[分流器组](#分流器组)将基于域名的规则和基于Geo IP的规则组合使用，实现更灵活的流量控制策略。
