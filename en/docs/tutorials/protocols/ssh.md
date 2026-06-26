@@ -232,7 +232,11 @@ The server sets the authorized client public key list through `authorizedKeys` o
 
 **Client**
 
-The client sets the certificate private key and private key password through the `privateKeyFile` and `passphrase` options.
+The client sets the certificate private key and private key passphrase through the `privateKeyFile` and `passphrase` options.
+
+The `privateKeyFile` path supports `~` prefix for home directory expansion (e.g., `~/.ssh/id_rsa`).
+
+Instead of specifying the `passphrase` in plaintext, you can enable the `passphraseFromKeyring` option to read the passphrase from the system keyring, where GOST retrieves the secret via `SSH <privateKeyFile>`. When enabled, the `passphrase` parameter is ignored.
 
 === "CLI"
 
@@ -269,6 +273,7 @@ The client sets the certificate private key and private key password through the
 			metadata:
 			  privateKeyFile: /path/to/privateKeyFile
 			  passphrase: "123456"
+			  # passphraseFromKeyring: true  # read passphrase from system keyring
     ```
 
 

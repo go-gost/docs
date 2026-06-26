@@ -238,6 +238,10 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 
 客户端通过`privateKeyFile`和`passphrase`选项设置证书私钥和私钥密码。
 
+`privateKeyFile`路径支持`~`前缀进行家目录扩展（例如`~/.ssh/id_rsa`）。
+
+`passphrase`可以明文指定，也可以开启`passphraseFromKeyring`选项从系统密钥环中读取，此时GOST会通过密钥环读取`SSH <privateKeyFile>`对应的密码，`passphrase`参数将被忽略。
+
 === "命令行"
 
     ```bash
@@ -274,6 +278,7 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 			metadata:
 			  privateKeyFile: /path/to/privateKeyFile
 			  passphrase: "123456"
+			  # passphraseFromKeyring: true  # 从系统密钥环读取密码
     ```
 
 ## 心跳
