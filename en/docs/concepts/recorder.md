@@ -44,6 +44,12 @@ recorders:
   file:
     path: /path/to/recorder/file
     sep: "\n"
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
 ```
 
 `file.path` (string)
@@ -51,6 +57,24 @@ recorders:
 
 `sep` (string)
 :    Record separator. If set, this separator will be inserted between two records
+
+`rotation` (object)
+:    :material-tag: 3.1.0 File rotation configuration. When set, the file recorder uses [lumberjack](https://github.com/natefinch/lumberjack) for log rotation. If not set, data is written directly to the file.
+
+`rotation.maxSize` (int, default=100)
+:    The maximum size in megabytes of the file before it gets rotated.
+
+`rotation.maxAge` (int)
+:    The maximum number of days to retain old files.
+
+`rotation.maxBackups` (int)
+:    The maximum number of old files to retain.
+
+`rotation.localTime` (bool, default=false)
+:    Determines if the time used for formatting the timestamps in backup files is the computer's local time. The default is to use UTC time.
+
+`rotation.compress` (bool, default=false)
+:    Determines if the rotated files should be compressed using gzip.
 
 ### TCP Service
 

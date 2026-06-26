@@ -43,6 +43,12 @@ recorders:
   file:
     path: /path/to/recorder/file
     sep: "\n"
+    rotation:
+      maxSize: 100
+      maxAge: 10
+      maxBackups: 3
+      localTime: false
+      compress: false
 ```
 
 `file.path` (string)
@@ -50,6 +56,24 @@ recorders:
 
 `sep` (string)
 :    记录分割符，如果设置则会在两条记录中间插入此分割符
+
+`rotation` (object)
+:    :material-tag: 3.1.0 文件轮滚配置。当设置后，文件记录器会使用[lumberjack](https://github.com/natefinch/lumberjack)进行日志轮滚。如果不设置，则直接写入文件。
+
+`rotation.maxSize` (int, default=100)
+:    文件最大存储大小，单位为MB，超过此大小将触发轮滚。
+
+`rotation.maxAge` (int)
+:    备份文件最大保留天数。默认不根据时间清理旧文件。
+
+`rotation.maxBackups` (int)
+:    最大备份文件数量。默认保留所有备份文件。
+
+`rotation.localTime` (bool, default=false)
+:    备份文件名是否使用本地时间格式，默认使用UTC时间。
+
+`rotation.compress` (bool, default=false)
+:    备份文件是否使用gzip压缩。
 
 ### TCP服务
 

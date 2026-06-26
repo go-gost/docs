@@ -150,6 +150,18 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
         - bar
         - baz
 
+    recorders:
+    - name: recorder-0
+      file:
+        path: /path/to/recorder/file
+        sep: "\n"
+        rotation:
+          maxSize: 100
+          maxAge: 10
+          maxBackups: 3
+          localTime: false
+          compress: false
+
     log:
       output: stderr
       level: debug
@@ -389,6 +401,22 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
         "keyFile": "key.pem",
         "caFile": "ca.pem"
       },
+      "recorders": [
+        {
+          "name": "recorder-0",
+          "file": {
+            "path": "/path/to/recorder/file",
+            "sep": "\n",
+            "rotation": {
+              "maxSize": 100,
+              "maxAge": 10,
+              "maxBackups": 3,
+              "localTime": false,
+              "compress": false
+            }
+          }
+        }
+      ],
       "log": {
         "output": "stderr",
         "level": "debug",
@@ -714,6 +742,29 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 
 `mark` (int)
 :    Linux Socket SO_MARK参数选项
+
+## Recorder
+
+`name` (string, required)
+:    Name
+
+`file` (object)
+:    File recorder
+
+`tcp` (object)
+:    TCP recorder
+
+`http` (object)
+:    HTTP recorder
+
+`redis` (object)
+:    Redis recorder
+
+`plugin` (object)
+:    gRPC plugin recorder
+
+!!! info "Reference"
+    See [Recorder](../../concepts/recorder.md) for detailed recorder configuration.
 
 ## 日志(log)
 
