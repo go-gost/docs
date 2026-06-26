@@ -69,6 +69,10 @@ SSH拨号器支持简单用户名/密码认证和公钥认证。
 
 ## 公钥认证
 
+The SSHD dialer supports multiple public key authentication methods: specifying a private key file via `privateKeyFile`, using SSH Agent via the `SSH_AUTH_SOCK` environment variable, or reading the passphrase from the system keyring.
+
+When the `SSH_AUTH_SOCK` environment variable is set, GOST automatically connects to the local SSH Agent for public key authentication, eliminating the need to specify private key file paths in configuration.
+
 === "命令行"
     ```
 	gost -L sshd://gost@:2222?authorizedKeys=/path/to/authorized_keys

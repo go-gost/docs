@@ -69,6 +69,10 @@ SSH拨号器支持简单用户名/密码认证和公钥认证。
 
 ## 公钥认证
 
+SSHD拨号器支持多种公钥认证方式：通过`privateKeyFile`指定私钥文件、通过`SSH_AUTH_SOCK`环境变量使用SSH Agent、或通过密钥环读取密码。
+
+通过设置`SSH_AUTH_SOCK`环境变量，GOST会自动连接本地的SSH Agent进行公钥认证，无需在配置文件中指定私钥文件路径。
+
 === "命令行"
     ```
 	gost -L sshd://gost@:2222?authorizedKeys=/path/to/authorized_keys

@@ -238,6 +238,8 @@ The `privateKeyFile` path supports `~` prefix for home directory expansion (e.g.
 
 Instead of specifying the `passphrase` in plaintext, you can enable the `passphraseFromKeyring` option to read the passphrase from the system keyring, where GOST retrieves the secret via `SSH <privateKeyFile>`. When enabled, the `passphrase` parameter is ignored.
 
+Additionally, the SSHD dialer supports automatic SSH Agent authentication via the `SSH_AUTH_SOCK` environment variable, eliminating the need to specify private key file paths in configuration.
+
 === "CLI"
 
     ```bash

@@ -242,6 +242,8 @@ SSH支持用户名/密码认证和PubKey认证两种认证方式。
 
 `passphrase`可以明文指定，也可以开启`passphraseFromKeyring`选项从系统密钥环中读取，此时GOST会通过密钥环读取`SSH <privateKeyFile>`对应的密码，`passphrase`参数将被忽略。
 
+此外，SSHD拨号器还支持通过`SSH_AUTH_SOCK`环境变量自动连接本地SSH Agent进行公钥认证，无需在配置文件中指定私钥文件路径。
+
 === "命令行"
 
     ```bash
