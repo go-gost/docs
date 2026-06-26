@@ -13,6 +13,7 @@ In GOST, the selection of nodes in a node group is done through node selector. T
      * `rand` - random
      * `fifo` - top-down 
      * `hash` - Based on a specific hash value (client IP or destination address)
+     * `parallel` - race mode, dials all nodes concurrently and uses the first successful connection
 
 `maxFails` (int, default=1)
 :    The maximum number of failed connections for a specified node, When the number of failed connections with a node exceeds this set value, the node will be marked as a dead node, dead node will not be selected to use.
@@ -367,3 +368,45 @@ Each service can set the hash type individually.
 	```
 
 Specify the hash type as `host` with the `hash` option.
+
+## Race Strategy
+
+The race strategy (`parallel`) concurrently dials all nodes in the node group and uses the first successfully established connection, closing the remaining ones. This strategy is ideal for latency-sensitive scenarios, automatically selecting the fastest-responding node.
+
+```yaml hl_lines="14 15 16"
+services:
+- name: service-0
+  addr: :8080
+  handler:
+    type: auto
+    chain: chain-0
+  listener:
+    type: tcp
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    selector:
+      strategy: parallel
+      maxFails: 1
+      failTimeout: 10s
+    nodes:
+    - name: node-0
+      addr: 192.168.1.1:1080
+      connector:
+        type: socks5
+      dialer:
+        type: tcp
+    - name: node-1
+      addr: 192.168.1.2:1080
+      connector:
+        type: socks5
+      dialer:
+        type: tcp
+```
+
+!!! tip "Difference from load balancing"
+    Unlike traditional load balancing, the race strategy does not distribute requests across nodes. Instead, it attempts to connect to all nodes simultaneously and uses the first one that succeeds. Therefore, it works best with a small number of nodes (2-3) in latency-sensitive scenarios. For larger node pools or traffic distribution needs, use round robin (`round`) or random (`rand`) strategies instead.
+
+!!! note "Multiplexing disabled"
+    The race strategy's `Multiplex()` method is hardcoded to return `false`, meaning multiplexing is forcibly disabled. This is because each request may go through a different node, making it impossible to guarantee that subsequent requests reuse the same established connection.

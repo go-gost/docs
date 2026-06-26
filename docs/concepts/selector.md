@@ -14,6 +14,7 @@ comments: true
      * `rand` - 随机
      * `fifo` - 自上而下，主备模式
      * `hash` - 基于特定Hash值(客户端IP或目标地址)
+     * `parallel` - 竞速模式，同时向所有节点发起连接，使用最先成功的连接
 
 `maxFails` (int, default=1)
 :    指定最大失败次数，当失败次数超过此设定值时，此对象会被标记为失败(Fail)状态，失败状态的对象不会被选择使用。
@@ -376,3 +377,45 @@ gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080?strategy=has
 	```
 
 通过`hash`选项指定hash类型为`host`。
+
+## 竞速策略
+
+竞速策略(`parallel`)同时向节点组中的所有节点发起连接，使用第一个成功建立的连接，并关闭其余连接。此策略适用于对延迟敏感的场景，能够自动选择响应最快的节点。
+
+```yaml hl_lines="14 15 16"
+services:
+- name: service-0
+  addr: :8080
+  handler:
+    type: auto
+    chain: chain-0
+  listener:
+    type: tcp
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    selector:
+      strategy: parallel
+      maxFails: 1
+      failTimeout: 10s
+    nodes:
+    - name: node-0
+      addr: 192.168.1.1:1080
+      connector:
+        type: socks5
+      dialer:
+        type: tcp
+    - name: node-1
+      addr: 192.168.1.2:1080
+      connector:
+        type: socks5
+      dialer:
+        type: tcp
+```
+
+!!! tip "与负载均衡的区别"
+    竞速策略与传统的负载均衡不同，它不是将请求分摊到各个节点，而是每次都尝试连接所有节点，使用最先成功的那一个。因此竞速策略更适合节点数量较少（2-3个）且对延迟敏感的场景。对于节点数量较多或需要均衡流量的场景，建议使用轮询(`round`)或随机(`rand`)策略。
+
+!!! note "多路复用禁用"
+    竞速策略的 `Multiplex()` 方法硬编码返回 `false`，即多路复用（Multiplex）功能会被强制禁用。这是因为竞速策略每次请求都可能通过不同的节点，无法保证后续请求复用同一个已建立的连接。

@@ -621,11 +621,13 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 ## 节点选择器(Selector)
 
 `strategy` (string, default=round)
-:   节点选择策略：
+:   Node selection strategy:
 
-    * `round`, `rr` - 轮询
-    * `random`, `rand` - 随机
-    * `fifo` - 主备模式
+    * `round`, `rr` - round robin
+    * `random`, `rand` - random
+    * `fifo` - primary/standby mode
+    * `hash` - based on a specific hash value (client IP or destination address)
+    * `parallel` - race mode, dials all nodes concurrently and uses the first successful connection
 
 `maxFails` (int, default=1)
 :    节点连接最大失败次数
