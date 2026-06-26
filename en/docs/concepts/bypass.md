@@ -194,6 +194,80 @@ For IP, domain name and domain name wildcard rules can also contain ports or por
       - .example.com:443
     ```
 
+## Network Protocol Filtering
+
+:material-tag: 3.3.0
+
+Bypass can be configured with the `network` parameter to restrict matching to a specific network protocol type (e.g., `tcp` or `udp`). When the network protocol does not match, the bypass rule is not applied.
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="3 10 17"
+    bypasses:
+    # Blacklist mode: all TCP connections are bypassed
+    - name: skip-tcp
+      network: tcp
+    # Whitelist mode: only UDP connections use the proxy, others are bypassed
+    - name: proxy-udp
+      network: udp
+      whitelist: true
+    # Network + address combination: bypassed only when TCP and address matches
+    - name: bypass-tcp-local
+      network: tcp
+      matchers:
+      - 192.168.1.0/24
+      - 10.0.0.0/8
+      - '*.example.com'
+      - .example.org
+    ```
+
+    When only `network` is set (without `matchers`):
+    
+    - **Blacklist mode**: matching network connections are bypassed (do not go through the proxy).
+    - **Whitelist mode**: matching network connections use the proxy, all others are bypassed.
+
+    When both `network` and `matchers` are set, the network protocol acts as a pre-filter:
+    
+    - Network mismatch → bypass rule is not applied, the connection proceeds normally.
+    - Network match → continue to evaluate the `matchers` rules for address matching.
+
+### Typical Use Case: TCP/UDP Routing
+
+In network proxying, TCP and UDP often require different routing paths. For example, route TCP traffic through an encrypted proxy while UDP traffic goes direct or through a different proxy:
+
+```yaml hl_lines="4 9"
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    bypasses:
+    - skip-udp
+    nodes:
+    - name: node-tcp
+      addr: :8443
+      bypass: skip-udp
+      connector:
+        type: http
+      dialer:
+        type: tls
+    - name: node-udp
+      addr: :8443
+      bypass: skip-tcp
+      connector:
+        type: relay
+      dialer:
+        type: tls
+bypasses:
+- name: skip-tcp
+  network: tcp
+- name: skip-udp
+  network: udp
+  whitelist: true
+```
+
+!!! note "Backward Compatibility"
+    By default, `network` is empty and the bypass behaves exactly the same as in previous versions.
+
 ## Bypass Type
 
 ### Service Level Bypass

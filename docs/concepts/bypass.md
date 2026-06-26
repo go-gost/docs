@@ -200,6 +200,80 @@ comments: true
       - .example.com:443
     ```
 
+## 网络协议过滤
+
+:material-tag: 3.3.0
+
+分流器可以设置`network`参数来限制匹配的网络协议类型（例如`tcp`或`udp`）。当网络协议不匹配时，分流器规则不生效。
+
+=== "配置文件"
+
+    ```yaml hl_lines="3 10 17"
+    bypasses:
+    # 黑名单模式：所有TCP连接均被分流
+    - name: skip-tcp
+      network: tcp
+    # 白名单模式：只有UDP连接使用代理，其余被分流
+    - name: proxy-udp
+      network: udp
+      whitelist: true
+    # 网络 + 地址组合：仅TCP且匹配地址时被分流
+    - name: bypass-tcp-local
+      network: tcp
+      matchers:
+      - 192.168.1.0/24
+      - 10.0.0.0/8
+      - '*.example.com'
+      - .example.org
+    ```
+
+    当仅设置`network`参数（无`matchers`）时：
+    
+    - **黑名单模式**：匹配的网络连接被分流（不通过代理）。
+    - **白名单模式**：匹配的网络连接使用代理，其余被分流。
+
+    当同时设置`network`和`matchers`时，网络协议首先作为前置过滤条件：
+    
+    - 网络不匹配 → 分流器不生效，连接正常通过。
+    - 网络匹配 → 继续使用`matchers`规则进行地址匹配判断。
+
+### 典型用例：TCP/UDP分流
+
+在网络代理中，TCP和UDP通常需要不同的处理路径。例如，将TCP流量通过加密代理，UDP流量直连或使用不同的代理：
+
+```yaml hl_lines="4 9"
+chains:
+- name: chain-0
+  hops:
+  - name: hop-0
+    bypasses:
+    - skip-udp
+    nodes:
+    - name: node-tcp
+      addr: :8443
+      bypass: skip-udp
+      connector:
+        type: http
+      dialer:
+        type: tls
+    - name: node-udp
+      addr: :8443
+      bypass: skip-tcp
+      connector:
+        type: relay
+      dialer:
+        type: tls
+bypasses:
+- name: skip-tcp
+  network: tcp
+- name: skip-udp
+  network: udp
+  whitelist: true
+```
+
+!!! note "向后兼容"
+    默认情况下`network`为空，分流器行为与之前版本完全一致。
+
 ## 分流器类型
 
 ### 服务上的分流器
