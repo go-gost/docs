@@ -35,4 +35,7 @@ HTTP3监听器根据服务配置，监听在指定UDP端口，并使用HTTP/3协
 `pullPath` (string, default=/pull)
 :   数据接收URI
 
+`enableDatagrams` (bool, default=false)
+:    Enable HTTP/3 datagram support. Required when using the [MASQUE handler](/reference/handlers/masque/).
+
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

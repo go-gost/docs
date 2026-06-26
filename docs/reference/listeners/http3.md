@@ -50,4 +50,7 @@ HTTP3监听器根据服务配置，监听在指定UDP端口，并使用HTTP/3协
 `maxStreams` (int, default=100)
 :    最大并发stream数量
 
+`enableDatagrams` (bool, default=false)
+:    开启HTTP/3数据报(Datagram)支持。当服务使用[MASQUE处理器](/reference/handlers/masque/)时需要开启此选项。
+
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

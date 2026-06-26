@@ -205,6 +205,7 @@ nav:
       - SSU: reference/handlers/ssu.md
       - SNI: reference/handlers/sni.md
       - SSHD: reference/handlers/sshd.md
+      - MASQUE: reference/handlers/masque.md
       - DNS: reference/handlers/dns.md
       - RED: reference/handlers/red.md
       - REDU: reference/handlers/redu.md
@@ -223,6 +224,7 @@ nav:
       - QUIC: reference/dialers/quic.md
       - PHT: reference/dialers/pht.md
       - HTTP3: reference/dialers/http3.md
+      - H3-MASQUE: reference/dialers/h3-masque.md
       - KCP: reference/dialers/kcp.md
       - SSH: reference/dialers/ssh.md
       - SSHD: reference/dialers/sshd.md
@@ -241,6 +243,7 @@ nav:
       - SSU: reference/connectors/ssu.md
       - SNI: reference/connectors/sni.md
       - SSHD: reference/connectors/sshd.md
+      - MASQUE: reference/connectors/masque.md
   - Donation: donation.md
   - GOST+: https://gost.plus
 
