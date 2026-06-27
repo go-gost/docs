@@ -555,11 +555,11 @@ services:
 
 `http://example.com/api/logout` will be rewritten to `http://example.com/logout`.
 
-### Rewrite Response Body
+### Rewrite Request/Response Body
 
-Define the response body rewriting rules by setting the `http.rewriteBody` option.
+Define the request and response body rewriting rules by setting `http.rewriteRequestBody` and `http.rewriteResponseBody` (or the deprecated `http.rewriteBody`) options.
 
-```yaml hl_lines="16-20"
+```yaml hl_lines="16-24"
 services:
 - name: http
   addr: :80
@@ -573,25 +573,29 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      # filter:
-      #   host: example.com
       matcher:
         rule: Host(`example.com`)
       http:
-        rewriteBody:
+        rewriteResponseBody:
         - match: foo
           replacement: bar
           type: text/html
+        rewriteRequestBody:
+        - type: application/json
+          rewriter: rewriter-0
 ```
 
-`rewriteBody.match` (string)
-:    Specify content matching pattern (regular expressions are supported).
+`match` (string)
+:    Specify content matching pattern (regular expressions are supported). Optional when `rewriter` is set.
 
-`rewriteBody.replacement` (string)
-:    Set the replacement content.
+`replacement` (string)
+:    Set the replacement content. Ignored when `rewriter` is set.
 
-`rewriteBody.type` (string, default=text/html)
-:    Set the content type of the response, matching the `Content-Type` header. It can be multiple types separated by `,` or `*` to match all types.
+`type` (string, default=text/html)
+:    Set the content type matching the `Content-Type` header. Can be multiple types separated by `,` or `*` to match all types.
+
+`rewriter` (string)
+:    :material-tag: 3.3.0 Reference a [Rewriter](../concepts/rewriter.md) plugin to delegate body modification to an external service. When set, `match` and `replacement` are ignored.
 
 ## TLS Settings
 

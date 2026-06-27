@@ -556,11 +556,11 @@ services:
 
 `http://example.com/api/logout`会被重写为`http://example.com/logout`。
 
-### 重写响应体
+### 重写请求体和响应体
 
-通过设置`http.rewriteBody`选项定义响应体重写规则。
+通过设置`http.rewriteRequestBody`和`http.rewriteResponseBody`(或已废弃的`http.rewriteBody`)选项定义请求体和响应体重写规则。
 
-```yaml hl_lines="16-20"
+```yaml hl_lines="16-24"
 services:
 - name: http
   addr: :80
@@ -574,25 +574,29 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      # filter:
-      #   host: example.com
       matcher:
         rule: Host(`example.com`)
       http:
-        rewriteBody:
+        rewriteResponseBody:
         - match: foo
           replacement: bar
           type: text/html
+        rewriteRequestBody:
+        - type: application/json
+          rewriter: rewriter-0
 ```
 
-`rewriteBody.match` (string)
-:    指定内容匹配模式(支持正则表达式)。
+`match` (string)
+:    指定内容匹配模式(支持正则表达式)。当设置了`rewriter`时此项可选。
 
-`rewriteBody.replacement` (string)
-:    设置替换内容。
+`replacement` (string)
+:    设置替换内容。当设置了`rewriter`时此项无效。
 
-`rewriteBody.type` (string, default=text/html)
+`type` (string, default=text/html)
 :    设置响应的内容类型，与`Content-Type`匹配。可以是`,`分割的多个类型或`*`代表匹配所有类型。
+
+`rewriter` (string)
+:    :material-tag: 3.3.0 引用[重写器](../concepts/rewriter.md)插件服务，将body修改委托给外部插件处理。当设置了此项时，`match`和`replacement`将被忽略。
 
 ## TLS请求设置
 
