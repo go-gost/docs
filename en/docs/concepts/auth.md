@@ -203,6 +203,47 @@ Use multiple authenticators by specifying a list of authenticators using the `au
         password: pass2
 	```
 
+## Authentication Whitelist
+
+:material-tag: 3.3.0
+
+The `skipauth` option sets a client IP whitelist that bypasses authentication when the client IP matches. `skipauth` accepts IP addresses (e.g. `192.168.1.1`) or CIDR ranges (e.g. `10.0.0.0/8`); unrecognized entries are ignored.
+
+!!! note "Prerequisite"
+    `skipauth` only takes effect when authentication (single auth info or an authenticator) is configured. Without authentication, all clients are already unauthenticated, so this option has no effect.
+
+=== "CLI"
+
+    Specify via the URL query parameter `skipauth`, with multiple values separated by commas:
+
+    ```bash
+    gost -L 'http://user:pass@:8080?skipauth=192.168.0.0/24,172.22.22.22/32'
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="9 10 11 12"
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        auth:
+          username: user
+          password: pass
+        metadata:
+          skipauth:
+            - 192.168.0.0/24
+            - 172.22.22.22/32
+      listener:
+        type: tcp
+    ```
+
+    Set the whitelist as a list under `metadata.skipauth` on the handler. A comma-separated string is also accepted (e.g. `skipauth: "192.168.0.0/24,172.22.22.22/32"`).
+
+!!! tip "Applicable scope"
+    `skipauth` works for all handler types (HTTP, SOCKS4/5, relay, http2, SSH, etc.); the authentication skip happens before the credential check.
+
 ## Data Source
 
 Authenticator can configure multiple data sources, currently supported data sources are: inline, file, redis.

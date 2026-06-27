@@ -200,6 +200,47 @@ user1 pass1
 !!! caution "Shadowsocks处理器"
     Shadowsocks处理器无法使用认证器，仅支持通过设置单认证信息作为加密参数。
 
+## 认证白名单
+
+:material-tag: 3.3.0
+
+通过`skipauth`选项可以设置客户端IP白名单，当客户端IP匹配白名单时跳过身份认证。`skipauth`接受IP地址(例如`192.168.1.1`)或CIDR网段(例如`10.0.0.0/8`)，无法识别的条目会被忽略。
+
+!!! note "前提条件"
+    `skipauth`仅在已配置认证(单认证信息或认证器)时生效。若未配置认证，所有客户端本就无需认证，此选项不生效。
+
+=== "命令行"
+
+    通过URL查询参数`skipauth`指定，多个值以逗号分隔：
+
+    ```sh
+    gost -L 'http://user:pass@:8080?skipauth=192.168.0.0/24,172.22.22.22/32'
+    ```
+
+=== "配置文件"
+
+    ```yaml hl_lines="9 10 11 12"
+    services:
+    - name: service-0
+      addr: ":8080"
+      handler:
+        type: http
+        auth:
+          username: user
+          password: pass
+        metadata:
+          skipauth:
+            - 192.168.0.0/24
+            - 172.22.22.22/32
+      listener:
+        type: tcp
+    ```
+
+    在处理器的`metadata`中通过`skipauth`以列表形式设置白名单，也支持以逗号分隔的字符串形式(例如`skipauth: "192.168.0.0/24,172.22.22.22/32"`)。
+
+!!! tip "适用范围"
+    `skipauth`对所有处理器类型(HTTP、SOCKS4/5、relay、http2、SSH等)均生效，认证跳过发生在凭据校验之前。
+
 ## 数据源
 
 认证器可以配置多个数据源，目前支持的数据源有：内联，文件，redis，HTTP。
