@@ -242,7 +242,7 @@ The `skipauth` option sets a client IP whitelist that bypasses authentication wh
     Set the whitelist as a list under `metadata.skipauth` on the handler. A comma-separated string is also accepted (e.g. `skipauth: "192.168.0.0/24,172.22.22.22/32"`).
 
 !!! tip "Applicable scope"
-    `skipauth` works for all handler types (HTTP, SOCKS4/5, relay, http2, SSH, etc.); the authentication skip happens before the credential check.
+    `skipauth` works for all handler types (HTTP, SOCKSv4/v5, relay, http2, SSH, etc.); the authentication skip happens before the credential check.
 
 ## Data Source
 

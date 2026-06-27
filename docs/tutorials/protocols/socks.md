@@ -156,7 +156,7 @@ UDP中转功能在服务端默认是禁用状态，可以通过`udp`选项来开
             type: tcp
     ```
 
-`relay` (bool, default=false)
+`relay` (string)
 :    使用标准的UDP中转方式传输数据，默认使用UDP-TUN(UDP-Over-TCP tunnel)方式。
 
 `udpBufferSize` (int, default=4096)

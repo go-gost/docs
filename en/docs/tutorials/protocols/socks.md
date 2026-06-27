@@ -157,7 +157,7 @@ The UDP relay feature is disabled by default on the server side, and can be enab
             type: tcp
     ```
 
-`relay` (bool, default=false)
+`relay` (string)
 :    Use standard UDP relay method to transmit data, UDP-TUN (UDP-Over-TCP tunnel) method is used by default.
 
 `udpBufferSize` (int, default=4096)

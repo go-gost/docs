@@ -239,7 +239,7 @@ user1 pass1
     在处理器的`metadata`中通过`skipauth`以列表形式设置白名单，也支持以逗号分隔的字符串形式(例如`skipauth: "192.168.0.0/24,172.22.22.22/32"`)。
 
 !!! tip "适用范围"
-    `skipauth`对所有处理器类型(HTTP、SOCKS4/5、relay、http2、SSH等)均生效，认证跳过发生在凭据校验之前。
+    `skipauth`对所有处理器类型(HTTP, SOCKSv4/v5, relay, http2, SSH等)均生效，认证跳过发生在凭据校验之前。
 
 ## 数据源
 
