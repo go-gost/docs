@@ -110,6 +110,7 @@ nav:
     - Router: concepts/router.md
     - Service Discovery: concepts/sd.md
     - Recorder: concepts/recorder.md
+    - Rewriter: concepts/rewriter.md
     - Observer: concepts/observer.md
     - Plugin System: concepts/plugin.md
   - Tutorials:
