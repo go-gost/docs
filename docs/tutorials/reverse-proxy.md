@@ -316,10 +316,44 @@ services:
 | ```Proto(`proto`)```                    | 匹配协议类型，等效于`filter.protocol`。                                  | ```Proto(`http`)```                                 |
 | ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> 匹配准入控制器名称，对客户端IP应用准入控制器过滤。     | ```Admission(`admission-0`)```                                 |
 | ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> 匹配分流器名称，对目标主机名应用分流器过滤。      | ```Bypass(`bypass-0`)```                                 |
+| ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> HTTP请求体的前缀匹配正则表达式`regexp`。                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
 
 !!! important "正则表达式"
 
     接受正则表达式作为其值的匹配器使用[Go](https://golang.org/pkg/regexp/)风格的语法。
+
+!!! important "请求体匹配"
+
+    `BodyRegexp` 用于匹配HTTP请求体，使用时需满足以下条件：
+
+    - 必须开启流量嗅探（`sniffing: true`），且仅在HTTP嗅探处理器（如`tcp`处理器嗅探HTTP流量）下生效。
+    - 必须通过`matcher.bodySize`指定该节点暴露给匹配器的请求体最大字节数（仅读取前缀），`0`（默认）表示不读取请求体，此时`BodyRegexp`将永远不会命中。
+    - `bodySize` 上限为 `1MB`（`1048576`），超出部分会被截断为该上限。
+    - 仅为匹配目的读取请求体前缀，完整的请求体仍会被正常转发到目标，不会被修改或截断。
+    - 匹配前会根据 `Content-Encoding` 自动解压请求体前缀（支持 `gzip`、`deflate`、`br`、`zstd`），因此 `BodyRegexp` 始终在解压后的明文上匹配。仅用于匹配的前缀被解压，转发给目标的完整请求体仍保持原始压缩编码，不会被修改。若请求体超过 `bodySize` 上限被截断，则对截断后的压缩流做尽力解压，匹配模式通常位于请求体起始处，仍可命中。
+
+    ```yaml
+    services:
+    - name: http
+      addr: :80
+      handler:
+        type: tcp
+        metadata:
+          sniffing: true
+      listener:
+        type: tcp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 192.168.1.1:80
+          matcher:
+            rule: 'BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)'
+            bodySize: 65536
+        - name: target-1
+          addr: 192.168.1.2:80
+    ```
+
+    上面的规则会读取每个请求体最前面的 `65536` 字节，当请求体中的 `model` 字段值以 `claude-opus` 为前缀（如 `claude-opus-4-8`）时选择 `target-0` 节点。
 
 !!! info "使用运算符和括号表达复杂规则"
 

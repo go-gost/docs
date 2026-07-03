@@ -316,10 +316,43 @@ Currently supported rules are
 | ```Proto(`proto`)```                    | Match the protocol，equivalent to `filter.protocol`.                                  | ```Proto(`http`)```                                 |
 | ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> Match the admission name, apply admission filtering to client IP.     | ```Admission(`admission-0`)```                                 |
 | ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> Match bypass name and apply bypass filtering to the target host name.      | ```Bypass(`bypass-0`)```                                 |
+| ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> Match the prefix of the HTTP request body against the regular expression `regexp`.                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
 
 
 !!! important "Regexp Syntax"
     Matchers that accept a regexp as their value use a [Go](https://golang.org/pkg/regexp/) flavored syntax.
+
+!!! important "Request Body Matching"
+    `BodyRegexp` matches the HTTP request body. The following conditions apply:
+
+    - Traffic sniffing must be enabled (`sniffing: true`), and it only takes effect under an HTTP sniffing handler (e.g. a `tcp` handler sniffing HTTP traffic).
+    - `matcher.bodySize` must be set to the maximum number of body bytes (a prefix) exposed to the matcher for this node. `0` (default) means the body is not read, in which case `BodyRegexp` will never match.
+    - `bodySize` is capped at `1MB` (`1048576`); larger values are clamped to this limit.
+    - Only a body prefix is read for matching; the full request body is still forwarded to the target unchanged.
+    - The body prefix is automatically decompressed according to `Content-Encoding` (`gzip`, `deflate`, `br`, `zstd`) before matching, so `BodyRegexp` always matches against the plaintext. Only the prefix used for matching is decoded; the full body forwarded to the target keeps its original compression and is left unchanged. If the body is truncated at the `bodySize` limit, the truncated compressed stream is best-effort decompressed — match patterns typically sit at the start of the body and are still found.
+
+    ```yaml
+    services:
+    - name: http
+      addr: :80
+      handler:
+        type: tcp
+        metadata:
+          sniffing: true
+      listener:
+        type: tcp
+      forwarder:
+        nodes:
+        - name: target-0
+          addr: 192.168.1.1:80
+          matcher:
+            rule: 'BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)'
+            bodySize: 65536
+        - name: target-1
+          addr: 192.168.1.2:80
+    ```
+
+    The rule above reads up to the first `65536` bytes of each request body and selects the `target-0` node when the body's `model` field is prefixed with `claude-opus` (e.g. `claude-opus-4-8`).
 
 !!! tip "Expressing Complex Rules Using Operators and Parenthesis"
     The usual AND (`&&`) and OR (`||`) logical operators can be used, with the expected precedence rules, as well as parentheses.
