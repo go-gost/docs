@@ -630,6 +630,14 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 `serverName` (string)
 :    服务器域名，用于域名校验
 
+:material-tag: 3.3.0
+
+`rejectUnknownSNI` (bool, default=false)
+:    拒绝SNI未知或为空的TLS握手，被拒绝的连接不会返回任何证书。
+
+`serverNames` (list)
+:    允许的SNI白名单。当`rejectUnknownSNI`开启且此列表非空时，任何不在列表中的SNI（包括空SNI）都会被拒绝；当列表为空且`rejectUnknownSNI`开启时，仅拒绝缺少或为空SNI的握手。
+
 ## 认证器(Auther)
 
 `name` (string, required)

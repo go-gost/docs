@@ -198,3 +198,41 @@ services:
 
 !!! note "注意"
 	通过命令行设置的证书信息仅会应用到监听器或拨号器上。
+
+
+## 拒绝未知SNI
+
+:material-tag: 3.3.0
+
+当基于TLS的监听器收到缺少、为空或无法识别的SNI（Server Name Indication）握手请求时，GOST默认会完成握手并返回自身证书。开启`rejectUnknownSNI`后，GOST会在TLS握手阶段（通过`GetConfigForClient`回调）拒绝此类握手，被拒绝的客户端不会收到任何证书。这可以降低服务和证书的暴露面，并防止主动探测。
+
+=== "命令行"
+
+	```bash
+	gost -L http+tls://:8443?rejectUnknownSNI=true&serverNames=example.com
+	```
+
+=== "配置文件"
+
+	```yaml
+	services:
+	- name: service-0
+	  addr: :8443
+	  handler:
+	    type: http
+	  listener:
+	    type: tls
+	    tls:
+	      rejectUnknownSNI: true
+	      serverNames:
+	      - example.com
+	```
+
+`rejectUnknownSNI` (bool, default=false)
+:    拒绝SNI未知或为空的TLS握手。被拒绝的连接会在握手阶段直接断开，不会返回任何证书。
+
+`serverNames` (list)
+:    允许的SNI白名单。当`rejectUnknownSNI`开启且此列表非空时，任何不在列表中的SNI（包括空SNI）都会被拒绝；当列表为空且`rejectUnknownSNI`开启时，仅拒绝缺少或为空SNI的握手，其余任意命名SNI均允许通过。
+
+!!! note "适用监听器"
+	此功能对所有基于TLS的监听器类型生效：`tls`，`mtls`，`ws`，`mws`，`http2`，`grpc`，`http3`。

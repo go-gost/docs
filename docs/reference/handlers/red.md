@@ -26,6 +26,9 @@ RED处理器用于构建TCP透明代理。
 `sniffing` (bool, default=false)
 :    开启流量嗅探，开启后对HTTP和TLS流量进行识别，识别后将使用HTTP `Host`头部信息或TLS的SNI扩展信息作为目标访问地址。
 
+`sniffing.dialOriginalDst` (bool, default=false) :material-tag: 3.3.0
+:    使用嗅探到的Host地址进行路由匹配（bypass），但仍然使用原始的透明重定向目标地址进行拨号连接。适用于SNI解析结果与原始目标地址不一致的场景。
+
 `tproxy` (bool, default=false)
 :   开启tproxy模式
 

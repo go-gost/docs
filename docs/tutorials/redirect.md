@@ -16,6 +16,8 @@ comments: true
 
     对于HTTPS流量如果未嗅探到SNI信息，可以开启`sniffing.fallback`选项，再次使用目标地址尝试连接。
 
+    当SNI解析结果与原始目标地址不一致时，可通过`sniffing.dialOriginalDst`选项使用原始目标地址进行拨号，而嗅探到的Host仍用于路由匹配（如bypass）。
+
 ## REDIRECT
 
 采用REDIRECT方式的透明代理可以选择给数据包打标记(Mark)。使用Mark需要管理员权限运行。

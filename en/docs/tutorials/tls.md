@@ -198,3 +198,40 @@ If a CA certificate is set on the server, the client certificate will be verifie
 
 !!! note 
     Certificate information set via the command line applies only to the listener or dialer.
+
+## Reject Unknown SNI
+
+:material-tag: 3.3.0
+
+When a TLS-based listener receives a handshake with a missing, empty, or unrecognized SNI (Server Name Indication), GOST by default completes the handshake and presents its certificate. Enabling `rejectUnknownSNI` rejects such handshakes at the TLS handshake stage (via the `GetConfigForClient` callback), so no certificate is ever sent to the rejected client. This reduces service and certificate exposure and protects against active probing.
+
+=== "CLI"
+
+	```bash
+	gost -L http+tls://:8443?rejectUnknownSNI=true&serverNames=example.com
+	```
+
+=== "File (YAML)"
+
+	```yaml
+	services:
+	- name: service-0
+	  addr: :8443
+	  handler:
+	    type: http
+	  listener:
+	    type: tls
+	    tls:
+	      rejectUnknownSNI: true
+	      serverNames:
+	      - example.com
+	```
+
+`rejectUnknownSNI` (bool, default=false)
+:    Reject TLS handshakes with an unknown or empty SNI. Rejected connections are dropped during the handshake and receive no certificate.
+
+`serverNames` (list)
+:    The allowed SNI whitelist. When `rejectUnknownSNI` is enabled and this list is non-empty, any SNI not in the list (including an empty SNI) is rejected. When the list is empty and `rejectUnknownSNI` is enabled, only handshakes with a missing or empty SNI are rejected; any named SNI is allowed.
+
+!!! note "Applicable listeners"
+    This takes effect on all TLS-based listener types: `tls`, `mtls`, `ws`, `mws`, `http2`, `grpc`, `http3`.
