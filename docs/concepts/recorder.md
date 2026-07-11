@@ -317,3 +317,11 @@ curl -XPOST http://127.0.0.1:8000/recorder -d '{"data":"aGVsbG8gd29ybGQ="}'
 ```json
 {"ok":true}
 ```
+
+:material-tag: 3.3.0
+
+当`service.recorders[*].metadata`中设置了自定义元数据时，这些元数据会被转发到插件服务。HTTP插件请求体中将包含`metadata`字段：
+
+```json
+{"data":"aGVsbG8gd29ybGQ=","metadata":{"testKey":"testValue"}}
+```

@@ -313,3 +313,11 @@ curl -XPOST http://127.0.0.1:8000/recorder -d '{"data":"aGVsbG8gd29ybGQ="}'
 ```json
 {"ok":true}
 ```
+
+:material-tag: 3.3.0
+
+When custom metadata is set in `service.recorders[*].metadata`, it is forwarded to the plugin service. The HTTP plugin request body will include a `metadata` field:
+
+```json
+{"data":"aGVsbG8gd29ybGQ=","metadata":{"testKey":"testValue"}}
+```
