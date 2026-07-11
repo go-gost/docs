@@ -216,6 +216,7 @@ nav:
       - TCP: reference/dialers/tcp.md
       - UDP: reference/dialers/udp.md
       - TLS: reference/dialers/tls.md
+      - uTLS: reference/dialers/utls.md
       - MTLS: reference/dialers/mtls.md
       - WS: reference/dialers/ws.md
       - MWS: reference/dialers/mws.md
