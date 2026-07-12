@@ -85,6 +85,27 @@ markdown_extensions:
 
 copyright: Copyright &copy; 2015 - 2025 GOST
 
+# Plugins
+plugins:
+  - search
+  - blog:
+      enabled: true
+      blog_dir: blog
+      post_url_date_format: yyyy
+      post_url_format: "{date}/{file}"
+      post_date_format: long
+      blog_toc: true
+      archive: true
+      archive_name: Archive
+      archive_date_format: yyyy
+      archive_url_date_format: yyyy
+      archive_url_format: "{date}"
+      categories: true
+      categories_name: Categories
+      categories_url_format: "category/{slug}"
+      authors: true
+      authors_file: "{blog}/.authors.yml"
+
 nav:
   - Welcome: index.md
   - Getting Started:
@@ -246,6 +267,8 @@ nav:
       - SNI: reference/connectors/sni.md
       - SSHD: reference/connectors/sshd.md
       - MASQUE: reference/connectors/masque.md
+  - Blog:
+    - blog/index.md
   - Donation: donation.md
   - GOST+: https://gost.plus
 
