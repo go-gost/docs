@@ -14,6 +14,8 @@ comments: true
 
 AI is getting increasingly popular, with more and more LLMs and providers emerging. But tokens remain a finite resource, and single-provider limits are easily reached. Multi-provider combinations with dynamic model-based routing are becoming a more cost-effective approach.
 
+<!-- more -->
+
 ## Protocol Conversion and Model Routing
 
 Most mainstream model APIs fall into a few categories:
