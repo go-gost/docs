@@ -225,7 +225,7 @@ GOST支持标准SOCKS5协议的0x00(NO AUTHENTICATION REQUIRED)和0x02(USERNAME/
 
 #### MBIND (Multiplex BIND)
 
-GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2)，多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。此扩展主要用于TCP远程端口转发。
+GOST对BIND方法进行了扩展，增加了支持多路复用的BIND方法(0xF2)。多路复用支持[xtaci/smux](https://github.com/xtaci/smux)和[hashicorp/yamux](https://github.com/hashicorp/yamux)后端，通过`mux.type`选项选择。 :material-tag: 3.3.0 此扩展主要用于TCP远程端口转发。
 
 **服务端**
 

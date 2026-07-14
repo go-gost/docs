@@ -31,6 +31,9 @@ HTTP文件服务，将本地的文件系统目录转成HTTP服务。
 `dir` (string):
 :    文件目录，默认为当前工作目录。
 
+`put` (bool, default=false) :material-tag: 3.3.0
+:    启用HTTP PUT上传支持。开启后可通过PUT请求上传文件到服务器。
+
 !!! note "转发链"
     文件服务会忽略转发链。
     
@@ -108,15 +111,48 @@ HTTP文件服务，将本地的文件系统目录转成HTTP服务。
         type: tls
     ```
 
-## 公网临时访问
+## 文件上传
 
-如果需要临时通过公网来访问文件服务，可以通过`GOST.PLUS`提供的公共反向代理服务将本地文件服务匿名暴露到公网来访问。
+:material-tag: 3.3.0
 
-```sh
-gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443
+当开启`put`选项后，文件服务支持通过HTTP PUT方法上传文件。
+
+=== "命令行"
+
+    ```bash
+    gost -L "file://:8080?dir=/path/to/dir&put=true"
+    ```
+
+=== "配置文件"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :8080
+      handler:
+        type: file
+        metadata:
+          dir: /path/to/dir
+          put: true
+      listener:
+        type: tcp
+    ```
+
+上传文件：
+
+```bash
+curl -X PUT -T ./local-file.txt http://localhost:8080/remote-file.txt
 ```
 
-当正常连接到`GOST.PLUS`服务后，会有类似如下日志信息：
+## 公网临时访问
+
+如果需要临时通过公网来访问文件服务，可以通过 [Wisper](https://wisper.gost.run) 提供的公共反向代理服务将本地文件服务匿名暴露到公网来访问。
+
+```sh
+gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://wisper.gost.run:443
+```
+
+当正常连接到Wisper服务后，会有类似如下日志信息：
 
 ```json
 {"connector":"tunnel","dialer":"wss","endpoint":"006478add9ed096a","hop":"hop-0","kind":"connector","level":"info",
@@ -125,4 +161,4 @@ gost -L file://:8080 -L rtcp://:0/:8080 -F tunnel+wss://tunnel.gost.plus:443
 "tunnel":"50ce9728-5d92-4d45-871d-4f275d5179cb"}
 ```
 
-日志的`endpoint`信息中`006478add9ed096a`是为此服务生成的临时公共访问点，有效期为24小时。通过[https://006478add9ed096a.gost.plus](https://006478add9ed096a.gost.plus)便能立即访问到此文件服务。
+日志的`endpoint`信息中`006478add9ed096a`是为此服务生成的临时公共访问点，有效期为24小时。通过[https://006478add9ed096a.gost.run](https://006478add9ed096a.gost.run)便能立即访问到此文件服务。

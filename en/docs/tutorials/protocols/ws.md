@@ -55,7 +55,7 @@ Websocket data channel based on TLS encryption.
 
 ## Multiplexing
 
-GOST extends Websocket with multiplexing feature (mws, mwss), multiplexing is based on the [xtaci/smux](https://github.com/xtaci/smux) library.
+GOST extends Websocket with multiplexing feature (mws, mwss). Multiplexing supports [xtaci/smux](https://github.com/xtaci/smux) and [hashicorp/yamux](https://github.com/hashicorp/yamux) backends, selected via the `mux.type` option. :material-tag: 3.3.0
 
 === "CLI"
 
@@ -106,6 +106,12 @@ GOST extends Websocket with multiplexing feature (mws, mwss), multiplexing is ba
 
 `mux.maxStreamBuffer` (int, default=65536)
 :    Steam Buffer Size.
+
+`mux.type` (string, default=smux) :material-tag: 3.3.0
+:    Mux backend type. Supported values: `smux` (default), `yamux`.
+
+`mux.maxStreamWindow` (int) :material-tag: 3.3.0
+:    Maximum stream window size (bytes) for yamux backend. Only effective when `mux.type` is `yamux`.
 
 ### Custom Request Path
 

@@ -44,5 +44,11 @@
 `muxMaxStreamBuffer` (int, default=65536)
 :    多路复用会话设置。最大流缓冲大小(字节)
 
+`muxType` (string, default=smux) :material-tag: 3.3.0
+:    多路复用后端类型。支持的值：`smux`（默认），`yamux`。
+
+`muxMaxStreamWindow` (int) :material-tag: 3.3.0
+:    yamux最大流窗口大小(字节)。仅在`muxType`为`yamux`时有效
+
 
 TLS配置请参考[TLS配置说明](/tutorials/tls/)。

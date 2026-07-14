@@ -780,19 +780,19 @@ iperf3 -c 127.0.0.1 -p 15201 -u
 
 ## 公共反向代理服务
 
-如果需要临时来反向代理内网服务提供公网访问，可以通过`GOST.PLUS`提供的公共反向代理服务将内网服务匿名暴露到公网来访问。
+如果需要临时来反向代理内网服务提供公网访问，可以通过[Wisper](https://wisper.gost.run)提供的公共反向代理服务将内网服务匿名暴露到公网来访问。
 
 ```sh
-gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443
+gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://wisper.gost.run:443
 ```
 
 或者手动指定隧道ID:
 
 ```sh
-gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
+gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://wisper.gost.run:443?tunnel.id=893787fd-fcd2-46a0-8dd4-f9103ae84df4
 ```
 
-当正常连接到`GOST.PLUS`服务后，会有类似如下日志信息：
+当正常连接到Wisper服务后，会有类似如下日志信息：
 
 ```json
 {"connector":"tunnel","dialer":"wss","endpoint":"134c714b65d54a4f","hop":"hop-0","kind":"connector","level":"info",
@@ -803,7 +803,7 @@ gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 
 日志的`endpoint`信息中`134c714b65d54a4f`是为此服务生成的临时公共访问点，有效期为24小时。
 
-如果`192.168.1.1:80`是一个HTTP服务，通过[https://134c714b65d54a4f.gost.plus](https://134c714b65d54a4f.gost.plus)便能立即访问。
+如果`192.168.1.1:80`是一个HTTP服务，通过[https://134c714b65d54a4f.gost.run](https://134c714b65d54a4f.gost.run)便能立即访问。
 
 
 ### TCP服务
@@ -811,13 +811,13 @@ gost -L rtcp://:0/192.168.1.1:80 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=
 对于TCP服务同样可以以私有隧道的方式来访问。这里假设192.168.1.1:22是一个SSH服务。
 
 ```bash
-gost -L rtcp://:0/192.168.1.1:22 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+gost -L rtcp://:0/192.168.1.1:22 -F tunnel+wss://wisper.gost.run:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
 ```
 
 内网服务不会在服务端暴露公开端口，需要在访问端开启一个私有入口点:
 
 ```bash
-gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.plus -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+gost -L tcp://:2222/f1bbbb4aa9d9868a.gost.run -F tunnel+wss://wisper.gost.run:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
 ```
 
 注意两端的隧道ID必须匹配才能访问到隧道对应的服务。
@@ -833,13 +833,13 @@ ssh -p 2222 user@localhost
 同样也可以以私有隧道的方式暴露UDP服务。这里假设192.168.1.1:53是一个DNS服务。
 
 ```bash
-gost -L rudp://:0/192.168.1.1:53 -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+gost -L rudp://:0/192.168.1.1:53 -F tunnel+wss://wisper.gost.run:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
 ```
 
 要访问此服务需要在访问端开启一个私有入口点:
 
 ```bash
-gost -L udp://:1053/f1bbbb4aa9d9868a.gost.plus -F tunnel+wss://tunnel.gost.plus:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
+gost -L udp://:1053/f1bbbb4aa9d9868a.gost.run -F tunnel+wss://wisper.gost.run:443?tunnel.id=f8baa731-4057-4300-ab75-c4e603834f1b
 ```
 
 注意两端的隧道ID必须匹配才能访问到隧道对应的服务。

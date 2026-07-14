@@ -31,7 +31,7 @@ TLS is a data channel type in GOST.
 
 ## Multiplexing
 
-GOST extends TLS with multiplexing feature (mtls). Multiplexing is based on [xtaci/smux](https://github.com/xtaci/smux) library.
+GOST extends TLS with multiplexing feature (mtls). Multiplexing supports [xtaci/smux](https://github.com/xtaci/smux) and [hashicorp/yamux](https://github.com/hashicorp/yamux) backends, selected via the `mux.type` option. :material-tag: 3.3.0
 
 === "CLI"
 
@@ -77,6 +77,12 @@ GOST extends TLS with multiplexing feature (mtls). Multiplexing is based on [xta
 
 `mux.maxStreamBuffer` (int, default=65536)
 :    Steam Buffer Size.
+
+`mux.type` (string, default=smux) :material-tag: 3.3.0
+:    Mux backend type. Supported values: `smux` (default), `yamux`.
+
+`mux.maxStreamWindow` (int) :material-tag: 3.3.0
+:    Maximum stream window size (bytes) for yamux backend. Only effective when `mux.type` is `yamux`.
 
 ## Proxy
 

@@ -4,7 +4,7 @@ comments: true
 
 # MTCP
 
-TCP data channel with multiplexing function. Multiplexing is based on [xtaci/smux](https://github.com/xtaci/smux) library.
+TCP data channel with multiplexing function. Multiplexing supports [xtaci/smux](https://github.com/xtaci/smux) and [hashicorp/yamux](https://github.com/hashicorp/yamux) backends, selected via the `mux.type` option. :material-tag: 3.3.0
 
 ## Usage
 
@@ -57,6 +57,12 @@ TCP data channel with multiplexing function. Multiplexing is based on [xtaci/smu
 
 `mux.maxStreamBuffer` (int, default=65536)
 :    Steam Buffer Size.
+
+`mux.type` (string, default=smux) :material-tag: 3.3.0
+:    Mux backend type. Supported values: `smux` (default), `yamux`.
+
+`mux.maxStreamWindow` (int) :material-tag: 3.3.0
+:    Maximum stream window size (bytes) for yamux backend. Only effective when `mux.type` is `yamux`.
 
 
 ## Proxy

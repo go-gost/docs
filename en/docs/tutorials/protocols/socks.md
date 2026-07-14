@@ -226,7 +226,7 @@ If both the client and the server use GOST, data transmission will be encrypted 
 
 #### MBIND (Multiplex BIND)
 
-GOST extends the BIND method and adds a Multiplex-BIND method (0xF2) that supports multiplexing. Multiplexing is based on the [xtaci/smux](https://github.com/xtaci/smux). This extension is mainly used for TCP remote port forwarding.
+GOST extends the BIND method and adds a Multiplex-BIND method (0xF2) that supports multiplexing. Multiplexing supports [xtaci/smux](https://github.com/xtaci/smux) and [hashicorp/yamux](https://github.com/hashicorp/yamux) backends, selected via the `mux.type` option. :material-tag: 3.3.0 This extension is mainly used for TCP remote port forwarding.
 
 **Server**
 

@@ -4,7 +4,7 @@ comments: true
 
 # MTCP
 
-具有多路复用功能的TCP数据通道。多路复用基于[xtaci/smux](https://github.com/xtaci/smux)库。
+具有多路复用功能的TCP数据通道。多路复用支持[xtaci/smux](https://github.com/xtaci/smux)和[hashicorp/yamux](https://github.com/hashicorp/yamux)后端，通过`mux.type`选项选择。 :material-tag: 3.3.0
 
 ## 用法
 
@@ -56,6 +56,12 @@ comments: true
 
 `mux.maxStreamBuffer` (int, default=65536)
 :    Steam缓冲区大小
+
+`mux.type` (string, default=smux) :material-tag: 3.3.0
+:    多路复用后端类型。支持的值：`smux`（默认），`yamux`。
+
+`mux.maxStreamWindow` (int) :material-tag: 3.3.0
+:    yamux最大流窗口大小（字节）。仅在`mux.type`为`yamux`时有效。
 
 ## 代理协议
 
