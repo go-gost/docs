@@ -166,6 +166,7 @@ nav:
     - Traffic Sniffing and MITM: tutorials/sniffing.md
     - HTTP File Server: tutorials/file.md
     - Probe Resistance: tutorials/probe-resistance.md
+    - Node Liveness Probe: tutorials/probe.md
     - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS Proxy: tutorials/dns.md
     - Transparent Proxy: tutorials/redirect.md

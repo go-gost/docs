@@ -173,6 +173,7 @@ nav:
     - 流量嗅探与MITM: tutorials/sniffing.md
     - HTTP文件服务: tutorials/file.md
     - 探测防御: tutorials/probe-resistance.md
+    - 节点存活探测: tutorials/probe.md
     - PROXY Protocol: tutorials/proxy-protocol.md
     - DNS代理: tutorials/dns.md
     - 透明代理: tutorials/redirect.md
