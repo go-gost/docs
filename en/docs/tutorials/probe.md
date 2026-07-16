@@ -27,6 +27,7 @@ Probing uses the node's own transport: it calls `Dial(node.Addr)` to reach the n
 
 - **TCP**: Dial + Handshake success is sufficient.
 - **HTTP**: An HTTP GET request is sent through the established tunnel and the response status code is validated.
+- **Cmd**: Runs a shell command; exit code 0 = healthy, non-zero = unhealthy. Does **not** require a transport or `addr` — the command runs locally.
 
 ## Configuration
 
@@ -66,15 +67,26 @@ chains:
         expectedStatus: 200
         interval: 60s
         timeout: 15s
+    - name: proxy3
+      addr: proxy3.local:1080
+      connector:
+        type: socks5
+      dialer:
+        type: tcp
+      probe:
+        type: cmd
+        command: './scripts/health-check.sh'
+        interval: 60s
+        timeout: 10s
 ```
 
 ### Parameters
 
 `type` (string, default=tcp)
-:    Probe type: `tcp` or `http`.
+:    Probe type: `tcp`, `http`, or `cmd`.
 
-`addr` (string, required)
-:    Probe target address. The probe reaches this address through the node's tunnel.
+`addr` (string, required for tcp/http)
+:    Probe target address. The probe reaches this address through the node's tunnel. Not required for `type: cmd`.
 
 `interval` (duration, default=30s)
 :    Interval between probes. The first probe fires immediately at startup.
@@ -93,6 +105,9 @@ chains:
 
 `expectedStatus` (int, default=200)
 :    Expected HTTP response status code. Only effective with `type: http`.
+
+`command` (string, required for cmd)
+:    Shell command to execute. On Unix, runs via `sh -c <command>`. On Windows, runs via `cmd /C <command>`. Exit 0 = healthy, non-zero (or timeout) = unhealthy. Node's transport is not used — the command runs directly on the GOST host.
 
 !!! note "Probe Target"
     The probe target (`addr`) is the address accessed **through** the node's tunnel. For example, `addr: 8.8.8.8:53` means connecting to `8.8.8.8:53` through proxy1's SOCKS5 tunnel. To verify the node itself is reachable, set `addr` to the node's own address.
@@ -251,7 +266,35 @@ nodes:
     timeout: 10s
 ```
 
+### Cmd Probe
+
+Runs a shell command on the GOST host to determine node health externally. The node's transport is bypassed — useful for time-based routing, external health-check scripts, or conditions the network can't probe:
+
+```yaml
+nodes:
+- name: biz-hours-only
+  addr: 8.8.8.8:1080
+  connector:
+    type: socks5
+  probe:
+    type: cmd
+    command: 'test $(date +%H) -ge 9 -a $(date +%H) -lt 18'
+    interval: 30s
+    timeout: 5s
+- name: with-check
+  addr: 8.8.8.8:1080
+  connector:
+    type: socks5
+  probe:
+    type: cmd
+    command: './scripts/health-check.sh'
+    interval: 60s
+    timeout: 10s
+```
+
+Note that `addr` is **not required** for cmd probes — the command runs locally, not through the node's tunnel.
+
 ## Limitations
 
 - **First-hop nodes**: The current implementation is accurate for first-hop / single-hop nodes (directly reachable by the client). Probing deep-hop nodes (requiring traversal through upstream hops) is not yet supported.
-- **Only `tcp` and `http` probe types** are currently available.
+- **Cmd probes** run commands as the same user as the GOST process. Config files are trusted input; do not source untrusted configurations.
