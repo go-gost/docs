@@ -348,6 +348,55 @@ GOST extends the UDP relay method and adds the UDP-Over-TCP method (0xF3). This 
             type: tcp
     ```
 
+#### Tor RESOLVE
+
+:material-tag: 3.3.0
+
+GOST supports Tor's SOCKS5 extension commands `0xF0` RESOLVE (hostname-to-IP) and `0xF1` RESOLVE_PTR (reverse DNS), allowing tools like `tor-resolve` and `torsocks` to work through GOST when forwarding to a Tor SOCKS5 upstream proxy. This feature must be explicitly enabled via the `tor` option.
+
+**Server**
+
+=== "CLI"
+
+    ```bash
+    gost -L "socks5://:1080?tor=true" -F "socks5://127.0.0.1:9050"
+    ```
+
+=== "File (YAML)"
+
+    ```yaml
+    services:
+    - name: service-0
+      addr: :1080
+      handler:
+        type: socks5
+        metadata:
+          tor: true
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        nodes:
+        - name: node-0
+          addr: 127.0.0.1:9050
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+    ```
+
+**Testing**
+
+```bash
+tor-resolve example.com 127.0.0.1:1080
+```
+
+`tor` (bool, default=false)
+:    Enables Tor SOCKS5 extension command support. Use `tor=true`, `enableTor=true`, or `socks5.tor=true`.
+
 ## Data Channel
 
 SOCKS proxy can be used in combination with various data channels.
