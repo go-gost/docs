@@ -41,6 +41,15 @@ The SOCKS5 handler uses the SOCKSv5 proxy protocol for data exchange, receiving 
 `comp` (bool, default=false):
 :    Compatibility mode. When enabled, the BIND feature will work with GOSTv2 configurations.
 
+`tor` (bool, default=false):
+:    Enables Tor SOCKS5 extension command support. When enabled, the handler accepts and forwards `0xF0` RESOLVE (hostname-to-IP) and `0xF1` RESOLVE_PTR (reverse DNS) commands to the upstream proxy. Use `tor=true`, `enableTor=true`, or `socks5.tor=true`.
+
+!!! example "Tor Resolve"
+    ```
+	gost -L "socks5://:1080?tor=true" -F "socks5://127.0.0.1:9050"
+	tor-resolve example.com 127.0.0.1:1080
+	```
+
 `hash` (string):
 :    A hash value used for verification or identification in the SOCKS5 connection.
 
