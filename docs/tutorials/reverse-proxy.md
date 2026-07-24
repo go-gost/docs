@@ -317,6 +317,7 @@ services:
 | ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> 匹配准入控制器名称，对客户端IP应用准入控制器过滤。     | ```Admission(`admission-0`)```                                 |
 | ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> 匹配分流器名称，对目标主机名应用分流器过滤。      | ```Bypass(`bypass-0`)```                                 |
 | ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> HTTP请求体的前缀匹配正则表达式`regexp`。                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
+| ```BodyJSON(`path`, `regexp`)```                    | :material-tag: 3.3.0 <br/> 通过[GJSON路径](https://github.com/tidwall/gjson#path-syntax)提取HTTP请求体JSON字段，与正则表达式`regexp`匹配。                                          | ```BodyJSON(`model`, `claude-opus.*`)```                               |
 
 !!! important "正则表达式"
 
@@ -324,13 +325,13 @@ services:
 
 !!! important "请求体匹配"
 
-    `BodyRegexp` 用于匹配HTTP请求体，使用时需满足以下条件：
+    `BodyRegexp` 和 `BodyJSON` 用于匹配HTTP请求体，使用时需满足以下条件：
 
     - 必须开启流量嗅探（`sniffing: true`），且仅在HTTP嗅探处理器（如`tcp`处理器嗅探HTTP流量）下生效。
-    - 必须通过`matcher.bodySize`指定该节点暴露给匹配器的请求体最大字节数（仅读取前缀），`0`（默认）表示不读取请求体，此时`BodyRegexp`将永远不会命中。
+    - 必须通过`matcher.bodySize`指定该节点暴露给匹配器的请求体最大字节数（仅读取前缀），`0`（默认）表示不读取请求体，此时`BodyRegexp`和`BodyJSON`将永远不会命中。
     - `bodySize` 上限为 `1MB`（`1048576`），超出部分会被截断为该上限。
     - 仅为匹配目的读取请求体前缀，完整的请求体仍会被正常转发到目标，不会被修改或截断。
-    - 匹配前会根据 `Content-Encoding` 自动解压请求体前缀（支持 `gzip`、`deflate`、`br`、`zstd`），因此 `BodyRegexp` 始终在解压后的明文上匹配。仅用于匹配的前缀被解压，转发给目标的完整请求体仍保持原始压缩编码，不会被修改。若请求体超过 `bodySize` 上限被截断，则对截断后的压缩流做尽力解压，匹配模式通常位于请求体起始处，仍可命中。
+    - 匹配前会根据 `Content-Encoding` 自动解压请求体前缀（支持 `gzip`、`deflate`、`br`、`zstd`），因此 `BodyRegexp` 和 `BodyJSON` 始终在解压后的明文上匹配。仅用于匹配的前缀被解压，转发给目标的完整请求体仍保持原始压缩编码，不会被修改。若请求体超过 `bodySize` 上限被截断，则对截断后的压缩流做尽力解压，匹配模式通常位于请求体起始处，仍可命中。
 
     ```yaml
     services:
@@ -618,16 +619,23 @@ services:
         rewriteRequestBody:
         - type: application/json
           rewriter: rewriter-0
+        - match: json:model
+          replacement: deepseek-v4-pro
 ```
 
 `match` (string)
-:    指定内容匹配模式(支持正则表达式)。当设置了`rewriter`时此项可选。
+:    指定内容匹配模式。支持两种模式：
+
+     - **正则表达式**（默认）：对原始 body 字节进行 `regexp.ReplaceAll` 替换。`replacement` 支持 Go 正则替换语法（`$1`、`$2` 等）。
+     - **`json:` 前缀**：基于 JSON 路径的字段匹配。格式：`json:<路径>[=<值正则>]`。字段值通过 [gjson](https://github.com/tidwall/gjson) 提取后与可选的值正则匹配，命中后通过 [sjson](https://github.com/tidwall/sjson) 替换。自动检测 `application/json` 内容类型，无需设置 `type`。
+
+    当设置了`rewriter`时此项可选。
 
 `replacement` (string)
-:    设置替换内容。当设置了`rewriter`时此项无效。
+:    设置替换内容。正则模式下支持 Go 正则替换语法。`json:` 模式下直接设置 JSON 字段的值。当设置了`rewriter`时此项无效。
 
 `type` (string, default=text/html)
-:    设置响应的内容类型，与`Content-Type`匹配。可以是`,`分割的多个类型或`*`代表匹配所有类型。
+:    设置响应的内容类型，与`Content-Type`匹配。可以是`,`分割的多个类型或`*`代表匹配所有类型。`json:` 匹配无需设置此项。
 
 `rewriter` (string)
 :    :material-tag: 3.3.0 引用[重写器](../concepts/rewriter.md)插件服务，将body修改委托给外部插件处理。当设置了此项时，`match`和`replacement`将被忽略。

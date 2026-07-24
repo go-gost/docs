@@ -317,19 +317,20 @@ Currently supported rules are
 | ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> Match the admission name, apply admission filtering to client IP.     | ```Admission(`admission-0`)```                                 |
 | ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> Match bypass name and apply bypass filtering to the target host name.      | ```Bypass(`bypass-0`)```                                 |
 | ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> Match the prefix of the HTTP request body against the regular expression `regexp`.                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
+| ```BodyJSON(`path`, `regexp`)```                    | :material-tag: 3.3.0 <br/> Extract a JSON field from the HTTP request body using a [GJSON path](https://github.com/tidwall/gjson#path-syntax) and match against the regular expression `regexp`.                                          | ```BodyJSON(`model`, `claude-opus.*`)```                               |
 
 
 !!! important "Regexp Syntax"
     Matchers that accept a regexp as their value use a [Go](https://golang.org/pkg/regexp/) flavored syntax.
 
 !!! important "Request Body Matching"
-    `BodyRegexp` matches the HTTP request body. The following conditions apply:
+    `BodyRegexp` and `BodyJSON` match the HTTP request body. The following conditions apply:
 
     - Traffic sniffing must be enabled (`sniffing: true`), and it only takes effect under an HTTP sniffing handler (e.g. a `tcp` handler sniffing HTTP traffic).
-    - `matcher.bodySize` must be set to the maximum number of body bytes (a prefix) exposed to the matcher for this node. `0` (default) means the body is not read, in which case `BodyRegexp` will never match.
+    - `matcher.bodySize` must be set to the maximum number of body bytes (a prefix) exposed to the matcher for this node. `0` (default) means the body is not read, in which case `BodyRegexp` and `BodyJSON` will never match.
     - `bodySize` is capped at `1MB` (`1048576`); larger values are clamped to this limit.
     - Only a body prefix is read for matching; the full request body is still forwarded to the target unchanged.
-    - The body prefix is automatically decompressed according to `Content-Encoding` (`gzip`, `deflate`, `br`, `zstd`) before matching, so `BodyRegexp` always matches against the plaintext. Only the prefix used for matching is decoded; the full body forwarded to the target keeps its original compression and is left unchanged. If the body is truncated at the `bodySize` limit, the truncated compressed stream is best-effort decompressed — match patterns typically sit at the start of the body and are still found.
+    - The body prefix is automatically decompressed according to `Content-Encoding` (`gzip`, `deflate`, `br`, `zstd`) before matching, so `BodyRegexp` and `BodyJSON` always match against the plaintext. Only the prefix used for matching is decoded; the full body forwarded to the target keeps its original compression and is left unchanged. If the body is truncated at the `bodySize` limit, the truncated compressed stream is best-effort decompressed — match patterns typically sit at the start of the body and are still found.
 
     ```yaml
     services:
@@ -616,16 +617,23 @@ services:
         rewriteRequestBody:
         - type: application/json
           rewriter: rewriter-0
+        - match: json:model
+          replacement: deepseek-v4-pro
 ```
 
 `match` (string)
-:    Specify content matching pattern (regular expressions are supported). Optional when `rewriter` is set.
+:    Specify content matching pattern. Supports two modes:
+
+     - **Regex** (default): applied to raw body bytes via `regexp.ReplaceAll`. The `replacement` value supports Go regex replacement syntax (`$1`, `$2`, etc.).
+     - **`json:` prefix**: JSON path-based field matching. Format: `json:<path>[=<value-regex>]`. The field value is extracted with [gjson](https://github.com/tidwall/gjson) and matched against the optional value regex. When matched, the field is replaced via [sjson](https://github.com/tidwall/sjson). Auto-detects `application/json` content type, no `type` field needed.
+
+    Optional when `rewriter` is set.
 
 `replacement` (string)
-:    Set the replacement content. Ignored when `rewriter` is set.
+:    Set the replacement content. For regex mode, supports Go regex replacement syntax. For `json:` mode, sets the JSON field value directly. Ignored when `rewriter` is set.
 
 `type` (string, default=text/html)
-:    Set the content type matching the `Content-Type` header. Can be multiple types separated by `,` or `*` to match all types.
+:    Set the content type matching the `Content-Type` header. Can be multiple types separated by `,` or `*` to match all types. Not needed for `json:` matches.
 
 `rewriter` (string)
 :    :material-tag: 3.3.0 Reference a [Rewriter](../concepts/rewriter.md) plugin to delegate body modification to an external service. When set, `match` and `replacement` are ignored.
