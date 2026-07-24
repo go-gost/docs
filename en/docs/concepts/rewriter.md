@@ -78,12 +78,37 @@ forwarder:
     http:
       rewriteResponseBody:
       - type: text/html
-        rewriter: rewriter-0
+        match: "Hello"
+        replacement: "Hola"
       rewriteRequestBody:
       - type: application/json
         rewriter: rewriter-0
 ```
 
 When a rule has `rewriter` set, the body modification is delegated to the rewriter plugin, and the `match`/`replacement` fields are ignored.
+
+When `rewriter` is not set, the `match` field can be either:
+
+- A **regex** pattern (applied to the raw body bytes via `regexp.ReplaceAll`). The `replacement` value supports Go's regex replacement syntax (`$1`, `$2`, etc.).
+- A **`json:` prefix** for JSON path-based field matching: `json:<path>[=<value-regex>]`. The field value is extracted with [gjson](https://github.com/tidwall/gjson) and matched against the optional value regex. When matched, the field is replaced with `replacement` using [sjson](https://github.com/tidwall/sjson).
+
+```yaml
+# Regex mode (existing behavior)
+rewriteRequestBody:
+- match: '"model"\s*:\s*"[^"]*"'
+  replacement: '"model":"deepseek-v4-pro"'
+
+# JSON path mode — match any model field and replace it
+rewriteRequestBody:
+- match: json:model
+  replacement: deepseek-v4-pro
+
+# JSON path mode — match only specific effort values
+rewriteRequestBody:
+- match: json:output_config.effort=(xhigh|max)
+  replacement: low
+```
+
+JSON mode auto-detects `application/json` content type, no `type` field needed.
 
 The `rewriter` can be combined with `type` (content-type filtering) to send different body types to different rewriters.

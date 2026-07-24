@@ -613,6 +613,77 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 `metadata` (map)
 :    拨号器实例相关参数
 
+### Node Matcher
+
+:material-tag: 3.3.0
+
+`rule` (string)
+:    Routing rule expression. Supports boolean operators (`&&`, `||`, `!`) and matcher functions:
+      `Method`, `Path`, `PathPrefix`, `PathRegexp`, `Host`, `HostRegexp`, `Header`, `HeaderRegexp`,
+      `Query`, `QueryRegexp`, `BodyRegexp`, `BodyJSON`, `ClientIP`, `Network`, `Proto`, `Bypass`, `Admission`.
+
+`BodyJSON(path, regex)` (since 3.3.x)
+:    Matches a JSON field value by dot-separated path using [gjson](https://github.com/tidwall/gjson).
+      The field value is extracted, then matched against the regex.
+      Example: `BodyJSON(`output_config.effort`, `^(xhigh|max)$`)`
+
+`bodySize` (int)
+:    Maximum size of HTTP request body prefix (in bytes) to read for body matchers. Default: 0 (disabled).
+
+`priority` (int)
+:    Node selection priority. 0 (default) auto-sets priority to the rule length so longer
+      (more specific) rules outrank shorter ones. Negative disables priority ordering.
+
+```yaml
+matcher:
+  rule: 'Method(`POST`) && Header(`Content-Type`, `application/json`) && BodyJSON(`output_config.effort`, `^(xhigh|max)$`)'
+  bodySize: 65536
+```
+
+### Node HTTP Settings
+
+`http` (object)
+:    HTTP-level settings for the node: host override, header injection, URL rewriting, and body rewriting.
+
+`http.host` (string)
+:    Override the HTTP Host header.
+
+`http.requestHeader` (map)
+:    Additional HTTP request headers to inject.
+
+`http.responseHeader` (map)
+:    Additional HTTP response headers to inject.
+
+`http.rewriteURL` (list)
+:    URL path rewrite rules. Each entry has `match` (regex) and `replacement`.
+
+`http.rewriteRequestBody` (list)
+:    Request body rewrite rules. Each entry has:
+      `match` (string) — regex or `json:<path>[=<regex>]` for JSON field matching;
+      `replacement` (string) — replacement value;
+      `rewriter` (string) — optional external rewriter plugin;
+      `type` (string) — optional content-type filter.
+
+`http.rewriteResponseBody` (list)
+:    Response body rewrite rules. Same structure as `rewriteRequestBody`.
+
+```yaml
+http:
+  host: api.deepseek.com
+  rewriteURL:
+    - match: /v1/messages
+      replacement: /anthropic/v1/messages
+  requestHeader:
+    Authorization: "Bearer sk-xxx"
+  rewriteRequestBody:
+    - match: json:model
+      replacement: deepseek-v4-pro
+    - match: json:output_config.effort=(xhigh|max)
+      replacement: low
+  rewriteResponseBody:
+    - rewriter: anthropic-converter
+```
+
 ## TLS
 
 `certFile` (string)

@@ -149,7 +149,15 @@ hops:
       bodySize: 65536
 ```
 
-通过`matcher.rule`中使用`BodyRegexp`来匹配HTTP请求体的模型名，对于以上配置规则匹配`model`字段以`claude-opus`或`gpt-5.4`为前缀的请求。
+通过`matcher.rule`中使用`BodyRegexp`或`BodyJSON`来匹配HTTP请求体的模型名，对于以上配置规则匹配`model`字段以`claude-opus`或`gpt-5.4`为前缀的请求。
+
+!!! tip "BodyJSON"
+    如果请求体是JSON格式，推荐使用 `BodyJSON` 直接提取字段值进行匹配，表达式更简洁且无需处理JSON语法细节。
+    ```yaml
+    matcher:
+      rule: '(BodyJSON(`model`, `claude-opus.*`) || BodyJSON(`model`, `gpt-5.4.*`))'
+      bodySize: 65536
+    ```
 
 GOST的反向代理服务通过以上功能便可以灵活的对接任何协议兼容的大模型供应商，同时提供给Claude Code，Codex等客户端使用。
 

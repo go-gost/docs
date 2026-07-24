@@ -120,6 +120,20 @@ GOST provides an LLM API conversion Rewriter plugin service — [llm-api-convert
   --model-map "claude-fable=glm-5.2:openai,claude-opus=deepseek-v4-pro:openai,*=deepseek-v4-flash:openai"
 ```
 
+For simple field replacements (like renaming a model field), use the `json:` prefix in `match` with sjson-based replacement — no external rewriter needed:
+
+```yaml
+hops:
+- name: hop-0
+  nodes:
+  - name: opencode-go-deepseek
+    addr: opencode.ai:443
+    http:
+      rewriteRequestBody:
+      - match: json:model
+        replacement: deepseek-v4-pro
+```
+
 ### Request Body Matching
 
 Nodes can use matching rules to select providers:
@@ -131,13 +145,27 @@ hops:
   - name: opencode-go-deepseek
     addr: opencode.ai:443
     matcher:
-      rule: '(BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`) || BodyRegexp(`"model"\s*:\s*"gpt-5.4[^"]*"`))'
+      rule: 'Method(`POST`) && Header(`Content-Type`, `application/json`) && BodyJSON(`output_config.effort`, `^(xhigh|max)$`)'
       bodySize: 65536
 ```
 
+!!! tip "BodyJSON"
+    For JSON request bodies, prefer `BodyJSON(path, regex)` for cleaner expressions without JSON syntax details in the regex. The first argument is a dot-separated JSON path, the second is a regex matched against that field's value.
+    ```yaml
+    # Match by model field
+    matcher:
+      rule: 'BodyJSON(`model`, `claude-opus.*`) || BodyJSON(`model`, `gpt-5.4.*`)'
+      bodySize: 65536
+    
+    # Match by Anthropic thinking effort
+    matcher:
+      rule: 'BodyJSON(`output_config.effort`, `^(xhigh|max)$`)'
+      bodySize: 65536
+    ```
+
 ## Complete Example
 
-Integration with OpenCode-Go and OpenCode-Zen:
+Integration with OpenCode-Go and OpenCode-Zen, routing by Anthropic thinking effort:
 
 ```yaml
 services:
@@ -158,7 +186,7 @@ hops:
       - name: opencode-go-glm-5.2
         addr: opencode.ai:443
         matcher:
-          rule: 'Method(`POST`) && Header(`Content-Type`, `application/json`) && (BodyRegexp(`"model"\s*:\s*"claude-fable[^"]*"`) || BodyRegexp(`"model"\s*:\s*"gpt-5.5[^"]*"`))'
+          rule: 'Method(`POST`) && Header(`Content-Type`, `application/json`) && BodyJSON(`output_config.effort`, `^(xhigh|max)$`)'
           bodySize: 65536
         tls:
           secure: true
@@ -180,7 +208,7 @@ hops:
       - name: opencode-go-deepseek-v4-pro
         addr: opencode.ai:443
         matcher:
-          rule: 'Method(`POST`) && Header(`Content-Type`, `application/json`) && (BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`) || BodyRegexp(`"model"\s*:\s*"gpt-5.4[^"]*"`))'
+          rule: 'Method(`POST`) && Header(`Content-Type`, `application/json`) && BodyJSON(`output_config.effort`, `^(low|medium|high)$`)'
           bodySize: 65536
         tls:
           secure: true
@@ -240,34 +268,29 @@ Start the services:
 
 ### Data Flow
 
-**Anthropic Messages client (Claude Code):**
+**High effort (xhigh/max) — routed to strong model:**
 ```
-POST :8787/v1/messages (model: claude-opus-4-8)
+POST :8787/v1/messages (output_config.effort: "xhigh")
   → Sniffer reads HTTP Body prefix
-  → BodyRegexp matches "claude-opus" → selects opencode-go-deepseek-v4-pro
+  → BodyJSON("output_config.effort") matches "(xhigh|max)" → selects opencode-go-glm-5.2
   → rewriteURL: /v1/messages → /zen/go/v1/chat/completions
-  → rewriteRequestBody: convert protocol, replace model with deepseek-v4-pro
+  → rewriteRequestBody: openai-converter rewrites protocol + model
   → Forward to https://opencode.ai/zen/go/v1/chat/completions
 ```
 
-**OpenAI Responses client (Codex):**
+**Low/medium/high effort — routed to standard model:**
 ```
-POST :8787/v1/responses (model: gpt-5.5)
-  → Sniffer reads HTTP Body prefix
-  → BodyRegexp matches "gpt-5.5" → selects opencode-go-glm-5.2
-  → rewriteURL: /v1/responses → /zen/go/v1/chat/completions
-  → rewriteRequestBody: convert protocol, replace model with glm-5.2
+POST :8787/v1/messages (output_config.effort: "medium")
+  → BodyJSON("output_config.effort") matches "(low|medium|high)" → selects opencode-go-deepseek-v4-pro
   → Forward to https://opencode.ai/zen/go/v1/chat/completions
 ```
 
-**Catch-all (other requests):**
+**No effort / HEAD request — catch-all:**
 ```
-POST :8787/v1/messages (model: claude-haiku-5)
-  → Sniffer reads HTTP Body prefix
-  → Catch-all rule → selects opencode-zen-deepseek-v4-flash-free
-  → rewriteURL: /v1/messages → /zen/v1/chat/completions
-  → rewriteRequestBody: convert protocol, replace model with deepseek-v4-flash-free
-  → Forward to https://opencode.ai/zen/v1/chat/completions
+HEAD :8787/v1/models
+  → Method(`HEAD`) → selects opencode-zen-deepseek-v4-flash-free
+  → rewriteURL: /v1/models → /zen/v1/models
+  → Forward to https://opencode.ai/zen/v1/models
 ```
 
 ### Docker Compose
