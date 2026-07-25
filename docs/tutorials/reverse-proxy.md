@@ -347,8 +347,8 @@ services:
     `BodyRegexp` 和 `BodyJSON` 用于匹配HTTP请求体，使用时需满足以下条件：
 
     - 必须开启流量嗅探（`sniffing: true`），且仅在HTTP嗅探处理器（如`tcp`处理器嗅探HTTP流量）下生效。
-    - 必须通过`matcher.bodySize`指定该节点暴露给匹配器的请求体最大字节数（仅读取前缀），`0`（默认）表示不读取请求体，此时`BodyRegexp`和`BodyJSON`将永远不会命中。
-    - `bodySize` 上限为 `1MB`（`1048576`），超出部分会被截断为该上限。
+    - `matcher.bodySize`控制暴露给 body 匹配器的请求体前缀大小（字节）。`0`（默认）使用 `DefaultMatcherBodySize`（`1MB`）。启用 body 读取时，`BodyRegexp` 和 `BodyJSON` 至少能获得这些数据用于匹配。
+    - `bodySize` 上限为 `MaxMatcherBodySize`（`10MB`），超出部分会被截断为该上限。
     - 仅为匹配目的读取请求体前缀，完整的请求体仍会被正常转发到目标，不会被修改或截断。
     - 匹配前会根据 `Content-Encoding` 自动解压请求体前缀（支持 `gzip`、`deflate`、`br`、`zstd`），因此 `BodyRegexp` 和 `BodyJSON` 始终在解压后的明文上匹配。仅用于匹配的前缀被解压，转发给目标的完整请求体仍保持原始压缩编码，不会被修改。若请求体超过 `bodySize` 上限被截断，则对截断后的压缩流做尽力解压，匹配模式通常位于请求体起始处，仍可命中。
 

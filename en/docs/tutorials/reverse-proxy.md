@@ -345,8 +345,8 @@ Currently supported rules are
     `BodyRegexp` and `BodyJSON` match the HTTP request body. The following conditions apply:
 
     - Traffic sniffing must be enabled (`sniffing: true`), and it only takes effect under an HTTP sniffing handler (e.g. a `tcp` handler sniffing HTTP traffic).
-    - `matcher.bodySize` must be set to the maximum number of body bytes (a prefix) exposed to the matcher for this node. `0` (default) means the body is not read, in which case `BodyRegexp` and `BodyJSON` will never match.
-    - `bodySize` is capped at `1MB` (`1048576`); larger values are clamped to this limit.
+    - `matcher.bodySize` controls the request body prefix (bytes) exposed to body matchers. `0` (default) uses `DefaultMatcherBodySize` (`1MB`). `BodyRegexp` and `BodyJSON` will always see at least this much data when body reading is active.
+    - `bodySize` is capped at `MaxMatcherBodySize` (`10MB`); larger values are clamped to this limit.
     - Only a body prefix is read for matching; the full request body is still forwarded to the target unchanged.
     - The body prefix is automatically decompressed according to `Content-Encoding` (`gzip`, `deflate`, `br`, `zstd`) before matching, so `BodyRegexp` and `BodyJSON` always match against the plaintext. Only the prefix used for matching is decoded; the full body forwarded to the target keeps its original compression and is left unchanged. If the body is truncated at the `bodySize` limit, the truncated compressed stream is best-effort decompressed — match patterns typically sit at the start of the body and are still found.
 
