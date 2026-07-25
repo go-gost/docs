@@ -306,19 +306,37 @@ Currently supported rules are
 | ```Path(`path`)```                      | The path for HTTP requests match `path`.                                          | ```Path(`/products/1234`)```   |
 | ```PathPrefix(`prefix`)```              | The path for HTTP requests match the prefix `prefix`, equivalent to `filter.path`.          | ```PathPrefix(`/products`)```  |
 | ```PathRegexp(`regexp`)```              | The path for HTTP requests match the regular expression `regexp`.                              | ```PathRegexp(`\.(jpeg|jpg|png)$`)```  |
-| ```Query(`key`)```                      | The query parameters for HTTP requests contain `key`                                         | ```Query(`foo``)```   |
+| ```Query(`key`)```                      | The query parameters for HTTP requests contain `key`.                                         | ```Query(`foo`)```   |
 | ```Query(`key`, `value`)```             | The query parameters for HTTP requests contain `key`, and the corresponding value match `value`.   | ```Query(`foo`, `bar`)```   |
+| ```Query(`key`, `op`, `value`)```       | :material-tag: 3.3.0 <br/> The query parameter `key` exists and its numeric value satisfies the [comparison operator](#comparison-operators) `op` against `value`. | ```Query(`page`, `gt`, `2`)``` |
 | ```QueryRegexp(`key`, `regexp`)```      | The query parameters for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.       | ```QueryRegexp(`foo`, `^.*$`)```      |
 | ```Header(`key`)```                     | The header for HTTP requests contain `key`.     | ```Header(`Content-Type`)```                         |
 | ```Header(`key`, `value`)```            | The header for HTTP requests contain `key`, and the corresponding value match `value`.     | ```Header(`Content-Type`, `application/json`)```                         |
+| ```Header(`key`, `op`, `value`)```      | :material-tag: 3.3.0 <br/> The header `key` exists and its numeric value satisfies the [comparison operator](#comparison-operators) `op` against `value`. | ```Header(`Content-Length`, `gt`, `1024`)``` |
 | ```HeaderRegexp(`key`, `regexp`)```     | The header for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
 | ```ClientIP(`ip`)```                    | The requests client IP match `ip`. The format of `ip` is IPv4, IPv6 or CIDR.                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
 | ```Proto(`proto`)```                    | Match the protocol，equivalent to `filter.protocol`.                                  | ```Proto(`http`)```                                 |
 | ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> Match the admission name, apply admission filtering to client IP.     | ```Admission(`admission-0`)```                                 |
 | ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> Match bypass name and apply bypass filtering to the target host name.      | ```Bypass(`bypass-0`)```                                 |
 | ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> Match the prefix of the HTTP request body against the regular expression `regexp`.                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
-| ```BodyJSON(`path`, `regexp`)```                    | :material-tag: 3.3.0 <br/> Extract a JSON field from the HTTP request body using a [GJSON path](https://github.com/tidwall/gjson#path-syntax) and match against the regular expression `regexp`.                                          | ```BodyJSON(`model`, `claude-opus.*`)```                               |
+| ```BodyJSON(`path`, `regexp`)```         | :material-tag: 3.3.0 <br/> Extract a JSON field from the HTTP request body using a [GJSON path](https://github.com/tidwall/gjson#path-syntax) and match against the regular expression `regexp`. | ```BodyJSON(`model`, `claude-opus.*`)```                               |
+| ```BodyJSON(`path`, `op`, `value`)```   | :material-tag: 3.3.0 <br/> Extract a numeric JSON field using a [GJSON path](https://github.com/tidwall/gjson#path-syntax) from the HTTP request body, and check it against the [comparison operator](#comparison-operators) `op` with `value`. | ```BodyJSON(`age`, `ge`, `18`)```                               |
 
+<span id="comparison-operators"></span>
+
+!!! tip "Comparison Operators"
+    `Header`, `Query`, and `BodyJSON` accept a 3-parameter form with a comparison operator as the second parameter: `Header("Content-Length", "gt", "1024")`. The following operators are supported:
+
+    | Operator | Matches when               |
+    |----------|----------------------------|
+    | `gt`     | value is greater than      |
+    | `ge`     | value is greater or equal  |
+    | `lt`     | value is less than         |
+    | `le`     | value is less or equal     |
+    | `eq`     | value is equal             |
+    | `ne`     | value is not equal         |
+
+    The value is parsed as a floating-point number. Non-numeric values are silently skipped (treated as no match). For multi-value headers and query parameters, the match succeeds if *any* value satisfies the comparison.
 
 !!! important "Regexp Syntax"
     Matchers that accept a regexp as their value use a [Go](https://golang.org/pkg/regexp/) flavored syntax.

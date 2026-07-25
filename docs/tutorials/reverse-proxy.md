@@ -308,16 +308,35 @@ services:
 | ```PathRegexp(`regexp`)```              | HTTP请求的URI路径匹配正则表达式`regexp`。                              | ```PathRegexp(`\.(jpeg|jpg|png)$`)```                               |
 | ```Query(`key`)```                      | HTTP请求的Query参数名包含`key`。                                       | ```Query(`foo`)```                |
 | ```Query(`key`, `value`)```             | HTTP请求的Query参数名包含`key`,对应的参数值匹配`value`。                 | ```Query(`foo`, `bar`)```                |
+| ```Query(`key`, `op`, `value`)```       | :material-tag: 3.3.0 <br/> Query参数 `key` 存在，且其数值满足[比较运算符](#comparison-operators) `op` 与 `value` 的关系。 | ```Query(`page`, `gt`, `2`)``` |
 | ```QueryRegexp(`key`, `regexp`)```      | HTTP请求的Query参数名包含`key`,对应的参数值匹配正则表达式`regexp`。       | ```QueryRegexp(`foo`, `^.*$`)```      |
 | ```Header(`key`)```                     | HTTP请求的Header中包含`key`。                                          | ```Header(`Content-Type`)```                         |
 | ```Header(`key`, `value`)```            | HTTP请求的Header中包含`key`,对应的值匹配`value`。                        | ```Header(`Content-Type`, `application/json`)```                         |
+| ```Header(`key`, `op`, `value`)```      | :material-tag: 3.3.0 <br/> Header `key` 存在，且其数值满足[比较运算符](#comparison-operators) `op` 与 `value` 的关系。 | ```Header(`Content-Length`, `gt`, `1024`)``` |
 | ```HeaderRegexp(`key`, `regexp`)```     | HTTP请求的Header中包含`key`,对应的值匹配正则表达式`regexp`。              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
 | ```ClientIP(`ip`)```                    | 请求的客户端IP匹配`ip`，`ip`格式为IPv4，IPv6或CIDR。                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
 | ```Proto(`proto`)```                    | 匹配协议类型，等效于`filter.protocol`。                                  | ```Proto(`http`)```                                 |
 | ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> 匹配准入控制器名称，对客户端IP应用准入控制器过滤。     | ```Admission(`admission-0`)```                                 |
 | ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> 匹配分流器名称，对目标主机名应用分流器过滤。      | ```Bypass(`bypass-0`)```                                 |
 | ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> HTTP请求体的前缀匹配正则表达式`regexp`。                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
-| ```BodyJSON(`path`, `regexp`)```                    | :material-tag: 3.3.0 <br/> 通过[GJSON路径](https://github.com/tidwall/gjson#path-syntax)提取HTTP请求体JSON字段，与正则表达式`regexp`匹配。                                          | ```BodyJSON(`model`, `claude-opus.*`)```                               |
+| ```BodyJSON(`path`, `regexp`)```         | :material-tag: 3.3.0 <br/> 通过[GJSON路径](https://github.com/tidwall/gjson#path-syntax)提取HTTP请求体JSON字段，与正则表达式`regexp`匹配。 | ```BodyJSON(`model`, `claude-opus.*`)```                               |
+| ```BodyJSON(`path`, `op`, `value`)```   | :material-tag: 3.3.0 <br/> 通过[GJSON路径](https://github.com/tidwall/gjson#path-syntax)提取数字类型的JSON字段，检查其是否满足[比较运算符](#comparison-operators) `op` 与 `value` 的关系。 | ```BodyJSON(`age`, `ge`, `18`)```                               |
+
+<span id="comparison-operators"></span>
+
+!!! tip "比较运算符"
+    `Header`、`Query` 和 `BodyJSON` 接受三参数形式，第二个参数为比较运算符：`Header("Content-Length", "gt", "1024")`。支持的运算符如下：
+
+    | 运算符 | 匹配条件               |
+    |--------|------------------------|
+    | `gt`   | 值大于                 |
+    | `ge`   | 值大于或等于           |
+    | `lt`   | 值小于                 |
+    | `le`   | 值小于或等于           |
+    | `eq`   | 值等于                 |
+    | `ne`   | 值不等于               |
+
+    值将被解析为浮点数。非数值将被静默跳过（视为不匹配）。对于多值 header 和 query 参数，任一值满足比较即视为匹配。
 
 !!! important "正则表达式"
 
