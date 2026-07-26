@@ -131,6 +131,7 @@ nav:
     - Router: concepts/router.md
     - Service Discovery: concepts/sd.md
     - Recorder: concepts/recorder.md
+    - Cache: concepts/cache.md
     - Rewriter: concepts/rewriter.md
     - Observer: concepts/observer.md
     - Plugin System: concepts/plugin.md
@@ -164,6 +165,7 @@ nav:
     - Reverse Proxy Tunnel: tutorials/reverse-proxy-tunnel.md
     - Reverse Proxy Tunnel - HA: tutorials/reverse-proxy-tunnel-ha.md
     - Traffic Sniffing and MITM: tutorials/sniffing.md
+    - HTTP Response Caching: tutorials/http-cache.md
     - HTTP File Server: tutorials/file.md
     - Probe Resistance: tutorials/probe-resistance.md
     - Node Liveness Probe: tutorials/probe.md
