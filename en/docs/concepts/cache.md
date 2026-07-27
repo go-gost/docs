@@ -11,7 +11,7 @@ comments: true
 
 The cache component provides a generic key-value store for caching hot data and reducing duplicate requests to upstream services. It is primarily used for HTTP response caching and will later be extended to DNS responses and other scenarios.
 
-```yaml hl_lines="5 6 7 10 11 12"
+```yaml hl_lines="2 11 15 16"
 caches:
 - name: cache-0
   memory:
@@ -117,9 +117,6 @@ When a service has caching configured, the HTTP request flow is:
 2. **Fresh hit**: the cached response is returned directly — no upstream request is made.
 3. **Stale hit**: the expired entry is retained as a fallback; the upstream request proceeds. If the upstream fails and `serveStale` is enabled, the stale entry is served.
 4. **Miss**: the request is forwarded upstream. When the response is written back to the client, a copy is captured and stored in the cache.
-
-!!! tip "MITM TLS requirement"
-    In SNI proxy mode, HTTP caching is only effective when MITM certificates (certificate + private key) are configured. Without MITM, TLS traffic is encrypted and HTTP content cannot be inspected for caching.
 
 ## Notes
 
