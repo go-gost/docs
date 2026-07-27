@@ -79,12 +79,13 @@ services:
       hops:
       - hop: hop-api
         matcher: PathPrefix("/api/") && Host("*.example.com")
-        probe: http
+        probe:
+          type: http
       - hop: hop-internal
         matcher: Bypass("10.0.0.0/8", "*.internal")
       - hop: hop-web
       selector:
-        strategy: roundRobin
+        strategy: rr
 ```
 
 | 字段 | 类型 | 说明 |
