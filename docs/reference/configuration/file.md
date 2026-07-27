@@ -527,6 +527,18 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 
 ### 转发器(Forwarder)
 
+`hop` (string, ref)
+:   引用 `hops` 中已命名的跳跃点。与 `hopGroup` 和内联节点互斥。
+
+`hopGroup` (object)
+:   :material-tag: 3.3.0 — 跳跃点组，支持每个条目独立的匹配器和探活。详见 [跳跃点组](../../concepts/forwarder.md#_2)。
+
+`hopGroup.hops` (list, required)
+:   跳跃点条目列表，每条包含 `hop`、`matcher` 和 `probe` 字段。
+
+`hopGroup.selector` (object)
+:   组级别负载均衡选择器，支持与节点选择器相同的[策略](#selector)。
+
 `nodes` (objects)
 :    转发目标节点列表
 

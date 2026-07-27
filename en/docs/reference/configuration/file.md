@@ -527,11 +527,23 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 
 ### Forwarder
 
+`hop` (string, ref)
+:    Reference to a named hop in `hops`. Mutually exclusive with `hopGroup` and inline nodes.
+
+`hopGroup` (object)
+:    :material-tag: 3.3.0 — Group of named hops with per-entry matchers and probes. See [Hop Group](../../concepts/forwarder.md#hop-group).
+
+`hopGroup.hops` (list, required)
+:    List of hop entries with `hop`, `matcher`, and `probe` fields.
+
+`hopGroup.selector` (object)
+:    Group-level load balancing selector. Supports the same [strategies](#selector) as the node selector.
+
 `nodes` (objects)
 :    target node list
 
 `selector` (object)
-:    负载均衡策略
+:    load balancing strategy
 
 ## Chain
 
