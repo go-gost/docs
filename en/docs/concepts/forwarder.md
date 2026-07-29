@@ -64,7 +64,7 @@ hops:
 
 :material-tag: 3.3.0
 
-`hopGroup` extends the forwarder to select from multiple named hops using a matcher-based routing DSL. Each hop entry can have its own probe and matcher rule — only entries whose matcher matches the current request are eligible for selection.
+`hopGroup` extends the forwarder to select from multiple named hops using a [matcher](matcher.md)-based routing DSL. Each hop entry can have its own probe and matcher rule — only entries whose matcher matches the current request are eligible for selection.
 
 ```yaml hl_lines="9 10 11 12 13 14 15"
 services:
@@ -98,7 +98,7 @@ services:
 | Field | Type | Description |
 |-------|------|-------------|
 | `hop` | string | Named hop reference from `hops` registry. |
-| `matcher` | object | Optional routing rule. See [Node Matcher](../reference/configuration/file.md#node-matcher) for DSL reference. Nil = catch-all (always eligible). |
+| `matcher` | object | Optional routing rule. See [Matcher](matcher.md) for the full DSL reference. Nil = catch-all (always eligible). |
 | `probe` | object | Optional hop-level health check. Validates network reachability independently from node-level `failCodes` — probe marks the hop entry, not the node. |
 
 !!! note "Probe vs failCodes"

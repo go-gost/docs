@@ -120,6 +120,7 @@ nav:
     - Hop: concepts/hop.md
     - Forwarder: concepts/forwarder.md
     - Selector: concepts/selector.md
+    - Matcher: concepts/matcher.md
     - Authentication: concepts/auth.md
     - Bypass: concepts/bypass.md
     - Load Balancing: concepts/load-balancing.md

@@ -172,6 +172,11 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 ### 条件过滤
 
+!!! warning "已废弃"
+    条件过滤已不推荐使用，建议改用 [规则匹配（Matcher）](../concepts/matcher.md)，并将在未来的版本中移除。
+    请使用 `matcher.rule` 代替 — 它覆盖了相同的使用场景，提供了更强大的 DSL 表达式，
+    并且适用于所有匹配器上下文（节点、跳跃点组、转发链组）。
+
 在节点上通过`filter`选项来设置过滤条件，当请求满足此过滤条件时此节点为合格结点，将参与下一步的目标节点选择。
 
 #### 主机名过滤
@@ -268,9 +273,7 @@ services:
 
 ### 规则匹配
 
-除了简单的条件过滤外，请求路由同时也集成了Traefik中更加灵活的[规则路由](https://doc.traefik.io/traefik/routing/routers/)功能。
-
-通过`matcher.rule`选项设置节点的匹配规则，当设置了规则后，`filter`将会被忽略。
+除了简单的条件过滤外，请求路由同时也集成了灵活的规则路由DSL。通过`matcher.rule`选项设置节点的匹配规则，当设置了规则后，`filter`将会被忽略。
 
 ```yaml hl_lines="15 19"
 services:
@@ -294,107 +297,20 @@ services:
         rule: Host(`*.example.com`)
 ```
 
-#### 规则
+完整的DSL参考 — 包括所有匹配器函数、比较运算符、请求体匹配细节、正则语法和请求体大小设置 — 请参见 **[匹配器](../concepts/matcher.md)**。
 
-目前支持的匹配规则列表
-
-| 规则                                    | 说明                                                                 | 示例                                                |
-| ----------------------------------------| ---------------------------------------------------------------------| --------------------------------------------------- |
-| ```Host(`domain`)```                    | HTTP请求的主机名或TLS请求的SNI匹配`domain`，等效于`filter.host`。       | ```Host(`example.com`)```，```Host(`*.example.org`)```      |
-| ```HostRegexp(`regexp`)```              | HTTP请求的主机名或TLS请求的SNI匹配正则表达式`regexp`。                  | ```HostRegexp(`^.+\.example\.com$`)```                  |
-| ```Method(`method`)```                  | HTTP请求的方法匹配`method`。                                          | ```Method(`POST`)```                                          |
-| ```Path(`path`)```                      | HTTP请求的URI路径匹配`path`。                                          | ```Path(`/products/1234`)```                                        |
-| ```PathPrefix(`prefix`)```              | HTTP请求的URI路径匹配前缀`prefix`，等效于`filter.path`。               | ```PathPrefix(`/products`)```                                   |
-| ```PathRegexp(`regexp`)```              | HTTP请求的URI路径匹配正则表达式`regexp`。                              | ```PathRegexp(`\.(jpeg|jpg|png)$`)```                               |
-| ```Query(`key`)```                      | HTTP请求的Query参数名包含`key`。                                       | ```Query(`foo`)```                |
-| ```Query(`key`, `value`)```             | HTTP请求的Query参数名包含`key`,对应的参数值匹配`value`。                 | ```Query(`foo`, `bar`)```                |
-| ```Query(`key`, `op`, `value`)```       | :material-tag: 3.3.0 <br/> Query参数 `key` 存在，且其数值满足[比较运算符](#comparison-operators) `op` 与 `value` 的关系。 | ```Query(`page`, `gt`, `2`)``` |
-| ```QueryRegexp(`key`, `regexp`)```      | HTTP请求的Query参数名包含`key`,对应的参数值匹配正则表达式`regexp`。       | ```QueryRegexp(`foo`, `^.*$`)```      |
-| ```Header(`key`)```                     | HTTP请求的Header中包含`key`。                                          | ```Header(`Content-Type`)```                         |
-| ```Header(`key`, `value`)```            | HTTP请求的Header中包含`key`,对应的值匹配`value`。                        | ```Header(`Content-Type`, `application/json`)```                         |
-| ```Header(`key`, `op`, `value`)```      | :material-tag: 3.3.0 <br/> Header `key` 存在，且其数值满足[比较运算符](#comparison-operators) `op` 与 `value` 的关系。 | ```Header(`Content-Length`, `gt`, `1024`)``` |
-| ```HeaderRegexp(`key`, `regexp`)```     | HTTP请求的Header中包含`key`,对应的值匹配正则表达式`regexp`。              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
-| ```ClientIP(`ip`)```                    | 请求的客户端IP匹配`ip`，`ip`格式为IPv4，IPv6或CIDR。                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
-| ```Proto(`proto`)```                    | 匹配协议类型，等效于`filter.protocol`。                                  | ```Proto(`http`)```                                 |
-| ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> 匹配准入控制器名称，对客户端IP应用准入控制器过滤。     | ```Admission(`admission-0`)```                                 |
-| ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> 匹配分流器名称，对目标主机名应用分流器过滤。      | ```Bypass(`bypass-0`)```                                 |
-| ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> HTTP请求体的前缀匹配正则表达式`regexp`。                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
-| ```BodyJSON(`path`, `regexp`)```         | :material-tag: 3.3.0 <br/> 通过[GJSON路径](https://github.com/tidwall/gjson#path-syntax)提取HTTP请求体JSON字段，与正则表达式`regexp`匹配。 | ```BodyJSON(`model`, `claude-opus.*`)```                               |
-| ```BodyJSON(`path`, `op`, `value`)```   | :material-tag: 3.3.0 <br/> 通过[GJSON路径](https://github.com/tidwall/gjson#path-syntax)提取数字类型的JSON字段，检查其是否满足[比较运算符](#comparison-operators) `op` 与 `value` 的关系。 | ```BodyJSON(`age`, `ge`, `18`)```                               |
-
-<span id="comparison-operators"></span>
-
-!!! tip "比较运算符"
-    `Header`、`Query` 和 `BodyJSON` 接受三参数形式，第二个参数为比较运算符：`Header("Content-Length", "gt", "1024")`。支持的运算符如下：
-
-    | 运算符 | 匹配条件               |
-    |--------|------------------------|
-    | `gt`   | 值大于                 |
-    | `ge`   | 值大于或等于           |
-    | `lt`   | 值小于                 |
-    | `le`   | 值小于或等于           |
-    | `eq`   | 值等于                 |
-    | `ne`   | 值不等于               |
-
-    值将被解析为浮点数。非数值将被静默跳过（视为不匹配）。对于多值 header 和 query 参数，任一值满足比较即视为匹配。
-
-!!! important "正则表达式"
-
-    接受正则表达式作为其值的匹配器使用[Go](https://golang.org/pkg/regexp/)风格的语法。
-
-!!! important "请求体匹配"
-
-    `BodyRegexp` 和 `BodyJSON` 用于匹配HTTP请求体，使用时需满足以下条件：
-
-    - 必须开启流量嗅探（`sniffing: true`），且仅在HTTP嗅探处理器（如`tcp`处理器嗅探HTTP流量）下生效。
-    - `matcher.bodySize`控制暴露给 body 匹配器的请求体前缀大小（字节）。`0`（默认）使用 `DefaultMatcherBodySize`（`1MB`）。启用 body 读取时，`BodyRegexp` 和 `BodyJSON` 至少能获得这些数据用于匹配。
-    - `bodySize` 上限为 `MaxMatcherBodySize`（`10MB`），超出部分会被截断为该上限。
-    - 仅为匹配目的读取请求体前缀，完整的请求体仍会被正常转发到目标，不会被修改或截断。
-    - 匹配前会根据 `Content-Encoding` 自动解压请求体前缀（支持 `gzip`、`deflate`、`br`、`zstd`），因此 `BodyRegexp` 和 `BodyJSON` 始终在解压后的明文上匹配。仅用于匹配的前缀被解压，转发给目标的完整请求体仍保持原始压缩编码，不会被修改。若请求体超过 `bodySize` 上限被截断，则对截断后的压缩流做尽力解压，匹配模式通常位于请求体起始处，仍可命中。
-
-    ```yaml
-    services:
-    - name: http
-      addr: :80
-      handler:
-        type: tcp
-        metadata:
-          sniffing: true
-      listener:
-        type: tcp
-      forwarder:
-        nodes:
-        - name: target-0
-          addr: 192.168.1.1:80
-          matcher:
-            rule: 'BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)'
-            bodySize: 65536
-        - name: target-1
-          addr: 192.168.1.2:80
-    ```
-
-    上面的规则会读取每个请求体最前面的 `65536` 字节，当请求体中的 `model` 字段值以 `claude-opus` 为前缀（如 `claude-opus-4-8`）时选择 `target-0` 节点。
-
-!!! info "使用运算符和括号表达复杂规则"
-
-    可以使用常见的 AND (`&&`) 和 OR (`||`) 逻辑运算符，以及预期的优先规则和括号。
-
-    可以使用 NOT (`!`) 运算符反转匹配器。
+!!! tip "复杂规则"
+    AND (`&&`)、OR (`||`) 和 NOT (`!`) 运算符可以与括号组合使用：
 
     ```yaml
     Host(`example.com`) || (Host(`example.org`) && !Path(`/path`))
     ```
 
-    上面的规则匹配：
-
-    - 主机名是`example.com` 或，
-    - 主机名是`example.org` 且 路径不是 `/path`。
+    上面的规则匹配：主机名是`example.com`，或者主机名是`example.org`且路径不是`/path`。
 
 #### 优先级
 
-为了避免路径重叠，默认情况下，路由按规则长度降序排序。优先级直接等于规则的长度，因此最长的长度具有最高优先级。
-
-通过`matcher.priority`选项可以设置节点的权重，从而改变节点选择的优先级。
+为了避免路径重叠，默认情况下路由按规则长度降序排序——最长的规则拥有最高优先级。通过`matcher.priority`选项可以覆盖此行为，设置为负数则禁用自动排序。详见 [匹配器 - 优先级](../concepts/matcher.md#_5)。
 
 ```yaml hl_lines="16 21"
 services:

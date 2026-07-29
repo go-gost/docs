@@ -64,7 +64,7 @@ hops:
 
 :material-tag: 3.3.0
 
-`hopGroup` 扩展了转发器，支持从多个命名跳跃点中基于匹配规则路由DSL进行选择。每个跳跃点条目可以有自己的探活和匹配规则 — 只有匹配规则命中当前请求的条目才能被选中。
+`hopGroup` 扩展了转发器，支持从多个命名跳跃点中基于[匹配器](matcher.md)路由DSL进行选择。每个跳跃点条目可以有自己的探活和匹配规则 — 只有匹配规则命中当前请求的条目才能被选中。
 
 ```yaml hl_lines="9 10 11 12 13 14 15"
 services:
@@ -98,7 +98,7 @@ services:
 | 字段 | 类型 | 说明 |
 |-------|------|------|
 | `hop` | string | 引用的跳跃点名称，对应 `hops.name`。 |
-| `matcher` | object | 可选路由规则。DSL参考参见 [节点匹配器](../reference/configuration/file.md#node-matcher)。nil = 无条件通过（catch-all）。 |
+| `matcher` | object | 可选路由规则。完整DSL参考请参见 [匹配器](matcher.md)。nil = 无条件通过（catch-all）。 |
 | `probe` | object | 可选跳跃点级别的健康检查。独立于节点级别的 `failCodes` 检查网络可达性 — probe 标记跳跃点条目，不影响节点。 |
 
 !!! note "Probe 与 failCodes 的区别"

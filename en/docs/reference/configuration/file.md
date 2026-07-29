@@ -551,12 +551,108 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 :    转发链名称
 
 `selector` (object)
-:    转发链层级节点选择器，用于负载均衡
+:    Chain-level node selector for load balancing. Applies to nodes across all hops in the chain.
 
 `hops` (hop-list)
-:    跳跃点列表
+:    Hop list
 
-## 跳跃点(Hop)
+## Chain Group (chainGroup)
+
+:material-tag: 3.3.0
+
+The `chainGroup` parameter on a service's listener or handler selects from multiple chains using
+a matcher-based routing DSL. Each chain entry can have its own matcher rule and health-check probe.
+
+```yaml
+chainGroup:
+  chains:
+  - chain: chain-primary
+    matcher:
+      rule: Host(`api.example.com`)
+    probe:
+      type: tcp
+      addr: 127.0.0.1:8081
+      interval: 10s
+  - chain: chain-fallback
+  selector:
+    strategy: round
+    maxFails: 1
+    failTimeout: 30s
+```
+
+`chains` (list, required)
+:    Chain entry list. Each entry is a chain reference string or a structured object.
+
+### Chain Entry
+
+`chain` (string, required)
+:    Chain name, reference to `chains.name`.
+
+`matcher` (object)
+:    Optional routing rule. See [Node Matcher](#node-matcher) for the DSL reference.
+     Nil = catch-all (always eligible). The matcher sees the target hostname from
+     the request context.
+
+`matcher.rule` (string)
+:    Routing rule expression using the same DSL as [Node Matcher](#node-matcher).
+     Common functions at the chain-group level: `Host()`, `ClientIP()`.
+     See [Matcher](../../concepts/matcher.md) for the full DSL reference.
+
+`probe` (object)
+:    Optional chain-level health check. Probes the entire chain end-to-end by dialing
+     through `Route.Dial()`. The probe marks the chain entry's own marker, independent
+     of any node-level markers inside the chain.
+
+### Probe
+
+Probe configuration for chain entries. Same structure as [Node Probe](../../concepts/chain.md#probe).
+
+`type` (string)
+:    Probe type: `tcp`, `http`, or `cmd`.
+
+`addr` (string)
+:    Target address for TCP/HTTP probes. Required for non-cmd probes.
+
+`interval` (duration)
+:    Probe interval. Default: 30s.
+
+`timeout` (duration)
+:    Probe timeout. Default: 10s.
+
+`httpPath` (string)
+:    HTTP request path (HTTP probe only).
+
+`httpHost` (string)
+:    HTTP Host header (HTTP probe only).
+
+`httpHeaders` (map)
+:    Additional HTTP request headers (HTTP probe only).
+
+`expectedStatus` (int)
+:    Expected HTTP response status code. Default: 0 (any 2xx).
+
+`command` (string)
+:    Shell command to execute (CMD probe only). Exit code 0 = success.
+
+### Backward Compatibility
+
+Chain entries accept both formats:
+
+```yaml
+# Old: plain string
+chains:
+- chain-0
+- chain-1
+
+# New: structured object
+chains:
+- chain: chain-0
+  matcher:
+    rule: Host(`api.example.com`)
+  probe:
+    type: tcp
+```
+
 
 `name` (string, required)
 :    跳跃点名称
@@ -629,15 +725,13 @@ GOST configuration file supports `yaml` and `json` format, the complete configur
 
 :material-tag: 3.3.0
 
+Each node can carry a `matcher` to participate in request-based routing. For the full
+DSL reference (all functions, boolean operators, examples) see [Matcher](../../concepts/matcher.md).
+
 `rule` (string)
 :    Routing rule expression. Supports boolean operators (`&&`, `||`, `!`) and matcher functions:
-      `Method`, `Path`, `PathPrefix`, `PathRegexp`, `Host`, `HostRegexp`, `Header`, `HeaderRegexp`,
-      `Query`, `QueryRegexp`, `BodyRegexp`, `BodyJSON`, `ClientIP`, `Network`, `Proto`, `Bypass`, `Admission`.
-
-`BodyJSON(path, regex)` (since 3.3.x)
-:    Matches a JSON field value by dot-separated path using [gjson](https://github.com/tidwall/gjson).
-      The field value is extracted, then matched against the regex.
-      Example: `BodyJSON(`output_config.effort`, `^(xhigh|max)$`)`
+     `Method`, `Path`, `PathPrefix`, `PathRegexp`, `Host`, `HostRegexp`, `Header`, `HeaderRegexp`,
+     `Query`, `QueryRegexp`, `BodyRegexp`, `BodyJSON`, `ClientIP`, `Network`, `Proto`, `Bypass`, `Admission`.
 
 `bodySize` (int)
 :    Maximum size of HTTP request body prefix (in bytes) to read for body matchers. Default: 0 (disabled).

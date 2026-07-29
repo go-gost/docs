@@ -556,7 +556,101 @@ GOST配置文件使用yaml或json格式，完整的配置文件的结构如下�
 `hops` (hop-list)
 :    跳跃点列表
 
-## 跳跃点(Hop)
+## 转发链组(ChainGroup)
+
+:material-tag: 3.3.0
+
+服务监听器或处理器上的`chainGroup`参数通过基于匹配器的路由DSL从多个转发链中进行选择。
+每个链条目可以有自己的匹配器规则和健康检查探针。
+
+```yaml
+chainGroup:
+  chains:
+  - chain: chain-primary
+    matcher:
+      rule: Host(`api.example.com`)
+    probe:
+      type: tcp
+      addr: 127.0.0.1:8081
+      interval: 10s
+  - chain: chain-fallback
+  selector:
+    strategy: round
+    maxFails: 1
+    failTimeout: 30s
+```
+
+`chains` (list, required)
+:    链条目列表。每个条目可以是链名称字符串或结构化对象。
+
+### 链条目(Chain Entry)
+
+`chain` (string, required)
+:    转发链名称，引用`chains.name`。
+
+`matcher` (object)
+:    可选的路由规则。DSL参考[节点匹配器](#node-matcher)。未设置 = 始终有资格（兜底）。
+     匹配器会看到请求上下文中的目标主机名。
+
+`matcher.rule` (string)
+:    路由规则表达式，使用与[节点匹配器](#node-matcher)相同的DSL。
+     转发链组层级常用函数：`Host()`、`ClientIP()`。
+     完整DSL参考请参见 [匹配器](../../concepts/matcher.md)。
+
+`probe` (object)
+:    可选的链级别健康检查。通过`Route.Dial()`对整个转发链进行端到端探测。
+     探针标记链条目自身的标记，与链内部任何节点级别的标记独立。
+
+### 探针(Probe)
+
+链条目的探针配置。结构与[节点探针](../../concepts/chain.md#probe)相同。
+
+`type` (string)
+:    探针类型：`tcp`、`http` 或 `cmd`。
+
+`addr` (string)
+:    TCP/HTTP探针的目标地址。非cmd探针必填。
+
+`interval` (duration)
+:    探测间隔。默认：30s。
+
+`timeout` (duration)
+:    探测超时。默认：10s。
+
+`httpPath` (string)
+:    HTTP请求路径（仅HTTP探针）。
+
+`httpHost` (string)
+:    HTTP Host头（仅HTTP探针）。
+
+`httpHeaders` (map)
+:    额外的HTTP请求头（仅HTTP探针）。
+
+`expectedStatus` (int)
+:    期望的HTTP响应状态码。默认：0（任意2xx）。
+
+`command` (string)
+:    要执行的Shell命令（仅CMD探针）。退出码0 = 成功。
+
+### 向后兼容
+
+链条目支持两种格式：
+
+```yaml
+# 旧格式：纯字符串
+chains:
+- chain-0
+- chain-1
+
+# 新格式：结构化对象
+chains:
+- chain: chain-0
+  matcher:
+    rule: Host(`api.example.com`)
+  probe:
+    type: tcp
+```
+
 
 `name` (string, required)
 :    跳跃点名称

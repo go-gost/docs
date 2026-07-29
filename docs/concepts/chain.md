@@ -241,7 +241,6 @@ chains:
 
 在服务的监听器或处理器上也可以通过`chainGroup`参数来指定转发链组来使用多条转发链，同时也可以设置一个[选择器(selector)](selector.md)指定转发链使用方式，默认使用轮询策略。
 
-
 ```yaml hl_lines="6 7 8 9 10 11 12 13"
 services:
 - name: service-0
@@ -250,8 +249,8 @@ services:
     type: http
     chainGroup:
       chains:
-      - chain-0
-      - chain-1
+      - chain: chain-0
+      - chain: chain-1
       selector:
         strategy: round
         maxFails: 1
@@ -282,6 +281,82 @@ chains:
 ```
 
 服务service-0采用轮询的方式使用两条转发链chain-0和chain-1。
+
+### 匹配器(Matcher)
+
+:material-tag: 3.3.0
+
+每条链条目可以携带一个`matcher`匹配规则。只有匹配器与当前请求匹配的条目才有资格被选择。完整的DSL参考请参见 [匹配器](matcher.md)。
+
+在转发链组层级，匹配器会看到请求的目标主机名（通过`Host()`匹配器）。
+
+```yaml hl_lines="7 8 9"
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    chainGroup:
+      chains:
+      - chain: chain-api
+        matcher:
+          rule: Host(`api.example.com`)
+      - chain: chain-web
+        matcher:
+          rule: Host(`*.example.com`)
+      - chain: chain-default
+      selector:
+        strategy: round
+  listener:
+    type: tcp
+```
+
+!!! note "向后兼容"
+    链条目接受纯字符串（旧格式：`chains: [chain-0, chain-1]`）或带`chain`、`matcher`和`probe`字段的结构化对象。
+
+### 探针(Probe)
+
+:material-tag: 3.3.0
+
+链条目可以设置`probe`对整个转发链进行端到端健康检查。探针通过转发链路由定期拨号到目标地址。如果探针失败，链条目的标记会被设置 — 组选择器中的`FailFilter`会将其排除在选择之外，直到恢复。
+
+支持的探针类型：`tcp`、`http`、`cmd`。探针使用转发链的完整`Route.Dial()`路径，测试每一个跳跃点。
+
+```yaml hl_lines="7 8 9 10 11"
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    chainGroup:
+      chains:
+      - chain: chain-primary
+        probe:
+          type: tcp
+          addr: 127.0.0.1:8081
+          interval: 10s
+      - chain: chain-fallback
+        probe:
+          type: http
+          addr: 127.0.0.1:8082
+          httpPath: /health
+          interval: 5s
+      selector:
+        strategy: round
+        maxFails: 1
+        failTimeout: 30s
+  listener:
+    type: tcp
+```
+
+!!! note "探针标记的独立性"
+    探针标记的是链条目自身的标记 — 与转发链内部的任何节点级别标记是独立的。节点级别的`failCodes`和链级别的探针不会互相干扰。
+
+### 选择流程
+
+1. **匹配器过滤** — 从匹配器匹配请求上下文（主机名、客户端IP等）的条目中构建候选池。未设置匹配器 = 始终有资格。
+2. **选择器管道** — 应用`FailFilter`（排除被探针标记的条目）→ `BackupFilter` → 策略（轮询、随机等）→ 选择一个链条目。
+3. **路由** — 委托给获胜条目的`Route()`方法，该方法从转发链的每个跳跃点中选择节点。
 
 ## 虚拟节点
 

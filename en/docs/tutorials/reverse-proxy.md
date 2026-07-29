@@ -172,6 +172,12 @@ There are two modes for routing requests to target nodes: conditional filtering 
 
 ### Conditional Filtering
 
+!!! warning "Deprecated"
+    Conditional filtering is deprecated in favor of [rule matching](../concepts/matcher.md)
+    and will be removed in a future release. Use `matcher.rule` instead — it covers the
+    same use cases with a more expressive DSL and works across all matcher contexts
+    (node, hop group, chain group).
+
 The filter condition is set on the node through the `filter` option. When the request meets this filter condition, this node is a qualified node and will participate in the next step of target node selection.
 
 #### Hostname Filtering
@@ -268,9 +274,9 @@ services:
 
 ### Rule Matching
 
-In addition to simple conditional filtering, request routing also integrates the more flexible [rule-based routing](https://doc.traefik.io/traefik/routing/routers/) function in Traefik.
-
-The matching rule of the node can be set by the `matcher.rule` option. When the rule is set, `filter` will be ignored.
+In addition to simple conditional filtering, request routing also integrates a flexible
+rule-based routing DSL. The matching rule is set via the `matcher.rule` option on each
+node. When `matcher.rule` is set, `filter` is ignored.
 
 ```yaml hl_lines="15 19"
 services:
@@ -294,94 +300,11 @@ services:
         rule: Host(`*.example.com`)
 ```
 
-#### Rule
+For the complete DSL reference — all matcher functions, comparison operators, body
+matching details, regexp syntax, and body size settings — see **[Matcher](../concepts/matcher.md)**.
 
-Currently supported rules are
-
-| Rule                                    | Description                                                         | Example                                                |
-| ----------------------------------------| ---------------------------------------------------------------------| --------------------------------------------------- |
-| ```Host(`domain`)```                    | The host for HTTP requests or SNI for TLS requests match `domain`, equivalent to `filter.host`. | ```Host(`example.com`)```，```Host(`*.example.org`)```      |
-| ```HostRegexp(`regexp`)```              | The host for HTTP requests or SNI for TLS requests match the regular expression `regexp`.       | ```HostRegexp(`^.+\.example\.com$`)``` |
-| ```Method(`method`)```                  | The method for HTTP requests match `method`.                                          | ```Method(`POST`)```                 |
-| ```Path(`path`)```                      | The path for HTTP requests match `path`.                                          | ```Path(`/products/1234`)```   |
-| ```PathPrefix(`prefix`)```              | The path for HTTP requests match the prefix `prefix`, equivalent to `filter.path`.          | ```PathPrefix(`/products`)```  |
-| ```PathRegexp(`regexp`)```              | The path for HTTP requests match the regular expression `regexp`.                              | ```PathRegexp(`\.(jpeg|jpg|png)$`)```  |
-| ```Query(`key`)```                      | The query parameters for HTTP requests contain `key`.                                         | ```Query(`foo`)```   |
-| ```Query(`key`, `value`)```             | The query parameters for HTTP requests contain `key`, and the corresponding value match `value`.   | ```Query(`foo`, `bar`)```   |
-| ```Query(`key`, `op`, `value`)```       | :material-tag: 3.3.0 <br/> The query parameter `key` exists and its numeric value satisfies the [comparison operator](#comparison-operators) `op` against `value`. | ```Query(`page`, `gt`, `2`)``` |
-| ```QueryRegexp(`key`, `regexp`)```      | The query parameters for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.       | ```QueryRegexp(`foo`, `^.*$`)```      |
-| ```Header(`key`)```                     | The header for HTTP requests contain `key`.     | ```Header(`Content-Type`)```                         |
-| ```Header(`key`, `value`)```            | The header for HTTP requests contain `key`, and the corresponding value match `value`.     | ```Header(`Content-Type`, `application/json`)```                         |
-| ```Header(`key`, `op`, `value`)```      | :material-tag: 3.3.0 <br/> The header `key` exists and its numeric value satisfies the [comparison operator](#comparison-operators) `op` against `value`. | ```Header(`Content-Length`, `gt`, `1024`)``` |
-| ```HeaderRegexp(`key`, `regexp`)```     | The header for HTTP requests contain `key`, and the corresponding value match the regular expression `regexp`.              | ```HeaderRegexp(`Content-Type`, `^application/(json|yaml)$`)```             |
-| ```ClientIP(`ip`)```                    | The requests client IP match `ip`. The format of `ip` is IPv4, IPv6 or CIDR.                     | ```ClientIP(`192.168.0.1`)```，```ClientIP(`::1`)```，```ClientIP(`192.168.1.0/24`)```，```ClientIP(`fe80::/10`)```                     |
-| ```Proto(`proto`)```                    | Match the protocol，equivalent to `filter.protocol`.                                  | ```Proto(`http`)```                                 |
-| ```Admission(`admission-name`)```                    | :material-tag: 3.2.4 <br/> Match the admission name, apply admission filtering to client IP.     | ```Admission(`admission-0`)```                                 |
-| ```Bypass(`bypass-name`)```                    |  :material-tag: 3.2.4 <br/> Match bypass name and apply bypass filtering to the target host name.      | ```Bypass(`bypass-0`)```                                 |
-| ```BodyRegexp(`regexp`)```                    | :material-tag: 3.3.0 <br/> Match the prefix of the HTTP request body against the regular expression `regexp`.                                          | ```BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)```                               |
-| ```BodyJSON(`path`, `regexp`)```         | :material-tag: 3.3.0 <br/> Extract a JSON field from the HTTP request body using a [GJSON path](https://github.com/tidwall/gjson#path-syntax) and match against the regular expression `regexp`. | ```BodyJSON(`model`, `claude-opus.*`)```                               |
-| ```BodyJSON(`path`, `op`, `value`)```   | :material-tag: 3.3.0 <br/> Extract a numeric JSON field using a [GJSON path](https://github.com/tidwall/gjson#path-syntax) from the HTTP request body, and check it against the [comparison operator](#comparison-operators) `op` with `value`. | ```BodyJSON(`age`, `ge`, `18`)```                               |
-
-<span id="comparison-operators"></span>
-
-!!! tip "Comparison Operators"
-    `Header`, `Query`, and `BodyJSON` accept a 3-parameter form with a comparison operator as the second parameter: `Header("Content-Length", "gt", "1024")`. The following operators are supported:
-
-    | Operator | Matches when               |
-    |----------|----------------------------|
-    | `gt`     | value is greater than      |
-    | `ge`     | value is greater or equal  |
-    | `lt`     | value is less than         |
-    | `le`     | value is less or equal     |
-    | `eq`     | value is equal             |
-    | `ne`     | value is not equal         |
-
-    The value is parsed as a floating-point number. Non-numeric values are silently skipped (treated as no match). For multi-value headers and query parameters, the match succeeds if *any* value satisfies the comparison.
-
-!!! important "Regexp Syntax"
-    Matchers that accept a regexp as their value use a [Go](https://golang.org/pkg/regexp/) flavored syntax.
-
-!!! important "Request Body Matching"
-    `BodyRegexp` and `BodyJSON` match the HTTP request body. The following conditions apply:
-
-    - Traffic sniffing must be enabled (`sniffing: true`), and it only takes effect under an HTTP sniffing handler (e.g. a `tcp` handler sniffing HTTP traffic).
-    - `matcher.bodySize` controls the request body prefix (bytes) exposed to body matchers. `0` (default) uses `DefaultMatcherBodySize` (`1MB`). `BodyRegexp` and `BodyJSON` will always see at least this much data when body reading is active.
-    - `bodySize` is capped at `MaxMatcherBodySize` (`10MB`); larger values are clamped to this limit.
-    - Only a body prefix is read for matching; the full request body is still forwarded to the target unchanged.
-    - The body prefix is automatically decompressed according to `Content-Encoding` (`gzip`, `deflate`, `br`, `zstd`) before matching, so `BodyRegexp` and `BodyJSON` always match against the plaintext. Only the prefix used for matching is decoded; the full body forwarded to the target keeps its original compression and is left unchanged. If the body is truncated at the `bodySize` limit, the truncated compressed stream is best-effort decompressed — match patterns typically sit at the start of the body and are still found.
-
-    ```yaml
-    services:
-    - name: http
-      addr: :80
-      handler:
-        type: tcp
-        metadata:
-          sniffing: true
-      listener:
-        type: tcp
-      forwarder:
-        nodes:
-        - name: target-0
-          addr: 192.168.1.1:80
-          matcher:
-            rule: 'BodyRegexp(`"model"\s*:\s*"claude-opus[^"]*"`)'
-            bodySize: 65536
-        - name: target-1
-          addr: 192.168.1.2:80
-    ```
-
-    The rule above reads up to the first `65536` bytes of each request body and selects the `target-0` node when the body's `model` field is prefixed with `claude-opus` (e.g. `claude-opus-4-8`).
-
-!!! tip "Expressing Complex Rules Using Operators and Parenthesis"
-    The usual AND (`&&`) and OR (`||`) logical operators can be used, with the expected precedence rules, as well as parentheses.
-
-    One can invert a matcher by using the NOT (`!`) operator.
-
-    The following rule matches requests where:
-
-    - either host is `example.com` OR,
-    - host is `example.org` AND path is NOT `/path`
+!!! tip "Complex Rules"
+    AND (`&&`), OR (`||`), and NOT (`!`) operators can be combined with parentheses:
 
     ```yaml
     Host(`example.com`) || (Host(`example.org`) && !Path(`/path`))
@@ -389,9 +312,10 @@ Currently supported rules are
 
 #### Priority
 
-To avoid path overlap, routes are sorted, by default, in descending order using rules length. The priority is directly equal to the length of the rule, and so the longest length has the highest priority.
-
-The `matcher.priority` option can be used to set the priority of the node, thereby changing the priority of node selection.
+To avoid path overlap, nodes are sorted by default in descending order using rule
+length — the longest rule has the highest priority. Set `matcher.priority` to override
+this. A negative value disables automatic priority ordering. See
+[Matcher - Priority](../concepts/matcher.md#priority) for details.
 
 ```yaml hl_lines="16 21"
 services:

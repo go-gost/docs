@@ -127,6 +127,7 @@ nav:
     - 跳跃点: concepts/hop.md
     - 转发器: concepts/forwarder.md
     - 选择器: concepts/selector.md
+    - 匹配器: concepts/matcher.md
     - 认证: concepts/auth.md
     - 分流: concepts/bypass.md
     - 负载均衡: concepts/load-balancing.md

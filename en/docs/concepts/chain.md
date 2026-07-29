@@ -255,8 +255,8 @@ Listener or handler of a service can also use the `chainGroup` parameter to spec
 		type: http
 		chainGroup:
 		  chains:
-		  - chain-0
-		  - chain-1
+		  - chain: chain-0
+		  - chain: chain-1
 		  selector:
 		    strategy: round
 			maxFails: 1
@@ -284,9 +284,98 @@ Listener or handler of a service can also use the `chainGroup` parameter to spec
 			type: http
 		  dialer:
 		    type: tcp
-	```
+    ```
 
 The service service-0 uses two chains chain-0 and chain-1 in a round-robin manner.
+
+### Matcher
+
+:material-tag: 3.3.0
+
+Each chain entry can carry a `matcher` rule. Only entries whose matcher matches the
+current request are eligible for selection — see [Matcher](matcher.md) for the full
+DSL reference.
+
+At the chain-group level, the matcher sees the target hostname from the request
+(via `Host()` matcher).
+
+```yaml hl_lines="7 8 9"
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    chainGroup:
+      chains:
+      - chain: chain-api
+        matcher:
+          rule: Host(`api.example.com`)
+      - chain: chain-web
+        matcher:
+          rule: Host(`*.example.com`)
+      - chain: chain-default
+      selector:
+        strategy: round
+  listener:
+    type: tcp
+```
+
+!!! note "Backward compatibility"
+    Chain entries accept either a plain string (old format: `chains: [chain-0, chain-1]`)
+    or a structured object with `chain`, `matcher`, and `probe` fields.
+
+### Probe
+
+:material-tag: 3.3.0
+
+A chain entry can have a `probe` that health-checks the entire chain end-to-end. The
+probe dials through the chain's route to a target address on a periodic interval. If
+the probe fails, the chain entry's marker is set — `FailFilter` in the group selector
+excludes it from selection until it recovers.
+
+Supported probe types: `tcp`, `http`, `cmd`. The probe uses the chain's full
+`Route.Dial()` path, testing every hop.
+
+```yaml hl_lines="7 8 9 10 11"
+services:
+- name: service-0
+  addr: ":8080"
+  handler:
+    type: http
+    chainGroup:
+      chains:
+      - chain: chain-primary
+        probe:
+          type: tcp
+          addr: 127.0.0.1:8081
+          interval: 10s
+      - chain: chain-fallback
+        probe:
+          type: http
+          addr: 127.0.0.1:8082
+          httpPath: /health
+          interval: 5s
+      selector:
+        strategy: round
+        maxFails: 1
+        failTimeout: 30s
+  listener:
+    type: tcp
+```
+
+!!! note "Probe marker independence"
+    The probe marks the chain entry's own marker — it is independent of any
+    node-level markers inside the chain. Node-level `failCodes` and chain-level
+    probes do not interfere.
+
+### Selection Flow
+
+1. **Matcher filter** — build eligible pool from entries whose matcher matches the
+   request context (hostname, client IP, etc.). Nil matcher = always eligible.
+2. **Selector pipeline** — apply `FailFilter` (exclude probe-marked entries) →
+   `BackupFilter` → strategy (round-robin, random, etc.) → pick one chain entry.
+3. **Route** — delegate to the winning entry's `Route()` method, which selects
+   nodes from each hop of the chain.
 
 ## Virtual Node
 
