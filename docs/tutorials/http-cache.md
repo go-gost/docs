@@ -49,6 +49,38 @@ services:
 !!! tip "验证缓存"
     第一次请求时，日志中会显示`<-> upstream`表示向上游发起请求。第二次相同的请求将会从缓存直接返回，日志中显示`cache hit`，不会再有上游连接。
 
+### 使用Redis缓存
+
+对于多实例部署或需要缓存共享的场景，可以使用Redis后端替代内存缓存：
+
+```yaml
+caches:
+- name: redis-cache
+  redis:
+    addr: 127.0.0.1:6379
+    db: 0
+    ttl: 60m
+    key: "gost:cache:"
+
+services:
+- name: mirror
+  addr: :8080
+  cache: redis-cache
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+      cache.ttl: 60m
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: upstream
+      addr: my-site.example.com:80
+```
+
+缓存条目存储在Redis中，多个GOST实例引用同一缓存名称时可以共享缓存数据。
+
 ### 缓存失效
 
 缓存的失效时间通过`cache.ttl`或`cache.status.<code>`控制：

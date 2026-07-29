@@ -66,6 +66,40 @@ caches:
     - `oldest` — evict the entry with the earliest creation time first.
     - `lru` — evict the least recently accessed entry first.
 
+### Redis
+
+Redis cache stores data in a remote Redis server, suitable for multi-instance deployments and shared caching scenarios.
+
+```yaml
+caches:
+- name: cache-0
+  redis:
+    addr: 127.0.0.1:6379
+    db: 0
+    ttl: 60m
+```
+
+`addr` (string, required)
+:    Redis server address (`host:port`).
+
+`db` (int, default=0)
+:    Redis database number.
+
+`username` (string)
+:    Redis ACL username (Redis 6.0+).
+
+`password` (string)
+:    Redis authentication password.
+
+`ttl` (duration, default=0)
+:    Default time-to-live for cache entries. When unset, entries never expire.
+
+`key` (string, default=`gost:cache:`)
+:    Key prefix for namespacing cache entries.
+
+!!! warning
+    Redis cache does not support `serveStale` semantics. Once a key has expired in Redis, it is treated as a cache miss. Use the memory backend if stale-serving is required.
+
 ## Using in a Service
 
 Reference a named cache via the service-level `cache` property.

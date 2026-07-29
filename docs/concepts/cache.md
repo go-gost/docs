@@ -66,6 +66,40 @@ caches:
     - `oldest` — 优先淘汰创建时间最早的条目。
     - `lru` — 优先淘汰最近最少访问的条目。
 
+### Redis
+
+Redis缓存将数据存储在远程Redis服务器中，适合多实例部署和需要缓存共享的场景。
+
+```yaml
+caches:
+- name: cache-0
+  redis:
+    addr: 127.0.0.1:6379
+    db: 0
+    ttl: 60m
+```
+
+`addr` (string, required)
+:    Redis服务器地址（`host:port`）。
+
+`db` (int, default=0)
+:    Redis数据库编号。
+
+`username` (string)
+:    Redis认证用户名（仅Redis 6.0+支持ACL时使用）。
+
+`password` (string)
+:    Redis认证密码。
+
+`ttl` (duration, default=0)
+:    默认的缓存有效期。如果不设置，条目默认永不过期。
+
+`key` (string, default=`gost:cache:`)
+:    键前缀，用于区分不同应用的缓存键。
+
+!!! warning "注意"
+    Redis缓存不支持`serveStale`（返回过期条目）语义。如果Redis中的键已过期，视为缓存未命中。需要使用此特性请使用内存后端。
+
 ## 服务中使用
 
 在服务级别通过`cache`属性引用已定义的缓存名称。

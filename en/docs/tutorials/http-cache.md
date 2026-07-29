@@ -49,6 +49,38 @@ services:
 !!! tip "Verifying the cache"
     On the first request, the log shows `<-> upstream` indicating an upstream connection. The same request a second time is served from cache — the log shows `cache hit` and no upstream connection is made.
 
+### Using Redis Cache
+
+For multi-instance deployments or shared caching scenarios, use the Redis backend instead of in-memory cache:
+
+```yaml
+caches:
+- name: redis-cache
+  redis:
+    addr: 127.0.0.1:6379
+    db: 0
+    ttl: 60m
+    key: "gost:cache:"
+
+services:
+- name: mirror
+  addr: :8080
+  cache: redis-cache
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+      cache.ttl: 60m
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: upstream
+      addr: my-site.example.com:80
+```
+
+Cache entries are stored in Redis, allowing multiple GOST instances referencing the same cache name to share cached data.
+
 ### Cache Expiration
 
 Control TTL per status code with `cache.ttl` and `cache.status.<code>`:
