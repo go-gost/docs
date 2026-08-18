@@ -9,6 +9,13 @@ UDS(Unix Domain Socket) redirector can redirect the local UDS service to a TCP s
 !!! caution "Limitation"
 	When redirecting to a remote UDS service, the last node at the end of the forwarding chain must be the `relay` protocol.
 
+!!! tip "Address format"
+	For path-based protocols (unix, runix, serial), the address is determined by the URL host and path:
+
+	* `unix://gost.sock` - listen on (or connect to) the relative path `gost.sock`
+	* `unix://gost.sock/gost2.sock` - listen on `gost.sock` and forward to `gost2.sock` (port-forwarding)
+	* `unix:///var/run/gost.sock` - three-slash form denotes the absolute path `/var/run/gost.sock`
+
 ## Redirect to TCP service
 
 Redirect the local UDS service `gost.sock` to TCP service `192.168.1.1:8080`.

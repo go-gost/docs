@@ -9,6 +9,13 @@ UDS(Unix Domain Socket)重定向可以将本地的UDS服务重定向到一个TCP
 !!! caution "限制"
 	当重定向到远程UDS服务时，转发链末端最后一个节点必须使用`relay`协议。
 
+!!! tip "地址格式"
+	路径型协议(unix, runix, serial)的地址由URL的host和path决定：
+
+	* `unix://gost.sock` - 监听(或连接)相对路径`gost.sock`
+	* `unix://gost.sock/gost2.sock` - 监听`gost.sock`并转发到`gost2.sock`(端口转发语义)
+	* `unix:///var/run/gost.sock` - 三斜杠形式表示绝对路径`/var/run/gost.sock`
+
 ## 重定向类型
 
 ### 重定向到TCP服务

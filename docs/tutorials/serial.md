@@ -31,6 +31,8 @@ comments: true
 	serial://COM1,9600,odd/COM2
 	```
 
+	在Linux下串口设备为绝对路径(如`/dev/ttyS0`)，需使用三斜杠形式：`serial:///dev/ttyS0`。
+
 ## 重定向类型
 
 ### 重定向到TCP服务

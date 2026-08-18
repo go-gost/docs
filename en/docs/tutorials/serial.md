@@ -31,6 +31,8 @@ Serial port redirector can redirect the local serial port device to a TCP servic
 	serial://COM1,9600,odd/COM2
 	```
 
+	On Linux the serial device is an absolute path (e.g. `/dev/ttyS0`), use the three-slash form: `serial:///dev/ttyS0`.
+
 ## Redirect Types
 
 ### Redirect to TCP service
