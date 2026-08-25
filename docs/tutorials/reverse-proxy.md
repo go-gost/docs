@@ -575,6 +575,47 @@ services:
 `rewriter` (string)
 :    :material-tag: 3.3.0 引用[重写器](../concepts/rewriter.md)插件服务，将body修改委托给外部插件处理。当设置了此项时，`match`和`replacement`将被忽略。
 
+### 失败状态码标记
+
+通过设置`http.failCodes`选项，当目标节点返回指定的HTTP状态码时，将该节点标记为失败节点。被标记的节点会被选择器的`FailFilter`排除，后续请求不再选择该节点，直到`failTimeout`超时后恢复。
+
+```yaml hl_lines="11-14 21-22"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    selector:
+      strategy: round
+      maxFails: 1
+      failTimeout: 30s
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      matcher:
+        rule: Host(`example.com`)
+      http:
+        failCodes: "429,502,5xx"
+```
+
+匹配到失败状态码时，响应仍会原样转发给客户端（不做自动重试），但连接会在本次请求结束后关闭，使下一次请求重新选择节点。
+
+`failCodes` (string)
+:    以`,`分割的HTTP状态码列表，支持两种格式：
+
+     - **精确状态码**：如`429`、`502`、`503`。
+     - **百位通配**：如`5xx`匹配500-599的所有状态码。
+
+无效项会被忽略并记录警告日志。
+
+!!! note "建议配合 `maxFails: 1` 使用"
+    节点成功建立连接时其失败标记会被重置。若`maxFails`大于1，HTTP状态码产生的失败标记可能在达到阈值前被后续成功建立的连接清除。设置`maxFails: 1`可以让一次状态码命中立即排除该节点。
+
 ## TLS请求设置
 
 如果转发的目标节点启用了TLS，可以通过设置`forwarder.nodes.tls`来建立TLS连接。

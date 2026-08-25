@@ -772,6 +772,9 @@ matcher:
 `http.rewriteResponseBody` (list)
 :    响应 Body 重写规则。结构同 `rewriteRequestBody`。
 
+`http.failCodes` (string)
+:    以`,`分割的HTTP状态码列表，当目标节点返回匹配的状态码时将其标记为失败节点（配合选择器的 `maxFails`/`failTimeout` 使用）。支持精确状态码（如 `429`）和百位通配（如 `5xx`）。
+
 ```yaml
 http:
   host: api.deepseek.com

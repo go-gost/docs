@@ -580,6 +580,47 @@ services:
 `rewriter` (string)
 :    :material-tag: 3.3.0 Reference a [Rewriter](../concepts/rewriter.md) plugin to delegate body modification to an external service. When set, `match` and `replacement` are ignored.
 
+### Failure Status Code Marking
+
+By setting the `http.failCodes` option, a target node is marked as failed when it returns one of the specified HTTP status codes. The marked node is excluded by the selector's `FailFilter`, so subsequent requests will no longer pick it until `failTimeout` expires.
+
+```yaml hl_lines="11-14 21-22"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    selector:
+      strategy: round
+      maxFails: 1
+      failTimeout: 30s
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      matcher:
+        rule: Host(`example.com`)
+      http:
+        failCodes: "429,502,5xx"
+```
+
+When a failing status code matches, the response is still relayed to the client as-is (no automatic retry), but the connection is closed after this request so that the next request re-selects a node.
+
+`failCodes` (string)
+:    A `,`-separated list of HTTP status codes, supporting two formats:
+
+     - **Exact status code**: e.g. `429`, `502`, `503`.
+     - **Hundred-level wildcard**: e.g. `5xx` matches all status codes from 500 to 599.
+
+Invalid entries are ignored with a warning log.
+
+!!! note "Use together with `maxFails: 1`"
+    A node's failure marker is reset whenever it establishes a connection successfully. If `maxFails` is greater than 1, failure marks produced by HTTP status codes may be cleared by subsequent successful connections before reaching the threshold. Setting `maxFails: 1` lets a single status-code hit exclude the node immediately.
+
 ## TLS Settings
 
 If the forwarding target node has TLS enabled, you can establish a TLS connection by setting `forwarder.nodes.tls`.

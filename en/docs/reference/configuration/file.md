@@ -773,6 +773,9 @@ matcher:
 `http.rewriteResponseBody` (list)
 :    Response body rewrite rules. Same structure as `rewriteRequestBody`.
 
+`http.failCodes` (string)
+:    A `,`-separated list of HTTP status codes. When the target node returns a matching status code it is marked as failed (used with the selector's `maxFails`/`failTimeout`). Supports exact codes (e.g. `429`) and hundred-level wildcards (e.g. `5xx`).
+
 ```yaml
 http:
   host: api.deepseek.com
