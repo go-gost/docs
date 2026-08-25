@@ -8,28 +8,9 @@ comments: true
 
 The Rewriter can dynamically modify HTTP request and response bodies. Unlike the built-in `rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody` rules (based on regex matching and replacement), the rewriter provides more flexible modification capabilities through external [plugin](plugin.md) services.
 
-## Using a Rewriter
+## Plugin Configuration
 
-The rewriter can be configured at the service level and referenced in `services`:
-
-```yaml
-services:
-- name: service-0
-  addr: :8080
-  handler:
-    type: auto
-  listener:
-    type: tcp
-  rewriter: rewriter-0
-
-rewriters:
-- name: rewriter-0
-  plugin:
-    type: grpc
-    addr: 127.0.0.1:8000
-```
-
-### Plugin Configuration
+A rewriter plugin is configured under `rewriters` and referenced by name in forwarder node rewrite rules.
 
 `plugin.type` (string, default=grpc)
 :    plugin type: `grpc` or `http`.
@@ -68,7 +49,7 @@ Response format:
 
 ## Node-Level Rewriter
 
-The rewriter can also be used in each forwarder node's `rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody` rules:
+The rewriter is used in each forwarder node's `rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody` rules:
 
 ```yaml
 forwarder:
@@ -117,3 +98,7 @@ rewriteRequestBody:
 JSON modes (`json:`/`json-:`) auto-detect `application/json` content type, no `type` field needed.
 
 The `rewriter` can be combined with `type` (content-type filtering) to send different body types to different rewriters.
+
+## Related Tutorial
+
+[Reverse Proxy — Rewrite Request/Response Body](../tutorials/reverse-proxy.md#rewrite-requestresponse-body) demonstrates rewriting HTTP request/response bodies through forwarder node rules.

@@ -8,28 +8,9 @@ comments: true
 
 重写器可以对HTTP请求和响应体进行动态修改，与内置的`rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody`规则（基于正则匹配和替换）不同，重写器通过外部[插件](plugin.md)服务提供更灵活的修改能力。
 
-## 使用重写器
+## 插件配置
 
-重写器可以作为服务级配置，在`services`中引用：
-
-```yaml
-services:
-- name: service-0
-  addr: :8080
-  handler:
-    type: auto
-  listener:
-    type: tcp
-  rewriter: rewriter-0
-
-rewriters:
-- name: rewriter-0
-  plugin:
-    type: grpc
-    addr: 127.0.0.1:8000
-```
-
-### 插件配置
+重写器插件在`rewriters`中配置，并在转发器节点重写规则中按名称引用。
 
 `plugin.type` (string, default=grpc)
 :    插件类型：`grpc`，`http`。
@@ -68,7 +49,7 @@ rewriters:
 
 ## 节点级重写器
 
-重写器也可以在每个转发器节点的`rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody`规则中使用：
+重写器在每个转发器节点的`rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody`规则中使用：
 
 ```yaml
 forwarder:
@@ -117,3 +98,7 @@ rewriteRequestBody:
 JSON 模式（`json:`/`json-:`）自动检测 `application/json` 内容类型，无需设置 `type`。
 
 `rewriter`可以与`type`(内容类型过滤)结合使用，通过设置不同的`type`将不同类型的请求/响应体发送给不同的重写器处理。
+
+## 相关教程
+
+[反向代理 — 重写请求体和响应体](../tutorials/reverse-proxy.md#重写请求体和响应体) 演示了如何通过转发器节点规则重写 HTTP 请求/响应体。
