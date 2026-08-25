@@ -91,6 +91,7 @@ forwarder:
 
 - **正则表达式**（对原始 body 字节进行 `regexp.ReplaceAll` 替换）。`replacement` 支持 Go 正则替换语法（`$1`、`$2` 等）。
 - **`json:` 前缀**用于 JSON 路径字段匹配：`json:<路径>[=<值正则>]`。字段值通过 [gjson](https://github.com/tidwall/gjson) 提取后与可选的值正则匹配，命中后通过 [sjson](https://github.com/tidwall/sjson) 替换。
+- **`json-:` 前缀**用于删除 JSON 字段：`json-:<路径>[=<值正则>]`。字段值匹配正则时，使用 [sjson](https://github.com/tidwall/sjson) 的删除操作移除该字段，`replacement` 会被忽略。注意：删除对象最后一个键后会留下空对象 `{}`，这是 sjson 的语义。
 
 ```yaml
 # 正则模式（现有行为）
@@ -107,8 +108,12 @@ rewriteRequestBody:
 rewriteRequestBody:
 - match: json:output_config.effort=(xhigh|max)
   replacement: low
+
+# JSON 删除模式 — 直接删除 model 字段
+rewriteRequestBody:
+- match: json-:model
 ```
 
-JSON 模式自动检测 `application/json` 内容类型，无需设置 `type`。
+JSON 模式（`json:`/`json-:`）自动检测 `application/json` 内容类型，无需设置 `type`。
 
 `rewriter`可以与`type`(内容类型过滤)结合使用，通过设置不同的`type`将不同类型的请求/响应体发送给不同的重写器处理。

@@ -765,7 +765,7 @@ matcher:
 
 `http.rewriteRequestBody` (list)
 :    Request body rewrite rules. Each entry has:
-      `match` (string) — regex or `json:<path>[=<regex>]` for JSON field matching;
+      `match` (string) — regex or `json:<path>[=<regex>]` for JSON field matching; use `json-:<path>[=<regex>]` to delete the matched field instead of replacing it;
       `replacement` (string) — replacement value;
       `rewriter` (string) — optional external rewriter plugin;
       `type` (string) — optional content-type filter.

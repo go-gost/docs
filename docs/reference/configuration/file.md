@@ -764,7 +764,7 @@ matcher:
 
 `http.rewriteRequestBody` (list)
 :    请求 Body 重写规则。每项包含：
-      `match` (string) — 正则或 `json:<路径>[=<值正则>]` JSON 字段匹配；
+      `match` (string) — 正则或 `json:<路径>[=<值正则>]` JSON 字段匹配；使用 `json-:<路径>[=<值正则>]` 可删除匹配的字段而非替换；
       `replacement` (string) — 替换值；
       `rewriter` (string) — 可选的外部 rewriter 插件；
       `type` (string) — 可选的 content-type 过滤。

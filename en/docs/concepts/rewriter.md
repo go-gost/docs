@@ -91,6 +91,7 @@ When `rewriter` is not set, the `match` field can be either:
 
 - A **regex** pattern (applied to the raw body bytes via `regexp.ReplaceAll`). The `replacement` value supports Go's regex replacement syntax (`$1`, `$2`, etc.).
 - A **`json:` prefix** for JSON path-based field matching: `json:<path>[=<value-regex>]`. The field value is extracted with [gjson](https://github.com/tidwall/gjson) and matched against the optional value regex. When matched, the field is replaced with `replacement` using [sjson](https://github.com/tidwall/sjson).
+- A **`json-:` prefix** to delete a JSON field instead of replacing it: `json-:<path>[=<value-regex>]`. When the field value matches the regex, the field is removed via [sjson](https://github.com/tidwall/sjson)'s delete operation and `replacement` is ignored. Note that deleting the last remaining key of an object leaves an empty object (`{}`), consistent with sjson semantics.
 
 ```yaml
 # Regex mode (existing behavior)
@@ -107,8 +108,12 @@ rewriteRequestBody:
 rewriteRequestBody:
 - match: json:output_config.effort=(xhigh|max)
   replacement: low
+
+# JSON delete mode — remove the model field entirely
+rewriteRequestBody:
+- match: json-:model
 ```
 
-JSON mode auto-detects `application/json` content type, no `type` field needed.
+JSON modes (`json:`/`json-:`) auto-detect `application/json` content type, no `type` field needed.
 
 The `rewriter` can be combined with `type` (content-type filtering) to send different body types to different rewriters.
