@@ -63,9 +63,9 @@ services:
         rule: Host(`example.org`) && Pathprefix(`/`)
 ```
 
-通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`filter`或`matcher.rule`选项对节点设置路由条件或规则。
+通过`sniffing`选项来开启流量嗅探，并在`forwarder.nodes`中通过`matcher.rule`选项对节点设置路由规则。
 
-当开启流量嗅探后，转发服务会对客户端的请求信息应用转发器(forwarder)中节点设置的匹配条件(filter)或匹配规则(matcher.rule)过滤出最终转发的目标节点。
+当开启流量嗅探后，转发服务会对客户端的请求信息应用转发器(forwarder)中节点设置的匹配规则(matcher.rule)过滤出最终转发的目标节点。
 
 ![Reverse Proxy - TCP Port Forwarding](../images/reverse-proxy-tcp.png) 
 
@@ -168,22 +168,18 @@ curl --resolve srv-2.local:443:SERVER_IP https://srv-2.local
 
 ## 请求路由
 
-反向代理中请求到目标节点的路由有两种模式：条件过滤和规则匹配。两种模式二选一，规则匹配优先。
+反向代理中请求到目标节点的路由通过`matcher.rule`选项设置匹配规则，当请求满足此规则时此节点为合格结点，将参与下一步的目标节点选择。匹配规则适用于所有匹配器上下文（节点、跳跃点组、转发链组）。
 
-### 条件过滤
+!!! note "`filter`选项已废弃"
+    `filter`选项（`filter.host`/`filter.protocol`/`filter.path`）已不推荐使用，在配置解析时会自动转换为等价的`matcher.rule`规则（分别对应`Host()`/`Proto()`/`PathPrefix()`），并将在未来的版本中移除。建议直接使用`matcher.rule`，它覆盖了相同的使用场景并提供了更强大的 DSL 表达式。详见 [匹配器](../concepts/matcher.md)。
 
-!!! warning "已废弃"
-    条件过滤已不推荐使用，建议改用 [规则匹配（Matcher）](../concepts/matcher.md)，并将在未来的版本中移除。
-    请使用 `matcher.rule` 代替 — 它覆盖了相同的使用场景，提供了更强大的 DSL 表达式，
-    并且适用于所有匹配器上下文（节点、跳跃点组、转发链组）。
-
-在节点上通过`filter`选项来设置过滤条件，当请求满足此过滤条件时此节点为合格结点，将参与下一步的目标节点选择。
+### 常用匹配条件
 
 #### 主机名过滤
 
-通过`filter.host`选项为节点设置主机名过滤。
+通过`matcher.rule`选项中的`Host()`匹配器为节点设置主机名过滤。
 
-`filter.host`也支持通配符，`*.example.com`或`.example.com`匹配example.com及其子域名abc.example.com，def.abc.example.com等。
+`Host()`支持通配符，`Host(`.example.com`)`匹配example.com的子域名abc.example.com，def.abc.example.com等。若要同时匹配example.com本身及其子域名，使用`Host(`example.com`) || Host(`.example.com`)`。
 
 ```yaml  hl_lines="15 19"
 services:
@@ -199,17 +195,17 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      matcher:
+        rule: Host(`example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: *.example.org
+      matcher:
+        rule: Host(`example.org`) || Host(`.example.org`)
 ```
 
 #### 应用协议过滤
 
-通过`filter.protocol`选项设置协议类型过滤，当嗅探到对应类型流量则会转发到此节点。
+通过`matcher.rule`选项中的`Proto()`匹配器设置协议类型过滤，当嗅探到对应类型流量则会转发到此节点。
 
 目前支持的应用协议有：
 
@@ -217,7 +213,7 @@ services:
 * `tls` - TLS流量数据。
 * `ssh` - SSH流量数据。
 
-```yaml hl_lines="16 21 25"
+```yaml hl_lines="15 19 23"
 services:
 - name: service-0
   addr: :8000
@@ -231,23 +227,21 @@ services:
     nodes:
     - name: http-server
       addr: example.com:80
-      filter:
-        host: example.com
-        protocol: http
+      matcher:
+        rule: Host(`example.com`) && Proto(`http`)
     - name: https-server
       addr: example.com:443
-      filter:
-        host: example.com
-        protocol: tls
+      matcher:
+        rule: Host(`example.com`) && Proto(`tls`)
     - name: ssh-server
       addr: example.com:22
-      filter:
-        protocol: ssh
+      matcher:
+        rule: Proto(`ssh`)
 ```
 
 #### URL路径过滤
 
-通过`filter.path`选项为节点设置路径前缀过滤。当嗅探到HTTP流量后，会使用URL路径前缀匹配模式来选择节点。
+通过`matcher.rule`选项中的`PathPrefix()`匹配器为节点设置路径前缀过滤。当嗅探到HTTP流量后，会使用URL路径前缀匹配模式来选择节点。
 
 ```yaml hl_lines="15 19"
 services:
@@ -263,17 +257,17 @@ services:
     nodes:
     - name: target-0
       addr: 192.168.1.1:80
-      filter:
-        path: /
+      matcher:
+        rule: PathPrefix(`/`)
     - name: target-1
       addr: 192.168.1.2:80
-      filter:
-        path: /test
+      matcher:
+        rule: PathPrefix(`/test`)
 ```
 
 ### 规则匹配
 
-除了简单的条件过滤外，请求路由同时也集成了灵活的规则路由DSL。通过`matcher.rule`选项设置节点的匹配规则，当设置了规则后，`filter`将会被忽略。
+除了上面的常用匹配条件外，请求路由还集成了灵活的规则路由DSL，通过`matcher.rule`选项可以组合更复杂的匹配规则。
 
 ```yaml hl_lines="15 19"
 services:

@@ -24,4 +24,4 @@ For [port forwarding](../tutorials/port-forwarding.md) services, multiple target
 
 ![Load Balancing](../images/load-balancing-4.png)
 
-For [reverse proxy](../tutorials/reverse-proxy.md), it is slightly more complicated. Based on the above node filtering, it can be filtered through some additional information on the node. For example, HTTP traffic can be filtered through the host name or URL path information on the node.
+For [reverse proxy](../tutorials/reverse-proxy.md), it is slightly more complicated. Based on the above node filtering, requests can also be filtered by additional information via the node's matching rule (`matcher.rule`). For example, HTTP traffic can be filtered through matchers such as the host name (`Host`) or URL path (`PathPrefix`).

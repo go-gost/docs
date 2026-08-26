@@ -61,13 +61,11 @@ services:
         rule: Host(`example.org`) && PathPrefix(`/`)
 ```
 
-Use the `sniffing` option to enable traffic sniffing, and set routing conditions or rules through the `filter` or `matcher.rule` options in `forwarder.nodes`.
+Use the `sniffing` option to enable traffic sniffing, and set routing rules through the `matcher.rule` option in `forwarder.nodes`.
 
-When traffic sniffing is enabled, the forwarding service will apply the matching conditions (filter) or matching rules (matcher.rule) set in the node of the forwarder to the client's request information to filter out the final forwarding target node.
+When traffic sniffing is enabled, the forwarding service applies the matching rules (matcher.rule) set on the forwarder's nodes to the client's request information to filter out the final forwarding target node.
 
 ![Reverse Proxy - TCP Port Forwarding](../images/reverse-proxy-tcp.png) 
-
-`filter.host` also supports wildcards, *.example.com or .example.com matches example.com and its subdomains: abc.example.com, def.abc.example.com, etc.
 
 At this time, the corresponding domain name can be resolved to the local and then accessed through the reverse proxy:
 
@@ -168,23 +166,18 @@ Since srv-2.local does not match the node, it will be forwarded to the fallback 
 
 ## Request Routing
 
-There are two modes for routing requests to target nodes: conditional filtering and rule matching. When choosing between the two modes, rule matching takes precedence.
+Request routing to target nodes is configured through the `matcher.rule` option on each node. When a request meets the rule, the node is a qualified node and participates in the next step of target node selection. The rule works across all matcher contexts (node, hop group, chain group).
 
-### Conditional Filtering
+!!! note "`filter` option deprecated"
+    The `filter` option (`filter.host`/`filter.protocol`/`filter.path`) is deprecated; at config parse time it is automatically converted into an equivalent `matcher.rule` (`Host()`/`Proto()`/`PathPrefix()` respectively) and will be removed in a future release. Prefer `matcher.rule` directly — it covers the same use cases with a more expressive DSL. See [Matcher](../concepts/matcher.md).
 
-!!! warning "Deprecated"
-    Conditional filtering is deprecated in favor of [rule matching](../concepts/matcher.md)
-    and will be removed in a future release. Use `matcher.rule` instead — it covers the
-    same use cases with a more expressive DSL and works across all matcher contexts
-    (node, hop group, chain group).
-
-The filter condition is set on the node through the `filter` option. When the request meets this filter condition, this node is a qualified node and will participate in the next step of target node selection.
+### Common Match Conditions
 
 #### Hostname Filtering
 
-Set hostname filtering for a node via the `filter.host` option.
+Set hostname filtering for a node via the `Host()` matcher in `matcher.rule`.
 
-`filter.host` also supports wildcards, `*.example.com` or `.example.com` matches example.com and its subdomains abc.example.com, def.abc.example.com, etc.
+`Host()` also supports wildcards: `Host(`.example.com`)` matches the subdomains of example.com — abc.example.com, def.abc.example.com, etc. To match example.com itself along with its subdomains, use `Host(`example.com`) || Host(`.example.com`)`.
 
 ```yaml  hl_lines="15 19"
 services:
@@ -200,17 +193,17 @@ services:
     nodes:
     - name: example-com
       addr: example.com:80
-      filter:
-        host: example.com
+      matcher:
+        rule: Host(`example.com`)
     - name: example-org
       addr: example.org:80
-      filter:
-        host: *.example.org
+      matcher:
+        rule: Host(`example.org`) || Host(`.example.org`)
 ```
 
 #### Protocol Filtering
 
-The protocol type filter is set through the `filter.protocol` option. When the corresponding type of traffic is sniffed, it will be forwarded to this node.
+The protocol type filter is set through the `Proto()` matcher in `matcher.rule`. When the corresponding type of traffic is sniffed, it will be forwarded to this node.
 
 Currently supported application protocols are:
 
@@ -218,7 +211,7 @@ Currently supported application protocols are:
 * `tls` - TLS traffic.
 * `ssh` - SSH traffic.
 
-```yaml hl_lines="16 21 25"
+```yaml hl_lines="15 19 23"
 services:
 - name: service-0
   addr: :8000
@@ -232,23 +225,21 @@ services:
     nodes:
     - name: http-server
       addr: example.com:80
-      filter:
-        host: example.com
-        protocol: http
+      matcher:
+        rule: Host(`example.com`) && Proto(`http`)
     - name: https-server
       addr: example.com:443
-      filter:
-        host: example.com
-        protocol: tls
+      matcher:
+        rule: Host(`example.com`) && Proto(`tls`)
     - name: ssh-server
       addr: example.com:22
-      filter:
-        protocol: ssh
+      matcher:
+        rule: Proto(`ssh`)
 ```
 
 #### URL Path Filtering
 
-Set the path prefix filtering for the node through the `filter.path` option. When sniffing HTTP traffic, the URL path prefix matching pattern is used to select the node.
+Set the path prefix filtering for the node through the `PathPrefix()` matcher in `matcher.rule`. When sniffing HTTP traffic, the URL path prefix matching pattern is used to select the node.
 
 ```yaml hl_lines="15 19"
 services:
@@ -264,19 +255,19 @@ services:
     nodes:
     - name: target-0
       addr: 192.168.1.1:80
-      filter:
-        path: /
+      matcher:
+        rule: PathPrefix(`/`)
     - name: target-1
       addr: 192.168.1.2:80
-      filter:
-        path: /test
+      matcher:
+        rule: PathPrefix(`/test`)
 ```
 
 ### Rule Matching
 
-In addition to simple conditional filtering, request routing also integrates a flexible
-rule-based routing DSL. The matching rule is set via the `matcher.rule` option on each
-node. When `matcher.rule` is set, `filter` is ignored.
+Beyond the common match conditions above, request routing also integrates a flexible
+rule-based routing DSL, letting you combine more complex matching rules through the
+`matcher.rule` option on each node.
 
 ```yaml hl_lines="15 19"
 services:

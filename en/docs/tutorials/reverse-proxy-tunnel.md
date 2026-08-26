@@ -200,12 +200,12 @@ services:
     nodes:
     - name: example-com
       addr: 192.168.1.1:80
-      filter:
-        host: example.com
+      matcher:
+        rule: Host(`example.com`)
     - name: sub-example-com
       addr: 192.168.1.2:80
-      filter:
-        host: sub.example.com
+      matcher:
+        rule: Host(`sub.example.com`)
     - name: fallback
       addr: 192.168.2.1:80
 chains:
@@ -382,12 +382,12 @@ services:
     nodes:
     - name: ssh
       addr: 192.168.2.1:22
-      filter:
-        host: ssh.srv-2.local
+      matcher:
+        rule: Host(`ssh.srv-2.local`)
     - name: redis
       addr: 192.168.2.2:6379
-      filter:
-        host: redis.srv-3.local
+      matcher:
+        rule: Host(`redis.srv-3.local`)
 chains:
 - name: chain-0
   hops:
@@ -477,12 +477,12 @@ services:
     nodes:
     - name: dns-1
       addr: 192.168.2.1:53
-      filter:
-        host: dns.srv-2.local
+      matcher:
+        rule: Host(`dns.srv-2.local`)
     - name: dns-2
       addr: 192.168.2.2:53
-      filter:
-        host: dns.srv-3.local
+      matcher:
+        rule: Host(`dns.srv-3.local`)
 chains:
 - name: chain-0
   hops:
@@ -660,8 +660,8 @@ Since there is only one forwarding target, you can use the command line to forwa
         nodes:
         - name: iperf
           addr: :5201
-          filter:
-            host: iperf.local
+          matcher:
+            rule: Host(`iperf.local`)
     - name: iperf-udp
       addr: :0
       handler:
@@ -673,8 +673,8 @@ Since there is only one forwarding target, you can use the command line to forwa
         nodes:
         - name: iperf
           addr: :5201
-          filter:
-            host: iperf.local
+          matcher:
+            rule: Host(`iperf.local`)
     chains:
     - name: chain-0
       hops:

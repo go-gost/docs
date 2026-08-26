@@ -24,4 +24,4 @@ comments: true
 
 ![Load Balancing](../images/load-balancing-4.png)
 
-对于[反向代理](../tutorials/reverse-proxy.md)会稍微复杂一些，在以上节点过滤基础之上可以通过节点上的一些额外信息来过滤，例如对于HTTP流量可以通过节点上的主机名(host)或URL路径(path)信息来达到分流效果。
+对于[反向代理](../tutorials/reverse-proxy.md)会稍微复杂一些，在以上节点过滤基础之上还可以通过节点上的匹配规则(matcher.rule)按请求的额外信息来过滤，例如对于HTTP流量可以通过主机名(Host)或URL路径(PathPrefix)等匹配器来达到分流效果。
