@@ -376,6 +376,50 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 当请求http://example.com时，最终发送给example.com:80的HTTP请求头中Host为test.example.com。
 
+### 从路径动态提取Host
+
+当上游的Host无法在配置时静态确定、而需要根据请求信息动态推导时，可以配合设置`http.hostPattern`选项，将`http.host`作为模板进行替换。
+
+`http.hostPattern`是一个正则表达式，作用于请求的URL路径。当它匹配成功时，`http.host`会作为模板，将其中的`$1`、`$2`等捕获组引用展开为对应的捕获内容；匹配失败时Host保持不变。例如对`*.github.io`（GitHub Pages）这类由Host头路由、而非SNI路由的无限子域，可以用一个节点服务所有站点：
+
+```yaml hl_lines="16-18"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: pages
+      addr: github.io:443
+      matcher:
+        rule: PathRegexp(`^/[a-z0-9-]+\.github\.io/`)
+      tls:
+        secure: true
+        serverName: github.io
+      http:
+        hostPattern: '^/([a-z0-9-]+\.github\.io)/'
+        host: '$1'
+        rewriteURL:
+        - match: '^/[a-z0-9-]+\.github\.io/'
+          replacement: '/'
+```
+
+当请求`http://pages.example.com/microsoft.github.io/`时，`hostPattern`将Host提取为`microsoft.github.io`，`rewriteURL`再剥掉路径中的host前缀，最终向上游发出`GET /`、`Host: microsoft.github.io`。
+
+`http.hostPattern` (string)
+:    作用于URL路径的正则表达式，用于从请求路径中提取Host。仅在设置了`http.host`时生效，此时`http.host`被当作替换模板。
+
+`http.host` (string)
+:    当`hostPattern`未设置时为静态Host；当`hostPattern`设置时作为模板，其中的`$1`、`$2`等捕获组引用会被展开为对应捕获内容（Go正则替换语法）。
+
+!!! note "`hostPattern`只影响Host头"
+    `hostPattern`只重写HTTP的Host头，**不会**改变节点的拨号目标或TLS SNI（这两者仍由`addr`和`tls.serverName`静态决定）。因此它适用于由Host头路由的上游（如GitHub Pages），不适用于由SNI路由的上游。
+
 ### 自定义请求头
 
 通过设置`http.requestHeader`选项可以自定义请求头部信息，如果所设置的头部字段已存在则会被覆盖。
@@ -568,6 +612,55 @@ services:
 
 `rewriter` (string)
 :    :material-tag: 3.3.0 引用[重写器](../concepts/rewriter.md)插件服务，将body修改委托给外部插件处理。当设置了此项时，`match`和`replacement`将被忽略。
+
+### 重写请求头和响应头
+
+通过设置`http.rewriteRequestHeader`和`http.rewriteResponseHeader`选项定义请求头和响应头重写规则。
+
+```yaml hl_lines="16-24"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      matcher:
+        rule: Host(`example.com`)
+      http:
+        rewriteResponseHeader:
+        - name: '(?i)^location$'
+          match: 'https://example\.com'
+          replacement: 'https://127.0.0.1:8000'
+        - name: '(?i)^set-cookie$'
+          match: '(?i)domain=\.?example\.com;?\s*'
+          replacement: ''          # 值空 → 删除该头
+        rewriteRequestHeader:
+        - name: '(?i)^(referer|origin|x-forwarded-host)$'
+          match: '.*'
+          replacement: ''          # 删除请求头
+```
+
+`name` (string)
+:    头名匹配正则（大小写不敏感）。插件模式下作为是否调用插件的门控，`name` 为空表示始终调用。
+
+`match` (string)
+:    头值匹配正则。替换结果为空则删除该头（`replacement` 为空 + `match: '.*'` 即删除该头名的所有值）。
+
+`replacement` (string)
+:    替换内容，支持 Go 正则替换语法（`$1`、`$2` 等）。替换结果为空时该头被删除。
+
+`rewriter` (string)
+:    :material-tag: 3.3.0 可选，引用[重写器](../concepts/rewriter.md)插件服务。设置后将整个头块序列化为文本并委托给插件处理，插件返回修改后的头块文本再解析回。元数据中 `kind` 字段为 `"header"`（body 重写为 `"body"`）。设置此项时 `match`/`replacement` 被忽略。
+
+!!! note "头重写的删除语义"
+    正则模式下，每个匹配的头值独立替换，替换结果为空则该值被丢弃；若某头名的所有值均被清空，该头被删除。这是删除请求/响应头（如剥离 `Set-Cookie` 的 `Domain`、删除 `Referer`/`Origin`）的标准写法。
 
 ### 失败状态码标记
 

@@ -6,7 +6,7 @@ comments: true
 
 :material-tag: 3.3.0
 
-The Rewriter can dynamically modify HTTP request and response bodies. Unlike the built-in `rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody` rules (based on regex matching and replacement), the rewriter provides more flexible modification capabilities through external [plugin](plugin.md) services.
+The Rewriter can dynamically modify HTTP request and response bodies. Unlike the built-in `rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody` rules (based on regex matching and replacement), the rewriter provides more flexible modification capabilities through external [plugin](plugin.md) services. The rewriter can also handle HTTP headers (`rewriteRequestHeader`/`rewriteResponseHeader`), in which case the entire header block is serialized to text and delegated to the plugin.
 
 ## Plugin Configuration
 
@@ -67,6 +67,32 @@ forwarder:
 ```
 
 When a rule has `rewriter` set, the body modification is delegated to the rewriter plugin, and the `match`/`replacement` fields are ignored.
+
+### Header Rewriting
+
+Header rewriting uses the `rewriteRequestHeader`/`rewriteResponseHeader` rules. Each entry has:
+
+- `name` (string) — header-name regex (case-insensitive). In plugin mode it gates whether the plugin is invoked (an empty `name` means always invoke).
+- `match` (string) — header-value regex.
+- `replacement` (string) — replacement value; an empty result deletes the header.
+- `rewriter` (string) — optional external rewriter plugin.
+
+Regex mode replaces each value independently; plugin mode serializes the whole header block to MIME text (`Key: value\r\n`), hands it to the plugin, and parses the returned block back. Metadata carries `kind:"header"` to distinguish it from body rewriting (`kind:"body"`).
+
+```yaml
+http:
+  rewriteResponseHeader:
+  - name: '(?i)^location$'
+    match: 'https://example\.com'
+    replacement: 'https://127.0.0.1:8000'
+  - name: '(?i)^set-cookie$'
+    match: '(?i)domain=\.?example\.com;?\s*'
+    replacement: ''               # empty value → delete header
+  rewriteRequestHeader:
+  - name: '(?i)^(referer|origin)$'
+    match: '.*'
+    replacement: ''               # delete request headers
+```
 
 When `rewriter` is not set, the `match` field can be either:
 

@@ -773,6 +773,16 @@ matcher:
 `http.rewriteResponseBody` (list)
 :    Response body rewrite rules. Same structure as `rewriteRequestBody`.
 
+`http.rewriteRequestHeader` (list)
+:    Request header rewrite rules. Each entry has:
+      `name` (string) — header-name regex (case-insensitive, e.g. `(?i)^referer$`);
+      `match` (string) — header-value regex;
+      `replacement` (string) — replacement value; an empty result deletes the header;
+      `rewriter` (string) — optional external rewriter plugin (the whole header block is serialized and delegated to the plugin).
+
+`http.rewriteResponseHeader` (list)
+:    Response header rewrite rules. Same structure as `rewriteRequestHeader`.
+
 `http.failCodes` (string)
 :    A `,`-separated list of HTTP status codes. When the target node returns a matching status code it is marked as failed (used with the selector's `maxFails`/`failTimeout`). Supports exact codes (e.g. `429`) and hundred-level wildcards (e.g. `5xx`).
 

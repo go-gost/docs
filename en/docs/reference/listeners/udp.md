@@ -44,5 +44,8 @@ UDP监听器根据服务配置，监听在指定UDP端口。
 `readQueueSize` (int, default=128)
 :    UDP连接读数据队列大小
 
+`stateless` (bool, default=false)
+:    无状态UDP转发模式。启用后每个UDP数据报独立转发，不建立虚拟连接，不做会话跟踪，类似NGINX Stream模块的转发行为。启用时需要同时为[UDP处理器](/reference/handlers/udp/)设置`stateless: true`。
+
 !!! note "限制"
     UDP监听器目前只能够与[ssu处理器](/reference/handlers/ssu/)组合使用，或与[UDP处理器](/reference/handlers/udp/)组合用做UDP端口转发。

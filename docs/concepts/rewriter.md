@@ -6,7 +6,7 @@ comments: true
 
 :material-tag: 3.3.0
 
-重写器可以对HTTP请求和响应体进行动态修改，与内置的`rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody`规则（基于正则匹配和替换）不同，重写器通过外部[插件](plugin.md)服务提供更灵活的修改能力。
+重写器可以对HTTP请求和响应体进行动态修改，与内置的`rewriteBody`/`rewriteResponseBody`/`rewriteRequestBody`规则（基于正则匹配和替换）不同，重写器通过外部[插件](plugin.md)服务提供更灵活的修改能力。重写器同样可以处理HTTP头（`rewriteRequestHeader`/`rewriteResponseHeader`），此时整个头块会被序列化为文本并委托给插件。
 
 ## 插件配置
 
@@ -67,6 +67,32 @@ forwarder:
 ```
 
 当规则设置了`rewriter`后，body的修改将委托给重写器插件处理，`match`和`replacement`将被忽略。
+
+### 头重写
+
+头重写通过`rewriteRequestHeader`/`rewriteResponseHeader`规则实现。每项包含：
+
+- `name` (string) — 头名正则（大小写不敏感）。插件模式下作为是否调用插件的门控（`name` 为空表示始终调用）。
+- `match` (string) — 头值正则。
+- `replacement` (string) — 替换值；替换结果为空则删除该头。
+- `rewriter` (string) — 可选的外部 rewriter 插件。
+
+正则模式逐值独立替换；插件模式将整个头块序列化为 MIME 文本（`Key: value\r\n`）后交给插件，插件返回修改后的头块文本再解析回。元数据中包含 `kind:"header"` 以区别于 body 重写（`kind:"body"`）。
+
+```yaml
+http:
+  rewriteResponseHeader:
+  - name: '(?i)^location$'
+    match: 'https://example\.com'
+    replacement: 'https://127.0.0.1:8000'
+  - name: '(?i)^set-cookie$'
+    match: '(?i)domain=\.?example\.com;?\s*'
+    replacement: ''               # 值空 → 删头
+  rewriteRequestHeader:
+  - name: '(?i)^(referer|origin)$'
+    match: '.*'
+    replacement: ''               # 删除请求头
+```
 
 当不使用`rewriter`时，`match`字段可以是：
 

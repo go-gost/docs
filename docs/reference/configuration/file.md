@@ -772,6 +772,16 @@ matcher:
 `http.rewriteResponseBody` (list)
 :    响应 Body 重写规则。结构同 `rewriteRequestBody`。
 
+`http.rewriteRequestHeader` (list)
+:    请求头重写规则。每项包含：
+      `name` (string) — 头名正则（大小写不敏感，例如 `(?i)^referer$`）；
+      `match` (string) — 头值正则；
+      `replacement` (string) — 替换值，替换结果为空则删除该头；
+      `rewriter` (string) — 可选的外部 rewriter 插件（将整个头块序列化后委托给插件处理）。
+
+`http.rewriteResponseHeader` (list)
+:    响应头重写规则。结构同 `rewriteRequestHeader`。
+
 `http.failCodes` (string)
 :    以`,`分割的HTTP状态码列表，当目标节点返回匹配的状态码时将其标记为失败节点（配合选择器的 `maxFails`/`failTimeout` 使用）。支持精确状态码（如 `429`）和百位通配（如 `5xx`）。
 

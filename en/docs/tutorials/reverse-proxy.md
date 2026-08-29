@@ -378,6 +378,50 @@ curl --resolve example.com:80:127.0.0.1 http://example.com
 
 When requesting http://example.com, the Host in the HTTP request header sent to example.com:80 is test.example.com.
 
+### Extract Host from Path
+
+When the upstream Host cannot be determined statically at config time but must be derived from the request, set `http.hostPattern` and use `http.host` as a replacement template.
+
+`http.hostPattern` is a regex matched against the request URL path. On a match, `http.host` is treated as a template whose `$1`, `$2`, ... capture-group references are expanded to the corresponding captures; on no match, the Host is left unchanged. This serves Host-routed (not SNI-routed) infinite subdomains such as `*.github.io` (GitHub Pages) with a single node:
+
+```yaml hl_lines="16-18"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: pages
+      addr: github.io:443
+      matcher:
+        rule: PathRegexp(`^/[a-z0-9-]+\.github\.io/`)
+      tls:
+        secure: true
+        serverName: github.io
+      http:
+        hostPattern: '^/([a-z0-9-]+\.github\.io)/'
+        host: '$1'
+        rewriteURL:
+        - match: '^/[a-z0-9-]+\.github\.io/'
+          replacement: '/'
+```
+
+When requesting `http://pages.example.com/microsoft.github.io/`, `hostPattern` extracts the Host as `microsoft.github.io`, `rewriteURL` then strips the host prefix from the path, and the upstream receives `GET /` with `Host: microsoft.github.io`.
+
+`http.hostPattern` (string)
+:    A regex matched against the URL path, used to derive the Host from the request path. Only takes effect when `http.host` is set, in which case `http.host` is treated as a replacement template.
+
+`http.host` (string)
+:    A static Host when `hostPattern` is unset; when `hostPattern` is set, a template whose `$1`, `$2`, ... capture-group references are expanded to the corresponding captures (Go regex replacement syntax).
+
+!!! note "`hostPattern` only affects the Host header"
+    `hostPattern` only rewrites the HTTP Host header; it does **not** change the node's dial target or TLS SNI (both remain statically determined by `addr` and `tls.serverName`). It therefore suits Host-routed upstreams (e.g. GitHub Pages), not SNI-routed ones.
+
 ### Custom Request Header
 
 The request header can be customized by setting the `http.requestHeader` option, if the header field already exists, it will be overwritten.
@@ -570,6 +614,55 @@ services:
 
 `rewriter` (string)
 :    :material-tag: 3.3.0 Reference a [Rewriter](../concepts/rewriter.md) plugin to delegate body modification to an external service. When set, `match` and `replacement` are ignored.
+
+### Rewrite Request/Response Header
+
+Define the request and response header rewriting rules by setting `http.rewriteRequestHeader` and `http.rewriteResponseHeader` options.
+
+```yaml hl_lines="16-24"
+services:
+- name: http
+  addr: :80
+  handler:
+    type: tcp
+    metadata:
+      sniffing: true
+  listener:
+    type: tcp
+  forwarder:
+    nodes:
+    - name: example-com
+      addr: example.com:80
+      matcher:
+        rule: Host(`example.com`)
+      http:
+        rewriteResponseHeader:
+        - name: '(?i)^location$'
+          match: 'https://example\.com'
+          replacement: 'https://127.0.0.1:8000'
+        - name: '(?i)^set-cookie$'
+          match: '(?i)domain=\.?example\.com;?\s*'
+          replacement: ''          # empty value → delete the header
+        rewriteRequestHeader:
+        - name: '(?i)^(referer|origin|x-forwarded-host)$'
+          match: '.*'
+          replacement: ''          # delete request headers
+```
+
+`name` (string)
+:    Header-name matching regex (case-insensitive). In plugin mode it gates whether the plugin is invoked; an empty `name` means always invoke.
+
+`match` (string)
+:    Header-value matching regex. An empty replacement result deletes the header (an empty `replacement` with `match: '.*'` removes every value of that header name).
+
+`replacement` (string)
+:    Replacement content, supporting Go regex replacement syntax (`$1`, `$2`, etc.). When the replacement result is empty, the header is deleted.
+
+`rewriter` (string)
+:    :material-tag: 3.3.0 Optional. Reference a [Rewriter](../concepts/rewriter.md) plugin. When set, the whole header block is serialized to text and delegated to the plugin, then the returned block is parsed back. The metadata `kind` field is `"header"` (body rewriting uses `"body"`). When set, `match`/`replacement` are ignored.
+
+!!! note "Header deletion semantics"
+    In regex mode, each matched header value is replaced independently; a value whose replacement is empty is dropped, and when all values of a header name become empty the header is deleted. This is the standard way to remove request/response headers (e.g. strip `Domain` from `Set-Cookie`, delete `Referer`/`Origin`).
 
 ### Failure Status Code Marking
 
