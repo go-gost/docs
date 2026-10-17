@@ -99,6 +99,29 @@ The hops defined in `hops` are referenced by `name` in the chain.
 !!! note "Mode Switch"
     When using inline mode, if no node is defined or plugin is not used in the hop, it will automatically switch to reference mode.
 
+## Node Reference
+
+Nodes can also be defined in the top-level `nodes` list and reused by hops. A
+hop node entry containing only `name` references the global definition. If the
+entry contains any additional node field, it remains an inline node definition.
+
+```yaml
+nodes:
+- name: proxy-0
+  addr: 192.168.1.1:8080
+  connector:
+    type: http
+  dialer:
+    type: tcp
+
+hops:
+- name: hop-0
+  nodes:
+  - name: proxy-0 # references the top-level node
+  - name: proxy-1
+    addr: 192.168.1.2:8080 # inline because another field is present
+```
+
 ## Data Source
 
 Hop can configure multiple data sources, currently supported data sources are: inline, file, redis, HTTP.
