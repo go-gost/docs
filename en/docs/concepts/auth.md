@@ -138,6 +138,8 @@ user1 pass1
 
 If there are multiple lines of authentication information, only the first one will be used.
 
+The file of the single authentication information only supports the text format, the JSON and YAML formats apply to the file data source of the authenticator.
+
 ## Authenticator
 
 An authenticator contains one or more sets of authentication information. Service can achieve the multi-user authentication function through the authenticator.
@@ -246,7 +248,7 @@ The `skipauth` option sets a client IP whitelist that bypasses authentication wh
 
 ## Data Source
 
-Authenticator can configure multiple data sources, currently supported data sources are: inline, file, redis.
+Authenticator can configure multiple data sources, currently supported data sources are: inline, file, redis, HTTP.
 
 ### Inline
 
@@ -264,16 +266,27 @@ authers:
 
 ### File
 
-Specify an external file as the data source. Specify the file path via the `file.path` property.
+Specify an external file as the data source. Specify the file path via the `file.path` property and the content format via the `file.format` property.
 
 ```yaml
 authers:
 - name: auther-0
   file:
-    path: /path/to/auth/file
+    path: /path/to/file
+    format: text
 ```
 
-The file format is the authentication information separated by lines, each line of authentication information is a user-pass pair separated by spaces, and the lines starting with `#` are commented out.
+`path` (string, required)
+:    file path
+
+`format` (string, default=text)
+:    content format of the file, one of `text`, `json` and `yaml` (`yml`). An unsupported format makes the configuration load fail.
+
+#### Auth File Formats
+
+:material-tag: 3.3.1
+
+The text format (`text`) is the authentication information separated by lines, each line of authentication information is a user-pass pair separated by spaces, and the lines starting with `#` are commented out.
 
 ```text
 # username password
@@ -282,6 +295,35 @@ admin           #123456
 test\user001    123456
 test.user@002   12345678
 ```
+
+The JSON format (`json`) is a JSON document with an `auths` array:
+
+```json
+{
+  "auths": [
+    {
+      "username": "admin",
+      "password": "#123456"
+    },
+    {
+      "username": "test\\user001",
+      "password": "123456"
+    }
+  ]
+}
+```
+
+The YAML format (`yaml`) is the YAML counterpart of the JSON format:
+
+```yaml
+auths:
+- username: admin
+  password: "#123456"
+- username: test\user001
+  password: "123456"
+```
+
+In the structured formats (`json`, `yaml`) the username and the password are trimmed like in the text format, and entries with an empty username are ignored.
 
 ### Redis
 
@@ -323,7 +365,7 @@ authers:
 
 ### HTTP
 
-Specify the HTTP service as the data source. For the requested URL, if HTTP returns a 200 status code, it is considered valid, and the returned data format is the same as the file data source.
+Specify the HTTP service as the data source. For the requested URL, if HTTP returns a 200 status code, it is considered valid. The format of the returned data is specified by the `http.format` property and is the same as the format of the file data source.
 
 ```yaml
 authers:
@@ -331,6 +373,7 @@ authers:
   http:
     url: http://127.0.0.1:8000
     timeout: 10s
+    format: text
 ```
 
 `url` (string, required)
@@ -338,6 +381,9 @@ authers:
 
 `timeout` (duration, default=0)
 :    request timeout
+
+`format` (string, default=text)
+:    format of the returned data, one of `text`, `json` and `yaml` (`yml`).
 
 ## Priority
 

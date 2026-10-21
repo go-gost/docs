@@ -134,6 +134,8 @@ user1 pass1
 
 如果有多行认证信息，则只会使用第一个。
 
+单认证信息的文件仅支持文本格式，JSON和YAML格式仅适用于认证器的文件数据源。
+
 
 ## 认证器
 
@@ -261,16 +263,27 @@ authers:
 
 ### 文件
 
-指定外部文件作为数据源。通过`file.path`参数指定文件路径。
+指定外部文件作为数据源。通过`file.path`参数指定文件路径，通过`file.format`参数指定文件内容格式。
 
 ```yaml
 authers:
 - name: auther-0
   file:
     path: /path/to/file
+    format: text
 ```
 
-文件格式为按行分割的认证信息，每一行认证信息为用空格分割的user-pass对，以`#`开始的行为注释行。
+`path` (string, required)
+:    文件路径
+
+`format` (string, default=text)
+:    文件内容格式，支持`text`、`json`、`yaml`(`yml`)三种取值。指定不受支持的格式时，配置加载失败。
+
+#### 认证文件格式
+
+:material-tag: 3.3.1
+
+文本格式(`text`)为按行分割的认证信息，每一行认证信息为用空格分割的user-pass对，以`#`开始的行为注释行。
 
 ```text
 # username password
@@ -279,6 +292,35 @@ admin           #123456
 test\user001    123456
 test.user@002   12345678
 ```
+
+JSON格式(`json`)为包含`auths`数组的JSON文档：
+
+```json
+{
+  "auths": [
+    {
+      "username": "admin",
+      "password": "#123456"
+    },
+    {
+      "username": "test\\user001",
+      "password": "123456"
+    }
+  ]
+}
+```
+
+YAML格式(`yaml`)为与JSON格式内容对应的YAML文档：
+
+```yaml
+auths:
+- username: admin
+  password: "#123456"
+- username: test\user001
+  password: "123456"
+```
+
+结构化格式(`json`、`yaml`)中的用户名和密码与文本格式一样会去除首尾空白，用户名为空的条目会被忽略。
 
 ### Redis
 
@@ -322,7 +364,7 @@ authers:
 
 ### HTTP
 
-指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式与文件数据源相同。
+指定HTTP服务作为数据源。对于所请求的URL，HTTP返回200状态码则认为有效，返回的数据格式通过`http.format`参数指定，与文件数据源的格式相同。
 
 ```yaml
 authers:
@@ -330,6 +372,7 @@ authers:
   http:
     url: http://127.0.0.1:8000
     timeout: 10s
+    format: text
 ```
 
 `url` (string, required)
@@ -337,6 +380,9 @@ authers:
 
 `timeout` (duration, default=0)
 :    请求超时时长
+
+`format` (string, default=text)
+:    返回数据的格式，支持`text`、`json`、`yaml`(`yml`)三种取值。
 
 ## 优先级
 
