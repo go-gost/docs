@@ -14,7 +14,7 @@ comments: true
      * `rand` - 随机
      * `fifo` - 自上而下，主备模式
      * `hash` - 基于特定Hash值(客户端IP或目标地址)
-     * `parallel` - 竞速模式，同时向所有节点发起连接，使用最先成功的连接
+     * `parallel` - 竞速模式，同时向所有节点发起连接，使用最先成功的连接，可通过 `maxParallel` 限制参与竞速的节点数量
 
 `maxFails` (int, default=1)
 :    指定最大失败次数，当失败次数超过此设定值时，此对象会被标记为失败(Fail)状态，失败状态的对象不会被选择使用。
@@ -419,5 +419,77 @@ chains:
 !!! tip "与负载均衡的区别"
     竞速策略与传统的负载均衡不同，它不是将请求分摊到各个节点，而是每次都尝试连接所有节点，使用最先成功的那一个。因此竞速策略更适合节点数量较少（2-3个）且对延迟敏感的场景。对于节点数量较多或需要均衡流量的场景，建议使用轮询(`round`)或随机(`rand`)策略。
 
+    使用 `maxParallel` 可以限制每次竞速的节点数量，这样节点组规模较大时也不会让每次连接都产生大量并发连接。
+
 !!! note "多路复用禁用"
     竞速策略的 `Multiplex()` 方法硬编码返回 `false`，即多路复用（Multiplex）功能会被强制禁用。这是因为竞速策略每次请求都可能通过不同的节点，无法保证后续请求复用同一个已建立的连接。
+
+### 限制参与竞速的节点数量
+
+:material-tag: 3.3.1
+
+竞速策略在每次连接时向节点组中的所有节点发起连接。当节点组规模较大时，每次连接都会产生大量并发连接。通过 `maxParallel` 选项可以限制每次竞速参与连接的节点数量，其余节点仍保留在节点组中，在后续的竞速中参与。
+
+`maxParallel` (int, default=0)
+:    单次连接中同时参与竞速的节点数量上限。`0`（默认值），或不小于节点组中节点数量的值，表示不限制，所有节点都参与竞速。
+
+`parallelMode` (string, default=round)
+:    指定每次竞速的节点在节点组中的选取方式：
+    
+     * `round` - 轮询，取连续的 maxParallel 个节点，每次连接的起始位置向后移动 maxParallel 个节点
+     * `rand` - 随机，每次连接随机抽取 maxParallel 个不同的节点
+
+=== "命令行"
+
+    ```bash
+    gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080,192.168.1.3:1080?strategy=parallel&maxParallel=2&parallelMode=round"
+    ```
+
+=== "配置文件"
+
+    ```yaml hl_lines="14 15 16"
+    services:
+    - name: service-0
+      addr: :8080
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        selector:
+          strategy: parallel
+          maxParallel: 2
+          parallelMode: round
+          maxFails: 1
+          failTimeout: 10s
+        nodes:
+        - name: node-0
+          addr: 192.168.1.1:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+        - name: node-1
+          addr: 192.168.1.2:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+        - name: node-2
+          addr: 192.168.1.3:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+    ```
+
+在轮询模式下，节点组有6个节点且限值为2时，各次竞速依次使用 0-1、2-3、4-5、0-1 这样的连续分组，因此每个节点参与竞速的次数相同。随机模式则每次随机选取参与竞速的节点。
+
+未参与竞速的节点完全不会被连接，因此限值可以在节点组规模较大的情况下将并发连接数控制在一定范围内。
+
+!!! note "失败的节点仍保留在节点组中"
+    竞速策略中连接失败时被标记的是虚拟节点，而不是竞速失败的候选节点，因此连接失败的节点仍会保留在节点组中，并可能在后续的连接中再次被选中。这与轮询(`round`)和自上而下(`fifo`)策略不同，在那些策略中节点自身被标记为失败，随后被失败过滤器跳过。

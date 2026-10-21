@@ -13,7 +13,7 @@ In GOST, the selection of nodes in a node group is done through node selector. T
      * `rand` - random
      * `fifo` - top-down 
      * `hash` - Based on a specific hash value (client IP or destination address)
-     * `parallel` - race mode, dials all nodes concurrently and uses the first successful connection
+     * `parallel` - race mode, dials all nodes concurrently and uses the first successful connection, the number of nodes in the race can be limited with `maxParallel`
 
 `maxFails` (int, default=1)
 :    The maximum number of failed connections for a specified node, When the number of failed connections with a node exceeds this set value, the node will be marked as a dead node, dead node will not be selected to use.
@@ -410,5 +410,77 @@ chains:
 !!! tip "Difference from load balancing"
     Unlike traditional load balancing, the race strategy does not distribute requests across nodes. Instead, it attempts to connect to all nodes simultaneously and uses the first one that succeeds. Therefore, it works best with a small number of nodes (2-3) in latency-sensitive scenarios. For larger node pools or traffic distribution needs, use round robin (`round`) or random (`rand`) strategies instead.
 
+    With `maxParallel` the number of nodes in the race can be capped, so a large node group no longer turns every connection into a large number of concurrent dials.
+
 !!! note "Multiplexing disabled"
     The race strategy's `Multiplex()` method is hardcoded to return `false`, meaning multiplexing is forcibly disabled. This is because each request may go through a different node, making it impossible to guarantee that subsequent requests reuse the same established connection.
+
+### Limiting the Nodes in the Race
+
+:material-tag: 3.3.1
+
+The race strategy dials every node of the node group on every connection. With a large node group this turns each connection into a large number of concurrent dials. The `maxParallel` option caps how many nodes take part in each race, the remaining nodes stay in the group and take part in later races.
+
+`maxParallel` (int, default=0)
+:    The maximum number of nodes racing concurrently in a single connection. `0` (the default), or a value not smaller than the number of nodes in the group, means no limit: every node races.
+
+`parallelMode` (string, default=round)
+:    How the nodes taking part in the race are picked from the group:
+    
+     * `round` - round robin, takes `maxParallel` consecutive nodes, the offset advances by `maxParallel` on every connection
+     * `rand` - random, samples `maxParallel` distinct nodes for every connection
+
+=== "CLI"
+
+    ```bash
+    gost -L http://:8080 -F "socks5://192.168.1.1:1080,192.168.1.2:1080,192.168.1.3:1080?strategy=parallel&maxParallel=2&parallelMode=round"
+    ```
+
+=== "File (YAML)"
+
+    ```yaml hl_lines="14 15 16"
+    services:
+    - name: service-0
+      addr: :8080
+      handler:
+        type: auto
+        chain: chain-0
+      listener:
+        type: tcp
+    chains:
+    - name: chain-0
+      hops:
+      - name: hop-0
+        selector:
+          strategy: parallel
+          maxParallel: 2
+          parallelMode: round
+          maxFails: 1
+          failTimeout: 10s
+        nodes:
+        - name: node-0
+          addr: 192.168.1.1:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+        - name: node-1
+          addr: 192.168.1.2:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+        - name: node-2
+          addr: 192.168.1.3:1080
+          connector:
+            type: socks5
+          dialer:
+            type: tcp
+    ```
+
+With the round robin mode and a group of 6 nodes and a limit of 2, the races use the consecutive groups 0-1, 2-3, 4-5, 0-1, ... so every node takes part in the same number of races. The random mode picks the nodes of each race at random instead.
+
+The nodes that do not take part in a race are not dialled at all, so a limit keeps the number of concurrent connection attempts under control while the group stays large.
+
+!!! note "Failed nodes stay in the group"
+    In the race strategy a failed race marks the virtual node, not the candidate that lost the race. A node whose connection failed therefore stays in the group and can be picked again by a later connection. This differs from the round robin (`round`) and fifo (`fifo`) strategies, where the node itself is marked as failed and then skipped by the fail filter.
