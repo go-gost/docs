@@ -16,6 +16,8 @@ Transparent proxy supports two modes: REDIRECT and TPROXY. The REDIRECT mode onl
 
     If the SNI information is not sniffed for HTTPS traffic, you can enable the `sniffing.fallback` option and try to connect again using the original target address.
 
+    Traffic that is neither HTTP nor TLS, including a connection on which the client sends nothing within `sniffing.timeout`, is forwarded to the original destination address as is. Enable the `sniffing.dropUnhandled` option to close such connections instead. This is useful when access rules (e.g., bypass) are written for hostnames, which such traffic does not carry.
+
     When the resolved address of the SNI differs from the original destination, use `sniffing.dialOriginalDst` to dial the original destination address while keeping sniffed hostname-based routing (e.g., bypass) intact.
 
 ## REDIRECT

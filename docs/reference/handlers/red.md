@@ -29,6 +29,9 @@ RED处理器用于构建TCP透明代理。
 `sniffing.dialOriginalDst` (bool, default=false) :material-tag: 3.3.0
 :    使用嗅探到的Host地址进行路由匹配（bypass），但仍然使用原始的透明重定向目标地址进行拨号连接。适用于SNI解析结果与原始目标地址不一致的场景。
 
+`sniffing.dropUnhandled` (bool, default=false)
+:    关闭HTTP和TLS以外协议的连接（包括客户端在`sniffing.timeout`时长内未发送任何数据的连接），不再使用原始目标地址转发。
+
 `tproxy` (bool, default=false)
 :   开启tproxy模式
 

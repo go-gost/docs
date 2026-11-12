@@ -16,6 +16,8 @@ comments: true
 
     对于HTTPS流量如果未嗅探到SNI信息，可以开启`sniffing.fallback`选项，再次使用目标地址尝试连接。
 
+    对于HTTP和TLS以外的流量（包括客户端在`sniffing.timeout`时长内未发送任何数据的连接），默认使用原始目标地址直接转发。开启`sniffing.dropUnhandled`选项后将关闭这类连接，不再转发。这类流量不带主机名，按主机名编写访问规则（如bypass）时可以使用此选项。
+
     当SNI解析结果与原始目标地址不一致时，可通过`sniffing.dialOriginalDst`选项使用原始目标地址进行拨号，而嗅探到的Host仍用于路由匹配（如bypass）。
 
 ## REDIRECT
