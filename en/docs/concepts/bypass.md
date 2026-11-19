@@ -198,7 +198,7 @@ For IP, domain name and domain name wildcard rules can also contain ports or por
 
 :material-tag: 3.3.0
 
-Bypass can be configured with the `network` parameter to restrict matching to a specific network protocol type (e.g., `tcp` or `udp`). When the network protocol does not match, the bypass rule is not applied.
+Bypass can be configured with the `network` parameter to restrict matching to a specific network protocol type (e.g., `tcp` or `udp`). Network and address matching form one combined predicate, and `whitelist` is applied to that final result.
 
 === "File (YAML)"
 
@@ -226,10 +226,10 @@ Bypass can be configured with the `network` parameter to restrict matching to a 
     - **Blacklist mode**: matching network connections are bypassed (do not go through the proxy).
     - **Whitelist mode**: matching network connections use the proxy, all others are bypassed.
 
-    When both `network` and `matchers` are set, the network protocol acts as a pre-filter:
-    
-    - Network mismatch → bypass rule is not applied, the connection proceeds normally.
-    - Network match → continue to evaluate the `matchers` rules for address matching.
+    When both `network` and `matchers` are set, they form one combined predicate:
+
+    - `whitelist: false`: bypass only when the network and one matcher both match; otherwise use the proxy.
+    - `whitelist: true`: use the proxy only when the network and one matcher both match; otherwise bypass.
 
 ### Typical Use Case: TCP/UDP Routing
 

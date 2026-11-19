@@ -100,6 +100,27 @@ hops:
 
     当使用内联模式时，如果跳跃点中未定义节点或未使用插件则会自动切换到引用模式。
 
+## 节点引用
+
+节点也可以在顶层`nodes`列表中定义，并在跳跃点中复用。跳跃点的节点条目如果只包含`name`，则引用同名的全局节点定义；如果还包含任何其他节点字段，则仍作为内联节点定义处理。
+
+```yaml
+nodes:
+- name: proxy-0
+  addr: 192.168.1.1:8080
+  connector:
+    type: http
+  dialer:
+    type: tcp
+
+hops:
+- name: hop-0
+  nodes:
+  - name: proxy-0 # 引用顶层节点
+  - name: proxy-1
+    addr: 192.168.1.2:8080 # 包含其他字段，因此是内联节点
+```
+
 ## 数据源
 
 跳跃点可以配置多个数据源，目前支持的数据源有：内联，文件，redis，HTTP。
@@ -325,4 +346,3 @@ curl -XPOST http://127.0.0.1:8000/hop -d '{"network":"tcp","addr":"example.com:8
 
 `client` (string)
 :    用户身份标识，此信息由认证器生成。
-
