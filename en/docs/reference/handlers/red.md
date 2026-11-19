@@ -29,6 +29,9 @@ RED处理器用于构建TCP透明代理。
 `sniffing.dialOriginalDst` (bool, default=false) :material-tag: 3.3.0
 :    Dial the original transparent-redirect destination address instead of the sniffed hostname. The sniffed hostname is still used for routing decisions such as bypass matching, but the actual connection is made to the original destination. Useful when the resolved address of the SNI differs from the original destination.
 
+`sniffing.dropUnhandled` (bool, default=false)
+:    Close a connection whose protocol is not HTTP or TLS, including one on which the client sends nothing within `sniffing.timeout`, instead of forwarding it to the original destination address.
+
 `tproxy` (bool, default=false)
 :   开启tproxy模式
 
